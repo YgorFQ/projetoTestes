@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SenkoLib — Biblioteca de Layouts</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="icon" type="image/x-icon" href="senko.ico" />
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo" id="logoHome" style="cursor:pointer;" title="Ver todos os layouts">
+        <img src="senko.png" class="logo-img" alt="SenkoLib" />
+        <span class="logo-text">Senko<strong>Lib</strong></span>
+      </div>
+      <div class="header-controls">
+        <div class="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input type="text" id="searchInput" class="search-input" placeholder="Buscar layouts…" autocomplete="off" />
+        </div>
+
+        <!-- Copy Basee -->
+        <button class="btn-fav" id="favFilterBtn" title="Ver favoritos">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+            <polygon
+              points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+        </button>
+        <button class="btn-guide" id="openGuideBtn" title="Guia do projeto">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+            <path
+              d="M9 21h6M12 3a6 6 0 0 1 6 6c0 2.22-1.2 4.16-3 5.2V17a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2.8C7.2 13.16 6 11.22 6 9a6 6 0 0 1 6-6z" />
+            <line x1="12" y1="17" x2="12" y2="21" stroke-width="0" />
+          </svg>
+        </button>
+        <button class="btn-copyall" id="copyAllBtn" onclick="copiarBasics()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
+            <rect x="9" y="9" width="13" height="13" rx="2" />
+            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+          </svg>
+          HTML Basico
+        </button>
+
+        <!-- Adicionar -->
+        <button class="btn-add" id="openAddModal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Adicionar
+        </button>
+
+        <!-- Modos de visualização -->
+        <div class="view-modes">
+          <button class="view-btn active" data-view="normal" title="Grade normal">
+            <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+              <rect x="1" y="1" width="8" height="8" rx="1.5" />
+              <rect x="11" y="1" width="8" height="8" rx="1.5" />
+              <rect x="1" y="11" width="8" height="8" rx="1.5" />
+              <rect x="11" y="11" width="8" height="8" rx="1.5" />
+            </svg>
+          </button>
+          <button class="view-btn" data-view="large" title="Blocos maiores">
+            <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+              <rect x="1" y="1" width="8.5" height="8.5" rx="1.5" />
+              <rect x="10.5" y="1" width="8.5" height="8.5" rx="1.5" />
+              <rect x="1" y="10.5" width="8.5" height="8.5" rx="1.5" />
+              <rect x="10.5" y="10.5" width="8.5" height="8.5" rx="1.5" />
+            </svg>
+          </button>
+          <button class="view-btn" data-view="single" title="Bloco único">
+            <svg viewBox="0 0 20 20" fill="currentColor" width="15" height="15">
+              <rect x="1" y="1" width="18" height="18" rx="1.5" />
+            </svg>
+          </button>
+          <button class="view-btn" data-view="list" title="Lista">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+              <rect x="1" y="2" width="18" height="4" rx="1" />
+              <rect x="1" y="8" width="18" height="4" rx="1" />
+              <rect x="1" y="14" width="18" height="4" rx="1" />
+            </svg>
+          </button>
+          <button class="view-btn" data-view="expanded" title="Expandido (um abaixo do outro)">
+            <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+              <rect x="1" y="1" width="18" height="7" rx="1.5" />
+              <rect x="1" y="11" width="18" height="7" rx="1.5" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="fsa-bar">
+      <span class="fsa-label">Modo experimental — File System Access</span>
+      <button class="fsa-btn" id="selectFolderBtn">📁 Selecionar pasta do projeto</button>
+      <span id="fsaStatus" class="fsa-status">Nenhuma pasta selecionada</span>
+    </div>
+  </header>
+
+  <!-- DASHBOARD -->
+  <main class="dashboard" id="dashboard">
+    <div class="stats-bar" id="statsBar"></div>
+    <div class="grid" id="layoutGrid"></div>
+    <div class="no-results hidden" id="noResults">
+      <img src="senko.png" class="no-results-icon" alt="Sem resultados" />
+      <p>Nenhum layout encontrado para <strong id="noResultsQuery"></strong></p>
+    </div>
+  </main>
+
+  <!-- MODAL VISUALIZAR -->
+  <div class="modal-overlay hidden" id="modalOverlay">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <div class="modal-meta">
+          <h2 class="modal-title" id="modalTitle"></h2>
+          <div class="modal-tags" id="modalTags"></div>
+        </div>
+        <button class="modal-close" id="modalClose" title="Fechar">✕</button>
+      </div>
+      <div class="modal-preview-wrap">
+        <div class="preview-label">Preview</div>
+        <iframe id="modalIframe" class="modal-iframe" sandbox="allow-scripts" title="Preview"></iframe>
+      </div>
+      <div class="code-section">
+        <div class="code-tabs">
+          <button class="tab-btn active" data-tab="html">HTML</button>
+          <button class="tab-btn" data-tab="css">CSS</button>
+        </div>
+        <div class="code-panel active" id="panelHtml">
+          <div class="code-toolbar">
+            <span class="code-lang">HTML</span>
+            <button class="copy-btn" id="copyHtmlBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                <rect x="9" y="9" width="13" height="13" rx="2" />
+                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+              </svg>
+              Copiar HTML
+            </button>
+          </div>
+          <pre class="code-block" id="codeHtml"></pre>
+        </div>
+        <div class="code-panel" id="panelCss">
+          <div class="code-toolbar">
+            <span class="code-lang">CSS</span>
+            <button class="copy-btn" id="copyCssBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                <rect x="9" y="9" width="13" height="13" rx="2" />
+                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+              </svg>
+              Copiar CSS
+            </button>
+          </div>
+          <pre class="code-block" id="codeCss"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR LAYOUT -->
+  <div class="modal-overlay hidden" id="editModalOverlay">
+    <div class="modal edit-modal" id="editModal">
+      <div class="modal-header">
+        <div class="modal-meta">
+          <span class="modal-category">Editar</span>
+          <h2 class="modal-title">Editar Layout</h2>
+          <p class="add-hint">Edite os campos e copie o objeto para substituir no arquivo
+            <code>layouts/layoutsXXX.js</code>.
+          </p>
+        </div>
+        <div style="display:flex;gap:.5rem;align-items:center;">
+          <button class="btn-add" id="copyEditBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+            Copiar objeto
+          </button>
+          <button class="btn-save-file" id="saveToFileBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+              <polyline points="17 21 17 13 7 13 7 21" />
+              <polyline points="7 3 7 8 15 8" />
+            </svg>
+            Salvar no arquivo
+          </button>
+          <button class="modal-close" id="editModalClose" title="Fechar">✕</button>
+        </div>
+      </div>
+
+      <!-- Campos de metadados -->
+      <input type="hidden" id="editId" />
+      <div class="add-fields">
+        <div class="field-row">
+          <div class="field-group" style="flex:1;">
+            <label>Nome <span class="req">*</span></label>
+            <input type="text" id="editName" placeholder="ex: Section-58" />
+            <span class="field-desc">Nome de exibição na biblioteca.</span>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Tags <span class="hint">(separadas por vírgula)</span></label>
+            <input type="text" id="editTags" placeholder="ex: hero, banner, cta" />
+            <span class="field-desc">Palavras-chave para busca.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seletor de modo -->
+      <div class="edit-mode-bar">
+        <button class="edit-mode-btn" data-editmode="html">HTML</button>
+        <button class="edit-mode-btn" data-editmode="css">CSS</button>
+        <button class="edit-mode-btn active" data-editmode="preview">Visualizar</button>
+      </div>
+
+      <!-- Painéis — ocupam todo o espaço restante -->
+      <div class="edit-mode-panel" id="editModeHtml">
+        <textarea id="editHtml" class="code-textarea edit-textarea" placeholder="HTML do layout…"></textarea>
+      </div>
+      <div class="edit-mode-panel" id="editModeCss">
+        <textarea id="editCss" class="code-textarea edit-textarea" placeholder="CSS do layout…"></textarea>
+      </div>
+      <div class="edit-mode-panel active" id="editModePreview">
+        <iframe id="editPreviewIframe" class="edit-preview-iframe" sandbox="allow-scripts"></iframe>
+      </div>
+
+      <!-- Campo oculto para o objeto gerado (só para copiar) -->
+      <pre id="editGeneratedCode" style="display:none"></pre>
+    </div>
+  </div>
+
+  <!-- MODAL ADICIONAR -->
+  <div class="modal-overlay hidden" id="addModalOverlay">
+    <div class="modal add-modal" id="addModal">
+      <div class="modal-header">
+        <div class="modal-meta">
+
+          <h2 class="modal-title">Adicionar Layout</h2>
+          <p class="add-hint">Preencha os campos, copie o objeto e cole dentro do array no arquivo
+            <code>layouts/layoutsXXX.js</code>. O ID vira o nome do futuro arquivo de variantes:
+            <code>variants/<span id="hintVariantPath">id</span>.js</code>
+          </p>
+        </div>
+        <button class="modal-close" id="addModalClose" title="Fechar">✕</button>
+      </div>
+      <div class="add-fields">
+        <div class="field-row">
+          <div class="field-group">
+            <label>ID <span class="req">*</span></label>
+            <input type="text" id="addId" placeholder="ex: section-58" />
+            <span class="field-desc">Identificador único, sempre em minúsculo. Vira o nome do arquivo de variantes. Ex:
+              <code>section-58</code> → <code>variants/section-58.js</code></span>
+          </div>
+          <div class="field-group">
+            <label>Nome <span class="req">*</span></label>
+            <input type="text" id="addName" placeholder="ex: Section-58" />
+            <span class="field-desc">Nome de exibição na biblioteca. Pode ter maiúsculas.</span>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label>Tags <span class="hint">(separadas por vírgula)</span></label>
+            <input type="text" id="addTags" placeholder="ex: hero, banner, cta" />
+            <span class="field-desc">Palavras-chave para facilitar a busca. Separe por vírgula.</span>
+          </div>
+        </div>
+      </div>
+      <div class="code-section">
+        <div class="code-tabs">
+          <button class="tab-btn add-tab active" data-addtab="html">HTML</button>
+          <button class="tab-btn add-tab" data-addtab="css">CSS</button>
+          <button class="tab-btn add-tab" data-addtab="preview">Preview</button>
+        </div>
+        <div class="add-code-panel active" id="addPanelHtml">
+          <textarea id="addHtml" class="code-textarea" placeholder="Cole o HTML do layout aqui…"></textarea>
+        </div>
+        <div class="add-code-panel" id="addPanelCss">
+          <textarea id="addCss" class="code-textarea" placeholder="Cole o CSS do layout aqui…"></textarea>
+        </div>
+        <div class="add-code-panel" id="addPanelPreview">
+          <div class="preview-label">Preview ao vivo</div>
+          <iframe id="addPreviewIframe" class="modal-iframe" sandbox="allow-scripts"></iframe>
+        </div>
+      </div>
+      <div class="add-result-section">
+        <div class="code-toolbar">
+          <span class="code-lang">Objeto gerado — cole no array layouts[]</span>
+          <button class="copy-btn btn-blocked" id="copyGeneratedBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+            Copiar objeto
+          </button>
+        </div>
+        <pre class="code-block" id="generatedCode">// Preencha os campos acima para gerar o objeto…</pre>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL VARIANTES -->
+  <div class="modal-overlay hidden" id="variantsOverlay">
+    <div class="modal variants-modal" id="variantsModal">
+      <div class="modal-header">
+        <div class="modal-meta">
+          <span class="modal-category">Variantes</span>
+          <h2 class="modal-title" id="variantsTitle"></h2>
+          <p class="variants-count" id="variantsCount"></p>
+          <p class="variants-hint">
+            Arquivo: <code>variants/<span id="variantsLayoutId"></span>.js</code>
+          </p>
+        </div>
+        <button class="modal-close" id="variantsClose" title="Fechar">✕</button>
+      </div>
+      <div class="variants-grid-wrap">
+        <div class="variants-grid" id="variantsGrid"></div>
+      </div>
+      <div class="variants-footer-bar">
+        <button class="btn-add" id="openNewVariantBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+          </svg>
+          Nova Variante
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL NOVA VARIANTE -->
+  <div class="modal-overlay hidden" id="newVarOverlay">
+    <div class="modal newvar-modal" id="newVarModal">
+      <div class="modal-header">
+        <div class="modal-meta">
+          <span class="modal-category">Nova Variante</span>
+          <h2 class="modal-title">Criar Variante</h2>
+          <p class="add-hint">Variante de: <strong id="newVarParentName"></strong></p>
+          <p class="add-hint">Preencha nome, HTML e CSS — copie o objeto gerado e cole dentro do array
+            <code>registerVariant</code> no arquivo de variantes.
+          </p>
+        </div>
+        <button class="modal-close" id="newVarClose" title="Fechar">✕</button>
+      </div>
+      <div class="add-fields">
+        <div class="field-row">
+          <div class="field-group">
+            <label>Nome <span class="req">*</span></label>
+            <input type="text" id="newVarName" placeholder="ex: section-49.1" />
+            <span class="field-desc">Nome da variante em minúsculo. Geralmente o nome do layout pai seguido de um
+              número. Ex: <code>section-49.1</code></span>
+          </div>
+        </div>
+      </div>
+      <div class="code-section">
+        <div class="code-tabs">
+          <button class="tab-btn newvar-tab active" data-nvtab="html">HTML</button>
+          <button class="tab-btn newvar-tab" data-nvtab="css">CSS</button>
+          <button class="tab-btn newvar-tab" data-nvtab="preview">Preview</button>
+        </div>
+        <div class="add-code-panel active newvar-panel" id="newVarPanelHtml">
+          <textarea id="newVarHtml" class="code-textarea" placeholder="Cole o HTML da variante aqui…"></textarea>
+        </div>
+        <div class="add-code-panel newvar-panel" id="newVarPanelCss">
+          <textarea id="newVarCss" class="code-textarea" placeholder="Cole o CSS da variante aqui…"></textarea>
+        </div>
+        <div class="add-code-panel newvar-panel" id="newVarPanelPreview">
+          <div class="preview-label">Preview ao vivo</div>
+          <iframe id="newVarPreviewIframe" class="modal-iframe" sandbox="allow-scripts"></iframe>
+        </div>
+      </div>
+      <div class="add-result-section">
+        <div class="code-toolbar">
+          <span class="code-lang">Objeto gerado — cole no array do arquivo de variantes</span>
+          <button class="copy-btn" id="newVarCopyBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+            Copiar objeto
+          </button>
+        </div>
+        <pre class="code-block" id="newVarGeneratedCode">// Preencha os campos acima para gerar o objeto…</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL GUIA -->
+  <div class="modal-overlay hidden" id="guideOverlay">
+    <div class="modal guide-modal" id="guideModal">
+      <div class="modal-header">
+        <div class="modal-meta">
+          <span class="modal-category">Documentação</span>
+          <h2 class="modal-title">Guia do Projeto</h2>
+          <p class="add-hint">Tudo que você precisa saber para usar o SenkoLib.</p>
+        </div>
+        <button class="modal-close" id="guideClose" title="Fechar">✕</button>
+      </div>
+      <div class="guide-content">
+
+        <div class="guide-section">
+          <h3>📁 Estrutura de arquivos</h3>
+          <p>O projeto é composto por:</p>
+          <ul>
+            <li><code>index.html</code> — interface principal</li>
+            <li><code>script.js</code> — lógica da aplicação</li>
+            <li><code>styles.css</code> — estilos</li>
+            <li><code>senkolib-core.js</code> — motor de registro de layouts e variantes</li>
+            <li><code>layouts/layoutsXXX.js</code> — arquivos com os layouts</li>
+            <li><code>variants/nome-do-layout.js</code> — arquivos com variantes de cada layout</li>
+          </ul>
+        </div>
+
+        <div class="guide-section">
+          <h3>➕ Criar um novo layout</h3>
+          <p>Clique em <strong>Adicionar</strong> no cabeçalho. Preencha os campos:</p>
+          <ul>
+            <li><strong>ID</strong> — identificador único, sempre em minúsculo. Ex: <code>section-58</code>. Será o nome
+              do futuro arquivo de variantes.</li>
+            <li><strong>Nome</strong> — nome de exibição. Ex: <code>Section-58</code></li>
+            <li><strong>Tags</strong> — palavras-chave separadas por vírgula para facilitar a busca</li>
+            <li><strong>HTML / CSS</strong> — cole o código do layout</li>
+          </ul>
+          <p>Copie o objeto gerado e cole dentro do array em <code>layouts/layoutsXXX.js</code>.</p>
+        </div>
+
+        <div class="guide-section">
+          <h3>📦 Adicionar um novo arquivo de layouts</h3>
+          <p>Crie um arquivo <code>layouts/layouts002.js</code> com a estrutura:</p>
+          <pre>// @ts-nocheck
+SenkoLib.register([ /* objetos aqui */ ]);</pre>
+          <p>Depois adicione no <code>index.html</code>, antes de <code>script.js</code>:</p>
+          <pre>&lt;script src="layouts/layouts002.js"&gt;&lt;/script&gt;</pre>
+        </div>
+
+        <div class="guide-section">
+          <h3>🔀 Criar uma variante de layout</h3>
+          <p>Clique no botão <strong>+</strong> no card do layout desejado. Dentro da janela de variantes, clique em
+            <strong>Nova Variante</strong>, preencha nome, HTML e CSS, e copie o objeto gerado.
+          </p>
+          <p>Cole o objeto dentro do array no arquivo de variantes correspondente em <code>variants/</code>.</p>
+        </div>
+
+        <div class="guide-section">
+          <h3>📄 Arquivo de variantes</h3>
+          <p>O nome do arquivo deve ser o <strong>nome do layout em minúsculo</strong>. Ex: layout
+            <code>Section-58</code> → arquivo <code>variants/section-58.js</code>.
+          </p>
+          <p>Estrutura do arquivo:</p>
+          <pre>// @ts-nocheck
+SenkoLib.registerVariant('section-58', [
+  { nome: 'section-58.1',
+    html: `...`,
+    css:  `...` },
+]);</pre>
+          <p>Após criar o arquivo, adicione no <code>index.html</code> antes de <code>script.js</code>:</p>
+          <pre>&lt;script src="variants/section-58.js"&gt;&lt;/script&gt;</pre>
+        </div>
+
+        <div class="guide-section">
+          <h3>🔍 Busca e visualização</h3>
+          <p>Use a barra de pesquisa para filtrar por nome ou tag. Os botões de visualização abrem um preview completo
+            com o código HTML e CSS do layout ou variante.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">✓ Copiado!</div>
+
+  <script src="senkolib-core.js"></script>
+
+  <!-- ═══════════════════════════════════════════════════
+       ARQUIVOS DE LAYOUTS
+       Para adicionar um novo pacote de layouts:
+         1. Crie /layouts/layoutsXXX.js
+         2. Adicione uma linha <script> abaixo
+         3. O arquivo deve chamar SenkoLib.register([...])
+  ════════════════════════════════════════════════════ -->
+  <script src="layouts/layouts001.js"></script>
+  <!-- <script src="layouts/layouts002.js"></script> -->
+  <!-- <script src="layouts/layouts003.js"></script> -->
+
+  <!-- ═══════════════════════════════════════════════════
+       ARQUIVOS DE VARIANTES
+       Para cada layout que tiver variantes, adicione:
+         <script src="variants/<id-do-layout>.js"></script>
+  ════════════════════════════════════════════════════ -->
+  <script src="variants/section-49.js"></script>
+  <script src="variants/section-51.js"></script>
+
+  <script src="script.js"></script>
+  <script src="senko-github-v2.js"></script>
+  <script src="senko-github-delete.js"></script>
+  <script src="senko-fsa.js"></script>
+</body>
+
+</html>
