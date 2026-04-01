@@ -19,8 +19,8 @@
 ═══════════════════════════════════════════════════════════════════════ */
 
 var GITHUB_CONFIG = {
-  OWNER:  'YgorMartins-webm',
-  REPO:   'SenkoLib',
+  OWNER:  'YgorFQ',
+  REPO:   'projetoTestes',
   BRANCH: 'main'
 };
 
