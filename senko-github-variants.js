@@ -198,7 +198,7 @@ function githubCreateVariant(parentId, variantNome, objectCode) {
     return githubPutFile(
       'variants/' + parentId.toLowerCase() + '.js',
       newFileContent,
-      null, /* sem sha = arquivo novo */
+      null,
       '[SenkoLib] create variants file: ' + parentId
     ).then(function () {
       var html = document.getElementById('newVarHtml') ? document.getElementById('newVarHtml').value : '';
@@ -582,7 +582,7 @@ function ghvInjectStyles() {
    usando a nova lógica de criação (com suporte a arquivo inexistente).
 ═══════════════════════════════════════════════════════════════════════ */
 function ghvInjectNewVariantButton() {
-  /* Evita recriar se já existe */
+  /* Evita duplicata caso senko-github-v2 já tenha criado */
   if (document.getElementById('ghvSaveVariantBtn')) return;
 
   var anchor = document.getElementById('newVarCopyBtn');
