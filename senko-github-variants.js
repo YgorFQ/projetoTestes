@@ -582,11 +582,6 @@ function ghvInjectStyles() {
    usando a nova lógica de criação (com suporte a arquivo inexistente).
 ═══════════════════════════════════════════════════════════════════════ */
 function ghvInjectNewVariantButton() {
-  /* Remove o botão antigo do senko-github-v2 (que usava githubSaveVariant
-     sem suporte a arquivo inexistente) para evitar duplicata */
-  var oldBtn = document.getElementById('ghSaveVariantBtn');
-  if (oldBtn) oldBtn.parentNode.removeChild(oldBtn);
-
   /* Evita recriar se já existe */
   if (document.getElementById('ghvSaveVariantBtn')) return;
 

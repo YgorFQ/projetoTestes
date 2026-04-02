@@ -1088,64 +1088,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ─── Modal nova variante — botão GitHub ──────────── */
-  var newVarCopyBtn = document.getElementById('newVarCopyBtn');
-  if (newVarCopyBtn && !document.getElementById('ghSaveVariantBtn')) {
-    var ghVarBtn = document.createElement('button');
-    ghVarBtn.id        = 'ghSaveVariantBtn';
-    ghVarBtn.className = 'btn-github';
-    ghVarBtn.innerHTML = GH_ICON + ' GitHub';
-    ghVarBtn.title     = 'Salvar variante diretamente no repositório GitHub';
-    newVarCopyBtn.parentNode.insertBefore(ghVarBtn, newVarCopyBtn.nextSibling);
-
-    ghVarBtn.addEventListener('click', function () {
-      var nome = document.getElementById('newVarName').value.trim().toLowerCase();
-      if (nome.length < 3) {
-        alert('Preencha o nome da variante primeiro.');
-        return;
-      }
-      if (!state.currentForVariant) {
-        alert('Nenhum layout pai selecionado.');
-        return;
-      }
-
-      var html     = document.getElementById('newVarHtml').value;
-      var css      = document.getElementById('newVarCss').value;
-      var safeHtml = html.replace(/`/g, '\\`');
-      var safeCss  = css.replace(/`/g, '\\`');
-      var parentId = state.currentForVariant.id;
-
-      var objectCode =
-        "  { nome: '" + nome + "',\n" +
-        '    html: `' + safeHtml + '`,\n' +
-        '    css: `'  + safeCss  + '` }';
-
-      ghVarBtn.textContent = 'Salvando…';
-      ghVarBtn.disabled    = true;
-
-      githubCreateVariant(parentId, nome, objectCode).then(function (result) {
-        if (result) {
-          ghVarBtn.innerHTML = GH_ICON + ' Salvo!';
-          setTimeout(function () {
-            if (typeof closeNewVariantModal === 'function') closeNewVariantModal();
-            if (state.currentForVariant) {
-              var updated = SenkoLib.getVariants(state.currentForVariant.id);
-              if (typeof renderVariantBlocks === 'function') renderVariantBlocks(updated);
-              var countEl = document.getElementById('variantsCount');
-              if (countEl) countEl.textContent = updated.length + (updated.length === 1 ? ' variação' : ' variações');
-            }
-            ghVarBtn.innerHTML = GH_ICON + ' GitHub';
-            ghVarBtn.disabled  = false;
-          }, 1200);
-        } else {
-          ghVarBtn.innerHTML = GH_ICON + ' GitHub';
-          ghVarBtn.disabled  = false;
-        }
-      });
-    });
-  }
-
   /* ─── Modal criação — botão GitHub (arquivo detectado automaticamente) ── */
+  /* NOTA: o botão GitHub do modal de nova variante é injetado pelo
+     senko-github-variants.js (ghvInjectNewVariantButton), que usa
+     githubCreateVariant com suporte a criar arquivo novo. */
   var copyGeneratedBtn = document.getElementById('copyGeneratedBtn');
   if (copyGeneratedBtn && !document.getElementById('ghSaveNewLayoutBtn')) {
 
