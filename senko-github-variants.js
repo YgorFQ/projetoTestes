@@ -187,16 +187,21 @@ function githubCreateVariant(parentId, variantNome, objectCode) {
         ghSetStatus('✓ Variante salva em ' + fileInfo.path, 'ok');
         ghUnlockSave();
         return fileInfo.path;
+      }).catch(function (e) {
+        ghSetStatus('Erro ao salvar: ' + e.message, 'error');
+        ghUnlockSave();
+        throw e; /* repassa para o .catch externo mostrar o alert */
       });
     }
 
     /* ── Arquivo não existe: cria do zero ── */
     var newFileContent = ghvBuildNewVariantFile(parentId, objectCode);
+    var newFilePath    = 'variants/' + parentId.toLowerCase() + '.js';
 
     ghSetStatus('Criando arquivo de variantes…', 'saving');
 
     return githubPutFile(
-      'variants/' + parentId.toLowerCase() + '.js',
+      newFilePath,
       newFileContent,
       null,
       '[SenkoLib] create variants file: ' + parentId
@@ -204,14 +209,20 @@ function githubCreateVariant(parentId, variantNome, objectCode) {
       var html = document.getElementById('newVarHtml') ? document.getElementById('newVarHtml').value : '';
       var css  = document.getElementById('newVarCss')  ? document.getElementById('newVarCss').value  : '';
       SenkoLib.registerVariant(parentId, [{ nome: variantNome, html: html, css: css }]);
-      ghSetStatus('✓ Arquivo criado: variants/' + parentId.toLowerCase() + '.js', 'ok');
+      ghSetStatus('✓ Arquivo criado: ' + newFilePath, 'ok');
       ghUnlockSave();
-      return 'variants/' + parentId.toLowerCase() + '.js';
+      return newFilePath;
+    }).catch(function (e) {
+      ghSetStatus('Erro ao criar arquivo: ' + e.message, 'error');
+      ghUnlockSave();
+      throw e; /* repassa para o .catch externo mostrar o alert */
     });
 
   }).catch(function (e) {
     console.error('[senko-github-variants] Erro ao criar variante:', e);
     ghSetStatus('Erro: ' + e.message, 'error');
+    /* ghUnlockSave() já foi chamado nos .catch internos,
+       mas chamamos de novo por segurança (é idempotente) */
     ghUnlockSave();
     alert('Erro ao salvar variante no GitHub:\n' + e.message);
     return false;
@@ -582,8 +593,9 @@ function ghvInjectStyles() {
    usando a nova lógica de criação (com suporte a arquivo inexistente).
 ═══════════════════════════════════════════════════════════════════════ */
 function ghvInjectNewVariantButton() {
-  /* Evita duplicata caso senko-github-v2 já tenha criado */
+  /* Evita duplicata — tanto deste módulo quanto do senko-github-v2 */
   if (document.getElementById('ghvSaveVariantBtn')) return;
+  if (document.getElementById('ghSaveVariantBtn')) return;
 
   var anchor = document.getElementById('newVarCopyBtn');
   if (!anchor) return;
@@ -647,6 +659,9 @@ function ghvInjectNewVariantButton() {
         btn.innerHTML = GH_ICON + ' GitHub';
         btn.disabled  = false;
       }
+    }).catch(function () {
+      btn.innerHTML = GH_ICON + ' GitHub';
+      btn.disabled  = false;
     });
   });
 }

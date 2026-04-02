@@ -1029,6 +1029,9 @@ document.addEventListener('DOMContentLoaded', function () {
           ghEditBtn.innerHTML = GH_ICON + ' GitHub';
           ghEditBtn.disabled  = false;
         }
+      }).catch(function () {
+        ghEditBtn.innerHTML = GH_ICON + ' GitHub';
+        ghEditBtn.disabled  = false;
       });
     });
   }
@@ -1044,8 +1047,12 @@ document.addEventListener('DOMContentLoaded', function () {
     newVarCopyBtn.parentNode.insertBefore(ghVarBtn, newVarCopyBtn.nextSibling);
 
     ghVarBtn.addEventListener('click', function () {
+      if (typeof githubCreateVariant !== 'function') {
+        alert('Módulo senko-github-variants.js não está carregado.\nVerifique se o arquivo está incluído no index.html após o senko-github-v2.js.');
+        return;
+      }
       var nome = document.getElementById('newVarName').value.trim().toLowerCase();
-      if (nome.length < 3) {
+      if (nome.length < 2) {
         alert('Preencha o nome da variante primeiro.');
         return;
       }
@@ -1086,6 +1093,9 @@ document.addEventListener('DOMContentLoaded', function () {
           ghVarBtn.innerHTML = GH_ICON + ' GitHub';
           ghVarBtn.disabled  = false;
         }
+      }).catch(function () {
+        ghVarBtn.innerHTML = GH_ICON + ' GitHub';
+        ghVarBtn.disabled  = false;
       });
     });
   }
@@ -1179,6 +1189,9 @@ document.addEventListener('DOMContentLoaded', function () {
           ghNewBtn.innerHTML = GH_ICON + ' GitHub';
           ghNewBtn.disabled  = false;
         }
+      }).catch(function () {
+        ghNewBtn.innerHTML = GH_ICON + ' GitHub';
+        ghNewBtn.disabled  = false;
       });
     });
   }
