@@ -133,7 +133,9 @@ function ghvGetVariantFile(parentId) {
    CORE: Criar ou adicionar variante no GitHub
 ═══════════════════════════════════════════════════════════════════════ */
 function githubCreateVariant(parentId, variantNome, objectCode) {
+  if (!ghLockSave()) return Promise.resolve(false);
   if (!ghEnsureToken()) {
+    ghUnlockSave();
     ghSetStatus('Token não configurado', 'error');
     return Promise.resolve(false);
   }
@@ -151,6 +153,7 @@ function githubCreateVariant(parentId, variantNome, objectCode) {
 
       if (content.toLowerCase().indexOf(markerCheck) !== -1) {
         ghSetStatus('Nome duplicado', 'error');
+        ghUnlockSave();
         alert('Já existe uma variante com o nome "' + variantNome + '" em ' + fileInfo.path + '.\nEscolha outro nome.');
         return false;
       }
@@ -159,6 +162,7 @@ function githubCreateVariant(parentId, variantNome, objectCode) {
       var closePos = content.lastIndexOf(']);');
       if (closePos === -1) {
         ghSetStatus('Estrutura inválida', 'error');
+        ghUnlockSave();
         alert('Não foi possível encontrar o fechamento do array em ' + fileInfo.path + '.\nVerifique se o arquivo segue o padrão SenkoLib.registerVariant([...]);');
         return false;
       }
@@ -181,6 +185,7 @@ function githubCreateVariant(parentId, variantNome, objectCode) {
         var css  = document.getElementById('newVarCss')  ? document.getElementById('newVarCss').value  : '';
         SenkoLib.registerVariant(parentId, [{ nome: variantNome, html: html, css: css }]);
         ghSetStatus('✓ Variante salva em ' + fileInfo.path, 'ok');
+        ghUnlockSave();
         return fileInfo.path;
       });
     }
@@ -200,12 +205,14 @@ function githubCreateVariant(parentId, variantNome, objectCode) {
       var css  = document.getElementById('newVarCss')  ? document.getElementById('newVarCss').value  : '';
       SenkoLib.registerVariant(parentId, [{ nome: variantNome, html: html, css: css }]);
       ghSetStatus('✓ Arquivo criado: variants/' + parentId.toLowerCase() + '.js', 'ok');
+      ghUnlockSave();
       return 'variants/' + parentId.toLowerCase() + '.js';
     });
 
   }).catch(function (e) {
     console.error('[senko-github-variants] Erro ao criar variante:', e);
     ghSetStatus('Erro: ' + e.message, 'error');
+    ghUnlockSave();
     alert('Erro ao salvar variante no GitHub:\n' + e.message);
     return false;
   });
@@ -575,7 +582,12 @@ function ghvInjectStyles() {
    usando a nova lógica de criação (com suporte a arquivo inexistente).
 ═══════════════════════════════════════════════════════════════════════ */
 function ghvInjectNewVariantButton() {
-  /* Evita duplicata caso senko-github-v2 já tenha criado */
+  /* Remove o botão antigo do senko-github-v2 (que usava githubSaveVariant
+     sem suporte a arquivo inexistente) para evitar duplicata */
+  var oldBtn = document.getElementById('ghSaveVariantBtn');
+  if (oldBtn) oldBtn.parentNode.removeChild(oldBtn);
+
+  /* Evita recriar se já existe */
   if (document.getElementById('ghvSaveVariantBtn')) return;
 
   var anchor = document.getElementById('newVarCopyBtn');

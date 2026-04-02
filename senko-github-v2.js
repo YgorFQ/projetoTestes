@@ -433,10 +433,14 @@ function githubSaveLayout(layoutId, objectCode) {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   CORE: Salvar novo layout em arquivo existente
+   CORE: Salvar novo layout — detecta arquivo destino automaticamente
+   Estratégia:
+     1. Lista layouts/*.js
+     2. Se encontrar algum, usa o primeiro (layouts001.js tem prioridade)
+     3. Se a pasta não existir ou estiver vazia, cria layouts/layouts001.js
 ═══════════════════════════════════════════════════════════════════════ */
 
-function githubSaveNewLayout(fileName, objectCode, layoutId) {
+function githubSaveNewLayout(objectCode, layoutId) {
   if (!ghLockSave()) return Promise.resolve(false);
   if (!ghEnsureToken()) {
     ghUnlockSave();
@@ -444,56 +448,106 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
     return Promise.resolve(false);
   }
 
-  ghSetStatus('Lendo arquivo…', 'saving');
+  ghSetStatus('Verificando arquivos de layouts…', 'saving');
 
-  return githubGetFile('layouts/' + fileName).then(function (data) {
-    var content = data.content;
-    var sha     = data.sha;
+  /* ── Tenta listar a pasta layouts/ ── */
+  return githubListDir('layouts').then(function (entries) {
+    var jsFiles = entries
+      .filter(function (e) { return e.type === 'file' && e.name.endsWith('.js'); })
+      .sort(function (a, b) { return a.name.localeCompare(b.name); });
 
-    var marker = '/*@@@@Senko - ' + layoutId.toLowerCase() + ' */';
-    if (content.indexOf(marker) !== -1) {
-      ghSetStatus('ID já existe', 'error');
-      alert('O ID "' + layoutId + '" já existe em ' + fileName + '.\nUse o botão de editar no card para modificar layouts existentes.');
-      return false;
+    if (jsFiles.length > 0) {
+      /* Usa o primeiro arquivo disponível */
+      return { fileName: jsFiles[0].name, needsCreate: false };
+    }
+    /* Pasta existe mas não tem .js — cria layouts001.js */
+    return { fileName: 'layouts001.js', needsCreate: true };
+
+  }).catch(function (err) {
+    /* Pasta layouts/ não existe (404) — cria layouts001.js */
+    if (err.message && err.message.indexOf('404') !== -1) {
+      return { fileName: 'layouts001.js', needsCreate: true };
+    }
+    throw err;
+
+  }).then(function (info) {
+    var fileName   = info.fileName;
+    var filePath   = 'layouts/' + fileName;
+    var marker     = '/*@@@@Senko - ' + layoutId.toLowerCase() + ' */';
+
+    /* ── Arquivo precisa ser criado do zero ── */
+    if (info.needsCreate) {
+      ghSetStatus('Criando ' + filePath + '…', 'saving');
+
+      var freshContent =
+        '// @ts-nocheck\n' +
+        'SenkoLib.register([\n\n' +
+        objectCode + '\n\n' +
+        ']);\n';
+
+      return githubPutFile(filePath, freshContent, null,
+        '[SenkoLib] create layouts file & add: ' + layoutId
+      ).then(function () {
+        return { fileName: fileName, filePath: filePath };
+      });
     }
 
-    var closePos = content.lastIndexOf(']);');
-    if (closePos === -1) {
-      ghSetStatus('Estrutura inválida', 'error');
-      alert('Não foi possível encontrar o fechamento do array em ' + fileName + '.\nVerifique se o arquivo segue o padrão SenkoLib.register([...]);');
-      return false;
-    }
+    /* ── Arquivo já existe: lê, valida e insere ── */
+    ghSetStatus('Lendo ' + filePath + '…', 'saving');
 
-    var newContent =
-      content.slice(0, closePos) +
-      '\n' + objectCode + '\n\n' +
-      content.slice(closePos);
+    return githubGetFile(filePath).then(function (data) {
+      var content = data.content;
+      var sha     = data.sha;
 
-    ghSetStatus('Salvando no GitHub…', 'saving');
+      if (content.indexOf(marker) !== -1) {
+        ghSetStatus('ID já existe', 'error');
+        ghUnlockSave();
+        alert('O ID "' + layoutId + '" já existe em ' + fileName + '.\nUse o botão de editar no card para modificar layouts existentes.');
+        return null;
+      }
 
-    return githubPutFile(
-      'layouts/' + fileName,
-      newContent,
-      sha,
-      '[SenkoLib] add layout: ' + layoutId
-    ).then(function () {
-      var addHtml = document.getElementById('addHtml');
-      var addCss  = document.getElementById('addCss');
-      var addName = document.getElementById('addName');
-      var addTags = document.getElementById('addTags');
-      var html = addHtml ? addHtml.value : '';
-      var css  = addCss  ? addCss.value  : '';
-      var name = addName ? addName.value.trim() : layoutId;
-      var tags = addTags
-        ? addTags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean)
-        : [];
+      var closePos = content.lastIndexOf(']);');
+      if (closePos === -1) {
+        ghSetStatus('Estrutura inválida', 'error');
+        ghUnlockSave();
+        alert('Não foi possível encontrar o fechamento do array em ' + fileName + '.\nVerifique se o arquivo segue o padrão SenkoLib.register([...]);');
+        return null;
+      }
 
-      SenkoLib.register([{ id: layoutId, name: name, tags: tags, html: html, css: css }]);
-      ghSetStatus('✓ Salvo em layouts/' + fileName, 'ok');
-      ghUnlockSave();
-      renderGrid();
-      return fileName;
+      var newContent =
+        content.slice(0, closePos) +
+        '\n' + objectCode + '\n\n' +
+        content.slice(closePos);
+
+      ghSetStatus('Salvando no GitHub…', 'saving');
+
+      return githubPutFile(filePath, newContent, sha,
+        '[SenkoLib] add layout: ' + layoutId
+      ).then(function () {
+        return { fileName: fileName, filePath: filePath };
+      });
     });
+
+  }).then(function (result) {
+    if (!result) return false; /* erro já tratado acima */
+
+    var addHtml = document.getElementById('addHtml');
+    var addCss  = document.getElementById('addCss');
+    var addName = document.getElementById('addName');
+    var addTags = document.getElementById('addTags');
+    var html = addHtml ? addHtml.value : '';
+    var css  = addCss  ? addCss.value  : '';
+    var name = addName ? addName.value.trim() : layoutId;
+    var tags = addTags
+      ? addTags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean)
+      : [];
+
+    SenkoLib.register([{ id: layoutId, name: name, tags: tags, html: html, css: css }]);
+    ghSetStatus('✓ Salvo em ' + result.filePath, 'ok');
+    ghUnlockSave();
+    renderGrid();
+    return result.fileName;
+
   }).catch(function (e) {
     console.error('[senko-github] Erro ao salvar novo layout:', e);
     ghSetStatus('Erro: ' + e.message, 'error');
@@ -1057,7 +1111,7 @@ document.addEventListener('DOMContentLoaded', function () {
       ghVarBtn.textContent = 'Salvando…';
       ghVarBtn.disabled    = true;
 
-      githubSaveVariant(parentId, nome, objectCode).then(function (result) {
+      githubCreateVariant(parentId, nome, objectCode).then(function (result) {
         if (result) {
           ghVarBtn.innerHTML = GH_ICON + ' Salvo!';
           setTimeout(function () {
@@ -1079,84 +1133,30 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  /* ─── Modal criação — select + botão GitHub ────────── */
+  /* ─── Modal criação — botão GitHub (arquivo detectado automaticamente) ── */
   var copyGeneratedBtn = document.getElementById('copyGeneratedBtn');
-  if (copyGeneratedBtn && !document.getElementById('ghNewLayoutGroup')) {
-
-    var ghSelect = document.createElement('select');
-    ghSelect.id        = 'ghTargetFile';
-    ghSelect.className = 'gh-file-select';
-    ghSelect.disabled  = true;
-    ghSelect.innerHTML = '<option value="">-- selecione o arquivo --</option>';
+  if (copyGeneratedBtn && !document.getElementById('ghSaveNewLayoutBtn')) {
 
     var ghNewBtn = document.createElement('button');
     ghNewBtn.id        = 'ghSaveNewLayoutBtn';
     ghNewBtn.className = 'btn-github';
     ghNewBtn.innerHTML = GH_ICON + ' GitHub';
-    ghNewBtn.title     = 'Salvar novo layout direto no repositório GitHub';
-
-    var ghGroup = document.createElement('div');
-    ghGroup.id        = 'ghNewLayoutGroup';
-    ghGroup.className = 'gh-auto-group';
-    ghGroup.appendChild(ghSelect);
-    ghGroup.appendChild(ghNewBtn);
-    copyGeneratedBtn.parentNode.insertBefore(ghGroup, copyGeneratedBtn.nextSibling);
-
-    function ghPopulateFileSelect() {
-      if (!ghGetToken()) return;
-
-      ghSelect.innerHTML = '<option value="">Carregando…</option>';
-      ghSelect.disabled  = true;
-
-      githubListDir('layouts').then(function (entries) {
-        var jsFiles = entries
-          .filter(function (e) { return e.type === 'file' && e.name.endsWith('.js'); })
-          .map(function (e) { return e.name; })
-          .sort();
-
-        ghSelect.innerHTML = '<option value="">-- selecione o arquivo --</option>';
-        jsFiles.forEach(function (name) {
-          var opt = document.createElement('option');
-          opt.value       = name;
-          opt.textContent = 'layouts/' + name;
-          ghSelect.appendChild(opt);
-        });
-        ghSelect.disabled = false;
-      }).catch(function () {
-        ghSelect.innerHTML = '<option value="">Erro ao listar</option>';
-        ghSelect.disabled  = true;
-      });
-    }
-
-    var openAddBtn = document.getElementById('openAddModal');
-    if (openAddBtn) {
-      openAddBtn.addEventListener('click', function () {
-        setTimeout(ghPopulateFileSelect, 60);
-      });
-    }
-
-    if (ghGetToken()) {
-      ghPopulateFileSelect();
-    }
+    ghNewBtn.title     = 'Salvar novo layout direto no repositório GitHub (detecta ou cria o arquivo automaticamente)';
+    copyGeneratedBtn.parentNode.insertBefore(ghNewBtn, copyGeneratedBtn.nextSibling);
 
     ghNewBtn.addEventListener('click', function () {
-      var code     = document.getElementById('generatedCode').textContent;
-      var id       = document.getElementById('addId').value.trim().toLowerCase();
-      var fileName = ghSelect.value;
+      var code = document.getElementById('generatedCode').textContent;
+      var id   = document.getElementById('addId').value.trim().toLowerCase();
 
       if (!id || code.indexOf('//') === 0) {
         alert('Preencha os campos primeiro.');
-        return;
-      }
-      if (!fileName) {
-        alert('Selecione o arquivo de destino no dropdown.');
         return;
       }
 
       ghNewBtn.textContent = 'Salvando…';
       ghNewBtn.disabled    = true;
 
-      githubSaveNewLayout(fileName, code, id).then(function (result) {
+      githubSaveNewLayout(code, id).then(function (result) {
         if (result) {
           ghNewBtn.innerHTML = GH_ICON + ' Salvo!';
           setTimeout(function () {
