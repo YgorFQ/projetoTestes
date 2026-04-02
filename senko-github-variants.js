@@ -733,6 +733,7 @@ function ghvInjectDeleteButtonsInVariantCards() {
    INICIALIZAÇÃO
 ═══════════════════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', function () {
+  if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;
   ghvInjectStyles();
   ghvCreateDeleteModal();
   ghvInjectNewVariantButton();

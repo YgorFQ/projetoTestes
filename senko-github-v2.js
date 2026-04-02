@@ -650,108 +650,13 @@ var GH_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="1
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  /* ─── Aviso de ambiente não-GitHub Pages ─────────────
-     Não exibido automaticamente — só chamado quando o
-     usuário clica num botão GitHub fora do GitHub Pages.
+  /* ─── Só executa no GitHub Pages ─────────────────────
+     Em qualquer outro ambiente (localhost, Live Server,
+     servidor externo, file://) este módulo inteiro fica
+     inativo — nenhum botão, engrenagem ou elemento GitHub
+     é criado na interface.
   ──────────────────────────────────────────────────── */
-  var _isGHPages = !!window.location.hostname.match(/^[^.]+\.github\.io$/i);
-
-  var _ghLocalBannerStyleInjected = false;
-  function ghShowLocalWarning() {
-    if (_isGHPages) return; /* está no lugar certo, não avisa */
-    if (document.getElementById('ghLocalBanner')) return; /* já visível */
-
-    if (!_ghLocalBannerStyleInjected) {
-      var bannerStyle = document.createElement('style');
-      bannerStyle.textContent = [
-        '#ghLocalBanner {',
-        '  position: fixed;',
-        '  bottom: 1.25rem;',
-        '  left: 50%;',
-        '  transform: translateX(-50%);',
-        '  z-index: 99999;',
-        '  display: flex;',
-        '  align-items: center;',
-        '  gap: .75rem;',
-        '  padding: .7rem 1rem;',
-        '  background: #1c1917;',
-        '  border: 1.5px solid #44403c;',
-        '  border-radius: 12px;',
-        '  box-shadow: 0 8px 32px rgba(0,0,0,.45);',
-        '  font-family: var(--font-body, sans-serif);',
-        '  font-size: .82rem;',
-        '  color: #d6d3d1;',
-        '  white-space: nowrap;',
-        '  animation: ghBannerIn .3s ease;',
-        '}',
-        '@keyframes ghBannerIn {',
-        '  from { opacity: 0; transform: translateX(-50%) translateY(12px); }',
-        '  to   { opacity: 1; transform: translateX(-50%) translateY(0); }',
-        '}',
-        '#ghLocalBanner svg { flex-shrink: 0; color: #f59e0b; }',
-        '#ghLocalBanner strong { color: #fafaf9; }',
-        '#ghLocalBanner a {',
-        '  color: #fb923c;',
-        '  font-weight: 700;',
-        '  text-decoration: none;',
-        '  border-bottom: 1px solid #fb923c55;',
-        '  transition: border-color .15s;',
-        '}',
-        '#ghLocalBanner a:hover { border-color: #fb923c; }',
-        '#ghLocalBannerClose {',
-        '  background: none;',
-        '  border: none;',
-        '  color: #78716c;',
-        '  cursor: pointer;',
-        '  font-size: .9rem;',
-        '  line-height: 1;',
-        '  padding: 0 0 0 .25rem;',
-        '  flex-shrink: 0;',
-        '  transition: color .15s;',
-        '}',
-        '#ghLocalBannerClose:hover { color: #d6d3d1; }',
-      ].join('\n');
-      document.head.appendChild(bannerStyle);
-      _ghLocalBannerStyleInjected = true;
-    }
-
-    var repoUrl = (GITHUB_CONFIG.OWNER && GITHUB_CONFIG.REPO)
-      ? 'https://' + GITHUB_CONFIG.OWNER + '.github.io/' + GITHUB_CONFIG.REPO
-      : null;
-
-    var banner = document.createElement('div');
-    banner.id = 'ghLocalBanner';
-    banner.innerHTML =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">' +
-        '<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>' +
-        '<line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>' +
-      '</svg>' +
-      '<span>' +
-        '<strong>Salvar via GitHub só funciona no GitHub Pages.</strong> ' +
-        (repoUrl
-          ? 'Acesse pelo <a href="' + repoUrl + '" target="_blank" rel="noopener">GitHub Pages</a>.'
-          : 'Configure o repositório pelo botão de engrenagem.') +
-      '</span>' +
-      '<button id="ghLocalBannerClose" title="Fechar">✕</button>';
-
-    document.body.appendChild(banner);
-
-    document.getElementById('ghLocalBannerClose').addEventListener('click', function () {
-      banner.style.animation  = 'none';
-      banner.style.opacity    = '0';
-      banner.style.transform  = 'translateX(-50%) translateY(12px)';
-      banner.style.transition = 'opacity .2s, transform .2s';
-      setTimeout(function () { banner.remove(); }, 200);
-    });
-
-    /* Remove automaticamente após 6 segundos */
-    setTimeout(function () {
-      if (document.getElementById('ghLocalBanner')) {
-        document.getElementById('ghLocalBannerClose').click();
-      }
-    }, 6000);
-  }
-
+  if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;
 
   var style = document.createElement('style');
   style.textContent = [
@@ -1116,7 +1021,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      ghShowLocalWarning();
       ghEditBtn.textContent = 'Salvando…';
       ghEditBtn.disabled    = true;
 
@@ -1175,7 +1079,6 @@ document.addEventListener('DOMContentLoaded', function () {
         '    html: `' + safeHtml + '`,\n' +
         '    css: `'  + safeCss  + '` }';
 
-      ghShowLocalWarning();
       ghVarBtn.textContent = 'Salvando…';
       ghVarBtn.disabled    = true;
 
@@ -1278,7 +1181,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      ghShowLocalWarning();
       ghNewBtn.textContent = 'Salvando…';
       ghNewBtn.disabled    = true;
 
