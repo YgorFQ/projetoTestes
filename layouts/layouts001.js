@@ -2770,69 +2770,6 @@ SenkoLib.register([
 
 
 
-/*@@@@Senko - awdaw55 3t */
-  /* variantes: variants/awdaw55 3t.js */
-  {
-    id: 'awdaw55 3t',
-    name: 'Awd5',
-    tags: ['asdawd'],
-    html: `<section class="section-5-tabela-nutricional-" aria-label="Tabela Nutricional do Produto">
-    <figure class="section-5-tabela-nutricional-__figura">
-
-        <a href="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/castelo/4900992-tabela.jpg"
-            target="_blank" rel="noopener noreferrer" title="Abrir tabela nutricional completa em tamanho original"
-            class="section-5-tabela-nutricional-__link">
-            <img src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/TABELA-BANNER.jpg"
-                class="section-5-tabela-nutricional-__imagem" width="1200" height="250" loading="lazy" decoding="async"
-                fetchpriority="low"
-                alt="Tabela nutricional do produto: informações sobre calorias, carboidratos, proteínas, gorduras e demais nutrientes por porção.">
-        </a>
-        <figcaption class="section-5-tabela-nutricional-__legenda">
-            Tabela Nutricional — clique para ampliar
-        </figcaption>
-    </figure>
-</section>`,
-    css: `<style>
-    .section-5-tabela-nutricional- {
-        width: 100%;
-        margin: 0 auto;
-    }
-
-    .section-5-tabela-nutricional-__figura {
-        margin: 0;
-    }
-
-    .section-5-tabela-nutricional-__link {
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-    }
-
-    .section-5-tabela-nutricional-__imagem {
-        border-radius: 0.25rem;
-        height: auto;
-        object-fit: cover;
-        width: 100%;
-    }
-
-    .section-5-tabela-nutricional-__legenda {
-        font-family: Arial, sans-serif;
-        font-size: 0.75rem;
-        color: #666;
-        margin-top: 0.25rem;
-        text-align: center;
-    }
-
-    @media (min-width: 820px) {
-
-        .section-5-tabela-nutricional-,
-        .section-5-tabela-nutricional-__imagem {
-            height: 250px;
-        }
-    }
-</style>`
-  },
-
 
 
 ]);
