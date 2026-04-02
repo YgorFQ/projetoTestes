@@ -2774,4 +2774,15 @@ SenkoLib.register([
 
 
 
+
+/*@@@@Senko - awd1 */
+  /* variantes: variants/awd1.js */
+  {
+    id: 'awd1',
+    name: 'awd1',
+    tags: ['awd1'],
+    html: ``,
+    css: ``
+  },
+
 ]);
