@@ -140,6 +140,18 @@ function githubCreateVariant(parentId, variantNome, objectCode) {
     return Promise.resolve(false);
   }
 
+  /* Valida parentId — não pode ter espaços ou caracteres inválidos para nome de arquivo */
+  if (!/^[a-z0-9-]+$/.test(parentId.toLowerCase())) {
+    ghUnlockSave();
+    ghSetStatus('ID inválido', 'error');
+    alert(
+      'O ID do layout pai ("' + parentId + '") contém caracteres inválidos.\n\n' +
+      'IDs devem usar apenas letras minúsculas, números e hífen.\n' +
+      'Ex: "section-58" é válido, "section 58" não é.'
+    );
+    return Promise.resolve(false);
+  }
+
   var nomeLower = variantNome.toLowerCase();
   ghSetStatus('Verificando arquivo de variantes…', 'saving');
 

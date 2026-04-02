@@ -368,8 +368,21 @@ function updateGeneratedCode() {
   var hintEl = document.getElementById('hintVariantPath');
   if (hintEl) hintEl.textContent = id || 'id';
 
+  /* Valida id: só letras, números e hífen — sem espaços ou caracteres especiais */
+  var idEl    = document.getElementById('addId');
+  var idValid = /^[a-z0-9-]+$/.test(id);
+  var idWarn  = document.getElementById('addIdWarn');
+  if (!idWarn && idEl) {
+    idWarn = document.createElement('span');
+    idWarn.id = 'addIdWarn';
+    idWarn.style.cssText = 'color:#ef4444;font-size:.75rem;font-weight:700;display:none;';
+    idWarn.textContent = '\u26a0 Use apenas letras minúsculas, números e hífen (sem espaços)';
+    idEl.parentNode.insertBefore(idWarn, idEl.nextSibling);
+  }
+  if (idWarn) idWarn.style.display = (id.length > 0 && !idValid) ? 'block' : 'none';
+
   var copyBtn = document.getElementById('copyGeneratedBtn');
-  var allFilled = id.length >= 3 && name.length >= 3 && html.length >= 3;
+  var allFilled = id.length >= 3 && idValid && name.length >= 3 && html.length >= 3;
   if (copyBtn) {
     if (allFilled) {
       copyBtn.classList.remove('btn-blocked');
