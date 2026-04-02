@@ -2772,4 +2772,170 @@ SenkoLib.register([
 
 
 
+
+/*@@@@Senko - awd2 */
+  /* variantes: variants/awd2.js */
+  {
+    id: 'awd2',
+    name: 'awd2',
+    tags: ['awd2'],
+    html: `<div class="wrapper-section-60">
+    <div class="text-col-section-60">
+        <img src="https://cdn-icons-png.flaticon.com/512/894/894565.png" class="brand-icon-section-60">
+        <h2 class="title-section-60">A Lenda dos Sete Mares</h2>
+        <p class="desc-section-60">
+            Capitan Cortez não é apenas um rum, é um convite à descoberta. Inspirado nos diários de bordo dos
+            grandes navegadores, nossa receita busca capturar a glória da tradição em cada garrafa. Uma homenagem
+            àqueles que ousam ir além do horizonte.
+        </p>
+        <a href="#" class="cta-link-section-60">
+            Conheça Nossa História
+            <span class="arrow-icon-section-60">&rarr;</span>
+        </a>
+    </div>
+    <div class="image-col-section-60">
+        <img src=""
+            class="bg-image-section-60" alt="Capitan Cortez Lifestyle">
+    </div>
+</div>`,
+    css: `        .wrapper-section-60 {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      background-color: #f8f8f8;
+      min-height: 28rem;
+      /* ~450px */
+    }
+
+    .text-col-section-60 {
+      flex: 1;
+      min-width: 18.75rem;
+      padding: 2.5rem 1.25rem;
+      /* Padding Mobile */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .image-col-section-60 {
+      flex: 1;
+      min-width: 18.75rem;
+      position: relative;
+    }
+
+    .bg-image-section-60 {
+      width: 95%;
+      height: 95%;
+      margin: 0.5rem;
+      border-radius: 15px;
+      object-fit: cover;
+      display: block;
+      min-height: 18.75rem;
+      /* Mobile Height */
+    }
+
+    .brand-icon-section-60 {
+      width: 3.75rem;
+      /* 60px */
+      height: auto;
+      margin-bottom: 1.5rem;
+      opacity: 0.8;
+    }
+
+    .title-section-60 {
+      color: #1a1a1a;
+      font-weight: 400;
+      letter-spacing: 0.125rem;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      line-height: 1.3;
+
+      /* Mobile Base */
+      font-size: 1.25rem;
+      /* ~20px */
+    }
+
+    .desc-section-60 {
+      color: #555;
+      line-height: 1.8;
+      max-width: 25rem;
+
+      /* Mobile Base */
+      font-size: 0.875rem;
+      /* ~14px */
+    }
+
+    .cta-link-section-60 {
+      text-decoration: none;
+      color: #1a1a1a;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.0625rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.3s;
+
+      /* Mobile Base */
+      font-size: 0.75rem;
+      /* ~12px */
+    }
+
+    .arrow-icon-section-60 {
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    /* Responsividade Exclusiva da Sessão 60 */
+    @media (min-width: 768px) {
+      .text-col-section-60 {
+        padding: 3.75rem 2.5rem;
+        /* Mais espaçamento no Desktop */
+      }
+
+      .title-section-60 {
+        font-size: 1.5rem;
+        /* ~24px Desktop */
+      }
+
+      .desc-section-60 {
+        font-size: 1rem;
+        /* 16px Desktop */
+      }
+
+      .cta-link-section-60 {
+        font-size: 0.875rem;
+        /* ~14px Desktop */
+      }
+
+      .reverse-desktop-60 {
+        flex-direction: row-reverse;
+      }
+
+    }
+
+    @media (max-width: 720px) {
+      .wrapper-section-60 {
+        flex-direction: column-reverse;
+      }
+
+      .reverse-mobile-60 {
+        flex-direction: column;
+      }
+
+      .bg-image-section-60 {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        min-height: 18.75rem;
+        max-width: 95%;
+        margin: 0.6rem auto;
+        border-radius: 10px;
+      }
+    }`
+  },
+
 ]);
