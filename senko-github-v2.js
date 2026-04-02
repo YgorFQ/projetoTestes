@@ -97,22 +97,7 @@ function ghEnsureToken() {
 }
 
 
-/* ═══════════════════════════════════════════════════════════════════════
-   BOTÃO CADEADO — indica estado do token
-═══════════════════════════════════════════════════════════════════════ */
 
-var LOCK_CLOSED_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>';
-var LOCK_OPEN_SVG   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>';
-
-function ghUpdateLockButton() {
-  var btn = document.getElementById('ghLockBtn');
-  if (!btn) return;
-
-  var hasToken = !!ghGetToken();
-  btn.innerHTML = hasToken ? LOCK_OPEN_SVG : LOCK_CLOSED_SVG;
-  btn.classList.toggle('gh-lock-active', hasToken);
-  btn.title = hasToken ? 'Token GitHub configurado' : 'Configurar token GitHub';
-}
 
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -325,11 +310,34 @@ function ghDeduplicateMarkers(content, layoutId) {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
+   RACE CONDITION GUARD
+   Impede que duas operações de escrita no GitHub ocorram simultaneamente.
+   Cada operação verifica e seta _ghSaving antes de prosseguir.
+═══════════════════════════════════════════════════════════════════════ */
+var _ghSaving = false;
+
+function ghLockSave() {
+  if (_ghSaving) {
+    alert('Já existe uma operação em andamento. Aguarde terminar antes de salvar novamente.');
+    return false;
+  }
+  _ghSaving = true;
+  return true;
+}
+
+function ghUnlockSave() {
+  _ghSaving = false;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
    CORE: Salvar layout existente
 ═══════════════════════════════════════════════════════════════════════ */
 
 function githubSaveLayout(layoutId, objectCode) {
+  if (!ghLockSave()) return Promise.resolve(false);
   if (!ghEnsureToken()) {
+    ghUnlockSave();
     ghSetStatus('Token não configurado', 'error');
     return Promise.resolve(false);
   }
@@ -409,6 +417,7 @@ function githubSaveLayout(layoutId, objectCode) {
           }
         }
         ghSetStatus('✓ Salvo em ' + target.entry.name, 'ok');
+        ghUnlockSave();
         renderGrid();
         return target.entry.name;
       });
@@ -416,6 +425,7 @@ function githubSaveLayout(layoutId, objectCode) {
   }).catch(function (e) {
     console.error('[senko-github] Erro ao salvar layout:', e);
     ghSetStatus('Erro: ' + e.message, 'error');
+    ghUnlockSave();
     alert('Erro ao salvar no GitHub:\n' + e.message);
     return false;
   });
@@ -427,7 +437,9 @@ function githubSaveLayout(layoutId, objectCode) {
 ═══════════════════════════════════════════════════════════════════════ */
 
 function githubSaveNewLayout(fileName, objectCode, layoutId) {
+  if (!ghLockSave()) return Promise.resolve(false);
   if (!ghEnsureToken()) {
+    ghUnlockSave();
     ghSetStatus('Token não configurado', 'error');
     return Promise.resolve(false);
   }
@@ -478,12 +490,14 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
 
       SenkoLib.register([{ id: layoutId, name: name, tags: tags, html: html, css: css }]);
       ghSetStatus('✓ Salvo em layouts/' + fileName, 'ok');
+      ghUnlockSave();
       renderGrid();
       return fileName;
     });
   }).catch(function (e) {
     console.error('[senko-github] Erro ao salvar novo layout:', e);
     ghSetStatus('Erro: ' + e.message, 'error');
+    ghUnlockSave();
     alert('Erro ao salvar no GitHub:\n' + e.message);
     return false;
   });
@@ -495,7 +509,9 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
 ═══════════════════════════════════════════════════════════════════════ */
 
 function githubSaveVariant(parentId, variantNome, objectCode) {
+  if (!ghLockSave()) return Promise.resolve(false);
   if (!ghEnsureToken()) {
+    ghUnlockSave();
     ghSetStatus('Token não configurado', 'error');
     return Promise.resolve(false);
   }
@@ -601,12 +617,14 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
       }
 
       ghSetStatus('✓ Salvo em ' + filePath, 'ok');
+      ghUnlockSave();
       renderGrid();
       return filePath;
     });
   }).catch(function (e) {
     console.error('[senko-github] Erro ao salvar variante:', e);
     ghSetStatus('Erro: ' + e.message, 'error');
+    ghUnlockSave();
     alert('Erro ao salvar variante no GitHub:\n' + e.message);
     return false;
   });
@@ -624,35 +642,6 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ─── Injetar estilos ─────────────────────────────── */
   var style = document.createElement('style');
   style.textContent = [
-    '.gh-lock-btn {',
-    '  display: inline-flex;',
-    '  align-items: center;',
-    '  justify-content: center;',
-    '  width: 34px;',
-    '  height: 34px;',
-    '  padding: 0;',
-    '  background: var(--card, #fff);',
-    '  border: 1.5px solid var(--border, #e2e8f0);',
-    '  border-radius: var(--radius, 8px);',
-    '  color: var(--text3, #94a3b8);',
-    '  cursor: pointer;',
-    '  transition: all .2s ease;',
-    '  flex-shrink: 0;',
-    '}',
-    '.gh-lock-btn:hover {',
-    '  border-color: var(--text3, #94a3b8);',
-    '  background: var(--hover, #f8fafc);',
-    '}',
-    '.gh-lock-btn.gh-lock-active {',
-    '  color: #22c55e;',
-    '  border-color: #22c55e40;',
-    '  background: #22c55e0a;',
-    '  cursor: default;',
-    '}',
-    '.gh-lock-btn.gh-lock-active:hover {',
-    '  border-color: #22c55e40;',
-    '  background: #22c55e0a;',
-    '}',
     /* Status text (hidden, only used internally) */
     '.gh-status-text { display: none; }',
     /* GitHub buttons in modals */
@@ -869,7 +858,6 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('ghConfigOwner').value = '';
       document.getElementById('ghConfigRepo').value  = '';
       document.getElementById('ghConfigToken').value = '';
-      ghUpdateLockButton();
       ghUpdateConfigButton();
       ghHideConfigError();
     });
@@ -910,7 +898,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }).then(function () {
         /* Tudo certo — salva */
         ghApplyConfig(owner, repo, token);
-        ghUpdateLockButton();
         ghUpdateConfigButton();
         saveBtn.textContent = '✓ Salvo!';
         setTimeout(function () {
@@ -983,21 +970,6 @@ document.addEventListener('DOMContentLoaded', function () {
     searchWrap.parentNode.insertBefore(gearBtn, searchWrap);
     gearBtn.addEventListener('click', ghOpenConfigModal);
     ghUpdateConfigButton();
-
-    /* Botão cadeado — só token (legado, mantido para compatibilidade) */
-    var lockBtn = document.createElement('button');
-    lockBtn.id        = 'ghLockBtn';
-    lockBtn.className = 'gh-lock-btn';
-    lockBtn.innerHTML = LOCK_CLOSED_SVG;
-    lockBtn.title     = 'Configurar token GitHub';
-    searchWrap.parentNode.insertBefore(lockBtn, searchWrap);
-
-    lockBtn.addEventListener('click', function () {
-      /* Cadeado agora abre o modal de configuração completo */
-      ghOpenConfigModal();
-    });
-
-    ghUpdateLockButton();
 
     /* Se estiver no GitHub Pages (config automática), mostra engrenagem como
        info apenas — não precisa configurar owner/repo, só o token */

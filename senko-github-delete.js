@@ -133,7 +133,9 @@ function ghRemoveLayoutFromMemory(layoutId) {
    deleteVariants = true  → também apaga o arquivo variants/[id].js
 ═══════════════════════════════════════════════════════════════════════ */
 function githubDeleteLayout(layoutId, deleteVariants) {
+  if (typeof ghLockSave === 'function' && !ghLockSave()) return Promise.resolve(false);
   if (!ghEnsureToken()) {
+    if (typeof ghUnlockSave === 'function') ghUnlockSave();
     ghSetStatus('Token não configurado', 'error');
     return Promise.resolve(false);
   }
@@ -208,9 +210,9 @@ function githubDeleteLayout(layoutId, deleteVariants) {
         return true;
 
       }).then(function () {
-        /* 4. Remove da memória e atualiza o grid */
         ghRemoveLayoutFromMemory(layoutId);
         ghSetStatus('✓ Layout excluído: ' + layoutId, 'ok');
+        if (typeof ghUnlockSave === 'function') ghUnlockSave();
         renderGrid();
         return true;
       });
@@ -220,6 +222,7 @@ function githubDeleteLayout(layoutId, deleteVariants) {
   }).catch(function (e) {
     console.error('[senko-github-delete] Erro ao excluir layout:', e);
     ghSetStatus('Erro: ' + e.message, 'error');
+    if (typeof ghUnlockSave === 'function') ghUnlockSave();
     alert('Erro ao excluir no GitHub:\n' + e.message);
     return false;
   });
