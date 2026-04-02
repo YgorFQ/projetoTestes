@@ -150,18 +150,18 @@ function githubGetFile(path) {
       ghUpdateLockButton();
       throw new Error('Token inválido ou expirado. Clique no cadeado para inserir um novo.');
     }
-    if (!res.ok) {
-      return res.json().then(function (e) {
-        throw new Error('GitHub GET falhou (' + res.status + '): ' + (e.message || path));
-      });
-    }
-    return res.json();
-  }).then(function (data) {
-    var raw = (data.content || '').replace(/\n/g, '');
-    return {
-      content: ghDecodeBase64(raw),
-      sha:     data.sha
-    };
+    /* Lê o JSON e rejeita a Promise com o erro correto — tudo dentro do
+       mesmo .then() para que o erro não seja engolido por um segundo .then() */
+    return res.json().then(function (data) {
+      if (!res.ok) {
+        throw new Error('GitHub GET falhou (' + res.status + '): ' + (data.message || path));
+      }
+      var raw = (data.content || '').replace(/\n/g, '');
+      return {
+        content: ghDecodeBase64(raw),
+        sha:     data.sha
+      };
+    });
   });
 }
 
@@ -193,12 +193,12 @@ function githubPutFile(path, content, sha, commitMsg) {
       ghUpdateLockButton();
       throw new Error('Token inválido ou expirado. Clique no cadeado para configurar um novo.');
     }
-    if (!res.ok) {
-      return res.json().then(function (e) {
-        throw new Error('GitHub PUT falhou (' + res.status + '): ' + (e.message || path));
-      });
-    }
-    return res.json();
+    return res.json().then(function (data) {
+      if (!res.ok) {
+        throw new Error('GitHub PUT falhou (' + res.status + '): ' + (data.message || path));
+      }
+      return data;
+    });
   });
 }
 
@@ -220,15 +220,13 @@ function githubListDir(path) {
       ghUpdateLockButton();
       throw new Error('Token inválido ou expirado. Clique no cadeado para configurar um novo.');
     }
-    if (!res.ok) {
-      return res.json().then(function (e) {
-        throw new Error('GitHub LIST falhou (' + res.status + '): ' + (e.message || path));
+    return res.json().then(function (data) {
+      if (!res.ok) {
+        throw new Error('GitHub LIST falhou (' + res.status + '): ' + (data.message || path));
+      }
+      return data.map(function (item) {
+        return { name: item.name, path: item.path, sha: item.sha, type: item.type };
       });
-    }
-    return res.json();
-  }).then(function (data) {
-    return data.map(function (item) {
-      return { name: item.name, path: item.path, sha: item.sha, type: item.type };
     });
   });
 }
@@ -315,6 +313,7 @@ function ghDeduplicateMarkers(content, layoutId) {
    Cada operação verifica e seta _ghSaving antes de prosseguir.
 ═══════════════════════════════════════════════════════════════════════ */
 var _ghSaving = false;
+var _ghSavingTimeout = null;
 
 function ghLockSave() {
   if (_ghSaving) {
@@ -322,11 +321,20 @@ function ghLockSave() {
     return false;
   }
   _ghSaving = true;
+  /* Safety net: libera o lock automaticamente após 30s para nunca ficar preso */
+  _ghSavingTimeout = setTimeout(function () {
+    console.warn('[senko-github] Lock de salvamento liberado por timeout de segurança.');
+    _ghSaving = false;
+  }, 30000);
   return true;
 }
 
 function ghUnlockSave() {
   _ghSaving = false;
+  if (_ghSavingTimeout) {
+    clearTimeout(_ghSavingTimeout);
+    _ghSavingTimeout = null;
+  }
 }
 
 
@@ -582,11 +590,13 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
 
     if (pos === -1) {
       ghSetStatus('Variante não encontrada', 'error');
+      ghUnlockSave();
       alert('Variante "' + variantNome + '" não encontrada em ' + filePath);
       return false;
     }
     if (content.indexOf(marker, pos + 1) !== -1) {
       ghSetStatus('Variante duplicada', 'error');
+      ghUnlockSave();
       alert('A variante "' + variantNome + '" aparece mais de uma vez no arquivo.\nCorrija manualmente.');
       return false;
     }
@@ -604,6 +614,7 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
 
     if (objOpen === -1) {
       ghSetStatus('Objeto da variante não encontrado', 'error');
+      ghUnlockSave();
       alert('Início do objeto da variante não encontrado.');
       return false;
     }
@@ -639,6 +650,7 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
 
     if (objEnd === -1) {
       ghSetStatus('Fim da variante não encontrado', 'error');
+      ghUnlockSave();
       alert('Fim do objeto da variante não encontrado.');
       return false;
     }
