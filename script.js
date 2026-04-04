@@ -1,28 +1,6 @@
 // @ts-nocheck
 /* ═══════════════════════════════════════════════════════
-   script.js — Lógica principal da interface SenkoLib
-
-   RESPONSABILIDADE:
-     Controla toda a UI da aplicação: renderização do grid
-     de cards, filtros, modais, favoritos e modos de visualização.
-
-   PRINCIPAIS FUNCIONALIDADES:
-     - Renderização do grid com filtro por busca e favoritos
-     - Ordenação alfanumérica natural (section-2 < section-9 < section-10)
-     - Lazy loading de iframes de preview via IntersectionObserver
-     - Modal de visualização (HTML + CSS + preview ao vivo)
-     - Modal de adição de novo layout (gera objeto para colar no arquivo)
-     - Modal de edição de layout existente
-     - Modal de variantes (lista e criação de variantes)
-     - Favoritos persistidos via localStorage
-     - Modos de visualização: normal, large, single, list, expanded
-     - copiarBasics(): copia template HTML base para área de transferência
-     - selectProjectFolder(): abre o seletor de pasta da File System Access API
-       (lógica de escrita nos arquivos fica no senko-fsa.js)
-
-   DEPENDÊNCIAS:
-     Deve ser carregado após senkolib-core.js e todos os
-     arquivos de layouts e variantes.
+   SENKOLIB — script.js
 ═══════════════════════════════════════════════════════ */
 
 var state = {
@@ -471,6 +449,7 @@ function renderVariantBlocks(variants) {
   variants.forEach(function (v) {
     var block = document.createElement('div');
     block.className = 'variant-block';
+    block.dataset.variantName = v.name || '';
 
     var previewWrap = document.createElement('div');
     previewWrap.className = 'variant-preview';
@@ -481,7 +460,7 @@ function renderVariantBlocks(variants) {
     previewWrap.appendChild(vIframe);
 
     var footer = document.createElement('div'); footer.className = 'variant-footer';
-    var vname  = document.createElement('span'); vname.className = 'variant-name'; vname.textContent = v.nome || v.name || '';
+    var vname  = document.createElement('span'); vname.className = 'variant-name'; vname.textContent = v.name || '';
 
     var bH = document.createElement('button'); bH.className = 'btn btn-ghost'; bH.innerHTML = HTML_ICON + ' HTML';
     bH.addEventListener('click', function () { copyToClipboard(v.html, bH, HTML_ICON + ' HTML'); });
@@ -519,21 +498,20 @@ function closeNewVariantModal() {
 }
 
 function updateNewVarCode() {
-  var nome      = document.getElementById('newVarName').value.trim().toLowerCase();
+  var name      = document.getElementById('newVarName').value.trim().toLowerCase();
   var html      = document.getElementById('newVarHtml').value;
   var css       = document.getElementById('newVarCss').value;
-  var layoutName = state.currentForVariant ? state.currentForVariant.id : '';
   var copyBtn   = document.getElementById('newVarCopyBtn');
 
   /* Botão vermelho se nome tiver menos de 3 chars */
-  if (nome.length < 3) {
+  if (name.length < 3) {
     copyBtn.classList.add('btn-blocked');
     copyBtn.classList.remove('copied');
   } else {
     copyBtn.classList.remove('btn-blocked');
   }
 
-  if (!nome && !html) {
+  if (!name && !html) {
     document.getElementById('newVarGeneratedCode').textContent = '// Preencha os campos acima para gerar o objeto…';
     return;
   }
@@ -542,12 +520,12 @@ function updateNewVarCode() {
   var safeCss  = css.replace(/`/g, '\\`');
 
   document.getElementById('newVarGeneratedCode').textContent =
-    '// @ts-nocheck\n' +
-    "SenkoLib.registerVariant('" + layoutName + "', [\n" +
-    "  { nome: '" + nome + "',\n" +
+    '  /*@@@@Senko - ' + name + ' */\n' +
+    '  {\n' +
+    "    name: '" + name + "',\n" +
     '    html: `' + safeHtml + '`,\n' +
-    '    css: `'  + safeCss  + '` },\n' +
-    ']);';
+    '    css: `'  + safeCss  + '`,\n' +
+    '  },';
 }
 
 
@@ -556,7 +534,7 @@ function openVariantPreview(v) {
   /* Fecha o modal de variantes temporariamente e abre o de visualização */
   document.getElementById('variantsOverlay').classList.add('hidden');
 
-  document.getElementById('modalTitle').textContent = v.nome || v.name || '';
+  document.getElementById('modalTitle').textContent = v.name || '';
 
   var tagsEl = document.getElementById('modalTags');
   tagsEl.innerHTML = '';

@@ -1,6 +1,7 @@
 // @ts-nocheck
 SenkoLib.registerVariant('section-1', [
-  { nome: 'ser gamer, ser um jogador',
+  {
+    nome: 'ser gamer, ser um jogador',
     html: `<section class="product-header" aria-label="Cabeçalho do produto">
   <header class="product-header__banner">
     <figure style="width:100%;height:100%;margin:0;">
@@ -135,7 +136,8 @@ SenkoLib.registerVariant('section-1', [
     }
   }
 </style>` },
-  { nome: 'sexoanal',
+  {
+    nome: 'sexoanal',
     html: `<section class="product-header" aria-label="Cabeçalho do produto">
   <header class="product-header__banner">
     <figure style="width:100%;height:100%;margin:0;">
@@ -270,4 +272,26 @@ SenkoLib.registerVariant('section-1', [
     }
   }
 </style>` },
+]);
+
+SenkoLib.registerVariant([
+
+/*@@@@Senko - teste */
+  /* variantes: variants/teste.js */
+  {
+    name: 'teste',
+    tags: ['teste'],
+    html: `aaaa`,
+    css: `aaaa`
+  },
+
+  /*@@@@Senko - teste2 */
+  /* variantes: variants/teste2.js */
+  {
+    name: 'teste2',
+    tags: ['teste2'],
+    html: `aaaa`,
+    css: `aaaa`
+  },
+
 ]);
