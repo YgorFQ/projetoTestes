@@ -530,7 +530,7 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
     var content = data.content;
     var sha     = data.sha;
 
-    var marker = "nome: '" + variantNome + "'";
+    var marker = '/*@@@@Senko - ' + variantNome.toLowerCase() + ' */';
     var pos    = content.indexOf(marker);
 
     if (pos === -1) {
@@ -539,24 +539,14 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
       alert('Variante "' + variantNome + '" não encontrada em ' + filePath);
       return false;
     }
-    if (content.indexOf(marker, pos + 1) !== -1) {
+    if (content.indexOf(marker, pos + marker.length) !== -1) {
       ghSetStatus('Variante duplicada', 'error');
       ghUnlockSave();
       alert('A variante "' + variantNome + '" aparece mais de uma vez no arquivo.\nCorrija manualmente.');
       return false;
     }
 
-    var objOpen = -1;
-    var tmpScan = content.lastIndexOf('{', pos);
-    while (tmpScan !== -1) {
-      var between = content.slice(tmpScan + 1, pos).trim();
-      if (/^[\s]*$/.test(between)) {
-        objOpen = tmpScan;
-        break;
-      }
-      tmpScan = content.lastIndexOf('{', tmpScan - 1);
-    }
-
+    var objOpen = content.indexOf('{', pos + marker.length);
     if (objOpen === -1) {
       ghSetStatus('Objeto da variante não encontrado', 'error');
       ghUnlockSave();
@@ -564,12 +554,7 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
       return false;
     }
 
-    var i          = objOpen;
-    var depth      = 0;
-    var inTemplate = false;
-    var len        = content.length;
-    var objEnd     = -1;
-
+    var i = objOpen, depth = 0, inTemplate = false, len = content.length, objEnd = -1;
     while (i < len) {
       var ch = content[i];
       if (ch === '`') {
@@ -601,8 +586,8 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
     }
 
     var newContent =
-      content.slice(0, objOpen) +
-      objectCode + ',\n' +
+      content.slice(0, pos) +
+      objectCode + '\n' +
       content.slice(objEnd);
 
     ghSetStatus('Salvando no GitHub…', 'saving');
@@ -618,13 +603,13 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
       var variants    = SenkoLib.getVariants(parentId);
       var existingIdx = -1;
       for (var k = 0; k < variants.length; k++) {
-        if ((variants[k].nome || variants[k].name) === variantNome) { existingIdx = k; break; }
+        if ((variants[k].name || '').toLowerCase() === variantNome.toLowerCase()) { existingIdx = k; break; }
       }
       if (existingIdx !== -1) {
         variants[existingIdx].html = html;
         variants[existingIdx].css  = css;
       } else {
-        SenkoLib.registerVariant(parentId, [{ nome: variantNome, html: html, css: css }]);
+        SenkoLib.registerVariant(parentId, [{ name: variantNome, html: html, css: css }]);
       }
 
       ghSetStatus('✓ Salvo em ' + filePath, 'ok');
@@ -1068,16 +1053,27 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
+      /* Verifica duplicata em memória */
+      var parentId = state.currentForVariant.id;
+      var existing = SenkoLib.getVariants(parentId);
+      var isDupe   = existing.some(function (v) { return (v.name || '').toLowerCase() === nome; });
+      if (isDupe) {
+        alert('Já existe uma variante com o nome "' + nome + '".\nEscolha outro nome.');
+        return;
+      }
+
       var html     = document.getElementById('newVarHtml').value;
       var css      = document.getElementById('newVarCss').value;
       var safeHtml = html.replace(/`/g, '\\`');
       var safeCss  = css.replace(/`/g, '\\`');
-      var parentId = state.currentForVariant.id;
 
       var objectCode =
-        "  { nome: '" + nome + "',\n" +
+        '/*@@@@Senko - ' + nome + ' */\n' +
+        '  {\n' +
+        "    name: '" + nome + "',\n" +
         '    html: `' + safeHtml + '`,\n' +
-        '    css: `'  + safeCss  + '` }';
+        '    css: `'  + safeCss  + '`,\n' +
+        '  },';
 
       ghVarBtn.textContent = 'Salvando…';
       ghVarBtn.disabled    = true;
