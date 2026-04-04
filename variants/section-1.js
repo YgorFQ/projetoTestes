@@ -58,4 +58,8 @@ SenkoLib.registerVariant('section-1', [
     }
   }
 </style>` },
+  { nome: 'awdawdawdawd',
+    html: `awdaw`,
+    css: `awdawdawd` }
+
 ]);
