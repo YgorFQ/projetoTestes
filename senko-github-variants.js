@@ -98,8 +98,8 @@ function ghvCountVariants(content) {
 function ghvBuildNewVariantFile(parentId, objectCode) {
   return (
     '// @ts-nocheck\n' +
-    "SenkoLib.registerVariant('" + parentId.toLowerCase() + "', [\n" +
-    objectCode + ',\n' +
+    "SenkoLib.registerVariant('" + parentId.toLowerCase() + "', [\n\n" +
+    objectCode + '\n\n' +
     ']);\n'
   );
 }
@@ -175,7 +175,7 @@ function githubCreateVariant(parentId, variantNome, objectCode) {
 
       var newContent =
         content.slice(0, closePos) +
-        objectCode + '\n' +
+        objectCode + '\n\n' +
         content.slice(closePos);
 
       ghSetStatus('Salvando no GitHub…', 'saving');
@@ -643,7 +643,7 @@ function ghvInjectNewVariantButton() {
     var safeCss   = css.replace(/`/g, '\\`');
 
     var objectCode =
-      '  /*@@@@Senko - ' + nameLower + ' */\n' +
+      '/*@@@@Senko - ' + nameLower + ' */\n' +
       '  {\n' +
       "    name: '" + nameLower + "',\n" +
       '    html: `' + safeHtml + '`,\n' +

@@ -520,7 +520,7 @@ function updateNewVarCode() {
   var safeCss  = css.replace(/`/g, '\\`');
 
   document.getElementById('newVarGeneratedCode').textContent =
-    '  /*@@@@Senko - ' + name + ' */\n' +
+    '/*@@@@Senko - ' + name + ' */\n' +
     '  {\n' +
     "    name: '" + name + "',\n" +
     '    html: `' + safeHtml + '`,\n' +

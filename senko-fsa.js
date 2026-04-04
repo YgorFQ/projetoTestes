@@ -204,6 +204,9 @@ var saveLayoutToFile = async function (layoutId, objectCode) {
 
 /* ═══════════════════════════════════════════════════════════════════════
    CORE: Salvar variante — opera em /variants/[parentId].js
+   - Se o arquivo não existir: cria do zero
+   - Se existir e variante é nova (sem marcador): insere antes do ]);
+   - Se existir e variante já existe (edição): substitui o objeto
 ═══════════════════════════════════════════════════════════════════════ */
 async function saveVariantToFile(parentId, variantName, objectCode) {
   if (!_projectDir) {
@@ -212,60 +215,89 @@ async function saveVariantToFile(parentId, variantName, objectCode) {
   }
 
   try {
-    var varDir  = await _projectDir.getDirectoryHandle('variants', { create: false });
-    var entry   = await varDir.getFileHandle(parentId + '.js', { create: false });
-    var file    = await entry.getFile();
-    var content = await file.text();
-
-    /* Usa o marcador @@@@Senko para localizar o objeto */
+    var varDir = await _projectDir.getDirectoryHandle('variants', { create: true });
     var marker = '/*@@@@Senko - ' + variantName.toLowerCase() + ' */';
-    var pos    = content.indexOf(marker);
-    if (pos === -1) {
-      alert('Variante "' + variantName + '" não encontrada em variants/' + parentId + '.js');
-      return false;
-    }
-    if (content.indexOf(marker, pos + marker.length) !== -1) {
-      alert('A variante "' + variantName + '" aparece mais de uma vez no arquivo.\nCorrija manualmente.');
-      return false;
+
+    /* ── Tenta abrir o arquivo existente ── */
+    var entry, content;
+    try {
+      entry   = await varDir.getFileHandle(parentId + '.js', { create: false });
+      var file = await entry.getFile();
+      content  = await file.text();
+    } catch (e) {
+      /* Arquivo não existe — cria do zero */
+      entry   = await varDir.getFileHandle(parentId + '.js', { create: true });
+      content = null;
     }
 
-    /* Avança do marcador até o '{' que abre o objeto */
-    var objOpen = content.indexOf('{', pos + marker.length);
-    if (objOpen === -1) { alert('Início do objeto da variante não encontrado.'); return false; }
+    var newContent;
 
-    /* Conta profundidade de chaves, ciente de template literals */
-    var i = objOpen, depth = 0, inTemplate = false, len = content.length, objEnd = -1;
-    while (i < len) {
-      var ch = content[i];
-      if (ch === '`') {
-        var backslashes = 0, j = i - 1;
-        while (j >= 0 && content[j] === '\\') { backslashes++; j--; }
-        if (backslashes % 2 === 0) inTemplate = !inTemplate;
-        i++; continue;
+    if (!content) {
+      /* ── Arquivo novo ── */
+      newContent =
+        '// @ts-nocheck\n' +
+        "SenkoLib.registerVariant('" + parentId.toLowerCase() + "', [\n\n" +
+        objectCode + '\n\n' +
+        ']);\n';
+
+    } else if (content.indexOf(marker) === -1) {
+      /* ── Variante nova em arquivo existente: insere antes do ]); ── */
+      var closePos = content.lastIndexOf(']);');
+      if (closePos === -1) {
+        alert('Não foi possível encontrar o fechamento do array em variants/' + parentId + '.js.\nVerifique se o arquivo segue o padrão SenkoLib.registerVariant([...]);');
+        return false;
       }
-      if (inTemplate) { i++; continue; }
-      if (ch === '{') { depth++; i++; continue; }
-      if (ch === '}') {
-        depth--;
-        if (depth === 0) {
-          objEnd = i + 1;
-          if (content[objEnd] === ',') objEnd++;
-          if (content[objEnd] === '\n') objEnd++;
-          break;
+      newContent =
+        content.slice(0, closePos) +
+        objectCode + '\n\n' +
+        content.slice(closePos);
+
+    } else {
+      /* ── Variante existente: substitui o objeto ── */
+      if (content.indexOf(marker, content.indexOf(marker) + marker.length) !== -1) {
+        alert('A variante "' + variantName + '" aparece mais de uma vez no arquivo.\nCorrija manualmente.');
+        return false;
+      }
+
+      var pos     = content.indexOf(marker);
+      var objOpen = content.indexOf('{', pos + marker.length);
+      if (objOpen === -1) { alert('Início do objeto da variante não encontrado.'); return false; }
+
+      var i = objOpen, depth = 0, inTemplate = false, len = content.length, objEnd = -1;
+      while (i < len) {
+        var ch = content[i];
+        if (ch === '`') {
+          var backslashes = 0, j = i - 1;
+          while (j >= 0 && content[j] === '\\') { backslashes++; j--; }
+          if (backslashes % 2 === 0) inTemplate = !inTemplate;
+          i++; continue;
         }
-        i++; continue;
+        if (inTemplate) { i++; continue; }
+        if (ch === '{') { depth++; i++; continue; }
+        if (ch === '}') {
+          depth--;
+          if (depth === 0) {
+            objEnd = i + 1;
+            if (content[objEnd] === ',') objEnd++;
+            if (content[objEnd] === '\n') objEnd++;
+            break;
+          }
+          i++; continue;
+        }
+        i++;
       }
-      i++;
+
+      if (objEnd === -1) { alert('Fim do objeto da variante não encontrado.'); return false; }
+
+      await backupFile(_projectDir, entry.name, content);
+
+      newContent =
+        content.slice(0, pos) +
+        objectCode + '\n' +
+        content.slice(objEnd);
     }
 
-    if (objEnd === -1) { alert('Fim do objeto da variante não encontrado.'); return false; }
-
-    await backupFile(_projectDir, entry.name, content);
-
-    var newContent =
-      content.slice(0, pos) +
-      objectCode + '\n' +
-      content.slice(objEnd);
+    if (content) await backupFile(_projectDir, entry.name, content);
 
     var writable = await entry.createWritable({ keepExistingData: false });
     await writable.write(new Blob([newContent], { type: 'text/plain' }));
@@ -356,7 +388,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       var objectCode =
-        '  /*@@@@Senko - ' + name + ' */\n' +
+        '/*@@@@Senko - ' + name + ' */\n' +
         '  {\n' +
         "    name: '" + name + "',\n" +
         '    html: `' + safeHtml + '`,\n' +
