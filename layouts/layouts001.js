@@ -15,17 +15,17 @@
        css:  `...`,               // CSS do layout
      }
 
-   MARCADORES:
-     Cada objeto é precedido por  /*@@@@Senko - [id] */
-     Esse marcador é usado pelos módulos de edição (senko-fsa.js
-     e senko-github-v2.js) para localizar e substituir o objeto
-     no arquivo sem precisar fazer parse completo do JS.
+   // MARCADORES:
+   //  Cada objeto é precedido por  /*@@@@Senko - [id] */
+//  Esse marcador é usado pelos módulos de edição (senko-fsa.js
+//  e senko-github-v2.js) para localizar e substituir o objeto
+//  no arquivo sem precisar fazer parse completo do JS.
 
-   PARA ADICIONAR MAIS LAYOUTS:
-     Cole um novo objeto antes do fechamento do array ].
-     Para um novo arquivo de layouts, crie layouts002.js
-     seguindo o mesmo padrão e adicione o <script> no index.html.
-═══════════════════════════════════════════════════════ */
+//PARA ADICIONAR MAIS LAYOUTS:
+//  Cole um novo objeto antes do fechamento do array ].
+//  Para um novo arquivo de layouts, crie layouts002.js
+// seguindo o mesmo padrão e adicione o <script> no index.html.
+//═══════════════════════════════════════════════════════ 
 
 SenkoLib.register([
 
@@ -599,7 +599,7 @@ SenkoLib.register([
     }`
   },
 
-  
+
   /*@@@@Senko - section-49 */
   /* variantes: variants/section-49.js */
   {
@@ -2664,7 +2664,7 @@ SenkoLib.register([
 
 
 
-/*@@@@Senko - section-6 */
+  /*@@@@Senko - section-6 */
   /* variantes: variants/section-6.js */
   {
     id: 'section-6',
