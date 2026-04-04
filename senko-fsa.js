@@ -249,7 +249,7 @@ async function saveVariantToFile(parentId, variantName, objectCode) {
       }
       newContent =
         content.slice(0, closePos) +
-        objectCode + '\n\n' +
+        '\n' + objectCode + '\n\n' +
         content.slice(closePos);
 
     } else {

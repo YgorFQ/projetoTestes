@@ -175,7 +175,7 @@ function githubCreateVariant(parentId, variantNome, objectCode) {
 
       var newContent =
         content.slice(0, closePos) +
-        objectCode + '\n\n' +
+        '\n' + objectCode + '\n\n' +
         content.slice(closePos);
 
       ghSetStatus('Salvando no GitHub…', 'saving');
