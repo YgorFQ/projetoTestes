@@ -15,4 +15,11 @@ SenkoLib.registerVariant('section-1', [
     css: `teste2`,
   },
 
+/*@@@@Senko - aaaa */
+  {
+    name: 'aaaa',
+    html: `aaaa`,
+    css: `aaaa`,
+  },
+
 ]);
