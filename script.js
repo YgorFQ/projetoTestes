@@ -503,7 +503,6 @@ function updateNewVarCode() {
   var css       = document.getElementById('newVarCss').value;
   var copyBtn   = document.getElementById('newVarCopyBtn');
 
-  /* Botão vermelho se nome tiver menos de 3 chars */
   if (name.length < 3) {
     copyBtn.classList.add('btn-blocked');
     copyBtn.classList.remove('copied');

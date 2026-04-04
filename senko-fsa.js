@@ -204,9 +204,6 @@ var saveLayoutToFile = async function (layoutId, objectCode) {
 
 /* ═══════════════════════════════════════════════════════════════════════
    CORE: Salvar variante — opera em /variants/[parentId].js
-   - Se o arquivo não existir: cria do zero
-   - Se existir e variante é nova (sem marcador): insere antes do ]);
-   - Se existir e variante já existe (edição): substitui o objeto
 ═══════════════════════════════════════════════════════════════════════ */
 async function saveVariantToFile(parentId, variantName, objectCode) {
   if (!_projectDir) {
@@ -221,11 +218,10 @@ async function saveVariantToFile(parentId, variantName, objectCode) {
     /* ── Tenta abrir o arquivo existente ── */
     var entry, content;
     try {
-      entry   = await varDir.getFileHandle(parentId + '.js', { create: false });
-      var file = await entry.getFile();
-      content  = await file.text();
+      entry        = await varDir.getFileHandle(parentId + '.js', { create: false });
+      var file     = await entry.getFile();
+      content      = await file.text();
     } catch (e) {
-      /* Arquivo não existe — cria do zero */
       entry   = await varDir.getFileHandle(parentId + '.js', { create: true });
       content = null;
     }
@@ -233,7 +229,7 @@ async function saveVariantToFile(parentId, variantName, objectCode) {
     var newContent;
 
     if (!content) {
-      /* ── Arquivo novo ── */
+      /* ── Arquivo novo: cria do zero ── */
       newContent =
         '// @ts-nocheck\n' +
         "SenkoLib.registerVariant('" + parentId.toLowerCase() + "', [\n\n" +
@@ -244,24 +240,19 @@ async function saveVariantToFile(parentId, variantName, objectCode) {
       /* ── Variante nova em arquivo existente: insere antes do ]); ── */
       var closePos = content.lastIndexOf(']);');
       if (closePos === -1) {
-        alert('Não foi possível encontrar o fechamento do array em variants/' + parentId + '.js.\nVerifique se o arquivo segue o padrão SenkoLib.registerVariant([...]);');
+        alert('Não foi possível encontrar o fechamento do array em variants/' + parentId + '.js.');
         return false;
       }
       newContent =
         content.slice(0, closePos) +
-        '\n' + objectCode + '\n\n' +
+        objectCode + '\n\n' +
         content.slice(closePos);
 
     } else {
-      /* ── Variante existente: substitui o objeto ── */
-      if (content.indexOf(marker, content.indexOf(marker) + marker.length) !== -1) {
-        alert('A variante "' + variantName + '" aparece mais de uma vez no arquivo.\nCorrija manualmente.');
-        return false;
-      }
-
+      /* ── Variante existente: substitui o objeto pelo marcador ── */
       var pos     = content.indexOf(marker);
       var objOpen = content.indexOf('{', pos + marker.length);
-      if (objOpen === -1) { alert('Início do objeto da variante não encontrado.'); return false; }
+      if (objOpen === -1) { alert('Início do objeto não encontrado.'); return false; }
 
       var i = objOpen, depth = 0, inTemplate = false, len = content.length, objEnd = -1;
       while (i < len) {
@@ -286,10 +277,7 @@ async function saveVariantToFile(parentId, variantName, objectCode) {
         }
         i++;
       }
-
-      if (objEnd === -1) { alert('Fim do objeto da variante não encontrado.'); return false; }
-
-      await backupFile(_projectDir, entry.name, content);
+      if (objEnd === -1) { alert('Fim do objeto não encontrado.'); return false; }
 
       newContent =
         content.slice(0, pos) +
