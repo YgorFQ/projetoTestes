@@ -1,6 +1,29 @@
 /* ═══════════════════════════════════════════════════════
-   SENKOLIB — styles.css
-   Tema: Branco + Laranja — Nunito + DM Mono
+   styles.css — Estilos da interface SenkoLib
+
+   RESPONSABILIDADE:
+     Define toda a aparência visual da aplicação.
+
+   CONTEÚDO:
+     - Variáveis CSS (cores, tipografia, sombras, raios)
+     - Reset e base global + scrollbar customizada
+     - Header, barra de controles e botão de guia
+     - Grid de cards e modos de visualização
+       (normal, large, single, list, expanded)
+     - Cards de layout (preview iframe, badges, botões de ação)
+     - Barra de stats (contagem de layouts e favoritos)
+     - Modal base + Modal de visualização (preview + código HTML/CSS)
+     - Modal de adição e modal de edição de layout
+     - Modal de variantes e modal de nova variante
+     - Botão favorito, botão de variantes (+), badge de contagem
+     - Abas de código, blocos <pre>, botões de copiar
+     - Toast de confirmação de cópia
+     - Barra FSA (File System Access experimental) e botão salvar
+     - Estado vazio / sem resultados
+     - Responsividade
+
+   TEMA:
+     Branco + Laranja — fontes Nunito (UI) + DM Mono (código)
 ═══════════════════════════════════════════════════════ */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -504,41 +527,6 @@ body {
   .grid.view-list .card-actions { border-left: none; border-top: 1.5px solid var(--border); flex-direction: row; min-width: unset; }
 }
 
-/* ─── Botão de tema — na barra de filtros ────────────── */
-.filters-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.filters { flex: 1; }
-
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: .45rem;
-  flex-shrink: 0;
-  background: transparent;
-  border: 1.5px solid var(--border);
-  border-radius: 99px;
-  padding: .28rem .85rem .28rem .6rem;
-  font-family: var(--font-body);
-  font-size: .8rem;
-  font-weight: 700;
-  color: var(--text2);
-  cursor: pointer;
-  transition: all var(--transition);
-  white-space: nowrap;
-}
-
-.theme-toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-bg);
-}
-
-/* Alterna ícone conforme tema */
 /* ─── Botão variantes (+) ────────────────────────────── */
 .btn-variants {
   flex: none;

@@ -1,10 +1,30 @@
 // @ts-nocheck
 /* ═══════════════════════════════════════════════════════
-   layouts001.js — Layouts: Header
-   Para adicionar mais layouts neste arquivo, copie um
-   objeto abaixo e cole antes do fechamento do array ].
-   Para criar um novo arquivo de layouts, veja o README
-   no index.html ou siga o padrão deste arquivo.
+   layouts001.js — Primeiro pacote de layouts do SenkoLib
+
+   RESPONSABILIDADE:
+     Registra o array principal de layouts via SenkoLib.register().
+     Cada objeto representa um bloco HTML/CSS reutilizável.
+
+   ESTRUTURA DE CADA LAYOUT:
+     {
+       id:   'section-X',         // identificador único (minúsculo)
+       name: 'Section-X (...)',   // nome de exibição
+       tags: ['tag1', 'tag2'],    // palavras-chave para busca
+       html: `...`,               // HTML do layout
+       css:  `...`,               // CSS do layout
+     }
+
+   MARCADORES:
+     Cada objeto é precedido por  /*@@@@Senko - [id] */
+     Esse marcador é usado pelos módulos de edição (senko-fsa.js
+     e senko-github-v2.js) para localizar e substituir o objeto
+     no arquivo sem precisar fazer parse completo do JS.
+
+   PARA ADICIONAR MAIS LAYOUTS:
+     Cole um novo objeto antes do fechamento do array ].
+     Para um novo arquivo de layouts, crie layouts002.js
+     seguindo o mesmo padrão e adicione o <script> no index.html.
 ═══════════════════════════════════════════════════════ */
 
 SenkoLib.register([

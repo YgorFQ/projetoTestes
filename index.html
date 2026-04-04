@@ -1,4 +1,35 @@
 <!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════
+   index.html — Página principal do SenkoLib
+
+   RESPONSABILIDADE:
+     Ponto de entrada da aplicação. Define a estrutura HTML
+     completa da interface e carrega todos os scripts e estilos
+     na ordem correta.
+
+   ESTRUTURA DA UI:
+     - Header com busca, filtro de favoritos, modos de visualização,
+       botão de copiar HTML base e botão de adicionar layout
+     - Barra FSA (File System Access — modo experimental local)
+     - Grid principal de cards (#layoutGrid)
+     - Modal de visualização de layout (preview + código HTML/CSS)
+     - Modal de edição de layout existente
+     - Modal de adição de novo layout
+     - Modal de variantes de um layout
+     - Modal de criação de nova variante
+     - Modal de guia/documentação do projeto
+     - Toast de confirmação de cópia
+
+   ORDEM DE CARREGAMENTO DOS SCRIPTS:
+     1. senkolib-core.js     — motor de registro (obrigatório primeiro)
+     2. layouts/layoutsXXX.js — pacotes de layouts
+     3. variants/[id].js     — variantes por layout
+     4. script.js            — lógica da UI
+     5. senko-github-v2.js   — salvar no GitHub via API
+     6. senko-github-variants.js — criar/deletar variantes no GitHub
+     7. senko-github-delete.js   — excluir layouts do GitHub
+     8. senko-fsa.js         — salvar localmente via File System Access
+════════════════════════════════════════════════════════ -->
 <html lang="pt-BR">
 
 <head>

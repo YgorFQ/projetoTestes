@@ -1,6 +1,28 @@
 // @ts-nocheck
 /* ═══════════════════════════════════════════════════════
-   SENKOLIB — script.js
+   script.js — Lógica principal da interface SenkoLib
+
+   RESPONSABILIDADE:
+     Controla toda a UI da aplicação: renderização do grid
+     de cards, filtros, modais, favoritos e modos de visualização.
+
+   PRINCIPAIS FUNCIONALIDADES:
+     - Renderização do grid com filtro por busca e favoritos
+     - Ordenação alfanumérica natural (section-2 < section-9 < section-10)
+     - Lazy loading de iframes de preview via IntersectionObserver
+     - Modal de visualização (HTML + CSS + preview ao vivo)
+     - Modal de adição de novo layout (gera objeto para colar no arquivo)
+     - Modal de edição de layout existente
+     - Modal de variantes (lista e criação de variantes)
+     - Favoritos persistidos via localStorage
+     - Modos de visualização: normal, large, single, list, expanded
+     - copiarBasics(): copia template HTML base para área de transferência
+     - selectProjectFolder(): abre o seletor de pasta da File System Access API
+       (lógica de escrita nos arquivos fica no senko-fsa.js)
+
+   DEPENDÊNCIAS:
+     Deve ser carregado após senkolib-core.js e todos os
+     arquivos de layouts e variantes.
 ═══════════════════════════════════════════════════════ */
 
 var state = {
