@@ -28,23 +28,16 @@
    usando contagem de profundidade de chaves, ciente de template literals.
    Retorna { start, end } ou null.
 ═══════════════════════════════════════════════════════════════════════ */
-function ghvFindVariantObjectBounds(content, variantNome) {
-  var marker    = "nome: '" + variantNome.toLowerCase() + "'";
-  var markerAlt = 'nome: "' + variantNome.toLowerCase() + '"';
-
-  /* Busca case-insensitive pelo nome */
-  var lowerContent = content.toLowerCase();
-  var markerPos    = lowerContent.indexOf(marker);
-  if (markerPos === -1) markerPos = lowerContent.indexOf(markerAlt);
+function ghvFindVariantObjectBounds(content, variantName) {
+  var marker    = '/*@@@@Senko - ' + variantName.toLowerCase() + ' */';
+  var markerPos = content.indexOf(marker);
   if (markerPos === -1) return null;
 
   /* Verifica duplicata */
-  var secondOccurrence = lowerContent.indexOf(marker, markerPos + marker.length);
-  if (secondOccurrence === -1) secondOccurrence = lowerContent.indexOf(markerAlt, markerPos + markerAlt.length);
-  if (secondOccurrence !== -1) return { duplicate: true };
+  if (content.indexOf(marker, markerPos + marker.length) !== -1) return { duplicate: true };
 
-  /* Retrocede do marcador até o '{' que abre o objeto desta variante */
-  var objOpen = content.lastIndexOf('{', markerPos);
+  /* Avança do marcador até o '{' que abre o objeto */
+  var objOpen = content.indexOf('{', markerPos + marker.length);
   if (objOpen === -1) return null;
 
   /* Conta profundidade de chaves, ciente de template literals */
@@ -65,17 +58,15 @@ function ghvFindVariantObjectBounds(content, variantNome) {
     }
 
     if (inTemplate) { i++; continue; }
-
     if (ch === '{') { depth++; i++; continue; }
 
     if (ch === '}') {
       depth--;
       if (depth === 0) {
         var end = i + 1;
-        /* Consome vírgula e quebra de linha que seguem o objeto */
         if (content[end] === ',') end++;
         if (content[end] === '\n') end++;
-        return { start: objOpen, end: end };
+        return { start: markerPos, end: end };
       }
       i++; continue;
     }
@@ -92,7 +83,7 @@ function ghvFindVariantObjectBounds(content, variantNome) {
    (conta ocorrências de "nome:" no escopo do array registerVariant)
 ═══════════════════════════════════════════════════════════════════════ */
 function ghvCountVariants(content) {
-  var re      = /nome\s*:/gi;
+  var re      = /\/\*@@@@Senko - /g;
   var matches = content.match(re);
   return matches ? matches.length : 0;
 }
