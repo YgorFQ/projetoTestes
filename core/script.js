@@ -479,7 +479,10 @@ function openVariantsModal(layout) {
 function closeVariantsModal() {
   document.getElementById('variantsOverlay').classList.add('hidden');
   document.body.style.overflow = '';
-  state.currentForVariant = null;
+  /* Só zera currentForVariant se o modal de edição de variante também estiver fechado */
+  if (document.getElementById('editVarOverlay').classList.contains('hidden')) {
+    state.currentForVariant = null;
+  }
 }
 
 function renderVariantBlocks(variants) {
@@ -696,12 +699,12 @@ function openEditVariantModal(v) {
 
 function closeEditVariantModal() {
   document.getElementById('editVarOverlay').classList.add('hidden');
-  /* Re-renderiza o grid de variantes para que todos os closures
-     reflitam os valores atualizados (nome, html, css) */
+  /* Re-renderiza e reabre o modal de variantes (pode ter sido escondido por baixo) */
   if (state.currentForVariant) {
     var parentId = state.currentForVariant.id;
     renderVariantBlocks(SenkoLib.getVariants(parentId));
     updateVariantsCount(parentId);
+    document.getElementById('variantsOverlay').classList.remove('hidden');
   }
   state.currentEditVariant = null;
 }
@@ -758,6 +761,8 @@ function updateEditVarCode() {
 }
 
 
+/* ─── Preview de variante (reutiliza modal visualizar) ── */
+function openVariantPreview(v) {
   /* Fecha o modal de variantes temporariamente e abre o de visualização */
   document.getElementById('variantsOverlay').classList.add('hidden');
 
@@ -830,9 +835,9 @@ function openEditModal(layout) {
 }
 
 function switchEditMode(mode) {
-  document.querySelectorAll('.edit-mode-btn').forEach(function(b){ b.classList.remove('active'); });
-  document.querySelectorAll('.edit-mode-panel').forEach(function(p){ p.classList.remove('active'); });
-  document.querySelector('[data-editmode="' + mode + '"]').classList.add('active');
+  document.querySelectorAll('#editModal .edit-mode-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('#editModal .edit-mode-panel').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelector('#editModal [data-editmode="' + mode + '"]').classList.add('active');
   document.getElementById('editMode' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('active');
 
   if (mode === 'preview') {
@@ -1015,7 +1020,7 @@ document.addEventListener('DOMContentLoaded', function () {
   /* Modal editar layout */
   document.getElementById('editModalClose').addEventListener('click', closeEditModal);
   document.getElementById('editModalOverlay').addEventListener('click', overlayClick('editModal', closeEditModal));
-  document.querySelectorAll('.edit-mode-btn').forEach(function (btn) {
+  document.querySelectorAll('#editModal .edit-mode-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
       switchEditMode(this.dataset.editmode);
       updateEditCode();
