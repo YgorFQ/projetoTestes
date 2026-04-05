@@ -13,40 +13,6 @@
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   ESTADO — pasta do projeto selecionada via File System Access API
-═══════════════════════════════════════════════════════════════════════ */
-var _projectDir = null;
-
-async function selectProjectFolder() {
-  try {
-    _projectDir = await window.showDirectoryPicker({ mode: 'readwrite' });
-    document.getElementById('fsaStatus').textContent = '📁 Pasta: ' + _projectDir.name;
-    document.getElementById('fsaStatus').style.color = 'var(--green)';
-  } catch (e) {
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════════════════
-   UI — Injeta a barra FSA no header ao carregar o DOM
-═══════════════════════════════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded', function () {
-  var header = document.querySelector('header.site-header');
-  if (!header) return;
-
-  var bar = document.createElement('div');
-  bar.className = 'fsa-bar';
-  bar.innerHTML =
-    '<span class="fsa-label">Modo experimental — File System Access</span>' +
-    '<button class="fsa-btn" id="selectFolderBtn">📁 Selecionar pasta do projeto</button>' +
-    '<span id="fsaStatus" class="fsa-status">Nenhuma pasta selecionada</span>';
-
-  header.appendChild(bar);
-
-  document.getElementById('selectFolderBtn').addEventListener('click', selectProjectFolder);
-});
-
-
-/* ═══════════════════════════════════════════════════════════════════════
    UTILITÁRIO: Parser híbrido
    Estratégia:
      1. Acha o marcador  @@@@Senko - [id]  no arquivo
@@ -430,8 +396,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (state.currentForVariant) {
             var updated = SenkoLib.getVariants(state.currentForVariant.id);
             renderVariantBlocks(updated);
-            var countEl = document.getElementById('variantsCount');
-            if (countEl) countEl.textContent = updated.length + (updated.length === 1 ? ' variação' : ' variações');
+            if (typeof updateVariantsCount === 'function') updateVariantsCount(state.currentForVariant.id);
           }
           renderGrid();
           var btn = document.getElementById('saveVariantToFileBtn');

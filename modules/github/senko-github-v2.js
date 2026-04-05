@@ -1086,8 +1086,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (state.currentForVariant) {
               var updated = SenkoLib.getVariants(state.currentForVariant.id);
               if (typeof renderVariantBlocks === 'function') renderVariantBlocks(updated);
-              var countEl = document.getElementById('variantsCount');
-              if (countEl) countEl.textContent = updated.length + (updated.length === 1 ? ' variação' : ' variações');
+              if (typeof updateVariantsCount === 'function') updateVariantsCount(state.currentForVariant.id);
             }
             ghVarBtn.innerHTML = GH_ICON + ' GitHub';
             ghVarBtn.disabled  = false;

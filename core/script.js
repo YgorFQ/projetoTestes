@@ -106,6 +106,28 @@ function toggleFav(id) {
 }
 
 
+/* ─── Favoritos de variantes (storage separado) ─────── */
+function getVarFavs() {
+  try { return JSON.parse(localStorage.getItem('senkolib_var_favs') || '{}'); }
+  catch(e) { return {}; }
+}
+function saveVarFavs(favs) {
+  localStorage.setItem('senkolib_var_favs', JSON.stringify(favs));
+}
+function isVarFav(parentId, variantName) {
+  var favs = getVarFavs();
+  return !!(favs[parentId] && favs[parentId].indexOf(variantName) !== -1);
+}
+function toggleVarFav(parentId, variantName) {
+  var favs = getVarFavs();
+  if (!favs[parentId]) favs[parentId] = [];
+  var idx = favs[parentId].indexOf(variantName);
+  if (idx === -1) favs[parentId].push(variantName);
+  else favs[parentId].splice(idx, 1);
+  saveVarFavs(favs);
+}
+
+
 /* ─── Scale iframe para preview desktop ─────────────── */
 function scaleCardIframe(iframe) {
   var container = iframe.parentElement;
@@ -133,6 +155,23 @@ function lazyIframe(iframe, html, css) {
   var src = buildSrcDoc(html, css);
   iframe.dataset.src = src;
   _iframeObserver.observe(iframe);
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   FILE SYSTEM ACCESS API — TESTE EXPERIMENTAL
+   Só funciona no Chrome/Edge. Não funciona com file://
+   Precisa de servidor local (ex: Live Server do VS Code)
+═══════════════════════════════════════════════════════ */
+var _projectDir = null;
+
+async function selectProjectFolder() {
+  try {
+    _projectDir = await window.showDirectoryPicker({ mode: 'readwrite' });
+    document.getElementById('fsaStatus').textContent = '📁 Pasta: ' + _projectDir.name;
+    document.getElementById('fsaStatus').style.color = 'var(--green)';
+  } catch (e) {
+  }
 }
 
 
@@ -396,6 +435,13 @@ function updateGeneratedCode() {
 }
 
 /* ─── Modal variantes ───────────────────────────────── */
+function updateVariantsCount(parentId) {
+  var countEl = document.getElementById('variantsCount');
+  if (!countEl) return;
+  var total = SenkoLib.getVariants(parentId).length;
+  countEl.textContent = total + (total === 1 ? ' variação' : ' variações');
+}
+
 function openVariantsModal(layout) {
   state.currentForVariant = layout;
   var key = layout.id;
@@ -404,8 +450,7 @@ function openVariantsModal(layout) {
   document.getElementById('variantsLayoutId').textContent = key;
 
   var vlist = SenkoLib.getVariants(key);
-  var countEl = document.getElementById('variantsCount');
-  if (countEl) countEl.textContent = vlist.length + (vlist.length === 1 ? ' variação' : ' variações');
+  updateVariantsCount(key);
   renderVariantBlocks(vlist);
 
   var overlay = document.getElementById('variantsOverlay');
@@ -470,16 +515,18 @@ function renderVariantBlocks(variants) {
     bC.innerHTML = HTML_ICON + ' CSS';
     bC.addEventListener('click', function (e) { e.stopPropagation(); copyToClipboard(v.css, bC, HTML_ICON + ' CSS'); });
 
-    /* Favorito — usa name como id da variante */
-    var varFavId = (state.currentForVariant ? state.currentForVariant.id : '') + '__' + (v.name || '');
+    /* Favorito — storage separado dos layouts */
+    var varParentId  = state.currentForVariant ? state.currentForVariant.id : '';
+    var variantName  = v.name || '';
     var bFav = document.createElement('button');
-    bFav.className = 'btn btn-fav' + (isFav(varFavId) ? ' active' : '');
+    bFav.className = 'btn btn-fav' + (isVarFav(varParentId, variantName) ? ' active' : '');
     bFav.title = 'Favorito';
     bFav.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
     bFav.addEventListener('click', function (e) {
       e.stopPropagation();
-      toggleFav(varFavId);
+      toggleVarFav(varParentId, variantName);
       bFav.classList.toggle('active');
+      updateVariantsCount(varParentId);
     });
 
     /* Editar */
@@ -489,14 +536,23 @@ function renderVariantBlocks(variants) {
     bEdit.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
     bEdit.addEventListener('click', function (e) { e.stopPropagation(); openVariantPreview(v); });
 
-    /* Excluir variante — comportamento injetado por módulo externo (ex: senko-github-variants.js) */
+    /* Excluir — chama modal do senko-github-variants.js se disponível */
     var bDel = document.createElement('button');
-    bDel.className = 'btn btn-fav btn-delete-variant-card';
+    bDel.className = 'btn btn-fav';
     bDel.title = 'Excluir variante';
-    bDel.dataset.variantName = v.name || '';
     bDel.style.cssText = 'color:#ef4444;border-color:#fca5a5;flex:none;width:34px;';
     bDel.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>';
-    bDel.addEventListener('click', function (e) { e.stopPropagation(); });
+    bDel.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var parentId = state.currentForVariant ? state.currentForVariant.id : null;
+      if (!parentId) return;
+      if (typeof ghvOpenDeleteModal === 'function') {
+        if (typeof ghEnsureToken === 'function' && !ghEnsureToken()) return;
+        ghvOpenDeleteModal(parentId, v.name || '');
+      } else {
+        alert('Módulo de exclusão do GitHub não está carregado.');
+      }
+    });
 
     actions.append(bH, bC, bFav, bEdit, bDel);
     block.append(previewWrap, body, actions);
@@ -818,6 +874,8 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* saveToFileBtn — listener gerenciado pelo senko-fsa.js (o botão é clonado lá) */
+
+  document.getElementById('selectFolderBtn').addEventListener('click', selectProjectFolder);
 
   /* Guia */
   /* Filtro favoritos */
