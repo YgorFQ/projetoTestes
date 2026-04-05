@@ -21,14 +21,14 @@
      - Toast de confirmação de cópia
 
    ORDEM DE CARREGAMENTO DOS SCRIPTS:
-     1. senkolib-core.js     — motor de registro (obrigatório primeiro)
-     2. layouts/layoutsXXX.js — pacotes de layouts
-     3. variants/[id].js     — variantes por layout
-     4. script.js            — lógica da UI
-     5. senko-github-v2.js   — salvar no GitHub via API
-     6. senko-github-variants.js — criar/deletar variantes no GitHub
-     7. senko-github-delete.js   — excluir layouts do GitHub
-     8. senko-fsa.js         — salvar localmente via File System Access
+     1. core/senkolib-core.js     — motor de registro (obrigatório primeiro)
+     2. layouts/layoutsXXX.js     — pacotes de layouts
+     3. variants/[id].js          — variantes por layout
+     4. core/script.js            — lógica da UI
+     5. modules/github/senko-github-v2.js       — salvar no GitHub via API
+     6. modules/github/senko-github-variants.js — criar/deletar variantes no GitHub
+     7. modules/github/senko-github-delete.js   — excluir layouts do GitHub
+     8. modules/fsa/senko-fsa.js               — salvar localmente via File System Access
 ════════════════════════════════════════════════════════ -->
 <html lang="pt-BR">
 
@@ -36,13 +36,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SenkoLib — Biblioteca de Layouts</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="assets/styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap"
     rel="stylesheet" />
-  <link rel="icon" type="image/x-icon" href="senko.ico" />
+  <link rel="icon" type="image/x-icon" href="assets/senko.ico" />
 </head>
 
 <body>
@@ -51,7 +51,7 @@
   <header class="site-header">
     <div class="header-inner">
       <div class="logo" id="logoHome" style="cursor:pointer;" title="Ver todos os layouts">
-        <img src="senko.png" class="logo-img" alt="SenkoLib" />
+        <img src="assets/senko.png" class="logo-img" alt="SenkoLib" />
         <span class="logo-text">Senko<strong>Lib</strong></span>
       </div>
       <div class="header-controls">
@@ -140,7 +140,7 @@
     <div class="stats-bar" id="statsBar"></div>
     <div class="grid" id="layoutGrid"></div>
     <div class="no-results hidden" id="noResults">
-      <img src="senko.png" class="no-results-icon" alt="Sem resultados" />
+      <img src="assets/senko.png" class="no-results-icon" alt="Sem resultados" />
       <p>Nenhum layout encontrado para <strong id="noResultsQuery"></strong></p>
     </div>
   </main>
@@ -441,9 +441,11 @@
           <p>O projeto é composto por:</p>
           <ul>
             <li><code>index.html</code> — interface principal</li>
-            <li><code>script.js</code> — lógica da aplicação</li>
-            <li><code>styles.css</code> — estilos</li>
-            <li><code>senkolib-core.js</code> — motor de registro de layouts e variantes</li>
+            <li><code>core/script.js</code> — lógica da aplicação</li>
+            <li><code>assets/styles.css</code> — estilos</li>
+            <li><code>core/senkolib-core.js</code> — motor de registro de layouts e variantes</li>
+            <li><code>modules/github/</code> — módulo GitHub (opcional)</li>
+            <li><code>modules/fsa/</code> — módulo File System Access (opcional)</li>
             <li><code>layouts/layoutsXXX.js</code> — arquivos com os layouts</li>
             <li><code>variants/nome-do-layout.js</code> — arquivos com variantes de cada layout</li>
           </ul>
@@ -508,7 +510,7 @@ SenkoLib.registerVariant('section-58', [
   <!-- Toast -->
   <div class="toast" id="toast">✓ Copiado!</div>
 
-  <script src="senkolib-core.js"></script>
+  <script src="core/senkolib-core.js"></script>
 
   <!-- ═══════════════════════════════════════════════════
        ARQUIVOS DE LAYOUTS
@@ -528,11 +530,11 @@ SenkoLib.registerVariant('section-58', [
   ════════════════════════════════════════════════════ -->
   <script src="variants/section-1.js"></script>
 
-  <script src="script.js"></script>
-  <script src="senko-github-v2.js"></script>
-  <script src="senko-github-variants.js"></script>
-  <script src="senko-github-delete.js"></script>
-  <script src="senko-fsa.js"></script>
+  <script src="core/script.js"></script>
+  <script src="modules/github/senko-github-v2.js"></script>
+  <script src="modules/github/senko-github-variants.js"></script>
+  <script src="modules/github/senko-github-delete.js"></script>
+  <script src="modules/fsa/senko-fsa.js"></script>
 </body>
 
 </html>
