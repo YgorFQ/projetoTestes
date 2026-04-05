@@ -288,11 +288,7 @@ document.addEventListener('DOMContentLoaded', function () {
     /* Torna o botão visível (estava display:none, reservado para módulos) */
     saveVarToFileBtn.style.display = '';
 
-    /* Clona para garantir listener limpo, sem herança de listeners antigos */
-    var cleanSaveBtn = saveVarToFileBtn.cloneNode(true);
-    saveVarToFileBtn.parentNode.replaceChild(cleanSaveBtn, saveVarToFileBtn);
-
-    cleanSaveBtn.addEventListener('click', async function () {
+    saveVarToFileBtn.addEventListener('click', async function () {
       if (!state.currentForVariant)  { alert('Nenhum layout pai selecionado.'); return; }
       if (!state.currentEditVariant) { alert('Nenhuma variante selecionada.');  return; }
 
