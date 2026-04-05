@@ -670,6 +670,53 @@ function ghvInjectNewVariantButton() {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
+   UI — Injeta comportamento de exclusão nos botões .btn-delete-variant-card
+   Usa MutationObserver para capturar botões criados dinamicamente
+   (renderVariantBlocks recria os cards toda vez que o modal de variantes abre)
+═══════════════════════════════════════════════════════════════════════ */
+function ghvAttachDeleteListener(btn) {
+  /* Evita attachar duas vezes no mesmo botão */
+  if (btn.dataset.ghvAttached) return;
+  btn.dataset.ghvAttached = '1';
+
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    var parentId = state.currentForVariant ? state.currentForVariant.id : null;
+    if (!parentId) return;
+    if (!ghEnsureToken()) return;
+    var variantName = btn.dataset.variantName || '';
+    ghvOpenDeleteModal(parentId, variantName);
+  });
+}
+
+function ghvInjectDeleteBehavior() {
+  /* Ataca nos botões já presentes */
+  document.querySelectorAll('.btn-delete-variant-card').forEach(ghvAttachDeleteListener);
+
+  /* Observa o grid de variantes para capturar botões criados depois */
+  var grid = document.getElementById('variantsGrid');
+  if (!grid || grid.dataset.ghvObserving) return;
+  grid.dataset.ghvObserving = '1';
+
+  var observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      mutation.addedNodes.forEach(function (node) {
+        if (node.nodeType !== 1) return; /* só elementos */
+        /* O botão pode ser o próprio nó adicionado ou estar dentro dele */
+        if (node.classList && node.classList.contains('btn-delete-variant-card')) {
+          ghvAttachDeleteListener(node);
+        } else if (node.querySelectorAll) {
+          node.querySelectorAll('.btn-delete-variant-card').forEach(ghvAttachDeleteListener);
+        }
+      });
+    });
+  });
+
+  observer.observe(grid, { childList: true, subtree: true });
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
    INICIALIZAÇÃO
 ═══════════════════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', function () {
@@ -677,4 +724,5 @@ document.addEventListener('DOMContentLoaded', function () {
   ghvInjectStyles();
   ghvCreateDeleteModal();
   ghvInjectNewVariantButton();
+  ghvInjectDeleteBehavior();
 });
