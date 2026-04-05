@@ -15,8 +15,11 @@ SenkoLib.registerVariant('section-1', [
     css: `teste2`,
   },
 
-  { nome: 'have maruaweda',
-    html: `have maruaweda`,
-    css: `have maruaweda` }
+/*@@@@Senko - aaaa */
+  {
+    name: 'aaaa',
+    html: `aaaa`,
+    css: `aaaa`,
+  },
 
 ]);
