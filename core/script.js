@@ -4,13 +4,14 @@
 ═══════════════════════════════════════════════════════ */
 
 var state = {
-  search:            '',
-  current:           null,
-  currentEdit:       null,
-  currentForVariant: null,
-  _fromVariant:      false,
-  viewMode:          'normal',
-  favOnly:           false,
+  search:             '',
+  current:            null,
+  currentEdit:        null,
+  currentForVariant:  null,
+  currentEditVariant: null,
+  _fromVariant:       false,
+  viewMode:           'normal',
+  favOnly:            false,
 };
 
 /* ─── Utilitários ─────────────────────────────────── */
@@ -546,12 +547,12 @@ function renderVariantBlocks(variants) {
       updateVariantsCount(varParentId);
     });
 
-    /* Editar / Preview */
+    /* Editar */
     var bEdit = document.createElement('button');
     bEdit.className = 'btn btn-edit-icon';
-    bEdit.title = 'Visualizar variante';
+    bEdit.title = 'Editar variante';
     bEdit.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
-    bEdit.addEventListener('click', function (e) { e.stopPropagation(); openVariantPreview(v); });
+    bEdit.addEventListener('click', function (e) { e.stopPropagation(); openEditVariantModal(v); });
 
     /* Botão de excluir — mantido no DOM para os módulos GitHub, mas escondido visualmente */
     var bDel = document.createElement('button');
@@ -649,8 +650,114 @@ function updateNewVarCode() {
 }
 
 
-/* ─── Preview de variante (reutiliza modal visualizar) ── */
-function openVariantPreview(v) {
+/* ─── Modal editar variante ─────────────────────────── */
+function openEditVariantModal(v) {
+  /* Guarda referência ao objeto (é referência direta ao array em memória) */
+  state.currentEditVariant = v;
+
+  var parentId = state.currentForVariant ? state.currentForVariant.id   : '';
+  var parentNm = state.currentForVariant ? state.currentForVariant.name : '';
+
+  document.getElementById('editVarParentName').textContent  = parentNm;
+  document.getElementById('editVarFileHint').textContent    = parentId;
+  document.getElementById('editVarName').value              = v.name || '';
+  document.getElementById('editVarHtml').value              = v.html || '';
+  document.getElementById('editVarCss').value               = v.css  || '';
+
+  /* Configura o botão de excluir — mantém data-variant-name atualizado para o módulo GitHub */
+  var delBtn = document.getElementById('editVarDeleteBtn');
+  if (delBtn) {
+    delBtn.dataset.variantName = v.name || '';
+    delBtn.style.display = '';   /* sempre visível no modal de edição */
+    delBtn.onclick = function (e) {
+      e.stopPropagation();
+      if (typeof ghvOpenDeleteModal === 'function') {
+        if (typeof ghEnsureToken === 'function' && !ghEnsureToken()) return;
+        ghvOpenDeleteModal(parentId, v.name || '');
+      } else {
+        /* Exclusão local: remove da memória e re-renderiza */
+        var arr = SenkoLib.getVariants(parentId);
+        var idx = arr.indexOf(v);
+        if (idx !== -1) arr.splice(idx, 1);
+        closeEditVariantModal();
+        renderVariantBlocks(SenkoLib.getVariants(parentId));
+        updateVariantsCount(parentId);
+      }
+    };
+  }
+
+  var overlay = document.getElementById('editVarOverlay');
+  overlay.classList.remove('hidden');
+  overlay.scrollTop = 0;
+
+  /* Abre em preview por padrão */
+  setTimeout(function () { switchEditVarMode('preview'); updateEditVarCode(); }, 10);
+}
+
+function closeEditVariantModal() {
+  document.getElementById('editVarOverlay').classList.add('hidden');
+  /* Re-renderiza o grid de variantes para que todos os closures
+     reflitam os valores atualizados (nome, html, css) */
+  if (state.currentForVariant) {
+    var parentId = state.currentForVariant.id;
+    renderVariantBlocks(SenkoLib.getVariants(parentId));
+    updateVariantsCount(parentId);
+  }
+  state.currentEditVariant = null;
+}
+
+function switchEditVarMode(mode) {
+  document.querySelectorAll('.edit-var-mode-btn').forEach(function (b) { b.classList.remove('active'); });
+  document.querySelectorAll('#editVarModal .edit-mode-panel').forEach(function (p) { p.classList.remove('active'); });
+  document.querySelector('[data-evmode="' + mode + '"]').classList.add('active');
+  document.getElementById('editVarMode' + mode.charAt(0).toUpperCase() + mode.slice(1)).classList.add('active');
+
+  if (mode === 'preview') {
+    var h = document.getElementById('editVarHtml').value;
+    var c = document.getElementById('editVarCss').value;
+    var f = document.getElementById('editVarPreviewIframe');
+    f.srcdoc = '';
+    setTimeout(function () { if (h || c) f.srcdoc = buildSrcDoc(h, c); }, 50);
+  }
+}
+
+function updateEditVarCode() {
+  var name = document.getElementById('editVarName').value.trim().toLowerCase();
+  var html = document.getElementById('editVarHtml').value;
+  var css  = document.getElementById('editVarCss').value;
+
+  var copyBtn = document.getElementById('copyEditVarBtn');
+  var ok = name.length >= 3 && html.length >= 1;
+  if (copyBtn) {
+    if (ok) copyBtn.classList.remove('btn-blocked');
+    else    copyBtn.classList.add('btn-blocked');
+  }
+
+  var safeHtml = html.replace(/`/g, '\\`');
+  var safeCss  = css.replace(/`/g, '\\`');
+
+  document.getElementById('editVarGeneratedCode').textContent =
+    '/*@@@@Senko - ' + name + ' */\n' +
+    '  {\n' +
+    "    name: '" + name + "',\n" +
+    '    html: `' + safeHtml + '`,\n' +
+    '    css: `'  + safeCss  + '`,\n' +
+    '  },';
+
+  /*
+   * ATUALIZAÇÃO EM MEMÓRIA — segura porque:
+   * 1. `state.currentEditVariant` é referência direta ao objeto no array _variants
+   * 2. Ao fechar/confirmar, chamamos renderVariantBlocks que recria todos os closures
+   *    com os valores novos — sem inconsistência de closures velhos
+   */
+  if (state.currentEditVariant) {
+    state.currentEditVariant.name = name;
+    state.currentEditVariant.html = html;
+    state.currentEditVariant.css  = css;
+  }
+}
+
+
   /* Fecha o modal de variantes temporariamente e abre o de visualização */
   document.getElementById('variantsOverlay').classList.add('hidden');
 
@@ -887,7 +994,25 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
 
-  /* Modal editar */
+  /* Modal editar variante */
+  document.getElementById('editVarClose').addEventListener('click', closeEditVariantModal);
+  document.getElementById('editVarOverlay').addEventListener('click', overlayClick('editVar', closeEditVariantModal));
+  document.querySelectorAll('.edit-var-mode-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      switchEditVarMode(this.dataset.evmode);
+      updateEditVarCode();
+    });
+  });
+  ['editVarName','editVarHtml','editVarCss'].forEach(function (id) {
+    document.getElementById(id).addEventListener('input', updateEditVarCode);
+  });
+  document.getElementById('copyEditVarBtn').addEventListener('click', function () {
+    if (this.classList.contains('btn-blocked')) return;
+    var code = document.getElementById('editVarGeneratedCode').textContent;
+    if (code.indexOf('//') !== 0) copyToClipboard(code, this, COPY_ICON + ' Copiar objeto');
+  });
+
+  /* Modal editar layout */
   document.getElementById('editModalClose').addEventListener('click', closeEditModal);
   document.getElementById('editModalOverlay').addEventListener('click', overlayClick('editModal', closeEditModal));
   document.querySelectorAll('.edit-mode-btn').forEach(function (btn) {
@@ -935,10 +1060,11 @@ document.addEventListener('DOMContentLoaded', function () {
   /* Escape */
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    if (!document.getElementById('newVarOverlay').classList.contains('hidden'))        closeNewVariantModal();
-    else if (!document.getElementById('variantsOverlay').classList.contains('hidden')) closeVariantsModal();
-    else if (!document.getElementById('editModalOverlay').classList.contains('hidden')) closeEditModal();
-    else if (!document.getElementById('addModalOverlay').classList.contains('hidden')) closeAddModal();
+    if (!document.getElementById('editVarOverlay').classList.contains('hidden'))         closeEditVariantModal();
+    else if (!document.getElementById('newVarOverlay').classList.contains('hidden'))     closeNewVariantModal();
+    else if (!document.getElementById('variantsOverlay').classList.contains('hidden'))   closeVariantsModal();
+    else if (!document.getElementById('editModalOverlay').classList.contains('hidden'))  closeEditModal();
+    else if (!document.getElementById('addModalOverlay').classList.contains('hidden'))   closeAddModal();
     else closeModal();
   });
 

@@ -956,6 +956,25 @@ body {
   max-width: 1600px;
 }
 
+/* Botão excluir variante dentro do modal de edição */
+.btn-delete-var-modal {
+  display: inline-flex; align-items: center; gap: .4rem;
+  background: transparent;
+  border: 1.5px solid #fca5a5;
+  border-radius: var(--radius);
+  padding: .5rem 1rem;
+  font-family: var(--font-body); font-size: .9rem; font-weight: 800;
+  color: var(--red); cursor: pointer;
+  transition: all var(--transition);
+}
+.btn-delete-var-modal:hover {
+  background: rgba(224,48,48,.08);
+  border-color: var(--red);
+}
+
+/* Sub-modal editar variante — sobrepõe modal de variantes */
+#editVarOverlay { z-index: 1100; }
+
 .edit-mode-bar {
   display: flex;
   gap: .4rem;
@@ -963,7 +982,8 @@ body {
   border-bottom: 1.5px solid var(--border);
 }
 
-.edit-mode-btn {
+.edit-mode-btn,
+.edit-var-mode-btn {
   background: transparent;
   border: 1.5px solid var(--border);
   border-radius: var(--radius);
@@ -973,8 +993,8 @@ body {
   color: var(--text2); cursor: pointer;
   transition: all var(--transition);
 }
-.edit-mode-btn:hover { border-color: var(--accent); color: var(--accent); }
-.edit-mode-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
+.edit-mode-btn:hover, .edit-var-mode-btn:hover { border-color: var(--accent); color: var(--accent); }
+.edit-mode-btn.active, .edit-var-mode-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 700; }
 
 .edit-mode-panel { display: none; }
 .edit-mode-panel.active { display: block; }
