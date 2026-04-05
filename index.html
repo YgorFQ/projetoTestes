@@ -36,13 +36,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SenkoLib — Biblioteca de Layouts</title>
-  <script>
-    /* Aplica o tema ANTES do CSS renderizar — evita flash branco */
-    (function(){
-      var t = localStorage.getItem('senkolib_theme');
-      if (t) document.documentElement.setAttribute('data-theme', t);
-    })();
-  </script>
+  <script>(function(){var t=localStorage.getItem('senkolib_theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
   <link rel="stylesheet" href="assets/styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -102,11 +96,10 @@
         </button>
 
         <!-- Tema -->
-        <button class="theme-toggle" id="themeToggleBtn" title="Alternar tema">
-          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+        <button class="theme-toggle" id="themeToggleBtn" title="Tema escuro">
+          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
           </svg>
-          <span id="themeLabel">Escuro</span>
         </button>
 
         <!-- Modos de visualização -->
@@ -149,13 +142,6 @@
       </div>
     </div>
   </header>
-
-  <!-- BARRA FSA (File System Access — modo experimental local) -->
-  <div class="fsa-bar" id="fsaBar">
-    <span class="fsa-label">⚡ FSA</span>
-    <span class="fsa-status" id="fsaStatus">Nenhuma pasta selecionada</span>
-    <button class="fsa-btn" id="selectFolderBtn">📁 Selecionar pasta do projeto</button>
-  </div>
 
   <!-- DASHBOARD -->
   <main class="dashboard" id="dashboard">
@@ -649,41 +635,28 @@ SenkoLib.registerVariant('section-58', [
   <script src="modules/github/senko-github-delete.js"></script>
   <script src="modules/fsa/senko-fsa.js"></script>
   <script>
-  /* ═══════════════════════════════════════════════
-     TEMA — toggle claro/escuro com persistência
-  ═══════════════════════════════════════════════ */
   (function () {
-    var STORAGE_KEY = 'senkolib_theme';
-    var SUN_ICON  = '<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/><circle cx="12" cy="12" r="5"/>';
-    var MOON_ICON = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+    var KEY = 'senkolib_theme';
+    var SUN  = '<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/><circle cx="12" cy="12" r="5"/>';
+    var MOON = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
 
-    function applyTheme(theme) {
+    function apply(theme) {
       document.documentElement.setAttribute('data-theme', theme);
-      var icon  = document.getElementById('themeIcon');
-      var label = document.getElementById('themeLabel');
-      if (!icon || !label) return;
-      if (theme === 'dark') {
-        icon.innerHTML  = SUN_ICON;
-        label.textContent = 'Claro';
-      } else {
-        icon.innerHTML  = MOON_ICON;
-        label.textContent = 'Escuro';
-      }
+      var icon = document.getElementById('themeIcon');
+      var btn  = document.getElementById('themeToggleBtn');
+      if (!icon) return;
+      icon.innerHTML = theme === 'dark' ? SUN : MOON;
+      if (btn) btn.title = theme === 'dark' ? 'Tema claro' : 'Tema escuro';
     }
 
-    /* Aplica imediatamente ao carregar (evita flash) */
-    var saved = localStorage.getItem(STORAGE_KEY) || 'light';
-    applyTheme(saved);
+    apply(localStorage.getItem(KEY) || 'light');
 
     document.addEventListener('DOMContentLoaded', function () {
-      /* Reaplicar após DOM pronto (garante ícone correto) */
-      applyTheme(localStorage.getItem(STORAGE_KEY) || 'light');
-
+      apply(localStorage.getItem(KEY) || 'light');
       document.getElementById('themeToggleBtn').addEventListener('click', function () {
-        var current = document.documentElement.getAttribute('data-theme') || 'light';
-        var next    = current === 'dark' ? 'light' : 'dark';
-        localStorage.setItem(STORAGE_KEY, next);
-        applyTheme(next);
+        var next = (document.documentElement.getAttribute('data-theme') || 'light') === 'dark' ? 'light' : 'dark';
+        localStorage.setItem(KEY, next);
+        apply(next);
       });
     });
   })();
