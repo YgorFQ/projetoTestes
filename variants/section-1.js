@@ -1,11 +1,17 @@
 // @ts-nocheck
 SenkoLib.registerVariant('section-1', [
 
-/*@@@@Senko - teste */
+/*@@@@Senko - teste2 */
   {
-    name: 'teste',
-    html: `teste`,
+    name: 'teste2',
+    html: `teste2`,
     css: `teste`,
   },
   
+/*@@@@Senko - teste3 */
+  {
+    name: 'teste3',
+    html: `test3`,
+    css: `test3`,
+  },,
 ]);
