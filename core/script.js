@@ -436,10 +436,26 @@ function updateGeneratedCode() {
 
 /* ─── Modal variantes ───────────────────────────────── */
 function updateVariantsCount(parentId) {
-  var countEl = document.getElementById('variantsCount');
+  var countEl  = document.getElementById('variantsCount');
+  var favSep   = document.getElementById('variantsFavSep');
+  var favBlock = document.getElementById('variantsFavCount');
+  var favNum   = document.getElementById('variantsFavNum');
   if (!countEl) return;
-  var total = SenkoLib.getVariants(parentId).length;
-  countEl.textContent = total + (total === 1 ? ' variação' : ' variações');
+
+  var total    = SenkoLib.getVariants(parentId).length;
+  countEl.textContent = 'TOTAL: ' + total + (total === 1 ? ' VARIAÇÃO' : ' VARIAÇÕES');
+
+  /* Favoritos — só mostra se pelo menos 1 for favoritado */
+  var varFavs  = getVarFavs();
+  var favCount = (varFavs[parentId] && varFavs[parentId].length) || 0;
+  if (favCount > 0 && favBlock && favSep && favNum) {
+    favNum.textContent = favCount;
+    favBlock.classList.remove('hidden');
+    favSep.style.display = '';
+  } else if (favBlock && favSep) {
+    favBlock.classList.add('hidden');
+    favSep.style.display = 'none';
+  }
 }
 
 function openVariantsModal(layout) {
@@ -470,7 +486,8 @@ function renderVariantBlocks(variants) {
   grid.innerHTML = '';
 
   if (variants.length === 0) {
-    grid.innerHTML = '<p class="variants-empty">Nenhuma variante cadastrada ainda.<br>Crie a primeira usando o botão abaixo.</p>';
+    /* Mesmo sem variantes, exibe o card de adicionar */
+    grid.appendChild(_makeAddVariantCard());
     return;
   }
 
@@ -501,7 +518,7 @@ function renderVariantBlocks(variants) {
     nameEl.textContent = v.name || '';
     body.appendChild(nameEl);
 
-    /* Ações — mesmos botões do card de layout, exceto o + */
+    /* Ações */
     var actions = document.createElement('div');
     actions.className = 'variant-footer';
 
@@ -515,7 +532,7 @@ function renderVariantBlocks(variants) {
     bC.innerHTML = HTML_ICON + ' CSS';
     bC.addEventListener('click', function (e) { e.stopPropagation(); copyToClipboard(v.css, bC, HTML_ICON + ' CSS'); });
 
-    /* Favorito — storage separado dos layouts */
+    /* Favorito */
     var varParentId  = state.currentForVariant ? state.currentForVariant.id : '';
     var variantName  = v.name || '';
     var bFav = document.createElement('button');
@@ -529,18 +546,19 @@ function renderVariantBlocks(variants) {
       updateVariantsCount(varParentId);
     });
 
-    /* Editar */
+    /* Editar / Preview */
     var bEdit = document.createElement('button');
     bEdit.className = 'btn btn-edit-icon';
-    bEdit.title = 'Editar variante';
+    bEdit.title = 'Visualizar variante';
     bEdit.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
     bEdit.addEventListener('click', function (e) { e.stopPropagation(); openVariantPreview(v); });
 
-    /* Excluir — chama modal do senko-github-variants.js se disponível */
+    /* Botão de excluir — mantido no DOM para os módulos GitHub, mas escondido visualmente */
     var bDel = document.createElement('button');
-    bDel.className = 'btn btn-fav';
+    bDel.className = 'btn btn-fav btn-delete-variant-card';
+    bDel.dataset.variantName = v.name || '';
     bDel.title = 'Excluir variante';
-    bDel.style.cssText = 'color:#ef4444;border-color:#fca5a5;flex:none;width:34px;';
+    bDel.style.cssText = 'display:none;'; /* oculto — gerenciado pelo senko-github-variants.js */
     bDel.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>';
     bDel.addEventListener('click', function (e) {
       e.stopPropagation();
@@ -549,19 +567,33 @@ function renderVariantBlocks(variants) {
       if (typeof ghvOpenDeleteModal === 'function') {
         if (typeof ghEnsureToken === 'function' && !ghEnsureToken()) return;
         ghvOpenDeleteModal(parentId, v.name || '');
-      } else {
-        alert('Módulo de exclusão do GitHub não está carregado.');
       }
     });
 
     actions.append(bH, bC, bFav, bEdit, bDel);
     block.append(previewWrap, body, actions);
 
-    /* Clique no card abre preview */
     block.addEventListener('click', function () { openVariantPreview(v); });
 
     grid.appendChild(block);
   });
+
+  /* Card de adicionar sempre na última posição */
+  grid.appendChild(_makeAddVariantCard());
+}
+
+function _makeAddVariantCard() {
+  var card = document.createElement('button');
+  card.className = 'variant-add-card';
+  card.id = 'openNewVariantBtn';
+  card.innerHTML =
+    '<div class="variant-add-icon">+</div>' +
+    '<span>Adicionar Nova Variante</span>';
+  card.addEventListener('click', function (e) {
+    e.stopPropagation();
+    openNewVariantModal();
+  });
+  return card;
 }
 
 /* ─── Modal nova variante ───────────────────────────── */
@@ -822,7 +854,7 @@ document.addEventListener('DOMContentLoaded', function () {
   /* Modal variantes */
   document.getElementById('variantsClose').addEventListener('click', closeVariantsModal);
   document.getElementById('variantsOverlay').addEventListener('click', overlayClick('variants', closeVariantsModal));
-  document.getElementById('openNewVariantBtn').addEventListener('click', openNewVariantModal);
+  /* openNewVariantBtn — criado dinamicamente em _makeAddVariantCard(), listener atribuído lá */
 
   /* Modal nova variante */
   document.getElementById('newVarClose').addEventListener('click', closeNewVariantModal);

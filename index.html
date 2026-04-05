@@ -340,28 +340,43 @@
   <!-- MODAL VARIANTES -->
   <div class="modal-overlay hidden" id="variantsOverlay">
     <div class="modal variants-modal" id="variantsModal">
-      <div class="modal-header">
-        <div class="modal-meta">
+
+      <!-- Cabeçalho do modal -->
+      <div class="variants-modal-header">
+        <div class="variants-header-left">
           <span class="modal-category">Variantes</span>
           <h2 class="modal-title" id="variantsTitle"></h2>
-          <p class="variants-count" id="variantsCount"></p>
           <p class="variants-hint">
             Arquivo: <code>variants/<span id="variantsLayoutId"></span>.js</code>
           </p>
         </div>
-        <button class="modal-close" id="variantsClose" title="Fechar">✕</button>
+        <div class="variants-header-right">
+          <!-- Badge de contagem — sem background, só border laranja -->
+          <div class="variants-stats-badge" id="variantsStatsBadge">
+            <span id="variantsCount"></span>
+            <span class="variants-stats-sep" id="variantsFavSep" style="display:none">·</span>
+            <span class="variants-fav-count hidden" id="variantsFavCount">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12" style="color:#f5a623">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+              <span id="variantsFavNum"></span> favorito
+            </span>
+          </div>
+          <!-- Barra de pesquisa de variantes (visual, sem lógica por enquanto) -->
+          <div class="variants-search-wrap">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input type="text" class="variants-search-input" placeholder="Pesquisar variações…" autocomplete="off" id="variantsSearchInput" />
+          </div>
+          <button class="modal-close" id="variantsClose" title="Fechar">✕</button>
+        </div>
       </div>
+
+      <!-- Grid de variantes -->
       <div class="variants-grid-wrap">
         <div class="variants-grid" id="variantsGrid"></div>
-      </div>
-      <div class="variants-footer-bar">
-        <button class="btn-add" id="openNewVariantBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
-            <line x1="12" y1="5" x2="12" y2="19" />
-            <line x1="5" y1="12" x2="19" y2="12" />
-          </svg>
-          Nova Variante
-        </button>
       </div>
     </div>
   </div>

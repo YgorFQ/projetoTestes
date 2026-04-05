@@ -568,10 +568,104 @@ body {
   overflow: hidden;
 }
 
+/* Cabeçalho do modal variantes — layout personalizado */
+.variants-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.25rem;
+  padding: 1.5rem 1.75rem 1.25rem;
+  border-bottom: 1.5px solid var(--border);
+  background: linear-gradient(135deg, rgba(255,107,0,.04) 0%, transparent 60%);
+  flex-wrap: wrap;
+}
+
+.variants-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  flex: 1;
+  min-width: 200px;
+}
+
+.variants-header-right {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
+
+/* Badge de contagem — só border laranja, sem background */
+.variants-stats-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  border: 1.5px solid var(--accent);
+  border-radius: 99px;
+  padding: .3rem .85rem;
+  font-family: var(--font-body);
+  font-size: .78rem;
+  font-weight: 800;
+  color: var(--text2);
+  white-space: nowrap;
+}
+
+.variants-stats-badge #variantsCount {
+  color: var(--accent);
+}
+
+.variants-stats-sep {
+  color: var(--text3);
+  font-weight: 400;
+}
+
+.variants-fav-count {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  color: #f5a623;
+  font-weight: 800;
+}
+
+/* Barra de pesquisa de variantes */
+.variants-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.variants-search-wrap .search-icon {
+  position: absolute;
+  left: .65rem;
+  width: 13px;
+  height: 13px;
+  color: var(--text3);
+  pointer-events: none;
+}
+
+.variants-search-input {
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: .4rem .7rem .4rem 2rem;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: .82rem;
+  width: 200px;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.variants-search-input::placeholder { color: var(--text3); }
+.variants-search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+  background: #fff;
+}
+
 .variants-hint {
   font-size: .82rem;
   color: var(--text2);
-  margin-top: .2rem;
+  margin-top: .1rem;
 }
 .variants-hint code {
   background: var(--accent-bg); color: var(--accent);
@@ -585,17 +679,68 @@ body {
   padding: 1.5rem 1.75rem;
 }
 
+/* Grid 4 colunas — última posição sempre é o botão de adicionar */
 .variants-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.25rem;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1400px) {
+  .variants-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 1000px) {
   .variants-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 700px) {
   .variants-grid { grid-template-columns: 1fr; }
+}
+
+/* Botão "Adicionar Nova Variante" como card no grid */
+.variant-add-card {
+  border: 2px dashed var(--border2);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .75rem;
+  min-height: 280px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text3);
+  font-family: var(--font-display);
+  font-size: .85rem;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  transition: all var(--transition);
+  animation: cardIn .3s cubic-bezier(.4,0,.2,1) both;
+}
+.variant-add-card:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 24px rgba(255,107,0,.1);
+}
+.variant-add-card:hover .variant-add-icon {
+  background: var(--accent);
+  color: #fff;
+}
+
+.variant-add-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 300;
+  transition: all var(--transition);
+  line-height: 1;
 }
 
 .variants-empty {
@@ -670,12 +815,7 @@ body {
   border-top: 1.5px solid var(--border);
 }
 
-.variants-footer-bar {
-  padding: 1rem 1.75rem;
-  border-top: 1.5px solid var(--border);
-  display: flex;
-  justify-content: flex-end;
-}
+/* .variants-footer-bar removido — botão agora é card no grid */
 
 /* ─── Modal nova variante ────────────────────────────── */
 .newvar-modal {
@@ -739,13 +879,7 @@ body {
   line-height: 1;
 }
 
-/* ─── Contagem no modal variantes ────────────────────── */
-.variants-count {
-  font-size: .82rem;
-  font-weight: 700;
-  color: var(--accent);
-  margin-top: -.2rem;
-}
+/* .variants-count substituído por .variants-stats-badge */
 
 /* ─── Botão favorito ─────────────────────────────────── */
 .btn-fav {
