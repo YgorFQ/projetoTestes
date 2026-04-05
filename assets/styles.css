@@ -217,7 +217,7 @@ body {
 
 .modal {
   background:var(--bg); border:1.5px solid var(--border);
-  border-radius:var(--radius-lg); width:100%; max-width:960px;
+  border-radius:var(--radius-lg); width:100%; max-width:1600px;
   box-shadow:var(--shadow-lg);
   animation:modalIn .25s cubic-bezier(.4,0,.2,1); overflow:visible;
 }
@@ -286,7 +286,7 @@ body {
 }
 
 /* ─── Modal Adicionar ────────────────────────────────── */
-.add-modal { max-width:1000px; position:relative; overflow:hidden; }
+.add-modal { max-width:1600px; position:relative; overflow:hidden; }
 
 /* Fundo do macaco - quase imperceptível */
 .add-modal::before {
@@ -819,7 +819,7 @@ body {
 
 /* ─── Modal nova variante ────────────────────────────── */
 .newvar-modal {
-  max-width: 900px;
+  max-width: 1600px;
 }
 
 /* ─── Correções modais variantes ─────────────────────── */
@@ -953,7 +953,7 @@ body {
 
 /* ─── Modal de edição ────────────────────────────────── */
 .edit-modal {
-  max-width: 1100px;
+  max-width: 1600px;
 }
 
 .edit-mode-bar {
