@@ -136,23 +136,6 @@ function lazyIframe(iframe, html, css) {
 }
 
 
-/* ═══════════════════════════════════════════════════════
-   FILE SYSTEM ACCESS API — TESTE EXPERIMENTAL
-   Só funciona no Chrome/Edge. Não funciona com file://
-   Precisa de servidor local (ex: Live Server do VS Code)
-═══════════════════════════════════════════════════════ */
-var _projectDir = null;
-
-async function selectProjectFolder() {
-  try {
-    _projectDir = await window.showDirectoryPicker({ mode: 'readwrite' });
-    document.getElementById('fsaStatus').textContent = '📁 Pasta: ' + _projectDir.name;
-    document.getElementById('fsaStatus').style.color = 'var(--green)';
-  } catch (e) {
-  }
-}
-
-
 /* ─── Grid ─────────────────────────────────────────── */
 function getFilteredLayouts() {
   var q = state.search.toLowerCase();
@@ -844,8 +827,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* saveToFileBtn — listener gerenciado pelo senko-fsa.js (o botão é clonado lá) */
-
-  document.getElementById('selectFolderBtn').addEventListener('click', selectProjectFolder);
 
   /* Guia */
   /* Filtro favoritos */
