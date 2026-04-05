@@ -4,7 +4,7 @@ SenkoLib.registerVariant('section-1', [
 /*@@@@Senko - teste */
   {
     name: 'teste',
-    html: `teste`,
+    html: `teste2`,
     css: `teste`,
   },
   
