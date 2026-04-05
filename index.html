@@ -36,6 +36,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SenkoLib — Biblioteca de Layouts</title>
+  <script>
+    /* Aplica o tema ANTES do CSS renderizar — evita flash branco */
+    (function(){
+      var t = localStorage.getItem('senkolib_theme');
+      if (t) document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
   <link rel="stylesheet" href="assets/styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -92,6 +99,14 @@
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
           Adicionar
+        </button>
+
+        <!-- Tema -->
+        <button class="theme-toggle" id="themeToggleBtn" title="Alternar tema">
+          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <span id="themeLabel">Escuro</span>
         </button>
 
         <!-- Modos de visualização -->
@@ -633,7 +648,46 @@ SenkoLib.registerVariant('section-58', [
   <script src="modules/github/senko-github-variants.js"></script>
   <script src="modules/github/senko-github-delete.js"></script>
   <script src="modules/fsa/senko-fsa.js"></script>
-  <script src="modules/fsa/senko-fsa-variants.js"></script>
+  <script>
+  /* ═══════════════════════════════════════════════
+     TEMA — toggle claro/escuro com persistência
+  ═══════════════════════════════════════════════ */
+  (function () {
+    var STORAGE_KEY = 'senkolib_theme';
+    var SUN_ICON  = '<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/><circle cx="12" cy="12" r="5"/>';
+    var MOON_ICON = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      var icon  = document.getElementById('themeIcon');
+      var label = document.getElementById('themeLabel');
+      if (!icon || !label) return;
+      if (theme === 'dark') {
+        icon.innerHTML  = SUN_ICON;
+        label.textContent = 'Claro';
+      } else {
+        icon.innerHTML  = MOON_ICON;
+        label.textContent = 'Escuro';
+      }
+    }
+
+    /* Aplica imediatamente ao carregar (evita flash) */
+    var saved = localStorage.getItem(STORAGE_KEY) || 'light';
+    applyTheme(saved);
+
+    document.addEventListener('DOMContentLoaded', function () {
+      /* Reaplicar após DOM pronto (garante ícone correto) */
+      applyTheme(localStorage.getItem(STORAGE_KEY) || 'light');
+
+      document.getElementById('themeToggleBtn').addEventListener('click', function () {
+        var current = document.documentElement.getAttribute('data-theme') || 'light';
+        var next    = current === 'dark' ? 'light' : 'dark';
+        localStorage.setItem(STORAGE_KEY, next);
+        applyTheme(next);
+      });
+    });
+  })();
+  </script>
 </body>
 
 </html>
