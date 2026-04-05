@@ -446,31 +446,72 @@ function renderVariantBlocks(variants) {
     return;
   }
 
-  variants.forEach(function (v) {
+  variants.forEach(function (v, i) {
     var block = document.createElement('div');
     block.className = 'variant-block';
     block.dataset.variantName = v.name || '';
+    block.style.animationDelay = (i * 40) + 'ms';
 
+    /* Preview */
     var previewWrap = document.createElement('div');
     previewWrap.className = 'variant-preview';
     var vIframe = document.createElement('iframe');
     vIframe.className = 'card-iframe';
     vIframe.sandbox = 'allow-scripts';
-    vIframe.srcdoc = buildSrcDoc(v.html, v.css);
-    previewWrap.appendChild(vIframe);
+    vIframe.title = v.name || '';
+    lazyIframe(vIframe, v.html, v.css);
+    vIframe.addEventListener('load', function () { scaleCardIframe(vIframe); });
+    var ov = document.createElement('div');
+    ov.className = 'variant-preview-overlay';
+    previewWrap.append(vIframe, ov);
 
-    var footer = document.createElement('div'); footer.className = 'variant-footer';
-    var vname  = document.createElement('span'); vname.className = 'variant-name'; vname.textContent = v.name || '';
+    /* Body — nome */
+    var body = document.createElement('div');
+    body.className = 'variant-body';
+    var nameEl = document.createElement('div');
+    nameEl.className = 'variant-name';
+    nameEl.textContent = v.name || '';
+    body.appendChild(nameEl);
 
-    var bH = document.createElement('button'); bH.className = 'btn btn-ghost'; bH.innerHTML = HTML_ICON + ' HTML';
-    bH.addEventListener('click', function () { copyToClipboard(v.html, bH, HTML_ICON + ' HTML'); });
-    var bC = document.createElement('button'); bC.className = 'btn btn-ghost'; bC.innerHTML = HTML_ICON + ' CSS';
-    bC.addEventListener('click', function () { copyToClipboard(v.css, bC, HTML_ICON + ' CSS'); });
-    var bV = document.createElement('button'); bV.className = 'btn btn-primary'; bV.textContent = 'Visualizar';
-    bV.addEventListener('click', function () { openVariantPreview(v); });
+    /* Ações — mesmos botões do card de layout, exceto o + */
+    var actions = document.createElement('div');
+    actions.className = 'variant-footer';
 
-    footer.append(vname, bH, bC, bV);
-    block.append(previewWrap, footer);
+    var bH = document.createElement('button');
+    bH.className = 'btn btn-ghost';
+    bH.innerHTML = HTML_ICON + ' HTML';
+    bH.addEventListener('click', function (e) { e.stopPropagation(); copyToClipboard(v.html, bH, HTML_ICON + ' HTML'); });
+
+    var bC = document.createElement('button');
+    bC.className = 'btn btn-ghost';
+    bC.innerHTML = HTML_ICON + ' CSS';
+    bC.addEventListener('click', function (e) { e.stopPropagation(); copyToClipboard(v.css, bC, HTML_ICON + ' CSS'); });
+
+    /* Favorito — usa name como id da variante */
+    var varFavId = (state.currentForVariant ? state.currentForVariant.id : '') + '__' + (v.name || '');
+    var bFav = document.createElement('button');
+    bFav.className = 'btn btn-fav' + (isFav(varFavId) ? ' active' : '');
+    bFav.title = 'Favorito';
+    bFav.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+    bFav.addEventListener('click', function (e) {
+      e.stopPropagation();
+      toggleFav(varFavId);
+      bFav.classList.toggle('active');
+    });
+
+    /* Visualizar — reutiliza modal principal */
+    var bV = document.createElement('button');
+    bV.className = 'btn btn-ghost btn-edit-icon';
+    bV.title = 'Visualizar';
+    bV.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+    bV.addEventListener('click', function (e) { e.stopPropagation(); openVariantPreview(v); });
+
+    actions.append(bH, bC, bFav, bV);
+    block.append(previewWrap, body, actions);
+
+    /* Clique no card abre preview */
+    block.addEventListener('click', function () { openVariantPreview(v); });
+
     grid.appendChild(block);
   });
 }

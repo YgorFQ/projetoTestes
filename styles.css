@@ -1,29 +1,6 @@
 /* ═══════════════════════════════════════════════════════
-   styles.css — Estilos da interface SenkoLib
-
-   RESPONSABILIDADE:
-     Define toda a aparência visual da aplicação.
-
-   CONTEÚDO:
-     - Variáveis CSS (cores, tipografia, sombras, raios)
-     - Reset e base global + scrollbar customizada
-     - Header, barra de controles e botão de guia
-     - Grid de cards e modos de visualização
-       (normal, large, single, list, expanded)
-     - Cards de layout (preview iframe, badges, botões de ação)
-     - Barra de stats (contagem de layouts e favoritos)
-     - Modal base + Modal de visualização (preview + código HTML/CSS)
-     - Modal de adição e modal de edição de layout
-     - Modal de variantes e modal de nova variante
-     - Botão favorito, botão de variantes (+), badge de contagem
-     - Abas de código, blocos <pre>, botões de copiar
-     - Toast de confirmação de cópia
-     - Barra FSA (File System Access experimental) e botão salvar
-     - Estado vazio / sem resultados
-     - Responsividade
-
-   TEMA:
-     Branco + Laranja — fontes Nunito (UI) + DM Mono (código)
+   SENKOLIB — styles.css
+   Tema: Branco + Laranja — Nunito + DM Mono
 ═══════════════════════════════════════════════════════ */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -527,6 +504,41 @@ body {
   .grid.view-list .card-actions { border-left: none; border-top: 1.5px solid var(--border); flex-direction: row; min-width: unset; }
 }
 
+/* ─── Botão de tema — na barra de filtros ────────────── */
+.filters-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.filters { flex: 1; }
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  flex-shrink: 0;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 99px;
+  padding: .28rem .85rem .28rem .6rem;
+  font-family: var(--font-body);
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+/* Alterna ícone conforme tema */
 /* ─── Botão variantes (+) ────────────────────────────── */
 .btn-variants {
   flex: none;
@@ -548,7 +560,8 @@ body {
 
 /* ─── Modal variantes ────────────────────────────────── */
 .variants-modal {
-  max-width: 1200px;
+  max-width: 1600px;
+  width: 95vw;
   display: flex;
   flex-direction: column;
   max-height: 90vh;
@@ -574,8 +587,15 @@ body {
 
 .variants-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 1100px) {
+  .variants-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 700px) {
+  .variants-grid { grid-template-columns: 1fr; }
 }
 
 .variants-empty {
@@ -586,43 +606,68 @@ body {
   text-align: center;
 }
 
+/* Card de variante — idêntico ao .card do grid principal */
 .variant-block {
+  background: var(--bg);
   border: 1.5px solid var(--border);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: var(--bg);
+  display: flex;
+  flex-direction: column;
   box-shadow: var(--shadow-card);
-  transition: border-color var(--transition), box-shadow var(--transition);
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  cursor: pointer;
+  animation: cardIn .3s cubic-bezier(.4,0,.2,1) both;
 }
 .variant-block:hover {
   border-color: var(--accent);
   box-shadow: 0 0 0 1.5px var(--accent), 0 4px 24px rgba(255,107,0,.10);
+  transform: translateY(-2px);
 }
 
 .variant-preview {
-  height: 320px;
+  position: relative;
+  height: 200px;
   background: var(--bg3);
   overflow: hidden;
   border-bottom: 1.5px solid var(--border);
-  position: relative;
 }
 .variant-preview iframe {
-  width: 100%; height: 100%; border: none; pointer-events: none;
+  width: 1280px;
+  height: 100%;
+  border: none;
+  pointer-events: none;
+  transform-origin: top left;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.variant-preview-overlay {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+}
+
+.variant-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+  flex: 1;
+}
+.variant-name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -.02em;
 }
 
 .variant-footer {
   display: flex;
-  align-items: center;
   gap: .5rem;
   padding: .75rem 1rem;
-}
-.variant-name {
-  font-family: var(--font-display);
-  font-size: .95rem;
-  font-weight: 800;
-  color: var(--text);
-  flex: 1;
-  letter-spacing: -.02em;
+  border-top: 1.5px solid var(--border);
 }
 
 .variants-footer-bar {
