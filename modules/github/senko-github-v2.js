@@ -1028,6 +1028,65 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  /* ─── Modal edição de variante — botão GitHub ─────── */
+  var saveVarToFileBtn = document.getElementById('saveVarToFileBtn');
+  if (saveVarToFileBtn && !document.getElementById('ghSaveEditVarBtn')) {
+    var ghEditVarBtn = document.createElement('button');
+    ghEditVarBtn.id        = 'ghSaveEditVarBtn';
+    ghEditVarBtn.className = 'btn-github';
+    ghEditVarBtn.innerHTML = GH_ICON + ' GitHub';
+    ghEditVarBtn.title     = 'Salvar variante editada no repositório GitHub';
+    saveVarToFileBtn.parentNode.insertBefore(ghEditVarBtn, saveVarToFileBtn);
+
+    ghEditVarBtn.addEventListener('click', function () {
+      if (typeof githubCreateVariant !== 'function') {
+        alert('Módulo senko-github-variants.js não está carregado.');
+        return;
+      }
+      if (!state.currentForVariant || !state.currentEditVariant) {
+        alert('Nenhuma variante selecionada.');
+        return;
+      }
+
+      var nome     = document.getElementById('editVarName').value.trim().toLowerCase();
+      var html     = document.getElementById('editVarHtml').value;
+      var css      = document.getElementById('editVarCss').value;
+      var parentId = state.currentForVariant.id;
+
+      if (nome.length < 2) { alert('Preencha o nome da variante primeiro.'); return; }
+
+      var safeHtml   = html.replace(/`/g, '\\`');
+      var safeCss    = css.replace(/`/g, '\\`');
+      var objectCode =
+        '/*@@@@Senko - ' + nome + ' */\n' +
+        '  {\n' +
+        "    name: '" + nome + "',\n" +
+        '    html: `' + safeHtml + '`,\n' +
+        '    css: `'  + safeCss  + '`,\n' +
+        '  },';
+
+      ghEditVarBtn.textContent = 'Salvando…';
+      ghEditVarBtn.disabled    = true;
+
+      githubCreateVariant(parentId, nome, objectCode).then(function (result) {
+        if (result) {
+          ghEditVarBtn.innerHTML = GH_ICON + ' Salvo!';
+          setTimeout(function () {
+            if (typeof closeEditVariantModal === 'function') closeEditVariantModal();
+            ghEditVarBtn.innerHTML = GH_ICON + ' GitHub';
+            ghEditVarBtn.disabled  = false;
+          }, 1200);
+        } else {
+          ghEditVarBtn.innerHTML = GH_ICON + ' GitHub';
+          ghEditVarBtn.disabled  = false;
+        }
+      }).catch(function () {
+        ghEditVarBtn.innerHTML = GH_ICON + ' GitHub';
+        ghEditVarBtn.disabled  = false;
+      });
+    });
+  }
+
   /* ─── Modal nova variante — botão GitHub ──────────── */
   var newVarCopyBtn = document.getElementById('newVarCopyBtn');
   if (newVarCopyBtn && !document.getElementById('ghSaveVariantBtn')) {

@@ -347,6 +347,50 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  /* Patch: modal de edição de variante */
+  var saveVarEditBtn = document.getElementById('saveVarToFileBtn');
+  if (saveVarEditBtn) {
+    saveVarEditBtn.style.display = '';
+    var newSaveVarEditBtn = saveVarEditBtn.cloneNode(true);
+    saveVarEditBtn.parentNode.replaceChild(newSaveVarEditBtn, saveVarEditBtn);
+
+    newSaveVarEditBtn.addEventListener('click', async function () {
+      if (!state.currentForVariant)  { alert('Nenhum layout pai selecionado.'); return; }
+      if (!state.currentEditVariant) { alert('Nenhuma variante selecionada.'); return; }
+
+      var name     = document.getElementById('editVarName').value.trim().toLowerCase();
+      var html     = document.getElementById('editVarHtml').value;
+      var css      = document.getElementById('editVarCss').value;
+      var parentId = state.currentForVariant.id;
+
+      if (name.length < 3) { alert('Nome da variante muito curto.'); return; }
+
+      var safeHtml   = html.replace(/`/g, '\\`');
+      var safeCss    = css.replace(/`/g, '\\`');
+      var objectCode =
+        '/*@@@@Senko - ' + name + ' */\n' +
+        '  {\n' +
+        "    name: '" + name + "',\n" +
+        '    html: `' + safeHtml + '`,\n' +
+        '    css: `'  + safeCss  + '`,\n' +
+        '  },';
+
+      this.textContent = 'Salvando...';
+      var self   = this;
+      var result = await saveVariantToFile(parentId, name, objectCode);
+
+      if (result) {
+        self.textContent = 'Salvo em ' + result;
+        setTimeout(function () {
+          closeEditVariantModal();
+          self.innerHTML = SAVE_ICON + ' Salvar no arquivo';
+        }, 1200);
+      } else {
+        self.innerHTML = SAVE_ICON + ' Salvar no arquivo';
+      }
+    });
+  }
+
   /* Botao salvar no modal de nova variante */
   var newVarCopyBtn = document.getElementById('newVarCopyBtn');
   if (newVarCopyBtn && !document.getElementById('saveVariantToFileBtn')) {
