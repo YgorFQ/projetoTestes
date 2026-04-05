@@ -65,17 +65,9 @@
         </div>
 
         <!-- Copy Basee -->
-        <button class="btn-fav" id="favFilterBtn" title="Ver favoritos">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-            <polygon
-              points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-          </svg>
-        </button>
-        <button class="btn-guide" id="openGuideBtn" title="Guia do projeto">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-            <path
-              d="M9 21h6M12 3a6 6 0 0 1 6 6c0 2.22-1.2 4.16-3 5.2V17a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2.8C7.2 13.16 6 11.22 6 9a6 6 0 0 1 6-6z" />
-            <line x1="12" y1="17" x2="12" y2="21" stroke-width="0" />
+        <button class="btn-fav-header" id="favFilterBtn" title="Ver favoritos">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
           </svg>
         </button>
         <button class="btn-copyall" id="copyAllBtn" onclick="copiarBasics()">
@@ -97,7 +89,7 @@
 
         <!-- Tema -->
         <button class="theme-toggle" id="themeToggleBtn" title="Tema escuro">
-          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
           </svg>
         </button>
@@ -518,90 +510,6 @@
           </button>
         </div>
         <pre class="code-block" id="newVarGeneratedCode">// Preencha os campos acima para gerar o objeto…</pre>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL GUIA -->
-  <div class="modal-overlay hidden" id="guideOverlay">
-    <div class="modal guide-modal" id="guideModal">
-      <div class="modal-header">
-        <div class="modal-meta">
-          <span class="modal-category">Documentação</span>
-          <h2 class="modal-title">Guia do Projeto</h2>
-          <p class="add-hint">Tudo que você precisa saber para usar o SenkoLib.</p>
-        </div>
-        <button class="modal-close" id="guideClose" title="Fechar">✕</button>
-      </div>
-      <div class="guide-content">
-
-        <div class="guide-section">
-          <h3>📁 Estrutura de arquivos</h3>
-          <p>O projeto é composto por:</p>
-          <ul>
-            <li><code>index.html</code> — interface principal</li>
-            <li><code>core/script.js</code> — lógica da aplicação</li>
-            <li><code>assets/styles.css</code> — estilos</li>
-            <li><code>core/senkolib-core.js</code> — motor de registro de layouts e variantes</li>
-            <li><code>modules/github/</code> — módulo GitHub (opcional)</li>
-            <li><code>modules/fsa/</code> — módulo File System Access (opcional)</li>
-            <li><code>layouts/layoutsXXX.js</code> — arquivos com os layouts</li>
-            <li><code>variants/nome-do-layout.js</code> — arquivos com variantes de cada layout</li>
-          </ul>
-        </div>
-
-        <div class="guide-section">
-          <h3>➕ Criar um novo layout</h3>
-          <p>Clique em <strong>Adicionar</strong> no cabeçalho. Preencha os campos:</p>
-          <ul>
-            <li><strong>ID</strong> — identificador único, sempre em minúsculo. Ex: <code>section-58</code>. Será o nome
-              do futuro arquivo de variantes.</li>
-            <li><strong>Nome</strong> — nome de exibição. Ex: <code>Section-58</code></li>
-            <li><strong>Tags</strong> — palavras-chave separadas por vírgula para facilitar a busca</li>
-            <li><strong>HTML / CSS</strong> — cole o código do layout</li>
-          </ul>
-          <p>Copie o objeto gerado e cole dentro do array em <code>layouts/layoutsXXX.js</code>.</p>
-        </div>
-
-        <div class="guide-section">
-          <h3>📦 Adicionar um novo arquivo de layouts</h3>
-          <p>Crie um arquivo <code>layouts/layouts002.js</code> com a estrutura:</p>
-          <pre>// @ts-nocheck
-SenkoLib.register([ /* objetos aqui */ ]);</pre>
-          <p>Depois adicione no <code>index.html</code>, antes de <code>script.js</code>:</p>
-          <pre>&lt;script src="layouts/layouts002.js"&gt;&lt;/script&gt;</pre>
-        </div>
-
-        <div class="guide-section">
-          <h3>🔀 Criar uma variante de layout</h3>
-          <p>Clique no botão <strong>+</strong> no card do layout desejado. Dentro da janela de variantes, clique em
-            <strong>Nova Variante</strong>, preencha nome, HTML e CSS, e copie o objeto gerado.
-          </p>
-          <p>Cole o objeto dentro do array no arquivo de variantes correspondente em <code>variants/</code>.</p>
-        </div>
-
-        <div class="guide-section">
-          <h3>📄 Arquivo de variantes</h3>
-          <p>O nome do arquivo deve ser o <strong>nome do layout em minúsculo</strong>. Ex: layout
-            <code>Section-58</code> → arquivo <code>variants/section-58.js</code>.
-          </p>
-          <p>Estrutura do arquivo:</p>
-          <pre>// @ts-nocheck
-SenkoLib.registerVariant('section-58', [
-  { nome: 'section-58.1',
-    html: `...`,
-    css:  `...` },
-]);</pre>
-          <p>Após criar o arquivo, adicione no <code>index.html</code> antes de <code>script.js</code>:</p>
-          <pre>&lt;script src="variants/section-58.js"&gt;&lt;/script&gt;</pre>
-        </div>
-
-        <div class="guide-section">
-          <h3>🔍 Busca e visualização</h3>
-          <p>Use a barra de pesquisa para filtrar por nome ou tag. Os botões de visualização abrem um preview completo
-            com o código HTML e CSS do layout ou variante.</p>
-        </div>
-
       </div>
     </div>
   </div>

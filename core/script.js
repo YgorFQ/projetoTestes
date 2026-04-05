@@ -1034,27 +1034,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.getElementById('selectFolderBtn').addEventListener('click', selectProjectFolder);
 
-  /* Guia */
   /* Filtro favoritos */
   document.getElementById('favFilterBtn').addEventListener('click', function () {
     state.favOnly = !state.favOnly;
     this.classList.toggle('active', state.favOnly);
     renderGrid();
-  });
-
-  document.getElementById('openGuideBtn').addEventListener('click', function () {
-    document.getElementById('guideOverlay').classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-  });
-  document.getElementById('guideClose').addEventListener('click', function () {
-    document.getElementById('guideOverlay').classList.add('hidden');
-    document.body.style.overflow = '';
-  });
-  document.getElementById('guideOverlay').addEventListener('click', function (e) {
-    overlayClick('guide', function() {
-      document.getElementById('guideOverlay').classList.add('hidden');
-      document.body.style.overflow = '';
-    }).call(this, e);
   });
 
   /* Escape */

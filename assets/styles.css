@@ -514,50 +514,37 @@ body {
 
 .filters { flex: 1; }
 
-.theme-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: .45rem;
-  flex-shrink: 0;
-  background: transparent;
-  border: 1.5px solid var(--border);
-  border-radius: 99px;
-  padding: .28rem .85rem .28rem .6rem;
-  font-family: var(--font-body);
-  font-size: .8rem;
-  font-weight: 700;
-  color: var(--text2);
-  cursor: pointer;
-  transition: all var(--transition);
-  white-space: nowrap;
-}
-
-.theme-toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-bg);
-}
-
 /* ─── Botão de tema ──────────────────────────────────── */
 .theme-toggle {
+  display: inline-flex; align-items: center; justify-content: center;
   flex-shrink: 0;
-  width: 34px;
-  height: 34px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
+  width: 36px; height: 36px; padding: 0;
+  background: var(--bg3);
   border: 1.5px solid var(--border);
   border-radius: var(--radius);
-  color: var(--text3);
+  color: var(--text2);
   cursor: pointer;
-  transition: all var(--transition);
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
 }
-.theme-toggle:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-bg);
+.theme-toggle svg { width: 18px; height: 18px; display: block; flex-shrink: 0; }
+.theme-toggle:hover { background: var(--accent); color: #fff; border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(255,107,0,.4); }
+
+/* ─── Botão favoritos do header ──────────────────────── */
+.btn-fav-header {
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  width: 36px; height: 36px; padding: 0;
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text2);
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
 }
+.btn-fav-header svg { width: 18px; height: 18px; display: block; flex-shrink: 0; }
+.btn-fav-header:hover { background: var(--accent); color: #fff; border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(255,107,0,.4); }
+.btn-fav-header.active { border-color: #f5a623; color: #f5a623; background: rgba(245,166,35,.12); }
+.btn-fav-header.active svg { fill: #f5a623; }
 
 /* ─── Tema Escuro ────────────────────────────────────── */
 /*
@@ -660,6 +647,7 @@ body {
 [data-theme="dark"] .btn-ghost       { border-color: #363b3d; color: #b2aca2; }
 [data-theme="dark"] .btn-ghost:hover { border-color: #b34b00; color: var(--accent); }
 [data-theme="dark"] .btn-fav         { border-color: #363b3d; color: #b2aca2; }
+[data-theme="dark"] .btn-fav-header  { border-color: #363b3d; color: #b2aca2; background: #25282a; }
 [data-theme="dark"] .btn-edit-icon   { border-color: #363b3d; color: #b2aca2; }
 [data-theme="dark"] .btn-variants    { border-color: #363b3d; color: #b2aca2; }
 [data-theme="dark"] .tab-btn         { border-color: #363b3d; color: #b2aca2; background: transparent; }
@@ -688,10 +676,6 @@ body {
 /* ── Modal edição ── */
 [data-theme="dark"] .edit-mode-bar    { border-bottom-color: #363b3d; }
 [data-theme="dark"] .edit-textarea    { background: #25282a; border-color: #363b3d; color: #d8d4cf; }
-
-/* ── Guia ── */
-[data-theme="dark"] .guide-section    { border-bottom-color: #363b3d; }
-[data-theme="dark"] .guide-content pre { background: #181a1b; border-color: #363b3d; color: #b2aca2; }
 
 /* ── Scrollbar ── */
 [data-theme="dark"] ::-webkit-scrollbar-track { background: #151718; }
@@ -1003,16 +987,6 @@ body {
   color: #fff !important;
   cursor: not-allowed !important;
   opacity: .85;
-}
-
-.btn-guide {
-  background: var(--accent-bg) !important;
-  border-color: var(--accent) !important;
-  color: var(--accent) !important;
-}
-.btn-guide:hover {
-  background: var(--accent) !important;
-  color: #fff !important;
 }
 
 /* ─── Barra de stats ─────────────────────────────────── */
