@@ -748,16 +748,11 @@ function updateEditVarCode() {
     '  },';
 
   /*
-   * ATUALIZAÇÃO EM MEMÓRIA — segura porque:
-   * 1. `state.currentEditVariant` é referência direta ao objeto no array _variants
-   * 2. Ao fechar/confirmar, chamamos renderVariantBlocks que recria todos os closures
-   *    com os valores novos — sem inconsistência de closures velhos
+   * IMPORTANTE: não mutamos state.currentEditVariant aqui.
+   * O objeto em memória só é atualizado APÓS o usuário confirmar o save
+   * (via senko-fsa-variants.js ou senko-github-variants.js).
+   * Isso evita corromper dados se o usuário fechar o modal sem salvar.
    */
-  if (state.currentEditVariant) {
-    state.currentEditVariant.name = name;
-    state.currentEditVariant.html = html;
-    state.currentEditVariant.css  = css;
-  }
 }
 
 
