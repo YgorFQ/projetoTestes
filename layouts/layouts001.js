@@ -1,6 +1,6 @@
 // @ts-nocheck
-/* ═══════════════════════════════════════════════════════
-   layouts001.js — Primeiro pacote de layouts do SenkoLib
+
+ /*  layouts001.js — Primeiro pacote de layouts do SenkoLib
 
    RESPONSABILIDADE:
      Registra o array principal de layouts via SenkoLib.register().
@@ -177,30 +177,33 @@ SenkoLib.register([
     id: 'section-2',
     name: 'Section-2 (Header Vídeo)',
     tags: ['Section-2', 'Section 2', '2', 'vídeo', 'header vídeo'],
-    html: `<section class="video-header" aria-label="Cabeçalho do produto">
-  <header class="video-header__banner">
-    <video class="video-header__banner-video" autoplay muted loop playsinline width="1200" height="250"
-      aria-hidden="true">
-      <source
-        src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/cottonbaby/header-cottonbaby.mov">
-    </video>
-    <div class="video-header__badge" role="img" aria-label="Logo da marca">
-      <img src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/cottonbaby/logo-cottonbaby2.png"
-        alt="imagem png com ícone da marca" class="video-header__badge-img">
-    </div>
-  </header>
-  <article class="video-header__body">
-    <small class="video-header__brand">Marca</small>
-    <h1 class="video-header__title">
-      TÍTULO DO PRODUTO (Nome, modelo, diferencial...)
-    </h1>
-    <p class="video-header__subtitle">
-      Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
-      Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
-      Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
-    </p>
-  </article>
-</section>`,
+    html: `    <section class="video-header" aria-label="Cabeçalho do produto">
+      <header class="video-header__banner">
+        <video class="video-header__banner-video"
+          poster="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/header.jpg" preload="none" autoplay muted loop
+          playsinline width="1200" height="250" aria-hidden="true">
+          <source
+            src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/cottonbaby/header-cottonbaby.mov"
+            loading="lazy">
+        </video>
+        <div class="video-header__badge" role="img" aria-label="Logo da marca">
+          <img
+            src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/cottonbaby/logo-cottonbaby2.png"
+            alt="imagem png com ícone da marca" class="video-header__badge-img">
+        </div>
+      </header>
+      <article class="video-header__body">
+        <small class="video-header__brand">Marca</small>
+        <h1 class="video-header__title">
+          TÍTULO DO PRODUTO (Nome, modelo, diferencial...)
+        </h1>
+        <p class="video-header__subtitle">
+          Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
+          Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
+          Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
+        </p>
+      </article>
+    </section>`,
     css: `<style>
   * {
     margin: 0;
@@ -434,7 +437,171 @@ SenkoLib.register([
 </style>`
   },
 
-  
+  /*@@@@Senko - section-60 */
+  /* variantes: variants/section-60.js */
+  {
+    id: 'section-60',
+    name: 'section-60',
+    tags: ['60', 'section 60', 'split', 'metade'],
+    html: `<div class="wrapper-section-60">
+    <div class="text-col-section-60">
+        <img src="https://cdn-icons-png.flaticon.com/512/894/894565.png" class="brand-icon-section-60">
+        <h2 class="title-section-60">A Lenda dos Sete Mares</h2>
+        <p class="desc-section-60">
+            Capitan Cortez não é apenas um rum, é um convite à descoberta. Inspirado nos diários de bordo dos
+            grandes navegadores, nossa receita busca capturar a glória da tradição em cada garrafa. Uma homenagem
+            àqueles que ousam ir além do horizonte.
+        </p>
+        <a href="#" class="cta-link-section-60">
+            Conheça Nossa História
+            <span class="arrow-icon-section-60">&rarr;</span>
+        </a>
+    </div>
+    <div class="image-col-section-60">
+        <img src=""
+            class="bg-image-section-60" alt="Capitan Cortez Lifestyle">
+    </div>
+</div>`,
+    css: `        .wrapper-section-60 {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      background-color: #f8f8f8;
+      min-height: 28rem;
+      /* ~450px */
+    }
+
+    .text-col-section-60 {
+      flex: 1;
+      min-width: 18.75rem;
+      padding: 2.5rem 1.25rem;
+      /* Padding Mobile */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .image-col-section-60 {
+      flex: 1;
+      min-width: 18.75rem;
+      position: relative;
+    }
+
+    .bg-image-section-60 {
+      width: 95%;
+      height: 95%;
+      margin: 0.5rem;
+      border-radius: 15px;
+      object-fit: cover;
+      display: block;
+      min-height: 18.75rem;
+      /* Mobile Height */
+    }
+
+    .brand-icon-section-60 {
+      width: 3.75rem;
+      /* 60px */
+      height: auto;
+      margin-bottom: 1.5rem;
+      opacity: 0.8;
+    }
+
+    .title-section-60 {
+      color: #1a1a1a;
+      font-weight: 400;
+      letter-spacing: 0.125rem;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+      line-height: 1.3;
+
+      /* Mobile Base */
+      font-size: 1.25rem;
+      /* ~20px */
+    }
+
+    .desc-section-60 {
+      color: #555;
+      line-height: 1.8;
+      max-width: 25rem;
+
+      /* Mobile Base */
+      font-size: 0.875rem;
+      /* ~14px */
+    }
+
+    .cta-link-section-60 {
+      text-decoration: none;
+      color: #1a1a1a;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.0625rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.3s;
+
+      /* Mobile Base */
+      font-size: 0.75rem;
+      /* ~12px */
+    }
+
+    .arrow-icon-section-60 {
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    /* Responsividade Exclusiva da Sessão 60 */
+    @media (min-width: 768px) {
+      .text-col-section-60 {
+        padding: 3.75rem 2.5rem;
+        /* Mais espaçamento no Desktop */
+      }
+
+      .title-section-60 {
+        font-size: 1.5rem;
+        /* ~24px Desktop */
+      }
+
+      .desc-section-60 {
+        font-size: 1rem;
+        /* 16px Desktop */
+      }
+
+      .cta-link-section-60 {
+        font-size: 0.875rem;
+        /* ~14px Desktop */
+      }
+
+      .reverse-desktop-60 {
+        flex-direction: row-reverse;
+      }
+
+    }
+
+    @media (max-width: 720px) {
+      .wrapper-section-60 {
+        flex-direction: column-reverse;
+      }
+
+      .reverse-mobile-60 {
+        flex-direction: column;
+      }
+
+      .bg-image-section-60 {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        min-height: 18.75rem;
+        max-width: 95%;
+        margin: 0.6rem auto;
+        border-radius: 10px;
+      }
+    }`
+  },
+
   
   /*@@@@Senko - section-49 */
   /* variantes: variants/section-49.js */
@@ -874,7 +1041,7 @@ SenkoLib.register([
   {
     id: 'section-46',
     name: 'Section-46',
-    tags: ['Imagem quadrada', '', '', ''],
+    tags: ['Imagem quadrada'],
     html: `      <div class="section-46-y reverse-46 ">
         <!--    AQUI É POSSIVEL TROCAR SE A IMAGEM FICA EM CIMA OU EM BAIXO TIRANDO A CLASSE "TROCAR-ORDEM-730PX"-->
         <div class="section-46-y-img trocar-ordem-730px">
@@ -885,9 +1052,9 @@ SenkoLib.register([
         <div class="section-46-y-content">
 
           <!-- Título padrão-->
-          <h1>
+          <h2>
             Isso é um título. <br> Isso é um título.
-          </h1>
+          </h2>
           <!-- Descrição padrão-->
           <p class="section-46-y-desc">
             Isso é uma descrição gamer. Isso é uma descrição gamer.
@@ -920,7 +1087,8 @@ SenkoLib.register([
           </div>
         </div>
       </div>`,
-    css: `.section-46-y {
+    css: `<style>
+.section-46-y {
       max-width: 1300px;
       margin: 0 auto;
       padding: 40px 20px;
@@ -962,7 +1130,7 @@ SenkoLib.register([
       flex: 1;
     }
 
-    .section-46-y-content h1 {
+    .section-46-y-content h2 {
       text-align: center;
     }
 
@@ -971,8 +1139,9 @@ SenkoLib.register([
     }
 
     /* ===== TITULO ===== */
-    .section-46-y-content h1 {
-      font-size: clamp(22px, 3.2vw, 48px);
+    .section-46-y-content h2 {
+      font-family: sans-serif;
+      font-size: clamp(22px, 3.2vw, 38px);
       font-weight: 700;
       margin-bottom: 20px;
       line-height: 1.2;
@@ -980,6 +1149,7 @@ SenkoLib.register([
 
     /* ===== DESCRIÇÃO ===== */
     .section-46-y-desc {
+      font-family: sans-serif;
       font-size: clamp(14px, 1.4vw, 26px);
       margin-bottom: 30px;
       color: #1b1b1b;
@@ -1008,12 +1178,14 @@ SenkoLib.register([
     }
 
     .section-46-y-box-text h3 {
+      font-family: sans-serif;
       font-size: clamp(16px, 2vw, 32px);
       margin: 0 0 5px;
       line-height: 1.1;
     }
 
     .section-46-y-box-text p {
+      font-family: sans-serif;
       font-size: clamp(12px, 1.4vw, 22px);
       color: #555;
       margin: 0;
@@ -1166,7 +1338,8 @@ SenkoLib.register([
     .section-46-y-box.reverse-icon-46 {
       flex-direction: row-reverse;
       text-align: right;
-    }`
+    }
+</style>`
   },
 
   /*@@@@Senko - section-3 */
@@ -1442,6 +1615,7 @@ SenkoLib.register([
       width: 90%;
       line-height: 1.5;
       text-align: center;
+      font-family: sans-serif
     }
 
     .section-32__grouptext-overlay.top {
@@ -1802,387 +1976,7 @@ SenkoLib.register([
   }`
   },
 
-  /*@@@@Senko - section 32.4 (imagens caindo) */
-  /* variantes: variants/section 32.4 (imagens caindo).js */
-  {
-    id: 'section 32.4 (imagens caindo)',
-    name: 'Section 32.4 (Imagens caindo)',
-    tags: ['imagens caindo', 'caindo', 'Section 32.4', '32.4'],
-    html: `<div class="groupcontainer">
-  <!-- Primeira seção com imagem -->
-  <div class="fallingItem-container"
-    style="--random-delay1: 0.1; --random-delay2: 0.7; --random-delay3: 0.3; --random-delay4: 0.5; --random-delay5: 0.2;">
-    <img
-      src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo-efacil.png"
-      class="fallingItem" width="200" height="200"
-      alt="Imagem ilustrativa de produto em destaque, representando qualidade, praticidade e estilo em uso no dia a dia.">
-    <img
-      src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo-efacil.png"
-      class="fallingItem" width="200" height="200"
-      alt="Imagem ilustrativa de produto em destaque, representando qualidade, praticidade e estilo em uso no dia a dia.">
-    <img
-      src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo-efacil.png"
-      class="fallingItem" width="200" height="200"
-      alt="Imagem ilustrativa de produto em destaque, representando qualidade, praticidade e estilo em uso no dia a dia.">
-    <img
-      src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo-efacil.png"
-      class="fallingItem" width="200" height="200"
-      alt="Imagem ilustrativa de produto em destaque, representando qualidade, praticidade e estilo em uso no dia a dia.">
-    <img
-      src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo-efacil.png"
-      class="fallingItem" width="200" height="200"
-      alt="Imagem ilustrativa de produto em destaque, representando qualidade, praticidade e estilo em uso no dia a dia.">
-    <div class="groupimage-section">
-      <img
-        src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/sessao32.jpg"
-        style="border-radius: 30px;" width="1600" height="865"
-        alt="Imagem ilustrativa de produto em destaque, representando qualidade, praticidade e estilo em uso no dia a dia.">
-      <div class="grouptext-overlay-Down">
-        <center>
-          <p1 style="color: #ffffff;">Isso é uma descrição. Isso é uma descrição.</p1>
-          <h1 style="color: #ffffff;"><b>SUB-TÍTULO</b></h1>
-          <p style="color: #ffffff;">Isso é uma descrição. Isso é uma descrição. Isso é uma
-            descrição. Isso é uma
-            descrição.
-          </p>
-        </center>
-      </div>
-    </div>
-  </div>
-</div>`,
-    css: `<style>
-  .groupcontainer {
-
-    width: 100%;
-    max-width: 1600px;
-    margin: 0 auto;
-  }
-
-  .fallingItem-container {
-
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: 100;
-  }
-
-  .groupimage-section {
-
-    position: relative;
-    width: 100%;
-  }
-
-  .groupimage-section img {
-
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  .fallingItem {
-
-    position: absolute;
-    top: -100px;
-    width: 8vw;
-    height: 8vw;
-    /*Ajuste o tamanho da imagem */
-
-    animation: fall infinite linear;
-    animation-duration: 5s;
-    /* Tempo para cair*/
-
-    opacity: 0;
-    z-index: 10;
-    transform-origin: center;
-  }
-
-  .fallingItem-container {
-
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: 100;
-  }
-
-  .fallingItem-container2 {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: 100;
-    overflow: visible;
-  }
-
-  .fallingItem {
-
-    position: absolute;
-    top: -100px;
-    width: 8vw;
-    height: 8vw;
-    /*Ajuste o tamanho da imagem */
-
-    animation: fall infinite linear;
-    animation-duration: 5s;
-    /* Tempo para cair*/
-
-    opacity: 0;
-    z-index: 10;
-    transform-origin: center;
-  }
-
-  .fallingItem2 {
-    position: absolute;
-    top: 100px;
-    width: 8vw;
-    height: 8vw;
-    /*Ajuste o tamanho da imagem */
-
-    animation: fall2 infinite linear;
-    animation-duration: 5s;
-    /* Tempo para cair*/
-
-    opacity: 0;
-    z-index: 10;
-    transform-origin: center;
-  }
-
-  .fallingItem3 {
-    position: absolute;
-    top: 100px;
-    width: 15vw;
-    height: 15vw;
-    /*Ajuste o tamanho da imagem */
-
-    animation: fall3 infinite linear;
-    animation-duration: 8s;
-    /* Tempo para cair*/
-
-    opacity: 0;
-    z-index: 10;
-    transform-origin: center;
-  }
-
-  @keyframes fall3 {
-
-    0% {
-
-      transform: translateY(0vh);
-      opacity: 0;
-    }
-
-    10% {
-      opacity: 1;
-    }
-
-    40% {
-
-      transform: translateY(0vh);
-      opacity: 1;
-    }
-
-    90% {
-
-      opacity: 1;
-    }
-
-    100% {
-
-      transform: translateY(-180vh);
-      opacity: 0;
-    }
-  }
-
-  @keyframes fall2 {
-
-    0% {
-
-      transform: translateY(-2rem) rotate(var(--start-rotation));
-      opacity: 0;
-    }
-
-    10% {
-      opacity: 1;
-    }
-
-    40% {
-
-      transform: translateY(-2rem) rotate(var(--start-rotation));
-      opacity: 1;
-    }
-
-    90% {
-
-      opacity: 1;
-    }
-
-    100% {
-
-      transform: translateY(110vh) rotate(var(--end-rotation));
-      opacity: 0;
-    }
-  }
-
-  @keyframes fall {
-
-    0% {
-
-      transform: translateY(-100px) rotate(var(--start-rotation));
-      opacity: 1;
-    }
-
-    90% {
-
-      opacity: 1;
-    }
-
-    100% {
-
-      transform: translateY(110vh) rotate(var(--end-rotation));
-      opacity: 0;
-    }
-  }
-
-  /* Tempo de Queda e Rotação */
-
-  .fallingItem:nth-child(1) {
-
-    left: 10%;
-    animation-delay: calc(0s + (4s * var(--random-delay1)));
-    --start-rotation: -30deg;
-    --end-rotation: 360deg;
-  }
-
-  .fallingItem:nth-child(2) {
-
-    left: 30%;
-    animation-delay: calc(0s + (4s * var(--random-delay2)));
-    --start-rotation: 20deg;
-    --end-rotation: 360deg;
-  }
-
-  .fallingItem:nth-child(3) {
-
-    left: 50%;
-    animation-delay: calc(0s + (4s * var(--random-delay3)));
-    --start-rotation: -45deg;
-    --end-rotation: 360deg;
-  }
-
-  .fallingItem:nth-child(4) {
-
-    left: 70%;
-    animation-delay: calc(0s + (4s * var(--random-delay4)));
-    --start-rotation: 15deg;
-    --end-rotation: 360deg;
-  }
-
-  .fallingItem:nth-child(5) {
-
-    left: 90%;
-    animation-delay: calc(0s + (4s * var(--random-delay5)));
-    --start-rotation: 45deg;
-    --end-rotation: 360deg;
-  }
-
-  .fallingItem2:nth-child(1) {
-
-    left: 10%;
-    animation-delay: calc(0s + (4s * var(--random-delay1)));
-    --start-rotation: -30deg;
-    --end-rotation: 360deg;
-  }
-
-  .fallingItem2:nth-child(2) {
-
-    left: 30%;
-    animation-delay: calc(0s + (4s * var(--random-delay2)));
-    --start-rotation: 20deg;
-    --end-rotation: 360deg;
-  }
-
-  .fallingItem2:nth-child(3) {
-
-    left: 50%;
-    animation-delay: calc(0s + (4s * var(--random-delay3)));
-    --start-rotation: -45deg;
-    --end-rotation: 360deg;
-  }
-
-  .fallingItem2:nth-child(4) {
-
-    left: 70%;
-    animation-delay: calc(0s + (4s * var(--random-delay4)));
-    --start-rotation: 15deg;
-    --end-rotation: 360deg;
-  }
-
-  .fallingItem2:nth-child(5) {
-
-    left: 90%;
-    animation-delay: calc(0s + (4s * var(--random-delay5)));
-    --start-rotation: 45deg;
-    --end-rotation: 360deg;
-  }
-
-  .fallingItem3:nth-child(1) {
-    left: 10%;
-    animation-delay: calc(0s + (4s * var(--random-delay1)));
-    --start-rotation: -30deg;
-    --end-rotation: 360deg;
-  }
-
-  .fallingItem3:nth-child(2) {
-
-    left: 30%;
-    animation-delay: calc(0s + (4s * var(--random-delay2)));
-    --start-rotation: 20deg;
-    --end-rotation: 360deg;
-  }
-
-  .fallingItem3:nth-child(3) {
-
-    left: 50%;
-    animation-delay: calc(0s + (4s * var(--random-delay3)));
-    --start-rotation: -45deg;
-    --end-rotation: 360deg;
-  }
-
-  .fallingItem3:nth-child(4) {
-
-    left: 70%;
-    animation-delay: calc(0s + (4s * var(--random-delay4)));
-    --start-rotation: 15deg;
-    --end-rotation: 360deg;
-  }
-
-  .fallingItem3:nth-child(5) {
-
-    left: 90%;
-    animation-delay: calc(0s + (4s * var(--random-delay5)));
-    --start-rotation: 45deg;
-    --end-rotation: 360deg;
-  }
-
-  @media all and (max-width:1000px) {
-    .fallingItem2 {
-
-      animation: fall2 infinite linear;
-      animation-duration: 10s;
-      /* Tempo para cair*/
-    }
-
-    .fallingItem3 {
-
-      animation: fall3 infinite linear;
-      animation-duration: 10s;
-      /* Tempo para cair*/
-    }
-  }
-</style>`
-  },
-
+  
   /*@@@@Senko - section 39.1 (caderno) */
   /* variantes: variants/section 39.1 (caderno).js */
   {
@@ -2631,5 +2425,1431 @@ SenkoLib.register([
 
 
 
+
+
+/*@@@@Senko - comp-p */
+  /* variantes: variants/comp-p.js */
+  {
+    id: 'comp-p',
+    name: 'Padrão Conteúdo Pedro',
+    tags: ['comp'],
+    html: `<div class="lp-container">
+  <link rel="nestlenect" href="https://fonts.googleapis.com">
+  <link rel="nestlenect" href="https://fonts.gstatic.com" crossorigin>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
+  <title>PDP - eFácil</title>
+
+    <section class="video-header" aria-label="Cabeçalho do produto">
+        <article style="width: 100%;">
+      <header class="video-header__banner">
+        <video class="video-header__banner-video"
+          poster="C:UsersygorqDownloadsCaptura de tela 2026-04-02 161810.png" preload="none" autoplay muted loop
+          playsinline width="1200" height="250" aria-hidden="true">
+          <source
+            src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/cottonbaby/header-cottonbaby.mov"
+            loading="lazy">
+        </video>
+        <div class="video-header__badge" role="img" aria-label="Logo da marca">
+          <img
+            src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/cottonbaby/logo-cottonbaby2.png"
+            alt="imagem png com ícone da marca" class="video-header__badge-img">
+        </div>
+      </header>
+        <section class="video-header__body">
+        <small class="video-header__brand">Marca</small>
+        <h1 class="video-header__title">
+          TÍTULO DO PRODUTO (Nome, modelo, diferencial...)
+        </h1>
+        <p class="video-header__subtitle">
+          Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
+          Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
+          Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
+        </p>
+    </section>
+     </section>
+
+      <section class="section-32__container" aria-label="Seção de destaque do produto">
+    <figure class="section-32__groupimage-section">
+      <img src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/sessao32.jpg"
+        alt="!!!!!COLOQUE O TEXTO ALT AQUI!!!!!" style="border-radius: 30px 30px 0px 0px;" width="1600" height="865"
+        loading="lazy" decoding="async" fetchpriority="low">
+      <figcaption class="section-32__grouptext-overlay right grouptext-overlay-Background">
+        <h2><strong>SUB-TÍTULO</strong></h2>
+        <p>Isso é uma descrição. Isso é uma descrição. Isso é uma descrição. Isso é umadescrição.
+          Isso é uma descrição. 
+        </p>
+      </figcaption>
+
+    </figure>
+     <figure class="section-32__groupimage-section">
+      <img src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/sessao32.jpg"
+        alt="!!!!!COLOQUE O TEXTO ALT AQUI!!!!!" style="border-radius: 0px 0px 0px 0px;" width="1600" height="865"
+        loading="lazy" decoding="async" fetchpriority="low">
+      <figcaption class="section-32__grouptext-overlay bottom grouptext-overlay-Background" style="top: 75%">
+        <h2><strong>SUB-TÍTULO</strong></h2>
+        <p>Isso é uma descrição. Isso é uma descrição. Isso é uma descrição. Isso é umadescrição.Isso é uma descrição. 
+          Isso é uma descrição. </p>
+      </figcaption>
+    </figure>
+
+    <figure class="section-32__groupimage-section">
+      <img src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/sessao32.jpg"
+        alt="!!!!!COLOQUE O TEXTO ALT AQUI!!!!!" style="border-radius: 0px 0px 30px 30px;" width="1600" height="865"
+        loading="lazy" decoding="async" fetchpriority="low">
+      <figcaption class="section-32__grouptext-overlay left grouptext-overlay-Background" style="top: 75%;">
+        <h2>
+            <strong>SUB-TÍTULO</strong>
+        </h2>
+        <p>Isso é uma descrição. Isso é uma descrição. Isso é uma descrição. Isso é umadescrição.
+          Isso é uma descrição. Isso é uma descrição.
+        </p>
+      </figcaption>
+    </figure>
+  </section>
+    
+
+  <footer>
+  <p class="p__end">
+    <strong>Imagens Meramente Ilustrativas</strong>
+  </p>
+  </footer>
+  </article>
+
+`,
+    css: `<style>
+
+  *{
+    margin: 0;
+    padding: 0;
+  }
+
+   body {
+
+      margin: 0;
+    }
+
+    .tw-container {
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      width: 100%
+    }
+
+    @media (min-width:576px) {
+
+      .tw-container {
+
+        max-width: 576px
+      }
+    }
+
+    @media (min-width:768px) {
+
+      .tw-container {
+
+        max-width: 768px
+      }
+    }
+
+    @media (min-width:992px) {
+
+      .tw-container {
+
+        max-width: 992px
+      }
+    }
+
+    @media (min-width:1200px) {
+
+      .tw-container {
+
+        max-width: 1200px
+      }
+    }
+
+    @media (min-width:1536px) {
+
+      .tw-container {
+
+        max-width: 1536px
+      }
+    }
+
+    .tw-absolute {
+
+      position: absolute
+    }
+
+    .tw-relative {
+
+      position: relative
+    }
+
+    .-tw-bottom-16 {
+
+      bottom: -4rem
+    }
+
+    .tw-left-0 {
+
+      left: 0
+    }
+
+    .tw-top-0 {
+
+      top: 0
+    }
+
+    .tw-z-0 {
+
+      z-index: 0
+    }
+
+    .tw-z-10 {
+
+      z-index: 10
+    }
+
+    .tw-col-span-2 {
+
+      grid-column: span 2/span 2
+    }
+
+    .tw-m-0 {
+
+      margin: 0
+    }
+
+    .tw-my-16 {
+
+      margin-bottom: 4rem;
+      margin-top: 4rem
+    }
+
+    .tw-my-8 {
+
+      margin-bottom: 2rem;
+      margin-top: 2rem
+    }
+
+    .tw-mb-1 {
+
+      margin-bottom: .25rem
+    }
+
+    .tw-mb-6 {
+
+      margin-bottom: 1.5rem
+    }
+
+    .tw-mt-16 {
+
+      margin-top: 4rem
+    }
+
+    .tw-mt-4 {
+
+      margin-top: 1rem
+    }
+
+    .tw-mt-8 {
+
+      margin-top: 2rem
+    }
+
+    .tw-flex {
+
+      display: flex
+    }
+
+    .tw-grid {
+
+      display: grid
+    }
+
+    .tw-h-14 {
+
+      height: 3.5rem
+    }
+
+    .tw-h-32 {
+
+      height: 8rem
+    }
+
+    .tw-h-5 {
+
+      height: 1.25rem
+    }
+
+    .tw-h-56 {
+
+      height: 14rem
+    }
+
+    .tw-h-6 {
+
+      height: 1.5rem
+    }
+
+    .tw-h-64 {
+
+      height: 16rem
+    }
+
+    .tw-h-[25rem] {
+
+      height: 25rem
+    }
+
+    .tw-h-[31.25rem] {
+
+      height: 31.25rem
+    }
+
+    .tw-h-[32rem] {
+
+      height: 32rem
+    }
+
+    .tw-h-full {
+
+      height: 100%
+    }
+
+    .tw-w-14 {
+
+      width: 3.5rem
+    }
+
+    .tw-w-32 {
+
+      width: 8rem
+    }
+
+    .tw-w-5 {
+
+      width: 1.25rem
+    }
+
+    .tw-w-6 {
+
+      width: 1.5rem
+    }
+
+    .tw-w-full {
+
+      width: 100%
+    }
+
+    .tw-max-w-[6rem] {
+
+      max-width: 6rem
+    }
+
+    .tw-max-w-md {
+
+      max-width: 28rem
+    }
+
+    .tw-max-w-sm {
+
+      max-width: 24rem
+    }
+
+    .tw-max-w-xl {
+
+      max-width: 36rem
+    }
+
+    .tw-select-none {
+
+      -webkit-user-select: none;
+      user-select: none
+    }
+
+    .tw-list-none {
+
+      list-style-type: none
+    }
+
+    .tw-grid-cols-1 {
+
+      grid-template-columns: repeat(1, minmax(0, 1fr))
+    }
+
+    .tw-flex-col {
+
+      flex-direction: column
+    }
+
+    .tw-items-end {
+
+      align-items: flex-end
+    }
+
+    .tw-items-center {
+
+      align-items: center
+    }
+
+    .tw-justify-end {
+
+      justify-content: flex-end
+    }
+
+    .tw-justify-center {
+
+      justify-content: center
+    }
+
+    .tw-justify-between {
+
+      justify-content: space-between
+    }
+
+    .tw-gap-10 {
+
+      gap: 2.5rem
+    }
+
+    .tw-gap-14 {
+
+      gap: 3.5rem
+    }
+
+    .tw-gap-4 {
+
+      gap: 1rem
+    }
+
+    .tw-gap-y-4 {
+
+      row-gap: 1rem
+    }
+
+    .tw-rounded {
+
+      border-radius: .25rem
+    }
+
+    .tw-rounded-2xl {
+
+      border-radius: 1rem
+    }
+
+    .tw-rounded-full {
+
+      border-radius: 9999px
+    }
+
+    .tw-rounded-lg {
+
+      border-radius: .5rem
+    }
+
+    .tw-rounded-t {
+
+      border-top-left-radius: .25rem;
+      border-top-right-radius: .25rem
+    }
+
+    .tw-border-t {
+
+      border-top-width: 1px
+    }
+
+    .tw-border-solid {
+
+      border-style: solid
+    }
+
+    .tw-border-transparent {
+
+      border-color: transparent
+    }
+
+    .tw-bg-gray-900 {
+
+      --tw-bg-opacity: 1;
+      background-color: rgb(46 53 56/var(--tw-bg-opacity))
+    }
+
+    .tw-bg-primary {
+
+      --tw-bg-opacity: 1;
+      background-color: rgb(255 153 0/var(--tw-bg-opacity))
+    }
+
+    .tw-bg-white {
+
+      --tw-bg-opacity: 1;
+      background-color: rgb(255 255 255/var(--tw-bg-opacity))
+    }
+
+    .tw-object-contain {
+
+      object-fit: contain
+    }
+
+    .tw-object-cover {
+
+      object-fit: cover
+    }
+
+    .tw-p-3 {
+
+      padding: .75rem
+    }
+
+    .tw-p-5 {
+
+      padding: 1.25rem
+    }
+
+    .tw-p-6 {
+
+      padding: 1.5rem
+    }
+
+    .tw-p-8 {
+
+      padding: 2rem
+    }
+
+    .tw-py-10 {
+
+      padding-bottom: 2.5rem;
+      padding-top: 2.5rem
+    }
+
+    .tw-pl-0 {
+
+      padding-left: 0
+    }
+
+    .tw-pt-8 {
+
+      padding-top: 2rem
+    }
+
+    .tw-text-center {
+
+      text-align: center
+    }
+
+    .tw-font-roboto {
+
+      font-family: Roboto, sans-serif
+    }
+
+    .tw-text-2xl {
+
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 40px
+    }
+
+    .tw-text-lg {
+
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 28px
+    }
+
+    .tw-text-md {
+
+      font-size: 16px;
+      line-height: 24px
+    }
+
+    .tw-text-sm {
+
+      font-size: 14px;
+      line-height: 22px
+    }
+
+    .tw-text-xs {
+
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 16px
+    }
+
+    .tw-uppercase {
+
+      text-transform: uppercase
+    }
+
+    .tw-text-black {
+
+      --tw-text-opacity: 1;
+      color: rgb(0 0 0/var(--tw-text-opacity))
+    }
+
+    .tw-text-gray-500 {
+
+      --tw-text-opacity: 1;
+      color: rgb(138 138 138/var(--tw-text-opacity))
+    }
+
+    .pdp {
+
+      display: flex;
+      flex-direction: column;
+      font-family: Roboto, sans-serif
+    }
+
+    .pdp * {
+
+      box-sizing: border-box;
+      margin: 0;
+    }
+
+  .video-header {
+    --badge-size: 8rem;
+    --banner-height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    position: relative;
+    font-family: sans-serif;
+    container-type: inline-size;
+  }
+
+  .video-header__banner {
+    width: 100%;
+    height: var(--banner-height);
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+
+  .video-header__banner-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+
+  .video-header__badge {
+    position: absolute;
+    bottom: calc(var(--badge-size) / -2);
+    width: var(--badge-size);
+    height: var(--badge-size);
+    background-color: #ff9900;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    z-index: 10;
+  }
+
+  .video-header__badge-img {
+    max-width: 90px;
+    max-height: 90px;
+    object-fit: contain;
+  }
+
+  .video-header__body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: calc(var(--badge-size) / 2 + 1.1rem) 0.3rem 2.5rem;
+    text-align: center;
+  }
+
+  .video-header__brand {
+    color: #ff9900;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .video-header__title {
+    font-size: clamp(1.4rem, 4vw, 2.4rem);
+    line-height: clamp(1.6rem, 4vw, 3.1rem);
+    font-weight: 600;
+    max-width: 50rem;
+    text-wrap: pretty;
+  }
+
+  .video-header__subtitle {
+    color: #8a8a8a;
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    line-height: 120%;
+    margin-top: 1rem;
+    max-width: 52rem;
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 768px) {
+    .video-header {
+      --banner-height: 180px;
+    }
+  }
+
+  @media (max-width: 470px) {
+    .video-header__subtitle {
+      text-align: justify;
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
+    }
+  }
+    .section-32__container {
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+      border: 5.5px solid #000;
+      border-radius: 34.5px;
+    }
+
+    .section-32__groupimage-section {
+      position: relative;
+      width: 100%;
+      margin: 0;
+      contain: layout style;
+    }
+
+    .section-32__groupimage-section img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .section-32__grouptext-overlay {
+      color: #ffffff;
+      position: absolute;
+      max-width: 45%;
+      width: 90%;
+      line-height: 2rem;
+      text-align: center;
+      font-family: sans-serif
+    }
+
+    .section-32__grouptext-overlay.top {
+      top: 3%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .section-32__grouptext-overlay.bottom {
+      top: 75%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .section-32__grouptext-overlay.left {
+      top: 50%;
+      left: 25%;
+      transform: translate(-50%, -50%);
+      max-width: 41%;
+    }
+
+    .section-32__grouptext-overlay.right {
+      top: 50%;
+      left: 75%;
+      transform: translate(-50%, -50%);
+      max-width: 42%;
+    }
+
+    .section-32__grouptext-overlay h2 {
+      font-size: 2vw;
+      font-weight: bold;
+      margin-bottom: 1.5px;
+      line-height: 120%;
+    }
+
+    .section-32__grouptext-overlay p {
+      font-size: 1.1vw;
+      margin: 0;
+      line-height: 120%;
+    }
+    
+
+    
+
+    @media (max-width: 960px) {
+      .section-32__grouptext-overlay h2 {
+        font-size: 2.1vw;
+      }
+
+      .section-32__grouptext-overlay p {
+        font-size: 1.5vw;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .section-32__grouptext-overlay h2 {
+        font-size: 2.5vw;
+      }
+
+      .section-32__grouptext-overlay p {
+        font-size: 1.8vw;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .section-32__grouptext-overlay h2 {
+        font-size: 3vw;
+      }
+
+      .section-32__grouptext-overlay p {
+        font-size: 2.3vw;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .section-32__grouptext-overlay h2 {
+        font-size: 3vw;
+      }
+
+      .section-32__grouptext-overlay p {
+        font-size: 2.3vw;
+      }
+    }
+
+    @media (max-width: 1060px) {
+      .section-32__grouptext-overlay.top {
+        top: 3%;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .section-32__grouptext-overlay.top {
+        top: 3%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .section-32__grouptext-overlay.top {
+        top: 3%;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .section-32__grouptext-overlay.top {
+        top: 3%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .section-32__grouptext-overlay.top {
+        top: 3%;
+      }
+    }
+
+    @media (max-width: 1060px) {
+      .section-32__grouptext-overlay.bottom {
+        top: 81%;
+      }
+    }
+
+    @media (max-width: 960px) {
+      .section-32__grouptext-overlay.bottom {
+        top: 79%
+      }
+    }
+
+    @media (max-width: 480px) {
+      .section-32__grouptext-overlay.bottom {
+        top: 81%
+      }
+    }
+
+    @media (max-width: 768px) {
+      .section-32__grouptext-overlay.bottom {
+        top: 76%;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .section-32__grouptext-overlay.bottom {
+        top: 67%;
+      }
+    }
+    
+    @media (max-width: 480px) {
+
+      .section-32__grouptext-overlay.right {
+        top: 50%;
+        left: 73%;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    @media (max-width: 480px) {
+
+      .section-32__grouptext-overlay.left {
+        top: 50%;
+        left: 27%;
+        transform: translate(-50%, -50%);
+      }
+    }
+
+    .grouptext-overlay-Background {
+        background: rgba(0, 0, 0, 0.205);
+        border-radius: 4.5vw;
+        padding: 0.5rem;
+        backdrop-filter: blur(0.8vw);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        -webkit-backdrop-filter: blur(10px);
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        max-width: 70%;
+        z-index: 100;
+    }
+
+    .p__end {
+      color: #8a8a8a;
+      font-family: sans-serif;
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      text-wrap: pretty;
+      text-align: center;
+      padding: 40px 0;
+
+    }
+
+
+
+</style>`
+  },
+
+
+/*@@@@Senko - section-7 */
+  /* variantes: variants/section-7.js */
+  {
+    id: 'section-7',
+    name: 'Section-7',
+    tags: ['Fallitens', 'section 7', '7'],
+    html: `<section class="section-7__banner" style="--d1:0.1; --d2:0.7; --d3:0.3; --d4:0.5; --d5:0.2;"
+  aria-label="Banner promocional">
+  <!-- Falling items (decorativos, aria-hidden) -->
+  <img class="section-7__falling-item"
+    src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo-efacil.png"
+    width="200" height="200" aria-hidden="true" alt="">
+  <img class="section-7__falling-item"
+    src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo-efacil.png"
+    width="200" height="200" aria-hidden="true" alt="">
+  <img class="section-7__falling-item"
+    src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo-efacil.png"
+    width="200" height="200" aria-hidden="true" alt="">
+  <img class="section-7__falling-item"
+    src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo-efacil.png"
+    width="200" height="200" aria-hidden="true" alt="">
+  <img class="section-7__falling-item"
+    src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo-efacil.png"
+    width="200" height="200" aria-hidden="true" alt="">
+  <!-- Imagem de fundo -->
+  <img class="section-7__banner-image"
+    src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/sessao32.jpg"
+    width="1600" height="865" alt="Produto em destaque — qualidade, praticidade e estilo no dia a dia">
+  <!-- Overlay de texto -->
+  <figcaption class="section-7__grouptext-overlay bottom">
+    <p style="color: #ffffff;">Isso é uma descrição. Isso é uma descrição.</p>
+    <h2 style="color: #ffffff;"><strong>SUB-TÍTULO</strong></h2>
+    <p style="color: #ffffff;">Isso é uma descrição. Isso é uma descrição. Isso é uma descrição. Isso é umadescrição.
+    </p>
+  </figcaption>
+</section>`,
+    css: `<style>
+  :root {
+    --fall-duration: 5s;
+    --fall-delay-range: 4s;
+  }
+
+  .section-7__wrapper {
+    width: 100%;
+    margin-inline: auto;
+  }
+
+  .section-7__banner {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin: -1px;
+  }
+
+  .section-7__banner-image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .section-7__grouptext-overlay {
+    position: absolute;
+    max-width: 40%;
+    width: 90%;
+    line-height: 1.5;
+    text-align: center;
+    font-family: sans-serif
+  }
+
+  .section-7__grouptext-overlay.top {
+    top: 3%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .section-7__grouptext-overlay.bottom {
+    top: 84%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .section-7__grouptext-overlay.left {
+    top: 50%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    max-width: 41%;
+  }
+
+  .section-7__grouptext-overlay.right {
+    top: 50%;
+    left: 75%;
+    transform: translate(-50%, -50%);
+    max-width: 42%;
+  }
+
+  .section-7__grouptext-overlay h2 {
+    font-size: 2vw;
+    font-weight: bold;
+    margin-bottom: 1.5px;
+    line-height: 120%;
+  }
+
+  .section-7__grouptext-overlay p {
+    font-size: 1.1vw;
+    margin: 0;
+    line-height: 120%;
+  }
+
+  @media (max-width: 960px) {
+    .section-7__grouptext-overlay h2 {
+      font-size: 2.1vw;
+    }
+
+    .section-7__grouptext-overlay p {
+      font-size: 1.5vw;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .section-7__grouptext-overlay h2 {
+      font-size: 2.5vw;
+    }
+
+    .section-7__grouptext-overlay p {
+      font-size: 1.8vw;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .section-7__grouptext-overlay h2 {
+      font-size: 3vw;
+    }
+
+    .section-7__grouptext-overlay p {
+      font-size: 2.3vw;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .section-7__grouptext-overlay h2 {
+      font-size: 3vw;
+    }
+
+    .section-7__grouptext-overlay p {
+      font-size: 2.3vw;
+    }
+  }
+
+  @media (max-width: 1060px) {
+    .section-7__grouptext-overlay.top {
+      top: 3%;
+    }
+  }
+
+  @media (max-width: 960px) {
+    .section-7__grouptext-overlay.top {
+      top: 3%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .section-7__grouptext-overlay.top {
+      top: 3%;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .section-7__grouptext-overlay.top {
+      top: 3%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .section-7__grouptext-overlay.top {
+      top: 3%;
+    }
+  }
+
+  @media (max-width: 1060px) {
+    .section-7__grouptext-overlay.bottom {
+      top: 81%;
+    }
+  }
+
+  @media (max-width: 960px) {
+    .section-7__grouptext-overlay.bottom {
+      top: 79%
+    }
+  }
+
+  @media (max-width: 480px) {
+    .section-7__grouptext-overlay.bottom {
+      top: 81%
+    }
+  }
+
+  @media (max-width: 768px) {
+    .section-7__grouptext-overlay.bottom {
+      top: 76%;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .section-7__grouptext-overlay.bottom {
+      top: 67%;
+    }
+  }
+
+  @media (max-width: 480px) {
+
+    .section-7__grouptext-overlay.right {
+      top: 50%;
+      left: 73%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  @media (max-width: 480px) {
+
+    .section-7__grouptext-overlay.left {
+      top: 50%;
+      left: 27%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .section-7__falling-item {
+    position: absolute;
+    top: -100px;
+    width: 8vw;
+    height: 8vw;
+    opacity: 0;
+    z-index: 10;
+    transform-origin: center;
+    animation: fall var(--fall-duration) infinite linear;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .section-7__falling-item:nth-child(1) {
+    left: 10%;
+    --start-rot: -30deg;
+    --end-rot: 360deg;
+    animation-delay: calc(var(--fall-delay-range) * var(--d1, 0.1));
+  }
+
+  .section-7__falling-item:nth-child(2) {
+    left: 30%;
+    --start-rot: 20deg;
+    --end-rot: 360deg;
+    animation-delay: calc(var(--fall-delay-range) * var(--d2, 0.7));
+  }
+
+  .section-7__falling-item:nth-child(3) {
+    left: 50%;
+    --start-rot: -45deg;
+    --end-rot: 360deg;
+    animation-delay: calc(var(--fall-delay-range) * var(--d3, 0.3));
+  }
+
+  .section-7__falling-item:nth-child(4) {
+    left: 70%;
+    --start-rot: 15deg;
+    --end-rot: 360deg;
+    animation-delay: calc(var(--fall-delay-range) * var(--d4, 0.5));
+  }
+
+  .section-7__falling-item:nth-child(5) {
+    left: 90%;
+    --start-rot: 45deg;
+    --end-rot: 360deg;
+    animation-delay: calc(var(--fall-delay-range) * var(--d5, 0.2));
+  }
+
+  @keyframes fall {
+    0% {
+      transform: translateY(-100px) rotate(var(--start-rot));
+      opacity: 1;
+    }
+
+    90% {
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateY(110vh) rotate(var(--end-rot));
+      opacity: 0;
+    }
+  }
+</style>`
+  },
+
+
+/*@@@@Senko - section-9 */
+  /* variantes: variants/section-9.js */
+  {
+    id: 'section-9',
+    name: 'Section-9',
+    tags: ['Section 9', '9', 'grid'],
+    html: `<section class="section-9" aria-labelledby="section-9-title">
+  <div class="section-9__header">
+    <h2 class="section-9__title" id="section-9-title">frequentes</h2>
+    <p class="section-9__subtitle">Cabo</p>
+  </div>
+  <ul class="section-9__list">
+    <li class="section-9__item">
+      <details class="section-9__item">
+        <summary>
+          <span class="section-9__q-text">cabo</span>
+          <span class="section-9__icon" aria-hidden="true"></span>
+        </summary>
+        <div class="section-9__a-inner">
+          <span class="section-9__badge">
+            <span class="section-9__badge-dot"></span>Confirmado
+          </span>
+          <p class="section-9__a-text">Sim, fabricado com cobre nu de têmpera mole. Não é alumínio revestido, garantindo condutividade total e máxima segurança.</p>
+        </div>
+      </details>
+    </li>
+    <li class="section-9__item">
+      <details class="section-9__item">
+        <summary>
+          <span class="section-9__q-text">Ele é fácil de passar pelo conduíte?</span>
+          <span class="section-9__icon" aria-hidden="true"></span>
+        </summary>
+        <div class="section-9__a-inner">
+          <span class="section-9__badge">
+            <span class="section-9__badge-dot"></span>Confirmado
+          </span>
+          <p class="section-9__a-text">Com certeza. Por ser classe 5 (extra flexível) e ter isolação deslizante, ele atravessa curvas e eletrodutos apertados sem travar.</p>
+        </div>
+      </details>
+    </li>
+    <li class="section-9__item">
+      <details class="section-9__item">
+        <summary>
+          <span class="section-9__q-text">O material é antichama?</span>
+          <span class="section-9__icon" aria-hidden="true"></span>
+        </summary>
+        <div class="section-9__a-inner">
+          <span class="section-9__badge">
+            <span class="section-9__badge-dot"></span>Confirmado
+          </span>
+          <p class="section-9__a-text">Sim. A isolação em PVC é autoextinguível e não propaga fogo, atendendo rigorosamente à norma ABNT NBR NM 247-3.</p>
+        </div>
+      </details>
+    </li>
+    <li class="section-9__item">
+      <details class="section-9__item">
+        <summary>
+          <span class="section-9__q-text">Qual o tamanho do rolo?</span>
+          <span class="section-9__icon" aria-hidden="true"></span>
+        </summary>
+        <div class="section-9__a-inner">
+          <span class="section-9__badge">
+            <span class="section-9__badge-dot"></span>Confirmado
+          </span>
+          <p class="section-9__a-text">Este anúncio refere-se ao rolo fechado de 200 metros na cor amarela, ideal para circuitos de sinalização ou comandos.</p>
+        </div>
+      </details>
+    </li>
+    <li class="section-9__item">
+      <details class="section-9__item">
+        <summary>
+          <span class="section-9__q-text">O cabo é original e normatizado?</span>
+          <span class="section-9__icon" aria-hidden="true"></span>
+        </summary>
+        <div class="section-9__a-inner">
+          <span class="section-9__badge">
+            <span class="section-9__badge-dot"></span>Confirmado
+          </span>
+          <p class="section-9__a-text">Sim, produto original Corfio com selo de conformidade e fabricado sob as normas técnicas.</p>
+        </div>
+      </details>
+    </li>
+  </ul>
+</section>`,
+    css: `<style>
+  .section-9 {
+    width: 100%;
+    padding: 2rem 16px;
+    box-sizing: border-box;
+    margin: 0 auto 25px;
+  }
+
+  .section-9__header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .section-9__title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: bold;
+    color: #333;
+    margin: 0 0 12px;
+    line-height: 98%;
+  }
+
+  .section-9__subtitle {
+    font-size: 1rem;
+    color: #666;
+    margin: 0;
+  }
+
+  .section-9__list {
+    list-style: none;
+    margin: 0 auto;
+    padding: 0;
+    max-width: 56rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .section-9__item {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .section-9__item summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .section-9__item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .section-9__item summary:hover {
+    background: #f9f9f9;
+  }
+
+  .section-9__q-text {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333;
+    flex: 1;
+  }
+
+  .section-9__icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .section-9__icon::before,
+  .section-9__icon::after {
+    content: '';
+    position: absolute;
+    background: #888;
+    border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+
+  .section-9__icon::before {
+    width: 12px;
+    height: 1.5px;
+    top: 9px;
+    left: 4px;
+  }
+
+  .section-9__icon::after {
+    width: 1.5px;
+    height: 12px;
+    top: 4px;
+    left: 9px;
+  }
+
+  .section-9__item[open] .section-9__icon::after {
+    transform: rotate(90deg);
+    opacity: 0;
+  }
+
+  .section-9__a-inner {
+    padding: 14px 20px 16px;
+    border-top: 1px solid #e5e5e5;
+  }
+
+  .section-9__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #1a7a4a;
+    background: #e6f4ed;
+    border-radius: 6px;
+    padding: 3px 10px;
+    margin-bottom: 8px;
+  }
+
+  .section-9__badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #1a7a4a;
+    flex-shrink: 0;
+  }
+
+  .section-9__a-text {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  @media (max-width: 480px) {
+    .section-9__q-text {
+      font-size: 0.9rem;
+    }
+  }
+</style>`
+  },
 
 ]);
