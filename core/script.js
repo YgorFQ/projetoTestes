@@ -10,7 +10,6 @@ var state = {
   currentForVariant:  null,
   currentEditVariant: null,
   _fromVariant:       false,
-  viewMode:           'normal',
 
 };
 
@@ -204,7 +203,6 @@ function renderGrid() {
 
   grid.innerHTML = '';
   grid.className = 'grid';
-  if (state.viewMode !== 'normal') grid.classList.add('view-' + state.viewMode);
 
   if (filtered.length === 0) {
     if (state.search) {
@@ -896,15 +894,6 @@ document.addEventListener('DOMContentLoaded', function () {
     state.search = '';
     document.getElementById('searchInput').value = '';
     renderGrid();
-  });
-
-  document.querySelectorAll('.view-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      state.viewMode = this.dataset.view;
-      document.querySelectorAll('.view-btn').forEach(function (b) { b.classList.remove('active'); });
-      this.classList.add('active');
-      renderGrid();
-    });
   });
 
   /* Modal visualizar */

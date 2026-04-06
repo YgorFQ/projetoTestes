@@ -139,13 +139,6 @@ body {
   gap: 1.25rem;
 }
 
-/* Grid modo categoria única — cards maiores */
-.grid.category-mode {
-  grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
-  gap: 1.75rem;
-}
-.grid.category-mode .card-preview { height: 320px; }
-
 /* ─── Card ───────────────────────────────────────────── */
 .card {
   background: var(--bg); border: 1.5px solid var(--border);
@@ -362,7 +355,7 @@ body {
   .header-inner { padding:.75rem 1rem; }
   .filters-wrap { padding:.4rem 1rem; }
   .dashboard { padding:1rem; }
-  .grid, .grid.category-mode { grid-template-columns:1fr; }
+  .grid { grid-template-columns:1fr; }
   .search-input { width:140px; }
   .modal-overlay { padding:0; align-items:flex-end; }
   .modal, .add-modal { border-radius:var(--radius-lg) var(--radius-lg) 0 0; max-height:95vh; overflow-y:auto; }
@@ -394,114 +387,9 @@ body {
   background: var(--green); border-color: var(--green); color: #fff;
 }
 
-/* ─── View Mode Toggle ───────────────────────────────── */
-.view-modes {
-  display: flex; align-items: center; gap: 2px;
-  background: var(--bg3);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 3px;
-}
-
-.view-btn {
-  background: transparent; border: none;
-  border-radius: 7px;
-  width: 30px; height: 30px;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--text3);
-  transition: all var(--transition);
-  flex-shrink: 0;
-}
-.view-btn:hover { color: var(--accent); background: var(--accent-bg); }
-.view-btn.active { background: #fff; color: var(--accent); box-shadow: 0 1px 4px rgba(0,0,0,.1); }
-
-/* ─── Grid — modos de visualização ──────────────────── */
-
-/* Normal: já definido (minmax 320px) */
-
-/* Grande: dobro */
-.grid.view-large {
-  grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
-  gap: 1.75rem;
-}
-.grid.view-large .card-preview { height: 360px; }
-
-/* Único: um card centralizado grande */
-.grid.view-single {
-  grid-template-columns: 1fr;
-  max-width: 900px;
-  margin: 0 auto;
-  gap: 2rem;
-}
-.grid.view-single .card-preview { height: 440px; }
-
-/* Lista */
-.grid.view-list {
-  grid-template-columns: 1fr;
-  gap: .6rem;
-}
-
-/* Expandido: um abaixo do outro, preview bem alto */
-.grid.view-expanded {
-  grid-template-columns: 1fr;
-  max-width: 1200px;
-  margin: 0 auto;
-  gap: 2rem;
-}
-.grid.view-expanded .card-preview { height: 600px; }
-.grid.view-expanded .card-iframe  { pointer-events: auto; }
-.grid.view-list .card {
-  flex-direction: row;
-  align-items: stretch;
-  border-radius: var(--radius);
-}
-.grid.view-list .card-preview {
-  width: 200px;
-  height: 110px;
-  flex-shrink: 0;
-  border-bottom: none;
-  border-right: 1.5px solid var(--border);
-  border-radius: 0;
-}
-.grid.view-list .card-body {
-  flex-direction: row;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: .5rem;
-  padding: .75rem 1rem;
-}
-.grid.view-list .card-name { font-size: .95rem; min-width: 180px; }
-.grid.view-list .card-category { min-width: 90px; }
-.grid.view-list .card-tags { flex: 1; }
-.grid.view-list .card-actions {
-  flex-direction: column;
-  border-top: none;
-  border-left: 1.5px solid var(--border);
-  padding: .75rem;
-  min-width: 120px;
-  justify-content: center;
-  gap: .4rem;
-}
-.grid.view-list .card-actions .btn { flex: none; width: 100%; font-size: .75rem; padding: .35rem .6rem; }
-
-/* Sobrescreve category-mode quando tem view-mode explícito */
-.grid.view-large.category-mode,
-.grid.view-single.category-mode,
-.grid.view-list.category-mode,
-.grid.view-expanded.category-mode { grid-template-columns: unset; }
-.grid.view-large.category-mode { grid-template-columns: repeat(auto-fill, minmax(600px, 1fr)); }
-.grid.view-single.category-mode { grid-template-columns: 1fr; max-width: 900px; }
-.grid.view-list.category-mode { grid-template-columns: 1fr; }
-.grid.view-expanded.category-mode { grid-template-columns: 1fr; max-width: 1200px; }
-
 @media (max-width: 700px) {
-  .view-modes { display: none; }
   .btn-copyall { padding: .5rem .6rem; font-size: 0; }
   .btn-copyall svg { margin: 0; }
-  .grid.view-large, .grid.view-single, .grid.view-expanded { grid-template-columns: 1fr; }
-  .grid.view-list .card { flex-direction: column; }
-  .grid.view-list .card-preview { width: 100%; height: 160px; border-right: none; border-bottom: 1.5px solid var(--border); }
-  .grid.view-list .card-actions { border-left: none; border-top: 1.5px solid var(--border); flex-direction: row; min-width: unset; }
 }
 
 /* ─── Botão de tema — na barra de filtros ────────────── */
@@ -638,10 +526,6 @@ body {
 [data-theme="dark"] .search-input:focus { background: #181a1b; }
 
 /* ── Modos de visualização ── */
-[data-theme="dark"] .view-modes      { background: #25282a; border-color: #363b3d; }
-[data-theme="dark"] .view-btn        { color: #b2aca2; }
-[data-theme="dark"] .view-btn.active { background: #181a1b; color: var(--accent); box-shadow: none; }
-[data-theme="dark"] .view-btn:hover  { background: rgba(204,86,0,.08); color: var(--accent); }
 
 /* ── Botões ── */
 [data-theme="dark"] .btn-ghost       { border-color: #363b3d; color: #b2aca2; }
