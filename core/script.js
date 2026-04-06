@@ -11,7 +11,7 @@ var state = {
   currentEditVariant: null,
   _fromVariant:       false,
   viewMode:           'normal',
-  favOnly:            false,
+
 };
 
 /* ─── Utilitários ─────────────────────────────────── */
@@ -182,7 +182,6 @@ function getFilteredLayouts() {
   var favs = getFavs();
   return SenkoLib.getAll()
     .filter(function (l) {
-      if (state.favOnly && favs.indexOf(l.id) === -1) return false;
       if (!q) return true;
       return [l.name].concat(l.tags).some(function (s) {
         return s && s.toLowerCase().indexOf(q) !== -1;
@@ -282,7 +281,6 @@ function createCard(layout, index) {
     toggleFav(layout.id);
     btnFav.classList.toggle('active');
     updateStatsBar(getFilteredLayouts().length);
-    if (state.favOnly) renderGrid();
   });
 
   /* Editar */
@@ -1033,13 +1031,6 @@ document.addEventListener('DOMContentLoaded', function () {
   /* saveToFileBtn — listener gerenciado pelo senko-fsa.js (o botão é clonado lá) */
 
   document.getElementById('selectFolderBtn').addEventListener('click', selectProjectFolder);
-
-  /* Filtro favoritos */
-  document.getElementById('favFilterBtn').addEventListener('click', function () {
-    state.favOnly = !state.favOnly;
-    this.classList.toggle('active', state.favOnly);
-    renderGrid();
-  });
 
   /* Escape */
   document.addEventListener('keydown', function (e) {
