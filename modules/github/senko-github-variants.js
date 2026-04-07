@@ -101,7 +101,7 @@ function ghvBuildNewVariantFile(parentId, objectCode) {
   return (
     '// @ts-nocheck\n' +
     "SenkoLib.registerVariant('" + parentId.toLowerCase() + "', [\n" +
-    objectCode + ',\n' +
+    objectCode + '\n' +
     ']);\n'
   );
 }
