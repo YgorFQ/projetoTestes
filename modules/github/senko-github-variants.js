@@ -239,6 +239,23 @@ function githubCreateVariant(parentId, variantName, objectCode) {
       null,
       '[SenkoLib] create variants file: ' + parentId
     ).then(function () {
+      ghSetStatus('Atualizando index.html…', 'saving');
+
+      return githubGetFile('index.html').then(function (indexData) {
+        var anchor = '  <script src="core/script.js"></script>';
+        if (indexData.content.indexOf('variants/' + parentId + '.js') !== -1) {
+          return; // já existe, seguro
+        }
+        var tag      = '  <script src="variants/' + parentId.toLowerCase() + '.js"></script>\n';
+        var newIndex = indexData.content.replace(anchor, tag + anchor);
+        return githubPutFile(
+          'index.html',
+          newIndex,
+          indexData.sha,
+          '[SenkoLib] register variant script: ' + parentId
+        );
+      });
+    }).then(function () {
       var html = document.getElementById('newVarHtml') ? document.getElementById('newVarHtml').value : '';
       var css  = document.getElementById('newVarCss')  ? document.getElementById('newVarCss').value  : '';
       SenkoLib.registerVariant(parentId, [{ name: variantName, html: html, css: css }]);
