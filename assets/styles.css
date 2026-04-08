@@ -539,12 +539,6 @@ body {
 [data-theme="dark"] .edit-var-mode-btn { border-color: #363b3d; color: #b2aca2; background: transparent; }
 [data-theme="dark"] .theme-toggle    { border-color: #363b3d; color: #b2aca2; }
 
-/* ── FSA bar ── */
-[data-theme="dark"] .fsa-bar         { background: rgba(255,200,0,.05); border-bottom-color: rgba(255,200,0,.2); }
-[data-theme="dark"] .fsa-btn         { color: #c49a00; }
-[data-theme="dark"] .fsa-label       { color: #b2aca2; }
-[data-theme="dark"] .fsa-status      { color: #b2aca2; }
-
 /* ── Modal variantes ── */
 [data-theme="dark"] .variants-modal         { background: #1c1e1f; }
 [data-theme="dark"] .variants-modal-header  { border-bottom-color: #363b3d; }
@@ -1045,29 +1039,6 @@ body {
   display: block;
   background: #fff;
 }
-
-/* ─── Barra FSA experimental ─────────────────────────── */
-.fsa-bar {
-  background: rgba(255, 200, 0, .08);
-  border-bottom: 1.5px solid rgba(255, 200, 0, .3);
-  padding: .5rem 2rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: .8rem;
-}
-.fsa-label { color: var(--text3); font-weight: 700; }
-.fsa-status { color: var(--text3); font-style: italic; }
-.fsa-btn {
-  background: transparent;
-  border: 1.5px solid rgba(255,200,0,.5);
-  border-radius: var(--radius);
-  padding: .3rem .85rem;
-  font-size: .8rem; font-weight: 700;
-  color: #a07800; cursor: pointer;
-  transition: all var(--transition);
-}
-.fsa-btn:hover { background: rgba(255,200,0,.15); }
 
 /* ─── Botão salvar no arquivo ────────────────────────── */
 .btn-save-file {

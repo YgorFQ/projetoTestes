@@ -158,23 +158,6 @@ function lazyIframe(iframe, html, css) {
 }
 
 
-/* ═══════════════════════════════════════════════════════
-   FILE SYSTEM ACCESS API — TESTE EXPERIMENTAL
-   Só funciona no Chrome/Edge. Não funciona com file://
-   Precisa de servidor local (ex: Live Server do VS Code)
-═══════════════════════════════════════════════════════ */
-var _projectDir = null;
-
-async function selectProjectFolder() {
-  try {
-    _projectDir = await window.showDirectoryPicker({ mode: 'readwrite' });
-    document.getElementById('fsaStatus').textContent = '📁 Pasta: ' + _projectDir.name;
-    document.getElementById('fsaStatus').style.color = 'var(--green)';
-  } catch (e) {
-  }
-}
-
-
 /* ─── Grid ─────────────────────────────────────────── */
 function getFilteredLayouts() {
   var q = state.search.toLowerCase();
@@ -746,7 +729,7 @@ function updateEditVarCode() {
   /*
    * IMPORTANTE: não mutamos state.currentEditVariant aqui.
    * O objeto em memória só é atualizado APÓS o usuário confirmar o save
-   * (via senko-fsa-variants.js ou senko-github-variants.js).
+   * (via senko-github-variants.js ou senko-firebase.js).
    * Isso evita corromper dados se o usuário fechar o modal sem salvar.
    */
 }
@@ -1017,11 +1000,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (code.indexOf('//') !== 0) copyToClipboard(code, this, COPY_ICON + ' Copiar objeto');
   });
 
-  /* saveToFileBtn — listener gerenciado pelo senko-fsa.js (o botão é clonado lá) */
-
-  document.getElementById('selectFolderBtn').addEventListener('click', selectProjectFolder);
-
-  /* Escape */
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
     if (!document.getElementById('editVarOverlay').classList.contains('hidden'))         closeEditVariantModal();

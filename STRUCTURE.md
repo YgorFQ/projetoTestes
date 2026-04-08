@@ -12,8 +12,8 @@ SenkoLib/
 │   │   ├── senko-github-v2.js          — salvar layouts/variantes no GitHub via API
 │   │   ├── senko-github-variants.js    — criar e deletar variantes no GitHub
 │   │   └── senko-github-delete.js      — excluir layouts do GitHub
-│   └── fsa/
-│       └── senko-fsa.js                — salvar localmente via File System Access (Chrome/Edge)
+│   └── firebase/
+│       └── senko-firebase.js           — salvar layouts/variantes no Firestore (Firebase)
 │
 ├── assets/
 │   ├── styles.css              — estilos globais da interface
