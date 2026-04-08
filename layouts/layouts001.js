@@ -183,7 +183,7 @@ SenkoLib.register([
           poster="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/header.jpg" preload="none" autoplay muted loop
           playsinline width="1200" height="250" aria-hidden="true">
           <source
-            src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/cottonbaby/header-cottonbaby.mov"
+            src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/cottonbaby/header-cottonbaby1.mov"
             loading="lazy">
         </video>
         <div class="video-header__badge" role="img" aria-label="Logo da marca">
