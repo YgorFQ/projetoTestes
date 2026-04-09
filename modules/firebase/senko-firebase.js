@@ -680,7 +680,7 @@ function fbSyncFromGithub() {
 
     console.log('[senko-firebase] ' + layouts.length + ' layouts encontrados no GitHub. Salvando no Firestore…');
 
-    /* 4. Salva em lotes no Firestore (limite de 500 por batch) */
+    /* 4. Salva layouts em lotes no Firestore (limite de 500 por batch) */
     var BATCH_SIZE = 400;
     var chain = Promise.resolve();
     var total  = 0;
@@ -712,9 +712,92 @@ function fbSyncFromGithub() {
     }
 
     return chain.then(function () {
-      SenkoLib.unlock();
-      fbUpdateStatusBadge('ok', 'Firebase sincronizado');
-      console.log('[senko-firebase] Sync GitHub → Firebase concluído: ' + total + ' layouts salvos.');
+      console.log('[senko-firebase] ' + total + ' layouts salvos. Buscando variantes do GitHub…');
+      fbUpdateStatusBadge('saving', 'Importando variantes…');
+
+      /* 5. Lista arquivos de variantes no GitHub */
+      return githubListDir('variants').catch(function () {
+        return []; /* pasta variants pode não existir */
+      });
+
+    }).then(function (entries) {
+      var variantFiles = (entries || []).filter(function (e) {
+        return e.type === 'file' && e.name.endsWith('.js');
+      });
+
+      if (variantFiles.length === 0) {
+        SenkoLib.unlock();
+        fbUpdateStatusBadge('ok', 'Firebase sincronizado');
+        console.log('[senko-firebase] Sync GitHub → Firebase concluído: ' + total + ' layouts, 0 arquivos de variantes.');
+        return;
+      }
+
+      /* 6. Lê cada arquivo de variantes e parseia */
+      var variantChain = Promise.resolve();
+      var totalVariants = 0;
+
+      variantFiles.forEach(function (entry) {
+        variantChain = variantChain.then(function () {
+          return githubGetFile(entry.path).then(function (data) {
+            var content  = data.content;
+            var parentId = entry.name.replace('.js', '');
+
+            /* Extrai o parentId do registerVariant */
+            var parentMatch = content.match(/registerVariant\s*\(\s*'([^']+)'/);
+            if (parentMatch) parentId = parentMatch[1];
+
+            /* Parseia cada variante pelo marcador */
+            var varRe = /\/\*@@@@Senko - ([a-z0-9._-]+) \*\//g;
+            var match;
+            var varBatch = _fbDb.batch();
+            var count = 0;
+
+            while ((match = varRe.exec(content)) !== null) {
+              var varName = match[1];
+              var objOpen = content.indexOf('{', match.index + match[0].length);
+              if (objOpen === -1) continue;
+
+              var i = objOpen, depth = 0, inTemplate = false, len = content.length;
+              while (i < len) {
+                var ch = content[i];
+                if (ch === '`') { inTemplate = !inTemplate; i++; continue; }
+                if (inTemplate) { i++; continue; }
+                if (ch === '{') { depth++; i++; continue; }
+                if (ch === '}') { depth--; if (depth === 0) break; i++; continue; }
+                i++;
+              }
+
+              var objStr   = content.slice(objOpen, i + 1);
+              var htmlMatch = objStr.match(/html:\s*`([\s\S]*?)`(?:,|\s*\n\s*css)/);
+              var cssMatch  = objStr.match(/css:\s*`([\s\S]*?)`(?:,|\s*\n?\s*\})/);
+
+              varBatch.set(
+                _fbDb.collection('layouts').doc(parentId).collection('variants').doc(varName),
+                {
+                  name:      varName,
+                  html:      htmlMatch ? htmlMatch[1].replace(/\\`/g, '`') : '',
+                  css:       cssMatch  ? cssMatch[1].replace(/\\`/g, '`')  : '',
+                  updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                },
+                { merge: true }
+              );
+              count++;
+            }
+
+            if (count > 0) {
+              totalVariants += count;
+              return varBatch.commit();
+            }
+          });
+        });
+      });
+
+      return variantChain.then(function () {
+        SenkoLib.unlock();
+        fbUpdateStatusBadge('ok', 'Firebase sincronizado');
+        console.log('[senko-firebase] Sync GitHub → Firebase concluído: ' + total + ' layouts, ' + totalVariants + ' variantes salvas.');
+      });
+
     });
 
   }).catch(function (e) {
