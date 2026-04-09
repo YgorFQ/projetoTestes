@@ -12,4 +12,10 @@ SenkoLib.registerVariant('section-3', [
     html: `awdawd`,
     css: ``,
   },
+/*@@@@Senko - test gambling */
+  {
+    name: 'test gambling',
+    html: ``,
+    css: ``
+  },
 ]);
