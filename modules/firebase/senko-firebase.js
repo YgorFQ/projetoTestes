@@ -728,10 +728,11 @@ function fbSyncFromGithub() {
     console.log('[senko-firebase] GitHub: ' + ghLayouts.length + ' layouts. Lendo Firestore…');
     fbUpdateStatusBadge('saving', 'Comparando com Firebase…');
 
-    /* 2. Lê estado atual do Firestore */
+    /* 2. Lê estado atual do Firestore e retorna explicitamente */
     return _fbDb.collection('layouts').get();
 
   }).then(function (fbSnap) {
+    console.log('[senko-firebase] fbSnap recebido:', fbSnap ? fbSnap.docs.length + ' docs' : 'undefined');
     if (!fbSnap) return;
 
     var fbLayoutIds = {};
