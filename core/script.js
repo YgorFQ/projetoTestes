@@ -158,6 +158,23 @@ function lazyIframe(iframe, html, css) {
 }
 
 
+/* ═══════════════════════════════════════════════════════
+   FILE SYSTEM ACCESS API — TESTE EXPERIMENTAL
+   Só funciona no Chrome/Edge. Não funciona com file://
+   Precisa de servidor local (ex: Live Server do VS Code)
+═══════════════════════════════════════════════════════ */
+var _projectDir = null;
+
+async function selectProjectFolder() {
+  try {
+    _projectDir = await window.showDirectoryPicker({ mode: 'readwrite' });
+    document.getElementById('fsaStatus').textContent = '📁 Pasta: ' + _projectDir.name;
+    document.getElementById('fsaStatus').style.color = 'var(--green)';
+  } catch (e) {
+  }
+}
+
+
 /* ─── Grid ─────────────────────────────────────────── */
 function getFilteredLayouts() {
   var q = state.search.toLowerCase();
@@ -729,7 +746,7 @@ function updateEditVarCode() {
   /*
    * IMPORTANTE: não mutamos state.currentEditVariant aqui.
    * O objeto em memória só é atualizado APÓS o usuário confirmar o save
-   * (via senko-github-variants.js ou senko-firebase.js).
+   * (via senko-fsa-variants.js ou senko-github-variants.js).
    * Isso evita corromper dados se o usuário fechar o modal sem salvar.
    */
 }
@@ -922,6 +939,11 @@ document.addEventListener('DOMContentLoaded', function () {
   ['addId','addName','addTags','addHtml','addCss'].forEach(function (id) {
     document.getElementById(id).addEventListener('input', updateGeneratedCode);
   });
+  document.getElementById('copyGeneratedBtn').addEventListener('click', function () {
+    if (this.classList.contains('btn-blocked')) return;
+    var code = document.getElementById('generatedCode').textContent;
+    if (code.indexOf('//') !== 0) copyToClipboard(code, this, COPY_ICON + ' Copiar objeto');
+  });
 
   /* Modal variantes */
   document.getElementById('variantsClose').addEventListener('click', closeVariantsModal);
@@ -951,6 +973,12 @@ document.addEventListener('DOMContentLoaded', function () {
   ['newVarName','newVarHtml','newVarCss'].forEach(function (id) {
     document.getElementById(id).addEventListener('input', updateNewVarCode);
   });
+  document.getElementById('newVarCopyBtn').addEventListener('click', function () {
+    var nome = document.getElementById('newVarName').value.trim();
+    if (nome.length < 3) return;
+    var code = document.getElementById('newVarGeneratedCode').textContent;
+    if (code.indexOf('// Preencha') !== 0) copyToClipboard(code, this, COPY_ICON + ' Copiar objeto');
+  });
 
 
   /* Modal editar variante */
@@ -965,6 +993,11 @@ document.addEventListener('DOMContentLoaded', function () {
   ['editVarName','editVarHtml','editVarCss'].forEach(function (id) {
     document.getElementById(id).addEventListener('input', updateEditVarCode);
   });
+  document.getElementById('copyEditVarBtn').addEventListener('click', function () {
+    if (this.classList.contains('btn-blocked')) return;
+    var code = document.getElementById('editVarGeneratedCode').textContent;
+    if (code.indexOf('//') !== 0) copyToClipboard(code, this, COPY_ICON + ' Copiar objeto');
+  });
 
   /* Modal editar layout */
   document.getElementById('editModalClose').addEventListener('click', closeEditModal);
@@ -978,7 +1011,17 @@ document.addEventListener('DOMContentLoaded', function () {
   ['editId','editName','editTags','editHtml','editCss'].forEach(function (id) {
     document.getElementById(id).addEventListener('input', updateEditCode);
   });
+  document.getElementById('copyEditBtn').addEventListener('click', function () {
+    if (this.classList.contains('btn-blocked')) return;
+    var code = document.getElementById('editGeneratedCode').textContent;
+    if (code.indexOf('//') !== 0) copyToClipboard(code, this, COPY_ICON + ' Copiar objeto');
+  });
 
+  /* saveToFileBtn — listener gerenciado pelo senko-fsa.js (o botão é clonado lá) */
+
+  document.getElementById('selectFolderBtn').addEventListener('click', selectProjectFolder);
+
+  /* Escape */
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
     if (!document.getElementById('editVarOverlay').classList.contains('hidden'))         closeEditVariantModal();
@@ -1015,10 +1058,17 @@ function copiarBasics() {
     }
 
     .pdp * {
-
       box-sizing: border-box;
       margin: 0;
     }
+
+    .pdp-text-gradient {
+      background: linear-gradient(90deg, #c29869, #ddbc88, #e6c588);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      background-clip: text;
+     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap"
     rel="stylesheet">

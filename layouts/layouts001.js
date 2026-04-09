@@ -1692,54 +1692,45 @@ SenkoLib.register([
   /*@@@@Senko - section 41 */
   /* variantes: variants/section 41.js */
   {
-    id: 'section 41',
-    name: 'Section 41 - Tabela',
-    tags: ['tabela', 'section 41', '41'],
-    html: `<div class="table-container-custom">
-  <h1 class="table-text-custom">NOME DA TABELA</h1><br />
-  <table class="table-design-custom">
-    <thead class="table-head-custom">
-      <tr class="table-tr-custom">
-        <th class="table-text-custom table-th-custom" style="background-color: #16a2ff;">Coluna 1
-        </th>
-        <!--Replicar para adicionar mais COLUNAS-->
-        <th class="table-text-custom table-th-custom" style="background-color: #16a2ff;">Coluna 2
-        </th>
-        <th class="table-text-custom table-th-custom" style="background-color: #16a2ff;">Coluna 3
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="table-tr-custom">
-        <td class="table-text-custom table-td-custom">SKU 1</td>
-        <!--Replicar para adicionar mais LINHAS-->
-        <td class="table-text-custom table-td-custom">DESCRIÇÃO DO PRODUTO 1</td>
-        <td class="table-text-custom table-td-custom">-</td>
-      </tr>
-      <tr class="table-tr-custom">
-        <td class="table-text-custom table-td-custom">SKU 2</td>
-        <td class="table-text-custom table-td-custom">DESCRIÇÃO DO PRODUTO 2</td>
-        <td class="table-text-custom table-td-custom">-</td>
-      </tr>
-      <tr class="table-tr-custom">
-        <td class="table-text-custom table-td-custom">SKU 3</td>
-        <td class="table-text-custom table-td-custom">DESCRIÇÃO DO PRODUTO 3</td>
-        <td class="table-text-custom table-td-custom">-</td>
-      </tr>
-      <tr class="table-tr-custom">
-        <td class="table-text-custom table-td-custom">SKU 4</td>
-        <td class="table-text-custom table-td-custom">DESCRIÇÃO DO PRODUTO 4</td>
-        <td class="table-text-custom table-td-custom">-</td>
-      </tr>
-      <tr class="table-tr-custom">
-        <td class="table-text-custom table-td-custom">SKU 5</td>
-        <td class="table-text-custom table-td-custom">DESCRIÇÃO DO PRODUTO 5</td>
-        <td class="table-text-custom table-td-custom">-</td>
-      </tr>
-    </tbody>
-  </table>
-</div>`,
-    css: `  .table-container-custom {
+    id: 'section-41',
+    name: 'Section-41 (tabela)',
+    tags: ['tabela', 'section 41', '41', 'footer', 'semantico'],
+    html: `<footer>
+
+          <section class="table-container-custom" aria-label="tabela contendo produtos relacionados e citados dentre deste conteúdo">
+          <h1 class="table-text-custom">ITENS RELACIONADOS</h1><br />
+          <table class="table-design-custom">
+            <thead class="table-head-custom">
+               <tr class="table-tr-custom">
+                 <th class="table-text-custom table-th-custom" style="background-color: #fb8d00; border-radius: 10px 0 0 0;">SKU
+                 </th>
+                 <!--Replicar para adicionar mais COLUNAS-->
+                 <th class="table-text-custom table-th-custom" style="background-color: #fb8d00; border-radius: 0 10px 0 0;">TÍTULO
+                 </th>
+               </tr>
+             </thead>
+             <tbody>
+               <tr class="table-tr-custom">
+                 <td class="table-text-custom table-td-custom-title">SKU 1</td>
+                 <td class="table-text-custom table-td-custom-sub">DESCRIÇÃO DO PRODUTO 1</td>
+               </tr>
+               <tr class="table-tr-custom">
+                 <td class="table-text-custom table-td-custom-title">SKU 2</td>
+                 <td class="table-text-custom table-td-custom-sub">DESCRIÇÃO DO PRODUTO 2</td>
+               </tr>
+               <tr class="table-tr-custom">
+                 <td class="table-text-custom table-td-custom-title">SKU 3</td>
+                 <td class="table-text-custom table-td-custom-sub">DESCRIÇÃO DO PRODUTO 3</td>
+               </tr>
+               <tr class="table-tr-custom">
+                 <td class="table-text-custom table-td-custom-title ">SKU 4</td>
+                 <td class="table-text-custom table-td-custom-sub">DESCRIÇÃO DO PRODUTO 4</td>
+               </tr>
+             </tbody>
+           </table>
+         </section>
+        </footer>`,
+    css: `.table-container-custom {
 
     background-color: #fff;
     padding: 20px;
@@ -1749,54 +1740,54 @@ SenkoLib.register([
     width: 100%;
     margin: 0 auto;
     display: block;
-  }
+    }
 
   .table-design-custom {
 
     width: 100%;
     border-collapse: collapse;
     margin: 0 auto;
-  }
+    }
 
   .table-head-custom {
+    color: rgb(255, 255, 255);
+    border-radius: 10px;
 
-    background-color: #ee3b0f;
-    color: white;
-  }
+    }
 
   .table-text-custom {
 
     padding: 12px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
+    border-bottom: 1px solid #979797;
+    font-family: sans-serif;
+     }
 
   .table-row-custom:hover {
 
     background-color: #f1f1f1;
     filter: brightness(0.9);
-  }
+    }
 
   .table-th-custom {
 
     font-weight: bold;
-  }
+    }
 
   .table-td-custom {
 
     color: #555;
-  }
+    }
 
   /* Efeito de zebrado nas linhas */
 
   .table-tr-custom:nth-child(even) {
 
     background-color: #f1f1f1;
-  }
+    }
 
-  /* Responsividade */
 
-  @media (max-width: 600px) {
+ @media (max-width: 600px) {
 
     .table-container-custom {
 
@@ -1809,7 +1800,7 @@ SenkoLib.register([
 
       padding: 8px;
     }
-  }`
+    }`
   },
 
   
@@ -2268,7 +2259,7 @@ SenkoLib.register([
   {
     id: 'comp-p',
     name: 'Padrão Conteúdo Pedro',
-    tags: ['comp', 'semantico', 'Acessivel', 'SEO'],
+    tags: ['comp', 'semantico', 'Acessivel', 'SEO', 'contraste'],
     html: `<div class="lp-container">
   <link rel="nestlenect" href="https://fonts.googleapis.com">
   <link rel="nestlenect" href="https://fonts.gstatic.com" crossorigin>
@@ -2917,7 +2908,6 @@ SenkoLib.register([
     color: #ff9900;
     font-size: 0.75rem;
     font-weight: 700;
-    letter-spacing: 0.08em;
     text-transform: uppercase;
     margin-bottom: 0.5rem;
   }
@@ -2947,7 +2937,7 @@ SenkoLib.register([
       max-width: 1600px;
       margin: 0 auto;
       border: 5.5px solid #000;
-      border-radius: 34.5px;
+      border-radius: 36px;
     }
 
     .section-32__groupimage-section {
@@ -3093,6 +3083,38 @@ SenkoLib.register([
   .table-tr-custom:nth-child(even) {
 
     background-color: #f1f1f1;
+    }
+
+   @media (prefers-contrast: more) {
+
+      .p__end {
+        color: #000;
+      }
+
+      .grouptext-overlay-Background {
+        background: rgb(0, 0, 0);
+      }
+
+      .video-header__subtitle {
+        color: #000;
+      }
+
+      .table-td-custom-sub
+      {
+        color: #000;
+        font-weight: 550;
+      }
+
+      .table-td-custom-title
+      {
+        color: #000;
+        font-weight: 700;
+      } 
+
+      .video-header__brand {
+        color:#3a2301
+      }
+     
     }
 
     @media (max-width: 360px) {
@@ -3535,227 +3557,192 @@ SenkoLib.register([
     id: 'section-9',
     name: 'Section-9',
     tags: ['Section 9', '9', 'grid'],
-    html: `<section class="section-9" aria-labelledby="section-9-title">
-  <div class="section-9__header">
-    <h2 class="section-9__title" id="section-9-title">frequentes</h2>
-    <p class="section-9__subtitle">Cabo</p>
-  </div>
-  <ul class="section-9__list">
-    <li class="section-9__item">
-      <details class="section-9__item">
-        <summary>
-          <span class="section-9__q-text">cabo</span>
-          <span class="section-9__icon" aria-hidden="true"></span>
-        </summary>
-        <div class="section-9__a-inner">
-          <span class="section-9__badge">
-            <span class="section-9__badge-dot"></span>Confirmado
-          </span>
-          <p class="section-9__a-text">Sim, fabricado com cobre nu de têmpera mole. Não é alumínio revestido, garantindo condutividade total e máxima segurança.</p>
-        </div>
-      </details>
-    </li>
-    <li class="section-9__item">
-      <details class="section-9__item">
-        <summary>
-          <span class="section-9__q-text">Ele é fácil de passar pelo conduíte?</span>
-          <span class="section-9__icon" aria-hidden="true"></span>
-        </summary>
-        <div class="section-9__a-inner">
-          <span class="section-9__badge">
-            <span class="section-9__badge-dot"></span>Confirmado
-          </span>
-          <p class="section-9__a-text">Com certeza. Por ser classe 5 (extra flexível) e ter isolação deslizante, ele atravessa curvas e eletrodutos apertados sem travar.</p>
-        </div>
-      </details>
-    </li>
-    <li class="section-9__item">
-      <details class="section-9__item">
-        <summary>
-          <span class="section-9__q-text">O material é antichama?</span>
-          <span class="section-9__icon" aria-hidden="true"></span>
-        </summary>
-        <div class="section-9__a-inner">
-          <span class="section-9__badge">
-            <span class="section-9__badge-dot"></span>Confirmado
-          </span>
-          <p class="section-9__a-text">Sim. A isolação em PVC é autoextinguível e não propaga fogo, atendendo rigorosamente à norma ABNT NBR NM 247-3.</p>
-        </div>
-      </details>
-    </li>
-    <li class="section-9__item">
-      <details class="section-9__item">
-        <summary>
-          <span class="section-9__q-text">Qual o tamanho do rolo?</span>
-          <span class="section-9__icon" aria-hidden="true"></span>
-        </summary>
-        <div class="section-9__a-inner">
-          <span class="section-9__badge">
-            <span class="section-9__badge-dot"></span>Confirmado
-          </span>
-          <p class="section-9__a-text">Este anúncio refere-se ao rolo fechado de 200 metros na cor amarela, ideal para circuitos de sinalização ou comandos.</p>
-        </div>
-      </details>
-    </li>
-    <li class="section-9__item">
-      <details class="section-9__item">
-        <summary>
-          <span class="section-9__q-text">O cabo é original e normatizado?</span>
-          <span class="section-9__icon" aria-hidden="true"></span>
-        </summary>
-        <div class="section-9__a-inner">
-          <span class="section-9__badge">
-            <span class="section-9__badge-dot"></span>Confirmado
-          </span>
-          <p class="section-9__a-text">Sim, produto original Corfio com selo de conformidade e fabricado sob as normas técnicas.</p>
-        </div>
-      </details>
-    </li>
-  </ul>
-</section>`,
-    css: `<style>
-  .section-9 {
-    width: 100%;
-    padding: 2rem 16px;
-    box-sizing: border-box;
-    margin: 0 auto 25px;
-  }
+    html: `        <section class="section-9" aria-labelledby="section-9-title">
+            <div class="section-9__header">
+                <h2 class="section-9__title" id="section-9-title">Resolva suas dúvidas</h2>
+                <p class="section-9__subtitle">Saiba por que o Dove Hialuron-Vit é o favorito para o uso diário</p>
+            </div>
+            <ul class="section-9__list">
+                <li class="section-9__item">
+                    <details class="section-9__item">
+                        <summary>
+                            <span class="section-9__q-text">O ácido hialurônico serve para o meu cabelo?</span>
+                            <span class="section-9__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="section-9__a-inner">
+                            <p class="section-9__a-text">Sim. Ele funciona em todos os tipos de fios, agindo como um imã de hidratação para cabelos ressecados e sem brilho.</p>
+                        </div>
+                    </details>
+                </li>
+                <li class="section-9__item">
+                    <details class="section-9__item">
+                        <summary>
+                            <span class="section-9__q-text">Ele deixa o cabelo pesado ou oleoso?</span>
+                            <span class="section-9__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="section-9__a-inner">
+                            <p class="section-9__a-text">Não. A fórmula é leve e garante fios 100% mais macios, mantendo o movimento natural sem pesar.</p>
+                        </div>
+                    </details>
+                </li>
+                <li class="section-9__item">
+                    <details class="section-9__item">
+                        <summary>
+                            <span class="section-9__q-text">Posso usar todos os dias?</span>
+                            <span class="section-9__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="section-9__a-inner">
+                            <p class="section-9__a-text">Sim. Ele é dermatologicamente testado e ideal para uso diário, proporcionando hidratação contínua.</p>
+                        </div>
+                    </details>
+                </li>
+                <li class="section-9__item">
+                    <details class="section-9__item">
+                        <summary>
+                            <span class="section-9__q-text">Onde ele entra no meu Cronograma Capilar?</span>
+                            <span class="section-9__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="section-9__a-inner">
+                            <p class="section-9__a-text">Ele é o aliado perfeito para a etapa de Hidratação, retendo a umidade e combatendo o ressecamento.</p>
+                        </div>
+                    </details>
+                </li>
+                <li class="section-9__item">
+                    <details class="section-9__item">
+                        <summary>
+                            <span class="section-9__q-text">Cabelo com química ou tintura pode usar?</span>
+                            <span class="section-9__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="section-9__a-inner">
+                            <p class="section-9__a-text">Com certeza. Ele ajuda a recuperar a maciez e o brilho que os fios perdem durante processos químicos.</p>
+                        </div>
+                    </details>
+                </li>
+            </ul>
+        </section>`,
+    css: `    <style>
+        .section-9 {
+            width: 100%;
+            padding: 2rem 16px;
+            box-sizing: border-box;
+            margin: 0 auto 25px;
+            padding-top: 0;
+        }
 
-  .section-9__header {
-    text-align: center;
-    margin-bottom: 2rem;
-  }
+        .section-9__header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
 
-  .section-9__title {
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: bold;
-    color: #333;
-    margin: 0 0 12px;
-    line-height: 98%;
-  }
+        .section-9__title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 12px;
+            line-height: 98%;
+        }
 
-  .section-9__subtitle {
-    font-size: 1rem;
-    color: #666;
-    margin: 0;
-  }
+        .section-9__subtitle {
+            font-size: 1rem;
+            color: #666;
+            margin: 0;
+        }
 
-  .section-9__list {
-    list-style: none;
-    margin: 0 auto;
-    padding: 0;
-    max-width: 56rem;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
+        .section-9__list {
+            list-style: none;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 56rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
 
-  .section-9__item {
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 12px;
-    overflow: hidden;
-  }
+        .section-9__item {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            overflow: hidden;
+        }
 
-  .section-9__item summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 16px 20px;
-    cursor: pointer;
-    list-style: none;
-  }
+        .section-9__item summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            list-style: none;
+        }
 
-  .section-9__item summary::-webkit-details-marker {
-    display: none;
-  }
+        .section-9__item summary::-webkit-details-marker {
+            display: none;
+        }
 
-  .section-9__item summary:hover {
-    background: #f9f9f9;
-  }
+        .section-9__item summary:hover {
+            background: #f9f9f9;
+        }
 
-  .section-9__q-text {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #333;
-    flex: 1;
-  }
+        .section-9__q-text {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            flex: 1;
+        }
 
-  .section-9__icon {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    position: relative;
-  }
+        .section-9__icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            position: relative;
+        }
 
-  .section-9__icon::before,
-  .section-9__icon::after {
-    content: '';
-    position: absolute;
-    background: #888;
-    border-radius: 2px;
-    transition: transform 0.25s ease, opacity 0.25s ease;
-  }
+        .section-9__icon::before,
+        .section-9__icon::after {
+            content: '';
+            position: absolute;
+            background: #888;
+            border-radius: 2px;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
 
-  .section-9__icon::before {
-    width: 12px;
-    height: 1.5px;
-    top: 9px;
-    left: 4px;
-  }
+        .section-9__icon::before {
+            width: 12px;
+            height: 1.5px;
+            top: 9px;
+            left: 4px;
+        }
 
-  .section-9__icon::after {
-    width: 1.5px;
-    height: 12px;
-    top: 4px;
-    left: 9px;
-  }
+        .section-9__icon::after {
+            width: 1.5px;
+            height: 12px;
+            top: 4px;
+            left: 9px;
+        }
 
-  .section-9__item[open] .section-9__icon::after {
-    transform: rotate(90deg);
-    opacity: 0;
-  }
+        .section-9__item[open] .section-9__icon::after {
+            transform: rotate(90deg);
+            opacity: 0;
+        }
 
-  .section-9__a-inner {
-    padding: 14px 20px 16px;
-    border-top: 1px solid #e5e5e5;
-  }
+        .section-9__a-inner {
+            padding: 14px 20px 16px;
+            border-top: 1px solid #e5e5e5;
+        }
 
-  .section-9__badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.75rem;
-    font-weight: bold;
-    color: #1a7a4a;
-    background: #e6f4ed;
-    border-radius: 6px;
-    padding: 3px 10px;
-    margin-bottom: 8px;
-  }
+        .section-9__a-text {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.6;
+            margin: 0;
+        }
 
-  .section-9__badge-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #1a7a4a;
-    flex-shrink: 0;
-  }
-
-  .section-9__a-text {
-    font-size: 0.9rem;
-    color: #555;
-    line-height: 1.6;
-    margin: 0;
-  }
-
-  @media (max-width: 480px) {
-    .section-9__q-text {
-      font-size: 0.9rem;
-    }
-  }
-</style>`
+        @media (max-width: 480px) {
+            .section-9__q-text {
+                font-size: 0.9rem;
+            }
+        }
+    </style>`
   },
 
 

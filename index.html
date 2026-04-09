@@ -10,6 +10,7 @@
    ESTRUTURA DA UI:
      - Header com busca, filtro de favoritos, modos de visualização,
        botão de copiar HTML base e botão de adicionar layout
+     - Barra FSA (File System Access — modo experimental local)
      - Grid principal de cards (#layoutGrid)
      - Modal de visualização de layout (preview + código HTML/CSS)
      - Modal de edição de layout existente
@@ -24,9 +25,10 @@
      2. layouts/layoutsXXX.js     — pacotes de layouts
      3. variants/[id].js          — variantes por layout
      4. core/script.js            — lógica da UI
-
-
-
+     5. modules/github/senko-github-v2.js       — salvar no GitHub via API
+     6. modules/github/senko-github-variants.js — criar/deletar variantes no GitHub
+     7. modules/github/senko-github-delete.js   — excluir layouts do GitHub
+     8. modules/fsa/senko-fsa.js               — salvar localmente via File System Access
 ════════════════════════════════════════════════════════ -->
 <html lang="pt-BR">
 
@@ -34,7 +36,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SenkoLib — Biblioteca de Layouts</title>
-  <script>(function () { var t = localStorage.getItem('senkolib_theme'); if (t) document.documentElement.setAttribute('data-theme', t); })();</script>
+  <script>(function(){var t=localStorage.getItem('senkolib_theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
   <link rel="stylesheet" href="assets/styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -83,7 +85,7 @@
         <!-- Tema -->
         <button class="theme-toggle" id="themeToggleBtn" title="Tema escuro">
           <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
           </svg>
         </button>
 
@@ -158,9 +160,26 @@
         <div class="modal-meta">
           <span class="modal-category">Editar</span>
           <h2 class="modal-title">Editar Layout</h2>
-          <p class="add-hint">Edite os campos e salve direto no Firebase.</p>
+          <p class="add-hint">Edite os campos e copie o objeto para substituir no arquivo
+            <code>layouts/layoutsXXX.js</code>.
+          </p>
         </div>
         <div style="display:flex;gap:.5rem;align-items:center;">
+          <button class="btn-add" id="copyEditBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+            Copiar objeto
+          </button>
+          <button class="btn-save-file" id="saveToFileBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+              <polyline points="17 21 17 13 7 13 7 21" />
+              <polyline points="7 3 7 8 15 8" />
+            </svg>
+            Salvar no arquivo
+          </button>
           <button class="modal-close" id="editModalClose" title="Fechar">✕</button>
         </div>
       </div>
@@ -214,7 +233,8 @@
         <div class="modal-meta">
 
           <h2 class="modal-title">Adicionar Layout</h2>
-          <p class="add-hint">Preencha os campos e salve direto no Firebase. O ID vira o nome do futuro arquivo de variantes:
+          <p class="add-hint">Preencha os campos, copie o objeto e cole dentro do array no arquivo
+            <code>layouts/layoutsXXX.js</code>. O ID vira o nome do futuro arquivo de variantes:
             <code>variants/<span id="hintVariantPath">id</span>.js</code>
           </p>
         </div>
@@ -259,10 +279,16 @@
           <iframe id="addPreviewIframe" class="modal-iframe" sandbox="allow-scripts"></iframe>
         </div>
       </div>
-      <div class="add-result-section" style="display:none">
+      <div class="add-result-section">
         <div class="code-toolbar">
-          <span class="code-lang">Objeto gerado</span>
-          <button class="copy-btn btn-blocked" id="copyGeneratedBtn">Copiar objeto</button>
+          <span class="code-lang">Objeto gerado — cole no array layouts[]</span>
+          <button class="copy-btn btn-blocked" id="copyGeneratedBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+            Copiar objeto
+          </button>
         </div>
         <pre class="code-block" id="generatedCode">// Preencha os campos acima para gerar o objeto…</pre>
       </div>
@@ -290,8 +316,7 @@
             <span class="variants-stats-sep" id="variantsFavSep" style="display:none">·</span>
             <span class="variants-fav-count hidden" id="variantsFavCount">
               <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12" style="color:#f5a623">
-                <polygon
-                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
               </svg>
               <span id="variantsFavNum"></span> favorito
             </span>
@@ -302,8 +327,7 @@
               <circle cx="11" cy="11" r="8" />
               <line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
-            <input type="text" class="variants-search-input" placeholder="Pesquisar variações…" autocomplete="off"
-              id="variantsSearchInput" />
+            <input type="text" class="variants-search-input" placeholder="Pesquisar variações…" autocomplete="off" id="variantsSearchInput" />
           </div>
           <button class="modal-close" id="variantsClose" title="Fechar">✕</button>
         </div>
@@ -329,15 +353,30 @@
         </div>
         <div style="display:flex;gap:.5rem;align-items:center;">
           <!-- Botão excluir variante — dentro do modal de edição -->
-          <button class="btn-delete-var-modal btn-delete-variant-card" id="editVarDeleteBtn" title="Excluir variante"
-            style="display:none;">
+          <button class="btn-delete-var-modal btn-delete-variant-card" id="editVarDeleteBtn" title="Excluir variante" style="display:none;">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-              <polyline points="3 6 5 6 21 6" />
-              <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
-              <path d="M10 11v6M14 11v6" />
-              <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
+              <path d="M10 11v6M14 11v6"/>
+              <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
             </svg>
             Excluir
+          </button>
+          <!-- Âncora para FSA e GitHub injetarem botões de salvar -->
+          <button class="btn-save-file" id="saveVarToFileBtn" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+              <polyline points="17 21 17 13 7 13 7 21" />
+              <polyline points="7 3 7 8 15 8" />
+            </svg>
+            Salvar no arquivo
+          </button>
+          <button class="btn-add" id="copyEditVarBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+            Copiar objeto
           </button>
           <button class="modal-close" id="editVarClose" title="Fechar">✕</button>
         </div>
@@ -385,7 +424,9 @@
           <span class="modal-category">Nova Variante</span>
           <h2 class="modal-title">Criar Variante</h2>
           <p class="add-hint">Variante de: <strong id="newVarParentName"></strong></p>
-          <p class="add-hint">Preencha nome, HTML e CSS e salve direto no Firebase.</p>
+          <p class="add-hint">Preencha nome, HTML e CSS — copie o objeto gerado e cole dentro do array
+            <code>registerVariant</code> no arquivo de variantes.
+          </p>
         </div>
         <button class="modal-close" id="newVarClose" title="Fechar">✕</button>
       </div>
@@ -416,9 +457,16 @@
           <iframe id="newVarPreviewIframe" class="modal-iframe" sandbox="allow-scripts"></iframe>
         </div>
       </div>
-      <div class="add-result-section" style="display:none">
+      <div class="add-result-section">
         <div class="code-toolbar">
-          <button class="copy-btn" id="newVarCopyBtn">Copiar objeto</button>
+          <span class="code-lang">Objeto gerado — cole no array do arquivo de variantes</span>
+          <button class="copy-btn" id="newVarCopyBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+            Copiar objeto
+          </button>
         </div>
         <pre class="code-block" id="newVarGeneratedCode">// Preencha os campos acima para gerar o objeto…</pre>
       </div>
@@ -451,41 +499,40 @@
   <script src="variants/comp-p.js"></script>
 
   <script src="variants/section-3.js"></script>
+  <script src="variants/section-46.js"></script>
+  <script src="variants/section-41.js"></script>
   <script src="core/script.js"></script>
-
+  <script src="modules/github/senko-github-v2.js"></script>
+  <script src="modules/github/senko-github-variants.js"></script>
+  <script src="modules/github/senko-github-delete.js"></script>
+  <script src="modules/fsa/senko-fsa.js"></script>
   <script>
-    (function () {
-      var KEY = 'senkolib_theme';
-      var SUN = '<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/><circle cx="12" cy="12" r="5"/>';
-      var MOON = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+  (function () {
+    var KEY = 'senkolib_theme';
+    var SUN  = '<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/><circle cx="12" cy="12" r="5"/>';
+    var MOON = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
 
-      function apply(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        var icon = document.getElementById('themeIcon');
-        var btn = document.getElementById('themeToggleBtn');
-        if (!icon) return;
-        icon.innerHTML = theme === 'dark' ? SUN : MOON;
-        if (btn) btn.title = theme === 'dark' ? 'Tema claro' : 'Tema escuro';
-      }
+    function apply(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      var icon = document.getElementById('themeIcon');
+      var btn  = document.getElementById('themeToggleBtn');
+      if (!icon) return;
+      icon.innerHTML = theme === 'dark' ? SUN : MOON;
+      if (btn) btn.title = theme === 'dark' ? 'Tema claro' : 'Tema escuro';
+    }
 
+    apply(localStorage.getItem(KEY) || 'light');
+
+    document.addEventListener('DOMContentLoaded', function () {
       apply(localStorage.getItem(KEY) || 'light');
-
-      document.addEventListener('DOMContentLoaded', function () {
-        apply(localStorage.getItem(KEY) || 'light');
-        document.getElementById('themeToggleBtn').addEventListener('click', function () {
-          var next = (document.documentElement.getAttribute('data-theme') || 'light') === 'dark' ? 'light' : 'dark';
-          localStorage.setItem(KEY, next);
-          apply(next);
-        });
+      document.getElementById('themeToggleBtn').addEventListener('click', function () {
+        var next = (document.documentElement.getAttribute('data-theme') || 'light') === 'dark' ? 'light' : 'dark';
+        localStorage.setItem(KEY, next);
+        apply(next);
       });
-    })();
+    });
+  })();
   </script>
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-  <!-- Módulo Firebase do SenkoLib -->
-  <script src="modules/firebase/senko-firebase.js"></script>
 </body>
 
 </html>
