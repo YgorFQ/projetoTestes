@@ -613,11 +613,11 @@ SenkoLib.register([
 </style>`
   },
 
-  /*@@@@Senko - section 39.3 (caderno) */
-  /* variantes: variants/section 39.3 (caderno).js */
+  /*@@@@Senko - section-92 */
+  /* variantes: variants/section-92.js */
   {
-    id: 'section 39.3 (caderno)',
-    name: 'Section 39.3 (Caderno)',
+    id: 'section-92',
+    name: 'section-92',
     tags: ['Caderno', 'Section 39.3', '39.3', 'interativo'],
     html: `<div class="bookcontainer1">
   <div class="book1">
@@ -719,11 +719,11 @@ SenkoLib.register([
 </style>`
   },
 
-  /*@@@@Senko - section 39.2 (caderno) */
-  /* variantes: variants/section 39.2 (caderno).js */
+  /*@@@@Senko - section-91 */
+  /* variantes: variants/section-91.js */
   {
-    id: 'section 39.2 (caderno)',
-    name: 'Section 39.2 (Caderno)',
+    id: 'section-91',
+    name: 'section-91',
     tags: ['Caderno', 'Section 39.2', '39.2', 'interativo'],
     html: `<div class="bookcontainer3">
   <div class="book3">
@@ -1689,12 +1689,12 @@ SenkoLib.register([
   </style>`
   },
 
-  /*@@@@Senko - section 41 */
-  /* variantes: variants/section 41.js */
+  /*@@@@Senko - section-41 */
+  /* variantes: variants/section-41.js */
   {
     id: 'section-41',
     name: 'Section-41 (tabela)',
-    tags: ['tabela', 'section 41', '41', 'footer', 'semantico'],
+    tags: ['tabela', 'section-41', '41', 'footer', 'semantico'],
     html: `<footer>
 
           <section class="table-container-custom" aria-label="tabela contendo produtos relacionados e citados dentre deste conteúdo">
