@@ -533,8 +533,10 @@ function ghvCloseDeleteModal() {
 function ghvInjectNewVariantButton() {
   if (document.getElementById('ghvSaveVariantBtn')) return;
 
-  var anchor = document.getElementById('newVarCopyBtn');
+  var anchor = document.getElementById('ghvNewVarBtnAnchor');
   if (!anchor) return;
+
+  anchor.style.display = '';
 
   var btn       = document.createElement('button');
   btn.id        = 'ghvSaveVariantBtn';
@@ -542,7 +544,7 @@ function ghvInjectNewVariantButton() {
   btn.innerHTML = GH_ICON + ' GitHub';
   btn.title     = 'Criar variante diretamente no repositório GitHub';
 
-  anchor.parentNode.insertBefore(btn, anchor.nextSibling);
+  anchor.appendChild(btn);
 
   btn.addEventListener('click', function () {
     var nomeRaw = document.getElementById('newVarName') ? document.getElementById('newVarName').value.trim() : '';

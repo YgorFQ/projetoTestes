@@ -341,7 +341,6 @@ function openAddModal() {
   ['addId','addName','addTags','addHtml','addCss'].forEach(function (id) {
     document.getElementById(id).value = '';
   });
-  document.getElementById('generatedCode').textContent = '// Preencha os campos acima para gerar o objeto…';
   document.getElementById('addPreviewIframe').srcdoc = '';
 
   document.querySelectorAll('.add-tab').forEach(function (b) { b.classList.remove('active'); });
