@@ -18,6 +18,6 @@ SenkoLib.registerVariant('section-1', [
   {
     name: 'teste1',
     html: `teste`,
-    css: `teste`,
+    css: `teste`
   },
 ]);
