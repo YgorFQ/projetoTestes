@@ -307,31 +307,20 @@ function ghDeduplicateMarkers(content, layoutId) {
 
 /* ═══════════════════════════════════════════════════════════════════════
    RACE CONDITION GUARD
-   Impede que duas operações de escrita no GitHub ocorram simultaneamente.
-   Cada operação verifica e seta _ghSaving antes de prosseguir.
+   Delegado ao SenkoLib.lock/unlock do senkolib-core.js.
+   Impede que GitHub e Firebase salvem ao mesmo tempo.
 ═══════════════════════════════════════════════════════════════════════ */
-var _ghSaving = false;
-var _ghSavingTimeout = null;
 
 function ghLockSave() {
-  if (_ghSaving) {
+  if (!SenkoLib.lock('github')) {
     alert('Já existe uma operação em andamento. Aguarde terminar antes de salvar novamente.');
     return false;
   }
-  _ghSaving = true;
-  _ghSavingTimeout = setTimeout(function () {
-    console.warn('[senko-github] Lock liberado por timeout de segurança.');
-    _ghSaving = false;
-  }, 30000);
   return true;
 }
 
 function ghUnlockSave() {
-  _ghSaving = false;
-  if (_ghSavingTimeout) {
-    clearTimeout(_ghSavingTimeout);
-    _ghSavingTimeout = null;
-  }
+  SenkoLib.unlock();
 }
 
 
@@ -407,19 +396,20 @@ function githubSaveLayout(layoutId, objectCode) {
         target.sha,
         '[SenkoLib] edit layout: ' + layoutId
       ).then(function () {
-        var layouts = SenkoLib.getAll();
-        for (var i = 0; i < layouts.length; i++) {
-          if (layouts[i].id === layoutId) {
-            var editName = document.getElementById('editName');
-            var editTags = document.getElementById('editTags');
-            var editHtml = document.getElementById('editHtml');
-            var editCss  = document.getElementById('editCss');
-            if (editName) layouts[i].name = editName.value.trim();
-            if (editTags) layouts[i].tags = editTags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean);
-            if (editHtml) layouts[i].html = editHtml.value;
-            if (editCss)  layouts[i].css  = editCss.value;
-            break;
-          }
+        /* Atualiza memória via SenkoLib.set */
+        var editName = document.getElementById('editName');
+        var editTags = document.getElementById('editTags');
+        var editHtml = document.getElementById('editHtml');
+        var editCss  = document.getElementById('editCss');
+        var existing = SenkoLib.getById(layoutId);
+        if (existing) {
+          SenkoLib.set(layoutId, {
+            id:   layoutId,
+            name: editName ? editName.value.trim() : existing.name,
+            tags: editTags ? editTags.value.split(',').map(function(t){ return t.trim(); }).filter(Boolean) : existing.tags,
+            html: editHtml ? editHtml.value : existing.html,
+            css:  editCss  ? editCss.value  : existing.css
+          });
         }
         ghSetStatus('✓ Salvo em ' + target.entry.name, 'ok');
         ghUnlockSave();
@@ -488,14 +478,13 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
       var addCss  = document.getElementById('addCss');
       var addName = document.getElementById('addName');
       var addTags = document.getElementById('addTags');
-      var html = addHtml ? addHtml.value : '';
-      var css  = addCss  ? addCss.value  : '';
-      var name = addName ? addName.value.trim() : layoutId;
-      var tags = addTags
-        ? addTags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean)
-        : [];
-
-      SenkoLib.register([{ id: layoutId, name: name, tags: tags, html: html, css: css }]);
+      SenkoLib.set(layoutId, {
+        id:   layoutId,
+        name: addName ? addName.value.trim() : layoutId,
+        tags: addTags ? addTags.value.split(',').map(function(t){ return t.trim(); }).filter(Boolean) : [],
+        html: addHtml ? addHtml.value : '',
+        css:  addCss  ? addCss.value  : ''
+      });
       ghSetStatus('✓ Salvo em layouts/' + fileName, 'ok');
       ghUnlockSave();
       renderGrid();

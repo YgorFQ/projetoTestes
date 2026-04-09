@@ -125,34 +125,20 @@ function ghvGetVariantFile(parentId) {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   UTILITÁRIO: Atualiza variante na memória do SenkoLib após edição
+   UTILITÁRIO: Atualiza variante na memória — delegado ao SenkoLib.setVariant
 ═══════════════════════════════════════════════════════════════════════ */
 function ghvUpdateVariantInMemory(parentId, originalName, newName, html, css) {
-  var variants  = SenkoLib.getVariants(parentId);
-  var origLower = originalName.toLowerCase();
-  for (var i = 0; i < variants.length; i++) {
-    if ((variants[i].name || '').toLowerCase() === origLower) {
-      variants[i].name = newName;
-      variants[i].html = html;
-      variants[i].css  = css;
-      return;
-    }
-  }
+  /* Remove pelo nome original e insere com o novo nome */
+  SenkoLib.removeVariant(parentId, originalName);
+  SenkoLib.setVariant(parentId, newName, { name: newName, html: html, css: css });
 }
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   UTILITÁRIO: Remove variante da memória do SenkoLib após exclusão
+   UTILITÁRIO: Remove variante da memória — delegado ao SenkoLib.removeVariant
 ═══════════════════════════════════════════════════════════════════════ */
 function ghvRemoveVariantFromMemory(parentId, variantName) {
-  var variants  = SenkoLib.getVariants(parentId);
-  var nameLower = variantName.toLowerCase();
-  for (var i = 0; i < variants.length; i++) {
-    if ((variants[i].name || '').toLowerCase() === nameLower) {
-      variants.splice(i, 1);
-      return;
-    }
-  }
+  SenkoLib.removeVariant(parentId, variantName);
 }
 
 
@@ -217,7 +203,7 @@ function githubCreateVariant(parentId, variantName, objectCode) {
       ).then(function () {
         var html = document.getElementById('newVarHtml') ? document.getElementById('newVarHtml').value : '';
         var css  = document.getElementById('newVarCss')  ? document.getElementById('newVarCss').value  : '';
-        SenkoLib.registerVariant(parentId, [{ name: variantName, html: html, css: css }]);
+        SenkoLib.setVariant(parentId, variantName, { name: variantName, html: html, css: css });
         ghSetStatus('✓ Variante salva em ' + fileInfo.path, 'ok');
         ghUnlockSave();
         return fileInfo.path;
@@ -258,7 +244,7 @@ function githubCreateVariant(parentId, variantName, objectCode) {
     }).then(function () {
       var html = document.getElementById('newVarHtml') ? document.getElementById('newVarHtml').value : '';
       var css  = document.getElementById('newVarCss')  ? document.getElementById('newVarCss').value  : '';
-      SenkoLib.registerVariant(parentId, [{ name: variantName, html: html, css: css }]);
+      SenkoLib.setVariant(parentId, variantName, { name: variantName, html: html, css: css });
       ghSetStatus('✓ Arquivo criado: ' + fileInfo.path, 'ok');
       ghUnlockSave();
       return fileInfo.path;

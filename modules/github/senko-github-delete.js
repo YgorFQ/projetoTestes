@@ -116,15 +116,10 @@ function ghDeleteFile(path, sha, commitMsg) {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   CORE: Remove o layout da memória do SenkoLib
+   CORE: Remove o layout da memória — delegado ao SenkoLib.remove
 ═══════════════════════════════════════════════════════════════════════ */
 function ghRemoveLayoutFromMemory(layoutId) {
-  var layouts = SenkoLib.getAll();
-  var idx = -1;
-  for (var i = 0; i < layouts.length; i++) {
-    if (layouts[i].id === layoutId) { idx = i; break; }
-  }
-  if (idx !== -1) layouts.splice(idx, 1);
+  SenkoLib.remove(layoutId);
 }
 
 

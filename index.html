@@ -2,33 +2,16 @@
 <!-- ═══════════════════════════════════════════════════════
    index.html — Página principal do SenkoLib
 
-   RESPONSABILIDADE:
-     Ponto de entrada da aplicação. Define a estrutura HTML
-     completa da interface e carrega todos os scripts e estilos
-     na ordem correta.
-
-   ESTRUTURA DA UI:
-     - Header com busca, filtro de favoritos, modos de visualização,
-       botão de copiar HTML base e botão de adicionar layout
-     - Barra FSA (File System Access — modo experimental local)
-     - Grid principal de cards (#layoutGrid)
-     - Modal de visualização de layout (preview + código HTML/CSS)
-     - Modal de edição de layout existente
-     - Modal de adição de novo layout
-     - Modal de variantes de um layout
-     - Modal de criação de nova variante
-     - Modal de guia/documentação do projeto
-     - Toast de confirmação de cópia
-
    ORDEM DE CARREGAMENTO DOS SCRIPTS:
-     1. core/senkolib-core.js     — motor de registro (obrigatório primeiro)
-     2. layouts/layoutsXXX.js     — pacotes de layouts
-     3. variants/[id].js          — variantes por layout
-     4. core/script.js            — lógica da UI
+     1. core/senkolib-core.js            — motor de registro (obrigatório primeiro)
+     2. layouts/layoutsXXX.js            — pacotes de layouts (fallback se Firebase offline)
+     3. variants/[id].js                 — variantes por layout (fallback se Firebase offline)
+     4. core/script.js                   — lógica da UI
      5. modules/github/senko-github-v2.js       — salvar no GitHub via API
      6. modules/github/senko-github-variants.js — criar/deletar variantes no GitHub
      7. modules/github/senko-github-delete.js   — excluir layouts do GitHub
-     8. modules/fsa/senko-fsa.js               — salvar localmente via File System Access
+     8. Firebase SDK (CDN)               — obrigatório antes do módulo Firebase
+     9. modules/firebase/senko-firebase.js      — integração Firebase (carrega por último)
 ════════════════════════════════════════════════════════ -->
 <html lang="pt-BR">
 
@@ -448,6 +431,13 @@
   <script src="modules/github/senko-github-v2.js"></script>
   <script src="modules/github/senko-github-variants.js"></script>
   <script src="modules/github/senko-github-delete.js"></script>
+
+  <!-- Firebase SDK (compat — necessário para senko-firebase.js) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <!-- Módulo Firebase SenkoLib — deve ser o último script carregado -->
+  <script src="modules/firebase/senko-firebase.js"></script>
   <script>
   (function () {
     var KEY = 'senkolib_theme';
