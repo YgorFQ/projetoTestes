@@ -174,14 +174,15 @@ function fbBoot() {
     }
     _fbDb = firebase.firestore(_fbApp);
 
-    /* Habilita persistência offline */
-    _fbDb.enablePersistence({ synchronizeTabs: true }).catch(function (err) {
-      if (err.code === 'failed-precondition') {
-        console.warn('[senko-firebase] Persistência offline indisponível: múltiplas abas abertas.');
-      } else if (err.code === 'unimplemented') {
-        console.warn('[senko-firebase] Navegador não suporta persistência offline.');
-      }
-    });
+    /* Habilita persistência offline — ignora erros silenciosamente
+       (pode falhar se o Firestore já foi iniciado antes ou se o navegador não suporta) */
+    try {
+      _fbDb.enablePersistence({ synchronizeTabs: true }).catch(function () {
+        /* ignora — persistência é opcional, não crítica */
+      });
+    } catch (e) {
+      /* ignora — não deve travar o boot */
+    }
 
     fbStartListening();
 
@@ -580,47 +581,146 @@ function fbSyncToGithub() {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   SYNC GitHub → Firebase
-   Chamado quando o Firebase volta do ar.
-   Lê os arquivos .js do GitHub e atualiza o Firestore com o que for diferente.
+   MIGRAÇÃO / SYNC GitHub → Firebase
+   Busca os layouts diretamente dos arquivos .js do GitHub via API,
+   parseia o conteúdo e salva no Firestore.
+   Funciona mesmo quando o Firebase já limpou a memória no boot.
+   Exposta globalmente como fbSyncFromGithub() para uso manual e automático.
 ═══════════════════════════════════════════════════════════════════════ */
 function fbSyncFromGithub() {
-  if (!_fbActive || !_fbDb) return;
-
-  console.log('[senko-firebase] Verificando atualizações do GitHub…');
-  fbUpdateStatusBadge('connecting', 'Verificando GitHub…');
-
-  /* Lê os layouts que estão na memória (carregados dos .js durante o fallback) */
-  var layouts = SenkoLib.getAll();
-  if (layouts.length === 0) {
-    fbUpdateStatusBadge('ok', 'Firebase conectado');
+  if (!_fbActive || !_fbDb) {
+    console.warn('[senko-firebase] Firebase não está ativo.');
     return;
   }
 
-  var batch = _fbDb.batch();
-  var count = 0;
+  if (!SenkoLib.lock('firebase-sync-from-github')) {
+    console.warn('[senko-firebase] Operação em andamento, aguarde.');
+    return;
+  }
 
-  layouts.forEach(function (l) {
-    var err = fbValidateLayout(l);
-    if (err) return;
-    var ref = _fbDb.collection('layouts').doc(l.id);
-    batch.set(ref, {
-      id:        l.id,
-      name:      l.name,
-      tags:      l.tags || [],
-      html:      l.html || '',
-      css:       l.css  || '',
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    }, { merge: true }); /* merge: não sobrescreve campos extras */
-    count++;
-  });
+  console.log('[senko-firebase] Iniciando sync GitHub → Firebase…');
+  fbUpdateStatusBadge('connecting', 'Importando do GitHub…');
 
-  batch.commit().then(function () {
-    console.log('[senko-firebase] Sync GitHub → Firebase: ' + count + ' layouts atualizados.');
-    fbUpdateStatusBadge('ok', 'Firebase sincronizado');
+  /* 1. Lista todos os arquivos de layouts no GitHub */
+  githubListDir('layouts').then(function (entries) {
+    var jsFiles = entries.filter(function (e) {
+      return e.type === 'file' && e.name.endsWith('.js');
+    });
+
+    /* 2. Lê cada arquivo */
+    return Promise.all(jsFiles.map(function (entry) {
+      return githubGetFile(entry.path).then(function (data) {
+        return data.content;
+      });
+    }));
+
+  }).then(function (fileContents) {
+
+    /* 3. Parseia os objetos de layout de cada arquivo
+          usando os marcadores @@@@Senko */
+    var layouts = [];
+
+    fileContents.forEach(function (content) {
+      var re = /\/\*@@@@Senko - ([a-z0-9-]+) \*\//g;
+      var match;
+
+      while ((match = re.exec(content)) !== null) {
+        var id      = match[1];
+        var objOpen = content.indexOf('{', match.index + match[0].length);
+        if (objOpen === -1) continue;
+
+        /* Conta chaves para achar o fechamento do objeto */
+        var i = objOpen, depth = 0, inTemplate = false, len = content.length;
+        while (i < len) {
+          var ch = content[i];
+          if (ch === '`') { inTemplate = !inTemplate; i++; continue; }
+          if (inTemplate) { i++; continue; }
+          if (ch === '{') { depth++; i++; continue; }
+          if (ch === '}') {
+            depth--;
+            if (depth === 0) break;
+            i++; continue;
+          }
+          i++;
+        }
+
+        var objStr = content.slice(objOpen, i + 1);
+
+        /* Extrai campos via regex — evita eval */
+        var nameMatch = objStr.match(/name:\s*'([^']+)'/);
+        var tagsMatch = objStr.match(/tags:\s*\[([^\]]*)\]/);
+        var htmlMatch = objStr.match(/html:\s*`([\s\S]*?)`(?:,|\s*\n\s*css)/);
+        var cssMatch  = objStr.match(/css:\s*`([\s\S]*?)`(?:,|\s*\n?\s*\})/);
+
+        if (!nameMatch) continue;
+
+        var tags = [];
+        if (tagsMatch && tagsMatch[1].trim()) {
+          tags = tagsMatch[1].split(',')
+            .map(function (t) { return t.trim().replace(/^'|'$/g, ''); })
+            .filter(Boolean);
+        }
+
+        layouts.push({
+          id:   id,
+          name: nameMatch[1],
+          tags: tags,
+          html: htmlMatch ? htmlMatch[1].replace(/\\`/g, '`') : '',
+          css:  cssMatch  ? cssMatch[1].replace(/\\`/g, '`')  : ''
+        });
+      }
+    });
+
+    if (layouts.length === 0) {
+      SenkoLib.unlock();
+      fbUpdateStatusBadge('error', 'Nenhum layout encontrado no GitHub');
+      console.warn('[senko-firebase] Nenhum layout encontrado nos arquivos do GitHub.');
+      return;
+    }
+
+    console.log('[senko-firebase] ' + layouts.length + ' layouts encontrados no GitHub. Salvando no Firestore…');
+
+    /* 4. Salva em lotes no Firestore (limite de 500 por batch) */
+    var BATCH_SIZE = 400;
+    var chain = Promise.resolve();
+    var total  = 0;
+
+    for (var b = 0; b < layouts.length; b += BATCH_SIZE) {
+      (function (slice) {
+        chain = chain.then(function () {
+          var batch = _fbDb.batch();
+          slice.forEach(function (l) {
+            var err = fbValidateLayout(l);
+            if (err) { console.warn('[senko-firebase] Layout inválido ignorado (' + l.id + '):', err); return; }
+            batch.set(
+              _fbDb.collection('layouts').doc(l.id),
+              {
+                id:        l.id,
+                name:      l.name,
+                tags:      l.tags,
+                html:      l.html,
+                css:       l.css,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+              },
+              { merge: true }
+            );
+            total++;
+          });
+          return batch.commit();
+        });
+      })(layouts.slice(b, b + BATCH_SIZE));
+    }
+
+    return chain.then(function () {
+      SenkoLib.unlock();
+      fbUpdateStatusBadge('ok', 'Firebase sincronizado');
+      console.log('[senko-firebase] Sync GitHub → Firebase concluído: ' + total + ' layouts salvos.');
+    });
+
   }).catch(function (e) {
+    SenkoLib.unlock();
+    fbUpdateStatusBadge('error', 'Erro no sync');
     console.error('[senko-firebase] Erro no sync GitHub → Firebase:', e.message);
-    fbUpdateStatusBadge('ok', 'Firebase conectado');
   });
 }
 
