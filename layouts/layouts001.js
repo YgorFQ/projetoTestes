@@ -1804,12 +1804,12 @@ SenkoLib.register([
   },
 
   
-  /*@@@@Senko - section 39.1 (caderno) */
-  /* variantes: variants/section-39.1.js */
+  /*@@@@Senko - section 90 (caderno) */
+  /* variantes: variants/section-90.js */
   {
     id: 'section-90',
-    name: 'Section 39.1 (Caderno)',
-    tags: ['interativo', 'Section 39.1', '39.1', 'caderno'],
+    name: 'Section 90 (Caderno)',
+    tags: ['interativo', 'Section 90', '90', 'caderno'],
     html: `<div class="bookcontainer">
   <div class="book">
     <div class="bookfront">
