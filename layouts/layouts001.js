@@ -1804,7 +1804,7 @@ SenkoLib.register([
   },
 
   
-  /*@@@@Senko - section 90 (caderno) */
+  /*@@@@Senko - section-90 */
   /* variantes: variants/section-90.js */
   {
     id: 'section-90',
