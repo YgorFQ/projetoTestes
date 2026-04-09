@@ -199,6 +199,12 @@ function fbBoot() {
    Carrega todos os layouts do Firestore e mantém em memória.
    Qualquer mudança de outro usuário é refletida automaticamente.
 ═══════════════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════════
+   LISTENER EM TEMPO REAL — layouts
+   Carrega todos os layouts do Firestore e mantém em memória.
+   Qualquer mudança de outro usuário é refletida automaticamente.
+   Após o primeiro carregamento, inicia listeners de variantes para todos.
+═══════════════════════════════════════════════════════════════════════ */
 function fbStartListening() {
   fbUpdateStatusBadge('connecting', 'Conectando ao Firebase…');
 
@@ -208,6 +214,8 @@ function fbStartListening() {
     _fbUnsubLayouts = null;
   }
 
+  var _firstLoad = true;
+
   _fbUnsubLayouts = _fbDb.collection('layouts').onSnapshot(function (snapshot) {
 
     if (!_fbActive) {
@@ -215,7 +223,7 @@ function fbStartListening() {
       _fbActive = true;
       SenkoLib.clearAll();
       SenkoLib.setSource('firebase');
-      fbUpdateStatusBadge('ok', 'Firebase conectado');
+      fbUpdateStatusBadge('connecting', 'Carregando variantes…');
       console.log('[senko-firebase] Conectado. Carregando layouts…');
     }
 
@@ -236,11 +244,13 @@ function fbStartListening() {
           html: data.html || '',
           css:  data.css  || ''
         });
+
+        /* Se layout novo apareceu após o boot, carrega variantes dele também */
+        if (!_firstLoad) fbLoadVariants(data.id);
       }
 
       if (change.type === 'removed') {
         SenkoLib.remove(change.doc.id);
-        /* Limpa cache de variantes se existir */
         delete _variantCache[change.doc.id];
         if (_variantUnsubs[change.doc.id]) {
           _variantUnsubs[change.doc.id]();
@@ -248,6 +258,28 @@ function fbStartListening() {
         }
       }
     });
+
+    /* Primeiro carregamento completo — inicia variantes de todos os layouts */
+    if (_firstLoad) {
+      _firstLoad = false;
+      var allLayouts = SenkoLib.getAll();
+      var loaded = 0;
+
+      allLayouts.forEach(function (layout) {
+        fbLoadVariants(layout.id);
+        loaded++;
+      });
+
+      console.log('[senko-firebase] Carregando variantes de ' + loaded + ' layouts…');
+
+      /* Aguarda um ciclo para as variantes chegarem antes de renderizar */
+      setTimeout(function () {
+        fbUpdateStatusBadge('ok', 'Firebase conectado');
+        if (typeof renderGrid === 'function') renderGrid();
+      }, 1500);
+
+      return; /* não renderiza ainda — espera o timeout */
+    }
 
     /* Re-renderiza o grid após qualquer mudança */
     if (typeof renderGrid === 'function') renderGrid();
