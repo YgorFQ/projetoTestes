@@ -747,8 +747,6 @@ function ghvInjectStyles() {
    INICIALIZAÇÃO — só ativa no GitHub Pages
 ═══════════════════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', function () {
-  if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;
-
   ghvInjectStyles();
   ghvCreateDeleteModal();
   ghvInjectNewVariantButton();

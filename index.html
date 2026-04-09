@@ -74,7 +74,7 @@
         </button>
 
         <!-- Adicionar -->
-        <button class="btn-add" id="openAddModal">
+        <button class="btn-add" id="openAddModal" onclick="openAddModal()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
@@ -165,21 +165,8 @@
           </p>
         </div>
         <div style="display:flex;gap:.5rem;align-items:center;">
-          <button class="btn-add" id="copyEditBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-              <rect x="9" y="9" width="13" height="13" rx="2" />
-              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
-            </svg>
-            Copiar objeto
-          </button>
-          <button class="btn-save-file" id="saveToFileBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-              <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
-              <polyline points="17 21 17 13 7 13 7 21" />
-              <polyline points="7 3 7 8 15 8" />
-            </svg>
-            Salvar no arquivo
-          </button>
+          <!-- âncora para o módulo GitHub injetar o botão de salvar -->
+          <span id="saveToFileBtn" style="display:none;"></span>
           <button class="modal-close" id="editModalClose" title="Fechar">✕</button>
         </div>
       </div>
@@ -233,10 +220,7 @@
         <div class="modal-meta">
 
           <h2 class="modal-title">Adicionar Layout</h2>
-          <p class="add-hint">Preencha os campos, copie o objeto e cole dentro do array no arquivo
-            <code>layouts/layoutsXXX.js</code>. O ID vira o nome do futuro arquivo de variantes:
-            <code>variants/<span id="hintVariantPath">id</span>.js</code>
-          </p>
+          <p class="add-hint">Preencha os campos e salve diretamente no GitHub.</p>
         </div>
         <button class="modal-close" id="addModalClose" title="Fechar">✕</button>
       </div>
@@ -279,19 +263,8 @@
           <iframe id="addPreviewIframe" class="modal-iframe" sandbox="allow-scripts"></iframe>
         </div>
       </div>
-      <div class="add-result-section">
-        <div class="code-toolbar">
-          <span class="code-lang">Objeto gerado — cole no array layouts[]</span>
-          <button class="copy-btn btn-blocked" id="copyGeneratedBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-              <rect x="9" y="9" width="13" height="13" rx="2" />
-              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
-            </svg>
-            Copiar objeto
-          </button>
-        </div>
-        <pre class="code-block" id="generatedCode">// Preencha os campos acima para gerar o objeto…</pre>
-      </div>
+      <!-- âncora para o módulo GitHub injetar select + botão de salvar -->
+      <div id="ghNewLayoutGroup" style="display:none;"></div>
     </div>
   </div>
 
@@ -347,9 +320,7 @@
         <div class="modal-meta">
           <span class="modal-category">Editar Variante</span>
           <h2 class="modal-title" id="editVarParentName"></h2>
-          <p class="add-hint">Edite os campos e copie o objeto para substituir no arquivo
-            <code>variants/<span id="editVarFileHint"></span>.js</code>
-          </p>
+          <p class="add-hint">Editando variante de: <strong id="editVarParentName"></strong></p>
         </div>
         <div style="display:flex;gap:.5rem;align-items:center;">
           <!-- Botão excluir variante — dentro do modal de edição -->
@@ -362,22 +333,8 @@
             </svg>
             Excluir
           </button>
-          <!-- Âncora para FSA e GitHub injetarem botões de salvar -->
-          <button class="btn-save-file" id="saveVarToFileBtn" style="display:none;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-              <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
-              <polyline points="17 21 17 13 7 13 7 21" />
-              <polyline points="7 3 7 8 15 8" />
-            </svg>
-            Salvar no arquivo
-          </button>
-          <button class="btn-add" id="copyEditVarBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-              <rect x="9" y="9" width="13" height="13" rx="2" />
-              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
-            </svg>
-            Copiar objeto
-          </button>
+          <!-- âncora para o módulo GitHub injetar botão de salvar -->
+          <span id="saveVarToFileBtn" style="display:none;"></span>
           <button class="modal-close" id="editVarClose" title="Fechar">✕</button>
         </div>
       </div>
@@ -424,9 +381,6 @@
           <span class="modal-category">Nova Variante</span>
           <h2 class="modal-title">Criar Variante</h2>
           <p class="add-hint">Variante de: <strong id="newVarParentName"></strong></p>
-          <p class="add-hint">Preencha nome, HTML e CSS — copie o objeto gerado e cole dentro do array
-            <code>registerVariant</code> no arquivo de variantes.
-          </p>
         </div>
         <button class="modal-close" id="newVarClose" title="Fechar">✕</button>
       </div>
@@ -457,19 +411,8 @@
           <iframe id="newVarPreviewIframe" class="modal-iframe" sandbox="allow-scripts"></iframe>
         </div>
       </div>
-      <div class="add-result-section">
-        <div class="code-toolbar">
-          <span class="code-lang">Objeto gerado — cole no array do arquivo de variantes</span>
-          <button class="copy-btn" id="newVarCopyBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-              <rect x="9" y="9" width="13" height="13" rx="2" />
-              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
-            </svg>
-            Copiar objeto
-          </button>
-        </div>
-        <pre class="code-block" id="newVarGeneratedCode">// Preencha os campos acima para gerar o objeto…</pre>
-      </div>
+      <!-- âncora para o módulo GitHub injetar botão de salvar variante -->
+      <div id="ghvNewVarBtnAnchor" style="display:none;"></div>
     </div>
   </div>
 
@@ -505,7 +448,6 @@
   <script src="modules/github/senko-github-v2.js"></script>
   <script src="modules/github/senko-github-variants.js"></script>
   <script src="modules/github/senko-github-delete.js"></script>
-  <script src="modules/fsa/senko-fsa.js"></script>
   <script>
   (function () {
     var KEY = 'senkolib_theme';
