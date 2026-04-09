@@ -1133,12 +1133,12 @@
     }
 
     /* ─── Modal criação layout: Salvar ─── */
-    var copyGeneratedBtn = document.getElementById('copyGeneratedBtn');
-    if (copyGeneratedBtn && !document.getElementById('fbSaveNewLayoutBtn')) {
+    var addModalClose = document.getElementById('addModalClose');
+    if (addModalClose && !document.getElementById('fbSaveNewLayoutBtn')) {
       var fbNewBtn = document.createElement('button');
       fbNewBtn.id = 'fbSaveNewLayoutBtn'; fbNewBtn.className = 'btn-firebase';
       fbNewBtn.innerHTML = FB_ICON + ' Salvar'; fbNewBtn.title = 'Salvar novo layout no Firebase';
-      copyGeneratedBtn.parentNode.insertBefore(fbNewBtn, copyGeneratedBtn.nextSibling);
+      addModalClose.parentNode.insertBefore(fbNewBtn, addModalClose);
       fbNewBtn.addEventListener('click', function() {
         var id   = ((document.getElementById('addId')  ||{}).value||'').trim().toLowerCase();
         var name = ((document.getElementById('addName')||{}).value||'').trim();
@@ -1157,12 +1157,12 @@
     }
 
     /* ─── Modal nova variante: Salvar ─── */
-    var newVarCopyBtn = document.getElementById('newVarCopyBtn');
-    if (newVarCopyBtn && !document.getElementById('fbSaveNewVarBtn')) {
+    var newVarClose = document.getElementById('newVarClose');
+    if (newVarClose && !document.getElementById('fbSaveNewVarBtn')) {
       var fbNVBtn = document.createElement('button');
       fbNVBtn.id = 'fbSaveNewVarBtn'; fbNVBtn.className = 'btn-firebase';
       fbNVBtn.innerHTML = FB_ICON + ' Salvar'; fbNVBtn.title = 'Salvar nova variante no Firebase';
-      newVarCopyBtn.parentNode.insertBefore(fbNVBtn, newVarCopyBtn.nextSibling);
+      newVarClose.parentNode.insertBefore(fbNVBtn, newVarClose);
       fbNVBtn.addEventListener('click', function() {
         var name     = ((document.getElementById('newVarName')||{}).value||'').trim();
         var html     = (document.getElementById('newVarHtml') ||{}).value||'';
