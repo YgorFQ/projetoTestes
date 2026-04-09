@@ -379,10 +379,29 @@
   function fbCreateLayout(obj) {
     if (!_fbReady || !_fbDb) return Promise.reject(new Error('Firebase não está pronto.'));
     if (_fbSaving) return Promise.reject(new Error('Operação em andamento.'));
+
+    var id = obj.id;
+
+    /* 1. Verifica duplicata em memória (instantâneo) */
+    var mem = SenkoLib.getAll();
+    for (var mi = 0; mi < mem.length; mi++) {
+      if (mem[mi].id === id) {
+        return Promise.reject(new Error('Já existe um layout com o ID "' + id + '". Use o botão de editar no card.'));
+      }
+    }
+
     _fbSaving = true;
-    var id  = obj.id;
     var doc = { id: id, name: obj.name||'', tags: obj.tags||[], html: obj.html||'', css: obj.css||'', updatedAt: _fbTimestamp(), updatedBy: _fbUpdatedBy() };
-    return _fbDb.collection('layouts').doc(id).set(doc)
+
+    /* 2. Verifica também no Firestore (caso memória esteja desatualizada) */
+    return _fbDb.collection('layouts').doc(id).get()
+      .then(function(snap) {
+        if (snap.exists) {
+          _fbSaving = false;
+          throw new Error('Já existe um layout com o ID "' + id + '" no Firebase. Clique em ↺ para recarregar e use o botão de editar.');
+        }
+        return _fbDb.collection('layouts').doc(id).set(doc);
+      })
       .then(function() {
         SenkoLib.register([doc]);
         _fbConflictTs[id] = doc.updatedAt;
@@ -419,9 +438,28 @@
 
   function fbCreateVariant(parentId, obj) {
     if (!_fbReady || !_fbDb) return Promise.reject(new Error('Firebase não está pronto.'));
-    var docId = parentId + '__' + (obj.name||'').toLowerCase().replace(/\s+/g,'-');
-    var doc   = { name: obj.name||'', parentId: parentId, html: obj.html||'', css: obj.css||'', updatedAt: _fbTimestamp(), updatedBy: _fbUpdatedBy() };
-    return _fbDb.collection('variants').doc(docId).set(doc)
+
+    var varName = obj.name || '';
+    var docId   = parentId + '__' + varName.toLowerCase().replace(/\s+/g,'-');
+
+    /* 1. Verifica duplicata em memória */
+    var existingVars = SenkoLib.getVariants(parentId);
+    for (var vi = 0; vi < existingVars.length; vi++) {
+      if ((existingVars[vi].name || '').toLowerCase() === varName.toLowerCase()) {
+        return Promise.reject(new Error('Já existe uma variante com o nome "' + varName + '" neste layout. Escolha outro nome.'));
+      }
+    }
+
+    var doc = { name: varName, parentId: parentId, html: obj.html||'', css: obj.css||'', updatedAt: _fbTimestamp(), updatedBy: _fbUpdatedBy() };
+
+    /* 2. Verifica também no Firestore */
+    return _fbDb.collection('variants').doc(docId).get()
+      .then(function(snap) {
+        if (snap.exists) {
+          throw new Error('Já existe uma variante com o nome "' + varName + '" no Firebase. Escolha outro nome.');
+        }
+        return _fbDb.collection('variants').doc(docId).set(doc);
+      })
       .then(function() {
         SenkoLib.registerVariant(parentId, [doc]);
         _fbSetStatus('✓ Variante "' + doc.name + '" criada.', 'ok');
