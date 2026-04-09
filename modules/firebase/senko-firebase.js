@@ -613,10 +613,9 @@ function fbSyncToGithub() {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   MIGRAÇÃO / SYNC GitHub → Firebase
-   Busca os layouts diretamente dos arquivos .js do GitHub via API,
-   parseia o conteúdo e salva no Firestore.
-   Funciona mesmo quando o Firebase já limpou a memória no boot.
+   SYNC GitHub → Firebase (sincronização completa com diff)
+   Busca layouts e variantes do GitHub, compara com o Firestore e aplica
+   todas as diferenças: adiciona, atualiza e DELETA o que não existe mais.
    Exposta globalmente como fbSyncFromGithub() para uso manual e automático.
 ═══════════════════════════════════════════════════════════════════════ */
 function fbSyncFromGithub() {
@@ -630,212 +629,259 @@ function fbSyncFromGithub() {
     return;
   }
 
-  console.log('[senko-firebase] Iniciando sync GitHub → Firebase…');
+  console.log('[senko-firebase] Iniciando sync GitHub → Firebase (diff completo)…');
   fbUpdateStatusBadge('connecting', 'Importando do GitHub…');
 
-  /* 1. Lista todos os arquivos de layouts no GitHub */
-  githubListDir('layouts').then(function (entries) {
-    var jsFiles = entries.filter(function (e) {
-      return e.type === 'file' && e.name.endsWith('.js');
-    });
-
-    /* 2. Lê cada arquivo */
-    return Promise.all(jsFiles.map(function (entry) {
-      return githubGetFile(entry.path).then(function (data) {
-        return data.content;
-      });
-    }));
-
-  }).then(function (fileContents) {
-
-    /* 3. Parseia os objetos de layout de cada arquivo
-          usando os marcadores @@@@Senko */
-    var layouts = [];
-
-    fileContents.forEach(function (content) {
-      var re = /\/\*@@@@Senko - ([a-z0-9-]+) \*\//g;
-      var match;
-
-      while ((match = re.exec(content)) !== null) {
-        var id      = match[1];
-        var objOpen = content.indexOf('{', match.index + match[0].length);
-        if (objOpen === -1) continue;
-
-        /* Conta chaves para achar o fechamento do objeto */
-        var i = objOpen, depth = 0, inTemplate = false, len = content.length;
-        while (i < len) {
-          var ch = content[i];
-          if (ch === '`') { inTemplate = !inTemplate; i++; continue; }
-          if (inTemplate) { i++; continue; }
-          if (ch === '{') { depth++; i++; continue; }
-          if (ch === '}') {
-            depth--;
-            if (depth === 0) break;
-            i++; continue;
-          }
-          i++;
-        }
-
-        var objStr = content.slice(objOpen, i + 1);
-
-        /* Extrai campos via regex — evita eval */
-        var nameMatch = objStr.match(/name:\s*'([^']+)'/);
-        var tagsMatch = objStr.match(/tags:\s*\[([^\]]*)\]/);
-        var htmlMatch = objStr.match(/html:\s*`([\s\S]*?)`(?:,|\s*\n\s*css)/);
-        var cssMatch  = objStr.match(/css:\s*`([\s\S]*?)`(?:,|\s*\n?\s*\})/);
-
-        if (!nameMatch) continue;
-
-        var tags = [];
-        if (tagsMatch && tagsMatch[1].trim()) {
-          tags = tagsMatch[1].split(',')
-            .map(function (t) { return t.trim().replace(/^'|'$/g, ''); })
-            .filter(Boolean);
-        }
-
-        layouts.push({
-          id:   id,
-          name: nameMatch[1],
-          tags: tags,
-          html: htmlMatch ? htmlMatch[1].replace(/\\`/g, '`') : '',
-          css:  cssMatch  ? cssMatch[1].replace(/\\`/g, '`')  : ''
-        });
+  /* ── Utilitário: parseia layouts de um conteúdo .js ── */
+  function parseLayouts(content) {
+    var result = [];
+    var re = /\/\*@@@@Senko - ([a-z0-9-]+) \*\//g;
+    var match;
+    while ((match = re.exec(content)) !== null) {
+      var id      = match[1];
+      var objOpen = content.indexOf('{', match.index + match[0].length);
+      if (objOpen === -1) continue;
+      var i = objOpen, depth = 0, inTemplate = false, len = content.length;
+      while (i < len) {
+        var ch = content[i];
+        if (ch === '`') { inTemplate = !inTemplate; i++; continue; }
+        if (inTemplate) { i++; continue; }
+        if (ch === '{') { depth++; i++; continue; }
+        if (ch === '}') { depth--; if (depth === 0) break; i++; continue; }
+        i++;
       }
+      var objStr    = content.slice(objOpen, i + 1);
+      var nameMatch = objStr.match(/name:\s*'([^']+)'/);
+      var tagsMatch = objStr.match(/tags:\s*\[([^\]]*)\]/);
+      var htmlMatch = objStr.match(/html:\s*`([\s\S]*?)`(?:,|\s*\n\s*css)/);
+      var cssMatch  = objStr.match(/css:\s*`([\s\S]*?)`(?:,|\s*\n?\s*\})/);
+      if (!nameMatch) continue;
+      var tags = [];
+      if (tagsMatch && tagsMatch[1].trim()) {
+        tags = tagsMatch[1].split(',').map(function(t){ return t.trim().replace(/^'|'$/g,''); }).filter(Boolean);
+      }
+      result.push({
+        id:   id,
+        name: nameMatch[1],
+        tags: tags,
+        html: htmlMatch ? htmlMatch[1].replace(/\\`/g, '`') : '',
+        css:  cssMatch  ? cssMatch[1].replace(/\\`/g, '`')  : ''
+      });
+    }
+    return result;
+  }
+
+  /* ── Utilitário: parseia variantes de um conteúdo .js ── */
+  function parseVariants(content, defaultParentId) {
+    var parentMatch = content.match(/registerVariant\s*\(\s*'([^']+)'/);
+    var parentId    = parentMatch ? parentMatch[1] : defaultParentId;
+    var result      = [];
+    var re = /\/\*@@@@Senko - ([a-z0-9._-]+) \*\//g;
+    var match;
+    while ((match = re.exec(content)) !== null) {
+      var varName = match[1];
+      var objOpen = content.indexOf('{', match.index + match[0].length);
+      if (objOpen === -1) continue;
+      var i = objOpen, depth = 0, inTemplate = false, len = content.length;
+      while (i < len) {
+        var ch = content[i];
+        if (ch === '`') { inTemplate = !inTemplate; i++; continue; }
+        if (inTemplate) { i++; continue; }
+        if (ch === '{') { depth++; i++; continue; }
+        if (ch === '}') { depth--; if (depth === 0) break; i++; continue; }
+        i++;
+      }
+      var objStr    = content.slice(objOpen, i + 1);
+      var htmlMatch = objStr.match(/html:\s*`([\s\S]*?)`(?:,|\s*\n\s*css)/);
+      var cssMatch  = objStr.match(/css:\s*`([\s\S]*?)`(?:,|\s*\n?\s*\})/);
+      result.push({
+        parentId: parentId,
+        name:     varName,
+        html:     htmlMatch ? htmlMatch[1].replace(/\\`/g, '`') : '',
+        css:      cssMatch  ? cssMatch[1].replace(/\\`/g, '`')  : ''
+      });
+    }
+    return { parentId: parentId, variants: result };
+  }
+
+  var ghLayouts  = [];  /* layouts do GitHub */
+  var ghVariants = {};  /* { parentId: [variants] } do GitHub */
+
+  /* 1. Lê todos os arquivos de layouts do GitHub */
+  githubListDir('layouts').then(function (entries) {
+    var jsFiles = entries.filter(function(e){ return e.type === 'file' && e.name.endsWith('.js'); });
+    return Promise.all(jsFiles.map(function(entry){
+      return githubGetFile(entry.path).then(function(data){ return data.content; });
+    }));
+  }).then(function (fileContents) {
+    fileContents.forEach(function(content){
+      parseLayouts(content).forEach(function(l){ ghLayouts.push(l); });
     });
 
-    if (layouts.length === 0) {
+    if (ghLayouts.length === 0) {
       SenkoLib.unlock();
       fbUpdateStatusBadge('error', 'Nenhum layout encontrado no GitHub');
-      console.warn('[senko-firebase] Nenhum layout encontrado nos arquivos do GitHub.');
-      return;
+      console.warn('[senko-firebase] Nenhum layout encontrado.');
+      return Promise.reject('empty');
     }
 
-    console.log('[senko-firebase] ' + layouts.length + ' layouts encontrados no GitHub. Salvando no Firestore…');
+    console.log('[senko-firebase] GitHub: ' + ghLayouts.length + ' layouts. Lendo Firestore…');
+    fbUpdateStatusBadge('saving', 'Comparando com Firebase…');
 
-    /* 4. Salva layouts em lotes no Firestore (limite de 500 por batch) */
+    /* 2. Lê estado atual do Firestore */
+    return _fbDb.collection('layouts').get();
+
+  }).then(function (fbSnap) {
+    if (!fbSnap) return;
+
+    var fbLayoutIds = {};
+    fbSnap.docs.forEach(function(doc){ fbLayoutIds[doc.id] = true; });
+
+    var ghLayoutIds = {};
+    ghLayouts.forEach(function(l){ ghLayoutIds[l.id] = true; });
+
+    /* 3. Aplica diff de layouts */
     var BATCH_SIZE = 400;
     var chain = Promise.resolve();
-    var total  = 0;
+    var added = 0, updated = 0, deleted = 0;
 
-    for (var b = 0; b < layouts.length; b += BATCH_SIZE) {
-      (function (slice) {
-        chain = chain.then(function () {
+    /* Adiciona/atualiza */
+    for (var b = 0; b < ghLayouts.length; b += BATCH_SIZE) {
+      (function(slice){
+        chain = chain.then(function(){
           var batch = _fbDb.batch();
-          slice.forEach(function (l) {
+          slice.forEach(function(l){
             var err = fbValidateLayout(l);
-            if (err) { console.warn('[senko-firebase] Layout inválido ignorado (' + l.id + '):', err); return; }
+            if (err) { console.warn('[senko-firebase] Ignorado (' + l.id + '):', err); return; }
             batch.set(
               _fbDb.collection('layouts').doc(l.id),
-              {
-                id:        l.id,
-                name:      l.name,
-                tags:      l.tags,
-                html:      l.html,
-                css:       l.css,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-              },
-              { merge: true }
+              { id: l.id, name: l.name, tags: l.tags, html: l.html, css: l.css,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp() }
             );
-            total++;
+            if (fbLayoutIds[l.id]) updated++; else added++;
           });
           return batch.commit();
         });
-      })(layouts.slice(b, b + BATCH_SIZE));
+      })(ghLayouts.slice(b, b + BATCH_SIZE));
     }
 
-    return chain.then(function () {
-      console.log('[senko-firebase] ' + total + ' layouts salvos. Buscando variantes do GitHub…');
-      fbUpdateStatusBadge('saving', 'Importando variantes…');
-
-      /* 5. Lista arquivos de variantes no GitHub */
-      return githubListDir('variants').catch(function () {
-        return []; /* pasta variants pode não existir */
-      });
-
-    }).then(function (entries) {
-      var variantFiles = (entries || []).filter(function (e) {
-        return e.type === 'file' && e.name.endsWith('.js');
-      });
-
-      if (variantFiles.length === 0) {
-        SenkoLib.unlock();
-        fbUpdateStatusBadge('ok', 'Firebase sincronizado');
-        console.log('[senko-firebase] Sync GitHub → Firebase concluído: ' + total + ' layouts, 0 arquivos de variantes.');
-        return;
-      }
-
-      /* 6. Lê cada arquivo de variantes e parseia */
-      var variantChain = Promise.resolve();
-      var totalVariants = 0;
-
-      variantFiles.forEach(function (entry) {
-        variantChain = variantChain.then(function () {
-          return githubGetFile(entry.path).then(function (data) {
-            var content  = data.content;
-            var parentId = entry.name.replace('.js', '');
-
-            /* Extrai o parentId do registerVariant */
-            var parentMatch = content.match(/registerVariant\s*\(\s*'([^']+)'/);
-            if (parentMatch) parentId = parentMatch[1];
-
-            /* Parseia cada variante pelo marcador */
-            var varRe = /\/\*@@@@Senko - ([a-z0-9._-]+) \*\//g;
-            var match;
-            var varBatch = _fbDb.batch();
-            var count = 0;
-
-            while ((match = varRe.exec(content)) !== null) {
-              var varName = match[1];
-              var objOpen = content.indexOf('{', match.index + match[0].length);
-              if (objOpen === -1) continue;
-
-              var i = objOpen, depth = 0, inTemplate = false, len = content.length;
-              while (i < len) {
-                var ch = content[i];
-                if (ch === '`') { inTemplate = !inTemplate; i++; continue; }
-                if (inTemplate) { i++; continue; }
-                if (ch === '{') { depth++; i++; continue; }
-                if (ch === '}') { depth--; if (depth === 0) break; i++; continue; }
-                i++;
-              }
-
-              var objStr   = content.slice(objOpen, i + 1);
-              var htmlMatch = objStr.match(/html:\s*`([\s\S]*?)`(?:,|\s*\n\s*css)/);
-              var cssMatch  = objStr.match(/css:\s*`([\s\S]*?)`(?:,|\s*\n?\s*\})/);
-
-              varBatch.set(
-                _fbDb.collection('layouts').doc(parentId).collection('variants').doc(varName),
-                {
-                  name:      varName,
-                  html:      htmlMatch ? htmlMatch[1].replace(/\\`/g, '`') : '',
-                  css:       cssMatch  ? cssMatch[1].replace(/\\`/g, '`')  : '',
-                  updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                },
-                { merge: true }
-              );
-              count++;
-            }
-
-            if (count > 0) {
-              totalVariants += count;
-              return varBatch.commit();
-            }
-          });
+    /* Deleta layouts que não existem mais no GitHub */
+    var toDelete = Object.keys(fbLayoutIds).filter(function(id){ return !ghLayoutIds[id]; });
+    if (toDelete.length > 0) {
+      chain = chain.then(function(){
+        var batch = _fbDb.batch();
+        toDelete.forEach(function(id){
+          batch.delete(_fbDb.collection('layouts').doc(id));
+          deleted++;
+          console.log('[senko-firebase] Layout deletado do Firebase: ' + id);
         });
+        return batch.commit();
       });
+    }
 
-      return variantChain.then(function () {
-        SenkoLib.unlock();
-        fbUpdateStatusBadge('ok', 'Firebase sincronizado');
-        console.log('[senko-firebase] Sync GitHub → Firebase concluído: ' + total + ' layouts, ' + totalVariants + ' variantes salvas.');
-      });
+    return chain.then(function(){
+      console.log('[senko-firebase] Layouts — adicionados: ' + added + ', atualizados: ' + updated + ', deletados: ' + deleted);
+      fbUpdateStatusBadge('saving', 'Sincronizando variantes…');
 
+      /* 4. Lê arquivos de variantes do GitHub */
+      return githubListDir('variants').catch(function(){ return []; });
     });
 
-  }).catch(function (e) {
+  }).then(function (entries) {
+    if (!entries) return;
+
+    var varFiles = (entries || []).filter(function(e){ return e.type === 'file' && e.name.endsWith('.js'); });
+
+    /* Lê todos os arquivos de variantes */
+    return Promise.all(varFiles.map(function(entry){
+      return githubGetFile(entry.path).then(function(data){
+        var defaultParentId = entry.name.replace('.js', '');
+        return parseVariants(data.content, defaultParentId);
+      });
+    }));
+
+  }).then(function (parsedFiles) {
+    if (!parsedFiles) return;
+
+    /* Organiza variantes do GitHub por parentId */
+    parsedFiles.forEach(function(pf){
+      if (!pf) return;
+      ghVariants[pf.parentId] = pf.variants;
+    });
+
+    /* 5. Para cada layout que tem variantes no GitHub, faz diff com Firestore */
+    var varChain      = Promise.resolve();
+    var varAdded      = 0;
+    var varUpdated    = 0;
+    var varDeleted    = 0;
+
+    /* Layouts que têm variantes no GitHub */
+    Object.keys(ghVariants).forEach(function(parentId){
+      varChain = varChain.then(function(){
+        return _fbDb.collection('layouts').doc(parentId).collection('variants').get()
+          .then(function(fbVarSnap){
+            var fbVarIds = {};
+            fbVarSnap.docs.forEach(function(doc){ fbVarIds[doc.id] = true; });
+
+            var ghVarIds = {};
+            var batch    = _fbDb.batch();
+
+            ghVariants[parentId].forEach(function(v){
+              ghVarIds[v.name] = true;
+              batch.set(
+                _fbDb.collection('layouts').doc(parentId).collection('variants').doc(v.name),
+                { name: v.name, html: v.html, css: v.css,
+                  updatedAt: firebase.firestore.FieldValue.serverTimestamp() }
+              );
+              if (fbVarIds[v.name]) varUpdated++; else varAdded++;
+            });
+
+            /* Deleta variantes que não existem mais no GitHub */
+            Object.keys(fbVarIds).forEach(function(varId){
+              if (!ghVarIds[varId]) {
+                batch.delete(_fbDb.collection('layouts').doc(parentId).collection('variants').doc(varId));
+                varDeleted++;
+                console.log('[senko-firebase] Variante deletada: ' + varId + ' (' + parentId + ')');
+              }
+            });
+
+            return batch.commit();
+          });
+      });
+    });
+
+    /* Layouts que existem no Firebase mas não têm mais variantes no GitHub — limpa subcoleção */
+    ghLayouts.forEach(function(l){
+      if (!ghVariants[l.id]) {
+        varChain = varChain.then(function(){
+          return _fbDb.collection('layouts').doc(l.id).collection('variants').get()
+            .then(function(snap){
+              if (snap.empty) return;
+              var batch = _fbDb.batch();
+              snap.docs.forEach(function(doc){
+                batch.delete(doc.ref);
+                varDeleted++;
+                console.log('[senko-firebase] Variante deletada (arquivo removido): ' + doc.id + ' (' + l.id + ')');
+              });
+              return batch.commit();
+            });
+        });
+      }
+    });
+
+    return varChain.then(function(){
+      console.log('[senko-firebase] Variantes — adicionadas: ' + varAdded + ', atualizadas: ' + varUpdated + ', deletadas: ' + varDeleted);
+    });
+
+  }).then(function(){
+    SenkoLib.unlock();
+    fbUpdateStatusBadge('ok', 'Firebase sincronizado');
+    console.log('[senko-firebase] Sync GitHub → Firebase concluído.');
+  }).catch(function(e){
+    if (e === 'empty') return;
     SenkoLib.unlock();
     fbUpdateStatusBadge('error', 'Erro no sync');
-    console.error('[senko-firebase] Erro no sync GitHub → Firebase:', e.message);
+    console.error('[senko-firebase] Erro no sync GitHub → Firebase:', e.message || e);
   });
 }
 
