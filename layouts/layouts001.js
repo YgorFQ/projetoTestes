@@ -1805,9 +1805,9 @@ SenkoLib.register([
 
   
   /*@@@@Senko - section 39.1 (caderno) */
-  /* variantes: variants/section 39.1 (caderno).js */
+  /* variantes: variants/section-39.1.js */
   {
-    id: 'section 39.1 (caderno)',
+    id: 'section-39.1',
     name: 'Section 39.1 (Caderno)',
     tags: ['interativo', 'Section 39.1', '39.1', 'caderno'],
     html: `<div class="bookcontainer">
