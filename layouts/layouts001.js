@@ -3889,6 +3889,15 @@ SenkoLib.register([
 </style>`
   },
 
+/*@@@@Senko - section-test */
+  /* variantes: variants/section-test.js */
+  {
+    id: 'section-test',
+    name: 'section-test',
+    tags: ['awdad'],
+    html: `section-test`,
+    css: `section-test`
+  },
 
 /*@@@@Senko - section0999 */
   /* variantes: variants/section0999.js */
