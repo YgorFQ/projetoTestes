@@ -964,6 +964,30 @@ document.addEventListener('DOMContentLoaded', function () {
     '}',
     '#fbConfigError { font-size: .82rem; color: #ef4444; font-weight: 700; display: none; }',
     '#fbConfigError:not(:empty) { display: block; }',
+    '#fbImportSection {',
+    '  border-top: 1.5px solid var(--border, #e2e8f0);',
+    '  padding-top: 1rem;',
+    '  display: flex; flex-direction: column; gap: .5rem;',
+    '}',
+    '#fbImportTitle { font-size: .82rem; font-weight: 700; color: var(--text1, #0f172a); margin: 0; }',
+    '#fbImportDesc { font-size: .75rem; color: var(--text2, #64748b); margin: 0; line-height: 1.5; }',
+    '#fbImportBtn {',
+    '  align-self: flex-start;',
+    '  padding: .45rem 1rem;',
+    '  background: transparent; color: var(--text2, #64748b);',
+    '  border: 1.5px solid var(--border, #e2e8f0);',
+    '  border-radius: var(--radius, 8px);',
+    '  font-size: .82rem; font-weight: 700; cursor: pointer;',
+    '  display: inline-flex; align-items: center; gap: .4rem;',
+    '  transition: border-color .15s, color .15s;',
+    '}',
+    '#fbImportBtn:hover:not(:disabled) { border-color: #f97316; color: #f97316; }',
+    '#fbImportBtn:disabled { opacity: .5; cursor: not-allowed; }',
+    '#fbImportStatus { font-size: .78rem; font-weight: 700; display: none; }',
+    '#fbImportStatus:not(:empty) { display: block; }',
+    '#fbImportStatus.ok    { color: #16a34a; }',
+    '#fbImportStatus.error { color: #ef4444; }',
+    '#fbImportStatus.busy  { color: #0369a1; }',
 
     /* Botão Firebase nos modais */
     '.btn-firebase {',
@@ -1034,6 +1058,12 @@ document.addEventListener('DOMContentLoaded', function () {
     '    <button id="fbConfigResetBtn">Desconectar Firebase</button>',
     '    <button id="fbConfigSaveBtn">Conectar</button>',
     '  </div>',
+    '  <div id="fbImportSection">',
+    '    <p id="fbImportTitle">Importar do GitHub</p>',
+    '    <p id="fbImportDesc">Importa todos os layouts e variantes do repositório GitHub para o Firebase. Use quando o Firebase estiver desatualizado em relação ao GitHub.</p>',
+    '    <button id="fbImportBtn">⬇ Importar do GitHub agora</button>',
+    '    <span id="fbImportStatus"></span>',
+    '  </div>',
     '</div>',
   ].join('\n');
   document.body.appendChild(fbOverlay);
@@ -1094,6 +1124,59 @@ document.addEventListener('DOMContentLoaded', function () {
     fbCloseConfigModal();
     fbUpdateStatusBadge('', '');
     alert('Firebase desconectado. Recarregue a página para usar os arquivos .js.');
+  });
+
+  /* Importar do GitHub → Firebase */
+  document.getElementById('fbImportBtn').addEventListener('click', function () {
+    var btn    = this;
+    var status = document.getElementById('fbImportStatus');
+
+    if (!_fbActive) {
+      status.textContent = '⚠ Firebase não está ativo. Conecte primeiro.';
+      status.className   = 'error';
+      return;
+    }
+
+    var ghCfg = typeof GITHUB_CONFIG !== 'undefined' && GITHUB_CONFIG.OWNER && GITHUB_CONFIG.REPO;
+    var ghTok = typeof ghGetToken === 'function' && ghGetToken();
+    if (!ghCfg || !ghTok) {
+      status.textContent = '⚠ Configure o GitHub (engrenagem) antes de importar.';
+      status.className   = 'error';
+      return;
+    }
+
+    btn.disabled       = true;
+    status.textContent = 'Importando layouts e variantes do GitHub…';
+    status.className   = 'busy';
+
+    /* Reutiliza fbSyncFromGithub e monitora o resultado pelo badge */
+    var _origUnlock = SenkoLib.unlock.bind(SenkoLib);
+    var _done = false;
+
+    /* Intercepta o unlock para saber quando terminou */
+    SenkoLib.unlock = function () {
+      _origUnlock();
+      SenkoLib.unlock = _origUnlock; /* restaura */
+      if (!_done) {
+        _done = true;
+        btn.disabled       = false;
+        status.textContent = '✓ Importação concluída! Recarregando…';
+        status.className   = 'ok';
+        setTimeout(function () {
+          status.textContent = '';
+          status.className   = '';
+        }, 4000);
+      }
+    };
+
+    try {
+      fbSyncFromGithub();
+    } catch (e) {
+      SenkoLib.unlock = _origUnlock;
+      btn.disabled       = false;
+      status.textContent = 'Erro: ' + e.message;
+      status.className   = 'error';
+    }
   });
 
   /* ── Botão Firebase (ícone chama) no header ao lado da engrenagem ── */
