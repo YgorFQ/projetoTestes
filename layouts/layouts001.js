@@ -3899,7 +3899,6 @@ SenkoLib.register([
     css: `section-test`
   },
 
-
 /*@@@@Senko - section0999 */
   /* variantes: variants/section0999.js */
   {

@@ -1,5 +1,7 @@
 // @ts-nocheck
+// Gerado automaticamente pelo sync Firebase → GitHub
 SenkoLib.registerVariant('section-41', [
+
 /*@@@@Senko - padrao-p-table-click */
   {
     name: 'padrao-p-table-click',
@@ -137,4 +139,5 @@ SenkoLib.registerVariant('section-41', [
 
   </style>`,
   },
+
 ]);
