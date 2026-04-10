@@ -3931,4 +3931,15 @@ SenkoLib.register([
     css: ``
   },
 
+
+/*@@@@Senko - carlinhos */
+  /* variantes: variants/carlinhos.js */
+  {
+    id: 'carlinhos',
+    name: 'carlinhos',
+    tags: ['carlinhos'],
+    html: `carlinhos`,
+    css: ``
+  },
+
 ]);
