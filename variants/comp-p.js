@@ -1,7 +1,5 @@
 // @ts-nocheck
-// Gerado automaticamente pelo sync Firebase → GitHub
 SenkoLib.registerVariant('comp-p', [
-
 /*@@@@Senko - padrao-p-2-blocos */
   {
     name: 'padrao-p-2-blocos',
@@ -886,7 +884,6 @@ SenkoLib.registerVariant('comp-p', [
         }
     }`,
   },
-
 /*@@@@Senko - padrao-p-com-table */
   {
     name: 'padrao-p-com-table',
@@ -1928,7 +1925,7 @@ SenkoLib.registerVariant('comp-p', [
         }
     }`,
   },
-
+  
 /*@@@@Senko - padrao-p-table-click */
   {
     name: 'padrao-p-table-click',
@@ -2034,7 +2031,7 @@ SenkoLib.registerVariant('comp-p', [
              <tbody>
                <tr class="table-tr-custom">
                  <td class="table-text-custom table-td-custom-title">
-            <a href="#" aria-label="Clique para ir para a página específica do PRODUTO 1"></a>SKU 1</a>
+            <a href="#" aria-label="Clique para ir para a página específica do PRODUTO 1">SKU 1</a>
             </td>
             <td class="table-text-custom table-td-custom-sub">DESCRIÇÃO DO PRODUTO 1</td>
            </tr>
@@ -2987,5 +2984,4 @@ SenkoLib.registerVariant('comp-p', [
 
 `,
   },
-
 ]);

@@ -2,16 +2,33 @@
 <!-- ═══════════════════════════════════════════════════════
    index.html — Página principal do SenkoLib
 
+   RESPONSABILIDADE:
+     Ponto de entrada da aplicação. Define a estrutura HTML
+     completa da interface e carrega todos os scripts e estilos
+     na ordem correta.
+
+   ESTRUTURA DA UI:
+     - Header com busca, filtro de favoritos, modos de visualização,
+       botão de copiar HTML base e botão de adicionar layout
+     - Barra FSA (File System Access — modo experimental local)
+     - Grid principal de cards (#layoutGrid)
+     - Modal de visualização de layout (preview + código HTML/CSS)
+     - Modal de edição de layout existente
+     - Modal de adição de novo layout
+     - Modal de variantes de um layout
+     - Modal de criação de nova variante
+     - Modal de guia/documentação do projeto
+     - Toast de confirmação de cópia
+
    ORDEM DE CARREGAMENTO DOS SCRIPTS:
-     1. core/senkolib-core.js            — motor de registro (obrigatório primeiro)
-     2. layouts/layoutsXXX.js            — pacotes de layouts (fallback se Firebase offline)
-     3. variants/[id].js                 — variantes por layout (fallback se Firebase offline)
-     4. core/script.js                   — lógica da UI
+     1. core/senkolib-core.js     — motor de registro (obrigatório primeiro)
+     2. layouts/layoutsXXX.js     — pacotes de layouts
+     3. variants/[id].js          — variantes por layout
+     4. core/script.js            — lógica da UI
      5. modules/github/senko-github-v2.js       — salvar no GitHub via API
      6. modules/github/senko-github-variants.js — criar/deletar variantes no GitHub
      7. modules/github/senko-github-delete.js   — excluir layouts do GitHub
-     8. Firebase SDK (CDN)               — obrigatório antes do módulo Firebase
-     9. modules/firebase/senko-firebase.js      — integração Firebase (carrega por último)
+     8. modules/fsa/senko-fsa.js               — salvar localmente via File System Access
 ════════════════════════════════════════════════════════ -->
 <html lang="pt-BR">
 
@@ -148,8 +165,21 @@
           </p>
         </div>
         <div style="display:flex;gap:.5rem;align-items:center;">
-          <!-- âncora para o módulo GitHub injetar o botão de salvar -->
-          <span id="saveToFileBtn" style="display:none;"></span>
+          <button class="btn-add" id="copyEditBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+            Copiar objeto
+          </button>
+          <button class="btn-save-file" id="saveToFileBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+              <polyline points="17 21 17 13 7 13 7 21" />
+              <polyline points="7 3 7 8 15 8" />
+            </svg>
+            Salvar no arquivo
+          </button>
           <button class="modal-close" id="editModalClose" title="Fechar">✕</button>
         </div>
       </div>
@@ -203,7 +233,10 @@
         <div class="modal-meta">
 
           <h2 class="modal-title">Adicionar Layout</h2>
-          <p class="add-hint">Preencha os campos e salve diretamente no GitHub.</p>
+          <p class="add-hint">Preencha os campos, copie o objeto e cole dentro do array no arquivo
+            <code>layouts/layoutsXXX.js</code>. O ID vira o nome do futuro arquivo de variantes:
+            <code>variants/<span id="hintVariantPath">id</span>.js</code>
+          </p>
         </div>
         <button class="modal-close" id="addModalClose" title="Fechar">✕</button>
       </div>
@@ -246,8 +279,19 @@
           <iframe id="addPreviewIframe" class="modal-iframe" sandbox="allow-scripts"></iframe>
         </div>
       </div>
-      <!-- âncora para o módulo GitHub injetar select + botão de salvar -->
-      <div id="ghNewLayoutGroup" style="display:none;"></div>
+      <div class="add-result-section">
+        <div class="code-toolbar">
+          <span class="code-lang">Objeto gerado — cole no array layouts[]</span>
+          <button class="copy-btn btn-blocked" id="copyGeneratedBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+            Copiar objeto
+          </button>
+        </div>
+        <pre class="code-block" id="generatedCode">// Preencha os campos acima para gerar o objeto…</pre>
+      </div>
     </div>
   </div>
 
@@ -303,7 +347,9 @@
         <div class="modal-meta">
           <span class="modal-category">Editar Variante</span>
           <h2 class="modal-title" id="editVarParentName"></h2>
-          <p class="add-hint">Editando variante de: <strong id="editVarParentName"></strong></p>
+          <p class="add-hint">Edite os campos e copie o objeto para substituir no arquivo
+            <code>variants/<span id="editVarFileHint"></span>.js</code>
+          </p>
         </div>
         <div style="display:flex;gap:.5rem;align-items:center;">
           <!-- Botão excluir variante — dentro do modal de edição -->
@@ -316,8 +362,22 @@
             </svg>
             Excluir
           </button>
-          <!-- âncora para o módulo GitHub injetar botão de salvar -->
-          <span id="saveVarToFileBtn" style="display:none;"></span>
+          <!-- Âncora para FSA e GitHub injetarem botões de salvar -->
+          <button class="btn-save-file" id="saveVarToFileBtn" style="display:none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" />
+              <polyline points="17 21 17 13 7 13 7 21" />
+              <polyline points="7 3 7 8 15 8" />
+            </svg>
+            Salvar no arquivo
+          </button>
+          <button class="btn-add" id="copyEditVarBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+            Copiar objeto
+          </button>
           <button class="modal-close" id="editVarClose" title="Fechar">✕</button>
         </div>
       </div>
@@ -364,6 +424,9 @@
           <span class="modal-category">Nova Variante</span>
           <h2 class="modal-title">Criar Variante</h2>
           <p class="add-hint">Variante de: <strong id="newVarParentName"></strong></p>
+          <p class="add-hint">Preencha nome, HTML e CSS — copie o objeto gerado e cole dentro do array
+            <code>registerVariant</code> no arquivo de variantes.
+          </p>
         </div>
         <button class="modal-close" id="newVarClose" title="Fechar">✕</button>
       </div>
@@ -394,8 +457,19 @@
           <iframe id="newVarPreviewIframe" class="modal-iframe" sandbox="allow-scripts"></iframe>
         </div>
       </div>
-      <!-- âncora para o módulo GitHub injetar botão de salvar variante -->
-      <div id="ghvNewVarBtnAnchor" style="display:none;"></div>
+      <div class="add-result-section">
+        <div class="code-toolbar">
+          <span class="code-lang">Objeto gerado — cole no array do arquivo de variantes</span>
+          <button class="copy-btn" id="newVarCopyBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+            </svg>
+            Copiar objeto
+          </button>
+        </div>
+        <pre class="code-block" id="newVarGeneratedCode">// Preencha os campos acima para gerar o objeto…</pre>
+      </div>
     </div>
   </div>
 
@@ -427,18 +501,11 @@
   <script src="variants/section-3.js"></script>
   <script src="variants/section-46.js"></script>
   <script src="variants/section-41.js"></script>
-  <script src="variants/section-test.js"></script>
   <script src="core/script.js"></script>
   <script src="modules/github/senko-github-v2.js"></script>
   <script src="modules/github/senko-github-variants.js"></script>
   <script src="modules/github/senko-github-delete.js"></script>
-
-  <!-- Firebase SDK (compat — necessário para senko-firebase.js) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-
-  <!-- Módulo Firebase SenkoLib — deve ser o último script carregado -->
-  <script src="modules/firebase/senko-firebase.js"></script>
+  <script src="modules/fsa/senko-fsa.js"></script>
   <script>
   (function () {
     var KEY = 'senkolib_theme';

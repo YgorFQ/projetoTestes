@@ -307,20 +307,31 @@ function ghDeduplicateMarkers(content, layoutId) {
 
 /* ═══════════════════════════════════════════════════════════════════════
    RACE CONDITION GUARD
-   Delegado ao SenkoLib.lock/unlock do senkolib-core.js.
-   Impede que GitHub e Firebase salvem ao mesmo tempo.
+   Impede que duas operações de escrita no GitHub ocorram simultaneamente.
+   Cada operação verifica e seta _ghSaving antes de prosseguir.
 ═══════════════════════════════════════════════════════════════════════ */
+var _ghSaving = false;
+var _ghSavingTimeout = null;
 
 function ghLockSave() {
-  if (!SenkoLib.lock('github')) {
+  if (_ghSaving) {
     alert('Já existe uma operação em andamento. Aguarde terminar antes de salvar novamente.');
     return false;
   }
+  _ghSaving = true;
+  _ghSavingTimeout = setTimeout(function () {
+    console.warn('[senko-github] Lock liberado por timeout de segurança.');
+    _ghSaving = false;
+  }, 30000);
   return true;
 }
 
 function ghUnlockSave() {
-  SenkoLib.unlock();
+  _ghSaving = false;
+  if (_ghSavingTimeout) {
+    clearTimeout(_ghSavingTimeout);
+    _ghSavingTimeout = null;
+  }
 }
 
 
@@ -396,20 +407,19 @@ function githubSaveLayout(layoutId, objectCode) {
         target.sha,
         '[SenkoLib] edit layout: ' + layoutId
       ).then(function () {
-        /* Atualiza memória via SenkoLib.set */
-        var editName = document.getElementById('editName');
-        var editTags = document.getElementById('editTags');
-        var editHtml = document.getElementById('editHtml');
-        var editCss  = document.getElementById('editCss');
-        var existing = SenkoLib.getById(layoutId);
-        if (existing) {
-          SenkoLib.set(layoutId, {
-            id:   layoutId,
-            name: editName ? editName.value.trim() : existing.name,
-            tags: editTags ? editTags.value.split(',').map(function(t){ return t.trim(); }).filter(Boolean) : existing.tags,
-            html: editHtml ? editHtml.value : existing.html,
-            css:  editCss  ? editCss.value  : existing.css
-          });
+        var layouts = SenkoLib.getAll();
+        for (var i = 0; i < layouts.length; i++) {
+          if (layouts[i].id === layoutId) {
+            var editName = document.getElementById('editName');
+            var editTags = document.getElementById('editTags');
+            var editHtml = document.getElementById('editHtml');
+            var editCss  = document.getElementById('editCss');
+            if (editName) layouts[i].name = editName.value.trim();
+            if (editTags) layouts[i].tags = editTags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean);
+            if (editHtml) layouts[i].html = editHtml.value;
+            if (editCss)  layouts[i].css  = editCss.value;
+            break;
+          }
         }
         ghSetStatus('✓ Salvo em ' + target.entry.name, 'ok');
         ghUnlockSave();
@@ -478,13 +488,14 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
       var addCss  = document.getElementById('addCss');
       var addName = document.getElementById('addName');
       var addTags = document.getElementById('addTags');
-      SenkoLib.set(layoutId, {
-        id:   layoutId,
-        name: addName ? addName.value.trim() : layoutId,
-        tags: addTags ? addTags.value.split(',').map(function(t){ return t.trim(); }).filter(Boolean) : [],
-        html: addHtml ? addHtml.value : '',
-        css:  addCss  ? addCss.value  : ''
-      });
+      var html = addHtml ? addHtml.value : '';
+      var css  = addCss  ? addCss.value  : '';
+      var name = addName ? addName.value.trim() : layoutId;
+      var tags = addTags
+        ? addTags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean)
+        : [];
+
+      SenkoLib.register([{ id: layoutId, name: name, tags: tags, html: html, css: css }]);
       ghSetStatus('✓ Salvo em layouts/' + fileName, 'ok');
       ghUnlockSave();
       renderGrid();
@@ -624,7 +635,13 @@ var GH_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="1
 
 document.addEventListener('DOMContentLoaded', function () {
 
-  /* ─── Ativo em qualquer ambiente ─────────────────────── */
+  /* ─── Só executa no GitHub Pages ─────────────────────
+     Em qualquer outro ambiente (localhost, Live Server,
+     servidor externo, file://) este módulo inteiro fica
+     inativo — nenhum botão, engrenagem ou elemento GitHub
+     é criado na interface.
+  ──────────────────────────────────────────────────── */
+  if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;
 
   var style = document.createElement('style');
   style.textContent = [
@@ -1033,11 +1050,8 @@ document.addEventListener('DOMContentLoaded', function () {
      modules/github/senko-github-variants.js              */
 
   /* ─── Modal criação — select + botão GitHub ────────── */
-  var ghGroupAnchor = document.getElementById('ghNewLayoutGroup');
-  if (ghGroupAnchor && !ghGroupAnchor.dataset.initialized) {
-    ghGroupAnchor.dataset.initialized = '1';
-    ghGroupAnchor.style.display = '';
-    ghGroupAnchor.className = 'gh-auto-group';
+  var copyGeneratedBtn = document.getElementById('copyGeneratedBtn');
+  if (copyGeneratedBtn && !document.getElementById('ghNewLayoutGroup')) {
 
     var ghSelect = document.createElement('select');
     ghSelect.id        = 'ghTargetFile';
@@ -1051,18 +1065,25 @@ document.addEventListener('DOMContentLoaded', function () {
     ghNewBtn.innerHTML = GH_ICON + ' GitHub';
     ghNewBtn.title     = 'Salvar novo layout direto no repositório GitHub';
 
-    ghGroupAnchor.appendChild(ghSelect);
-    ghGroupAnchor.appendChild(ghNewBtn);
+    var ghGroup = document.createElement('div');
+    ghGroup.id        = 'ghNewLayoutGroup';
+    ghGroup.className = 'gh-auto-group';
+    ghGroup.appendChild(ghSelect);
+    ghGroup.appendChild(ghNewBtn);
+    copyGeneratedBtn.parentNode.insertBefore(ghGroup, copyGeneratedBtn.nextSibling);
 
     function ghPopulateFileSelect() {
       if (!ghGetToken()) return;
+
       ghSelect.innerHTML = '<option value="">Carregando…</option>';
       ghSelect.disabled  = true;
+
       githubListDir('layouts').then(function (entries) {
         var jsFiles = entries
           .filter(function (e) { return e.type === 'file' && e.name.endsWith('.js'); })
           .map(function (e) { return e.name; })
           .sort();
+
         ghSelect.innerHTML = '<option value="">-- selecione o arquivo --</option>';
         jsFiles.forEach(function (name) {
           var opt = document.createElement('option');
@@ -1084,41 +1105,23 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
 
-    if (ghGetToken()) ghPopulateFileSelect();
+    if (ghGetToken()) {
+      ghPopulateFileSelect();
+    }
 
     ghNewBtn.addEventListener('click', function () {
+      var code     = document.getElementById('generatedCode').textContent;
       var id       = document.getElementById('addId').value.trim().toLowerCase();
-      var name     = document.getElementById('addName').value.trim();
-      var tagsRaw  = document.getElementById('addTags').value;
-      var html     = document.getElementById('addHtml').value;
-      var css      = document.getElementById('addCss').value;
       var fileName = ghSelect.value;
 
-      var idValid = /^[a-z0-9-]+$/.test(id);
-      if (!id || !idValid || name.length < 3 || html.length < 3) {
-        alert('Preencha todos os campos obrigatórios (ID, Nome e HTML) corretamente.');
+      if (!id || code.indexOf('//') === 0) {
+        alert('Preencha os campos primeiro.');
         return;
       }
       if (!fileName) {
         alert('Selecione o arquivo de destino no dropdown.');
         return;
       }
-
-      var tags     = tagsRaw.split(',').map(function(t){ return t.trim(); }).filter(Boolean);
-      var tagsStr  = tags.map(function(t){ return "'" + t + "'"; }).join(', ');
-      var safeHtml = html.replace(/`/g, '\\`');
-      var safeCss  = css.replace(/`/g, '\\`');
-
-      var code =
-        '/*@@@@Senko - ' + id + ' */\n' +
-        '  /* variantes: variants/' + id + '.js */\n' +
-        '  {\n' +
-        "    id: '"   + id   + "',\n" +
-        "    name: '" + name + "',\n" +
-        '    tags: [' + tagsStr + '],\n' +
-        '    html: `' + safeHtml + '`,\n' +
-        '    css: `'  + safeCss  + '`\n' +
-        '  },';
 
       ghNewBtn.textContent = 'Salvando…';
       ghNewBtn.disabled    = true;

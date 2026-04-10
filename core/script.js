@@ -158,6 +158,22 @@ function lazyIframe(iframe, html, css) {
 }
 
 
+/* ═══════════════════════════════════════════════════════
+   FILE SYSTEM ACCESS API — TESTE EXPERIMENTAL
+   Só funciona no Chrome/Edge. Não funciona com file://
+   Precisa de servidor local (ex: Live Server do VS Code)
+═══════════════════════════════════════════════════════ */
+var _projectDir = null;
+
+async function selectProjectFolder() {
+  try {
+    _projectDir = await window.showDirectoryPicker({ mode: 'readwrite' });
+    document.getElementById('fsaStatus').textContent = '📁 Pasta: ' + _projectDir.name;
+    document.getElementById('fsaStatus').style.color = 'var(--green)';
+  } catch (e) {
+  }
+}
+
 
 /* ─── Grid ─────────────────────────────────────────── */
 function getFilteredLayouts() {
@@ -341,6 +357,7 @@ function openAddModal() {
   ['addId','addName','addTags','addHtml','addCss'].forEach(function (id) {
     document.getElementById(id).value = '';
   });
+  document.getElementById('generatedCode').textContent = '// Preencha os campos acima para gerar o objeto…';
   document.getElementById('addPreviewIframe').srcdoc = '';
 
   document.querySelectorAll('.add-tab').forEach(function (b) { b.classList.remove('active'); });
@@ -362,9 +379,15 @@ function closeAddModal() {
 function updateGeneratedCode() {
   var id      = document.getElementById('addId').value.trim().toLowerCase();
   var name    = document.getElementById('addName').value.trim();
+  var tagsRaw = document.getElementById('addTags').value;
   var html    = document.getElementById('addHtml').value;
+  var css     = document.getElementById('addCss').value;
+  var tags    = tagsRaw.split(',').map(function (t) { return t.trim(); }).filter(Boolean);
 
-  /* Valida id */
+  var hintEl = document.getElementById('hintVariantPath');
+  if (hintEl) hintEl.textContent = id || 'id';
+
+  /* Valida id: só letras, números e hífen — sem espaços ou caracteres especiais */
   var idEl    = document.getElementById('addId');
   var idValid = /^[a-z0-9-]+$/.test(id);
   var idWarn  = document.getElementById('addIdWarn');
@@ -372,10 +395,40 @@ function updateGeneratedCode() {
     idWarn = document.createElement('span');
     idWarn.id = 'addIdWarn';
     idWarn.style.cssText = 'color:#ef4444;font-size:.75rem;font-weight:700;display:none;';
-    idWarn.textContent = '⚠ Use apenas letras minúsculas, números e hífen (sem espaços ou caracteres especiais)';
+    idWarn.textContent = '\u26a0 Use apenas letras minúsculas, números e hífen (sem espaços)';
     idEl.parentNode.insertBefore(idWarn, idEl.nextSibling);
   }
   if (idWarn) idWarn.style.display = (id.length > 0 && !idValid) ? 'block' : 'none';
+
+  var copyBtn = document.getElementById('copyGeneratedBtn');
+  var allFilled = id.length >= 3 && idValid && name.length >= 3 && html.length >= 3;
+  if (copyBtn) {
+    if (allFilled) {
+      copyBtn.classList.remove('btn-blocked');
+    } else {
+      copyBtn.classList.add('btn-blocked');
+    }
+  }
+
+  if (!id && !name && !html) {
+    document.getElementById('generatedCode').textContent = '// Preencha os campos acima para gerar o objeto…';
+    return;
+  }
+
+  var tagsStr  = tags.map(function (t) { return "'" + t + "'"; }).join(', ');
+  var safeHtml = html.replace(/`/g, '\\`');
+  var safeCss  = css.replace(/`/g, '\\`');
+
+  document.getElementById('generatedCode').textContent =
+    '/*@@@@Senko - ' + id.toLowerCase() + ' */\n' +
+    '  /* variantes: variants/' + id.toLowerCase() + '.js */\n' +
+    '  {\n' +
+    "    id: '"   + id.toLowerCase() + "',\n" +
+    "    name: '" + name             + "',\n" +
+    '    tags: [' + tagsStr          + '],\n' +
+    '    html: `' + safeHtml         + '`,\n' +
+    '    css: `'  + safeCss          + '`\n' +
+    '  },'
 }
 
 /* ─── Modal variantes ───────────────────────────────── */
@@ -548,6 +601,7 @@ function openNewVariantModal() {
   ['newVarName','newVarHtml','newVarCss'].forEach(function (id) {
     document.getElementById(id).value = '';
   });
+  document.getElementById('newVarGeneratedCode').textContent = '// Preencha os campos acima para gerar o objeto…';
   document.getElementById('newVarPreviewIframe').srcdoc = '';
 
   document.querySelectorAll('.newvar-tab').forEach(function (b) { b.classList.remove('active'); });
@@ -565,7 +619,33 @@ function closeNewVariantModal() {
 }
 
 function updateNewVarCode() {
-  /* Mantido para compatibilidade com listeners de input no módulo GitHub */
+  var name      = document.getElementById('newVarName').value.trim().toLowerCase();
+  var html      = document.getElementById('newVarHtml').value;
+  var css       = document.getElementById('newVarCss').value;
+  var copyBtn   = document.getElementById('newVarCopyBtn');
+
+  if (name.length < 3) {
+    copyBtn.classList.add('btn-blocked');
+    copyBtn.classList.remove('copied');
+  } else {
+    copyBtn.classList.remove('btn-blocked');
+  }
+
+  if (!name && !html) {
+    document.getElementById('newVarGeneratedCode').textContent = '// Preencha os campos acima para gerar o objeto…';
+    return;
+  }
+
+  var safeHtml = html.replace(/`/g, '\\`');
+  var safeCss  = css.replace(/`/g, '\\`');
+
+  document.getElementById('newVarGeneratedCode').textContent =
+    '/*@@@@Senko - ' + name + ' */\n' +
+    '  {\n' +
+    "    name: '" + name + "',\n" +
+    '    html: `' + safeHtml + '`,\n' +
+    '    css: `'  + safeCss  + '`,\n' +
+    '  },';
 }
 
 
@@ -578,6 +658,7 @@ function openEditVariantModal(v) {
   var parentNm = state.currentForVariant ? state.currentForVariant.name : '';
 
   document.getElementById('editVarParentName').textContent  = parentNm;
+  document.getElementById('editVarFileHint').textContent    = parentId;
   document.getElementById('editVarName').value              = v.name || '';
   document.getElementById('editVarHtml').value              = v.html || '';
   document.getElementById('editVarCss').value               = v.css  || '';
@@ -640,7 +721,34 @@ function switchEditVarMode(mode) {
 }
 
 function updateEditVarCode() {
-  /* Mantido para compatibilidade com listeners — geração de objeto gerenciada pelo módulo GitHub */
+  var name = document.getElementById('editVarName').value.trim().toLowerCase();
+  var html = document.getElementById('editVarHtml').value;
+  var css  = document.getElementById('editVarCss').value;
+
+  var copyBtn = document.getElementById('copyEditVarBtn');
+  var ok = name.length >= 3 && html.length >= 1;
+  if (copyBtn) {
+    if (ok) copyBtn.classList.remove('btn-blocked');
+    else    copyBtn.classList.add('btn-blocked');
+  }
+
+  var safeHtml = html.replace(/`/g, '\\`');
+  var safeCss  = css.replace(/`/g, '\\`');
+
+  document.getElementById('editVarGeneratedCode').textContent =
+    '/*@@@@Senko - ' + name + ' */\n' +
+    '  {\n' +
+    "    name: '" + name + "',\n" +
+    '    html: `' + safeHtml + '`,\n' +
+    '    css: `'  + safeCss  + '`,\n' +
+    '  },';
+
+  /*
+   * IMPORTANTE: não mutamos state.currentEditVariant aqui.
+   * O objeto em memória só é atualizado APÓS o usuário confirmar o save
+   * (via senko-fsa-variants.js ou senko-github-variants.js).
+   * Isso evita corromper dados se o usuário fechar o modal sem salvar.
+   */
 }
 
 
@@ -744,13 +852,22 @@ function updateEditCode() {
   var css     = document.getElementById('editCss').value;
   var tags    = tagsRaw.split(',').map(function(t){ return t.trim(); }).filter(Boolean);
 
-  if (!id && !name && !html) return;
+  var copyBtn = document.getElementById('copyEditBtn');
+  var allFilled = id.length >= 3 && name.length >= 3 && html.length >= 3;
+  if (copyBtn) {
+    if (allFilled) copyBtn.classList.remove('btn-blocked');
+    else copyBtn.classList.add('btn-blocked');
+  }
+
+  if (!id && !name && !html) {
+    document.getElementById('editGeneratedCode').textContent = '// Preencha os campos acima para gerar o objeto…';
+    return;
+  }
 
   var tagsStr  = tags.map(function(t){ return "'" + t + "'"; }).join(', ');
   var safeHtml = html.replace(/`/g, '\\`');
   var safeCss  = css.replace(/`/g, '\\`');
 
-  /* Mantido oculto — o módulo GitHub lê este campo para salvar */
   document.getElementById('editGeneratedCode').textContent =
     '/*@@@@Senko - ' + id + ' */\n' +
     '  /* variantes: variants/' + id + '.js */\n' +
@@ -822,6 +939,11 @@ document.addEventListener('DOMContentLoaded', function () {
   ['addId','addName','addTags','addHtml','addCss'].forEach(function (id) {
     document.getElementById(id).addEventListener('input', updateGeneratedCode);
   });
+  document.getElementById('copyGeneratedBtn').addEventListener('click', function () {
+    if (this.classList.contains('btn-blocked')) return;
+    var code = document.getElementById('generatedCode').textContent;
+    if (code.indexOf('//') !== 0) copyToClipboard(code, this, COPY_ICON + ' Copiar objeto');
+  });
 
   /* Modal variantes */
   document.getElementById('variantsClose').addEventListener('click', closeVariantsModal);
@@ -851,6 +973,12 @@ document.addEventListener('DOMContentLoaded', function () {
   ['newVarName','newVarHtml','newVarCss'].forEach(function (id) {
     document.getElementById(id).addEventListener('input', updateNewVarCode);
   });
+  document.getElementById('newVarCopyBtn').addEventListener('click', function () {
+    var nome = document.getElementById('newVarName').value.trim();
+    if (nome.length < 3) return;
+    var code = document.getElementById('newVarGeneratedCode').textContent;
+    if (code.indexOf('// Preencha') !== 0) copyToClipboard(code, this, COPY_ICON + ' Copiar objeto');
+  });
 
 
   /* Modal editar variante */
@@ -865,6 +993,11 @@ document.addEventListener('DOMContentLoaded', function () {
   ['editVarName','editVarHtml','editVarCss'].forEach(function (id) {
     document.getElementById(id).addEventListener('input', updateEditVarCode);
   });
+  document.getElementById('copyEditVarBtn').addEventListener('click', function () {
+    if (this.classList.contains('btn-blocked')) return;
+    var code = document.getElementById('editVarGeneratedCode').textContent;
+    if (code.indexOf('//') !== 0) copyToClipboard(code, this, COPY_ICON + ' Copiar objeto');
+  });
 
   /* Modal editar layout */
   document.getElementById('editModalClose').addEventListener('click', closeEditModal);
@@ -878,8 +1011,15 @@ document.addEventListener('DOMContentLoaded', function () {
   ['editId','editName','editTags','editHtml','editCss'].forEach(function (id) {
     document.getElementById(id).addEventListener('input', updateEditCode);
   });
+  document.getElementById('copyEditBtn').addEventListener('click', function () {
+    if (this.classList.contains('btn-blocked')) return;
+    var code = document.getElementById('editGeneratedCode').textContent;
+    if (code.indexOf('//') !== 0) copyToClipboard(code, this, COPY_ICON + ' Copiar objeto');
+  });
 
+  /* saveToFileBtn — listener gerenciado pelo senko-fsa.js (o botão é clonado lá) */
 
+  document.getElementById('selectFolderBtn').addEventListener('click', selectProjectFolder);
 
   /* Escape */
   document.addEventListener('keydown', function (e) {

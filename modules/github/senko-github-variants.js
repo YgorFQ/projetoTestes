@@ -125,20 +125,34 @@ function ghvGetVariantFile(parentId) {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   UTILITÁRIO: Atualiza variante na memória — delegado ao SenkoLib.setVariant
+   UTILITÁRIO: Atualiza variante na memória do SenkoLib após edição
 ═══════════════════════════════════════════════════════════════════════ */
 function ghvUpdateVariantInMemory(parentId, originalName, newName, html, css) {
-  /* Remove pelo nome original e insere com o novo nome */
-  SenkoLib.removeVariant(parentId, originalName);
-  SenkoLib.setVariant(parentId, newName, { name: newName, html: html, css: css });
+  var variants  = SenkoLib.getVariants(parentId);
+  var origLower = originalName.toLowerCase();
+  for (var i = 0; i < variants.length; i++) {
+    if ((variants[i].name || '').toLowerCase() === origLower) {
+      variants[i].name = newName;
+      variants[i].html = html;
+      variants[i].css  = css;
+      return;
+    }
+  }
 }
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   UTILITÁRIO: Remove variante da memória — delegado ao SenkoLib.removeVariant
+   UTILITÁRIO: Remove variante da memória do SenkoLib após exclusão
 ═══════════════════════════════════════════════════════════════════════ */
 function ghvRemoveVariantFromMemory(parentId, variantName) {
-  SenkoLib.removeVariant(parentId, variantName);
+  var variants  = SenkoLib.getVariants(parentId);
+  var nameLower = variantName.toLowerCase();
+  for (var i = 0; i < variants.length; i++) {
+    if ((variants[i].name || '').toLowerCase() === nameLower) {
+      variants.splice(i, 1);
+      return;
+    }
+  }
 }
 
 
@@ -203,7 +217,7 @@ function githubCreateVariant(parentId, variantName, objectCode) {
       ).then(function () {
         var html = document.getElementById('newVarHtml') ? document.getElementById('newVarHtml').value : '';
         var css  = document.getElementById('newVarCss')  ? document.getElementById('newVarCss').value  : '';
-        SenkoLib.setVariant(parentId, variantName, { name: variantName, html: html, css: css });
+        SenkoLib.registerVariant(parentId, [{ name: variantName, html: html, css: css }]);
         ghSetStatus('✓ Variante salva em ' + fileInfo.path, 'ok');
         ghUnlockSave();
         return fileInfo.path;
@@ -244,7 +258,7 @@ function githubCreateVariant(parentId, variantName, objectCode) {
     }).then(function () {
       var html = document.getElementById('newVarHtml') ? document.getElementById('newVarHtml').value : '';
       var css  = document.getElementById('newVarCss')  ? document.getElementById('newVarCss').value  : '';
-      SenkoLib.setVariant(parentId, variantName, { name: variantName, html: html, css: css });
+      SenkoLib.registerVariant(parentId, [{ name: variantName, html: html, css: css }]);
       ghSetStatus('✓ Arquivo criado: ' + fileInfo.path, 'ok');
       ghUnlockSave();
       return fileInfo.path;
@@ -519,10 +533,8 @@ function ghvCloseDeleteModal() {
 function ghvInjectNewVariantButton() {
   if (document.getElementById('ghvSaveVariantBtn')) return;
 
-  var anchor = document.getElementById('ghvNewVarBtnAnchor');
+  var anchor = document.getElementById('newVarCopyBtn');
   if (!anchor) return;
-
-  anchor.style.display = '';
 
   var btn       = document.createElement('button');
   btn.id        = 'ghvSaveVariantBtn';
@@ -530,7 +542,7 @@ function ghvInjectNewVariantButton() {
   btn.innerHTML = GH_ICON + ' GitHub';
   btn.title     = 'Criar variante diretamente no repositório GitHub';
 
-  anchor.appendChild(btn);
+  anchor.parentNode.insertBefore(btn, anchor.nextSibling);
 
   btn.addEventListener('click', function () {
     var nomeRaw = document.getElementById('newVarName') ? document.getElementById('newVarName').value.trim() : '';
@@ -735,6 +747,8 @@ function ghvInjectStyles() {
    INICIALIZAÇÃO — só ativa no GitHub Pages
 ═══════════════════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', function () {
+  if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;
+
   ghvInjectStyles();
   ghvCreateDeleteModal();
   ghvInjectNewVariantButton();

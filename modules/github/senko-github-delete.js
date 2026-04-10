@@ -116,10 +116,15 @@ function ghDeleteFile(path, sha, commitMsg) {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   CORE: Remove o layout da memória — delegado ao SenkoLib.remove
+   CORE: Remove o layout da memória do SenkoLib
 ═══════════════════════════════════════════════════════════════════════ */
 function ghRemoveLayoutFromMemory(layoutId) {
-  SenkoLib.remove(layoutId);
+  var layouts = SenkoLib.getAll();
+  var idx = -1;
+  for (var i = 0; i < layouts.length; i++) {
+    if (layouts[i].id === layoutId) { idx = i; break; }
+  }
+  if (idx !== -1) layouts.splice(idx, 1);
 }
 
 
@@ -474,6 +479,7 @@ function ghInjectDeleteStyles() {
 var TRASH_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>';
 
 document.addEventListener('DOMContentLoaded', function () {
+  if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;
   ghInjectDeleteStyles();
   ghCreateDeleteModal();
 
