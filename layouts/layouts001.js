@@ -3920,4 +3920,15 @@ SenkoLib.register([
     css: `cavalo`
   },
 
+
+/*@@@@Senko - caralho */
+  /* variantes: variants/caralho.js */
+  {
+    id: 'caralho',
+    name: 'caralho',
+    tags: ['caralho'],
+    html: `caralho`,
+    css: ``
+  },
+
 ]);
