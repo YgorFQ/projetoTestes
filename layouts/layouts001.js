@@ -3942,4 +3942,15 @@ SenkoLib.register([
     css: ``
   },
 
+
+/*@@@@Senko - cavlaos */
+  /* variantes: variants/cavlaos.js */
+  {
+    id: 'cavlaos',
+    name: 'cavlaos',
+    tags: ['cavlaos'],
+    html: `cavlaos`,
+    css: `cavlaos`
+  },
+
 ]);
