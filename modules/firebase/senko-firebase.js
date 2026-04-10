@@ -732,7 +732,6 @@ function fbSyncFromGithub() {
     return _fbDb.collection('layouts').get();
 
   }).then(function (fbSnap) {
-    console.log('[senko-firebase] fbSnap recebido:', fbSnap ? fbSnap.docs.length + ' docs' : 'undefined');
     if (!fbSnap) return;
 
     var fbLayoutIds = {};
@@ -1460,7 +1459,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /* ── Hook: carregar variantes do Firebase quando modal abre ── */
-  /* Intercepta openVariantsModal para disparar fbLoadVariants */
   var _origOpenVariantsModal = window.openVariantsModal;
   if (typeof _origOpenVariantsModal === 'function') {
     window.openVariantsModal = function (layout) {
@@ -1469,29 +1467,114 @@ document.addEventListener('DOMContentLoaded', function () {
     };
   }
 
-  /* ── Hook: GitHub → Firebase (após salvar no GitHub, salva no Firebase também) ── */
-  /* Sobrescreve githubSaveLayout para chamar fbSaveLayout na sequência */
+  /* ══════════════════════════════════════════════════════════════
+     HOOKS GitHub → Firebase
+     Após qualquer operação bem-sucedida no GitHub,
+     espelha a mesma operação no Firebase automaticamente.
+  ══════════════════════════════════════════════════════════════ */
+
+  /* ── Editar layout existente ── */
   var _origGithubSaveLayout = window.githubSaveLayout;
   if (typeof _origGithubSaveLayout === 'function') {
     window.githubSaveLayout = function (layoutId, objectCode) {
       return _origGithubSaveLayout(layoutId, objectCode).then(function (result) {
         if (result && _fbActive) {
           var layout = SenkoLib.getById(layoutId);
-          if (layout) fbSaveLayout(layout);
+          if (layout) {
+            fbSaveLayout(layout).then(function () {
+              console.log('[senko-firebase] Hook GitHub→Firebase: layout atualizado:', layoutId);
+            });
+          }
         }
         return result;
       });
     };
   }
 
-  /* Sobrescreve githubSaveNewLayout */
+  /* ── Criar novo layout ── */
   var _origGithubSaveNewLayout = window.githubSaveNewLayout;
   if (typeof _origGithubSaveNewLayout === 'function') {
     window.githubSaveNewLayout = function (fileName, objectCode, layoutId) {
       return _origGithubSaveNewLayout(fileName, objectCode, layoutId).then(function (result) {
         if (result && _fbActive) {
           var layout = SenkoLib.getById(layoutId);
-          if (layout) fbSaveLayout(layout);
+          if (layout) {
+            fbSaveLayout(layout).then(function () {
+              console.log('[senko-firebase] Hook GitHub→Firebase: layout criado:', layoutId);
+            });
+          }
+        }
+        return result;
+      });
+    };
+  }
+
+  /* ── Deletar layout ── */
+  var _origGithubDeleteLayout = window.githubDeleteLayout;
+  if (typeof _origGithubDeleteLayout === 'function') {
+    window.githubDeleteLayout = function (layoutId, deleteVariants) {
+      return _origGithubDeleteLayout(layoutId, deleteVariants).then(function (result) {
+        if (result && _fbActive) {
+          fbDeleteLayout(layoutId, deleteVariants).then(function () {
+            console.log('[senko-firebase] Hook GitHub→Firebase: layout deletado:', layoutId);
+          });
+        }
+        return result;
+      });
+    };
+  }
+
+  /* ── Criar variante ── */
+  var _origGithubCreateVariant = window.githubCreateVariant;
+  if (typeof _origGithubCreateVariant === 'function') {
+    window.githubCreateVariant = function (parentId, variantName, objectCode) {
+      return _origGithubCreateVariant(parentId, variantName, objectCode).then(function (result) {
+        if (result && _fbActive) {
+          var html = document.getElementById('newVarHtml') ? document.getElementById('newVarHtml').value : '';
+          var css  = document.getElementById('newVarCss')  ? document.getElementById('newVarCss').value  : '';
+          fbSaveVariant(parentId, { name: variantName, html: html, css: css }).then(function () {
+            console.log('[senko-firebase] Hook GitHub→Firebase: variante criada:', variantName, '(' + parentId + ')');
+          });
+        }
+        return result;
+      });
+    };
+  }
+
+  /* ── Editar variante existente ── */
+  var _origGithubSaveVariant = window.githubSaveVariant;
+  if (typeof _origGithubSaveVariant === 'function') {
+    window.githubSaveVariant = function (parentId, originalName, objectCode) {
+      return _origGithubSaveVariant(parentId, originalName, objectCode).then(function (result) {
+        if (result && _fbActive) {
+          var newName = document.getElementById('editVarName') ? document.getElementById('editVarName').value.trim().toLowerCase() : originalName;
+          var html    = document.getElementById('editVarHtml') ? document.getElementById('editVarHtml').value : '';
+          var css     = document.getElementById('editVarCss')  ? document.getElementById('editVarCss').value  : '';
+          var chain   = Promise.resolve();
+          /* Se nome mudou, deleta a antiga antes */
+          if (originalName.toLowerCase() !== newName) {
+            chain = fbDeleteVariant(parentId, originalName);
+          }
+          chain.then(function () {
+            return fbSaveVariant(parentId, { name: newName, html: html, css: css });
+          }).then(function () {
+            console.log('[senko-firebase] Hook GitHub→Firebase: variante editada:', originalName, '→', newName, '(' + parentId + ')');
+          });
+        }
+        return result;
+      });
+    };
+  }
+
+  /* ── Deletar variante ── */
+  var _origGithubDeleteVariant = window.githubDeleteVariant;
+  if (typeof _origGithubDeleteVariant === 'function') {
+    window.githubDeleteVariant = function (parentId, variantNome) {
+      return _origGithubDeleteVariant(parentId, variantNome).then(function (result) {
+        if (result && _fbActive) {
+          fbDeleteVariant(parentId, variantNome).then(function () {
+            console.log('[senko-firebase] Hook GitHub→Firebase: variante deletada:', variantNome, '(' + parentId + ')');
+          });
         }
         return result;
       });
