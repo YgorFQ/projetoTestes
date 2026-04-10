@@ -3909,4 +3909,15 @@ SenkoLib.register([
     css: `fvtjhgj`
   },
 
+
+/*@@@@Senko - cavalo */
+  /* variantes: variants/cavalo.js */
+  {
+    id: 'cavalo',
+    name: 'cavalo',
+    tags: ['cavalo'],
+    html: `cavalo`,
+    css: `cavalo`
+  },
+
 ]);
