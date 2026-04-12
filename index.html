@@ -35,7 +35,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SenkoLib — Biblioteca de Layouts</title>
   <script>(function(){var t=localStorage.getItem('senkolib_theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
-  <link rel="stylesheet" href="assets/styles.css?v=2" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
+  <link rel="stylesheet" href="assets/styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -426,7 +431,7 @@
   <!-- Toast -->
   <div class="toast" id="toast">✓ Copiado!</div>
 
-  <script src="core/senkolib-core.js?v=2"></script>
+  <script src="core/senkolib-core.js"></script>
 
   <!-- ═══════════════════════════════════════════════════
        ARQUIVOS DE LAYOUTS
@@ -435,25 +440,25 @@
          2. Adicione uma linha <script> abaixo
          3. O arquivo deve chamar SenkoLib.register([...])
   ════════════════════════════════════════════════════ -->
-  <script src="layouts/layouts001.js?v=2"></script>
-  <!-- <script src="layouts/layouts002.js?v=2"></script> -->
-  <!-- <script src="layouts/layouts003.js?v=2"></script> -->
+  <script src="layouts/layouts001.js"></script>
+  <!-- <script src="layouts/layouts002.js"></script> -->
+  <!-- <script src="layouts/layouts003.js"></script> -->
 
   <!-- ═══════════════════════════════════════════════════
        ARQUIVOS DE VARIANTES
        Para cada layout que tiver variantes, adicione:
-         <script src="variants/<id-do-layout>.js?v=2"></script>
+         <script src="variants/<id-do-layout>.js"></script>
   ════════════════════════════════════════════════════ -->
-  <script src="variants/section-1.js?v=2"></script>
-  <script src="variants/section-2.js?v=2"></script>
-  <script src="variants/comp-p.js?v=2"></script>
-  <script src="variants/section-3.js?v=2"></script>
-  <script src="variants/section-46.js?v=2"></script>
-  <script src="variants/section-41.js?v=2"></script>
-  <script src="core/script.js?v=2"></script>
-  <script src="modules/github/senko-github-v2.js?v=2"></script>
-  <script src="modules/github/senko-github-variants.js?v=2"></script>
-  <script src="modules/github/senko-github-delete.js?v=2"></script>
+  <script src="variants/section-1.js"></script>
+  <script src="variants/section-2.js"></script>
+  <script src="variants/comp-p.js"></script>
+  <script src="variants/section-3.js"></script>
+  <script src="variants/section-46.js"></script>
+  <script src="variants/section-41.js"></script>
+  <script src="core/script.js"></script>
+  <script src="modules/github/senko-github-v2.js"></script>
+  <script src="modules/github/senko-github-variants.js"></script>
+  <script src="modules/github/senko-github-delete.js"></script>
   <script>
   (function () {
     var KEY = 'senkolib_theme';
