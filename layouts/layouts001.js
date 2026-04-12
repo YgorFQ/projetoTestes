@@ -3945,14 +3945,16 @@ SenkoLib.register([
 
 
 
-/*@@@@Senko - saas */
-  /* variantes: variants/saas.js */
+
+
+/*@@@@Senko - syuuuus */
+  /* variantes: variants/syuuuus.js */
   {
-    id: 'saas',
-    name: 'saas',
-    tags: ['saas'],
-    html: `saas`,
-    css: `saas`
+    id: 'syuuuus',
+    name: 'syuuuus',
+    tags: ['syuuuus'],
+    html: `syuuuus`,
+    css: ``
   },
 
 ]);
