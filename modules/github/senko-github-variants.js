@@ -220,7 +220,7 @@ function githubCreateVariant(parentId, variantName, objectCode) {
         SenkoLib.registerVariant(parentId, [{ name: variantName, html: html, css: css }]);
         ghSetStatus('✓ Variante salva em ' + fileInfo.path, 'ok');
         ghUnlockSave();
-        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(fileInfo.path);
+        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch();
         return fileInfo.path;
       }).catch(function (e) {
         ghSetStatus('Erro ao salvar: ' + e.message, 'error');
@@ -262,7 +262,7 @@ function githubCreateVariant(parentId, variantName, objectCode) {
       SenkoLib.registerVariant(parentId, [{ name: variantName, html: html, css: css }]);
       ghSetStatus('✓ Arquivo criado: ' + fileInfo.path, 'ok');
       ghUnlockSave();
-      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(fileInfo.path);
+      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch();
       return fileInfo.path;
     }).catch(function (e) {
       ghSetStatus('Erro ao criar arquivo: ' + e.message, 'error');
@@ -332,7 +332,7 @@ function githubSaveVariant(parentId, originalName, objectCode) {
     ).then(function () {
       ghSetStatus('✓ Salvo em ' + filePath, 'ok');
       ghUnlockSave();
-      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(filePath);
+      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch();
       return filePath;
     });
 
@@ -421,7 +421,7 @@ function githubDeleteVariant(parentId, variantNome) {
         ghvRemoveVariantFromMemory(parentId, variantNome);
         ghSetStatus('✓ Arquivo de variantes removido: ' + fileInfo.path, 'ok');
         /* arquivo foi deletado — monitora o index.html como proxy */
-        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch('index.html');
+        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch();
         return true;
       });
     }
@@ -443,7 +443,7 @@ function githubDeleteVariant(parentId, variantNome) {
     ).then(function () {
       ghvRemoveVariantFromMemory(parentId, variantNome);
       ghSetStatus('✓ Variante excluída: ' + variantNome, 'ok');
-      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(fileInfo.path);
+      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch();
       return true;
     });
 

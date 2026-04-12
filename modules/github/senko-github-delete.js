@@ -213,7 +213,7 @@ function githubDeleteLayout(layoutId, deleteVariants) {
         ghRemoveLayoutFromMemory(layoutId);
         ghSetStatus('✓ Layout excluído: ' + layoutId, 'ok');
         if (typeof ghUnlockSave === 'function') ghUnlockSave();
-        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch('index.html');
+        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch();
         renderGrid();
         return true;
       });
