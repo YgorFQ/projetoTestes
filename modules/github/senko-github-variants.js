@@ -220,7 +220,7 @@ function githubCreateVariant(parentId, variantName, objectCode) {
         SenkoLib.registerVariant(parentId, [{ name: variantName, html: html, css: css }]);
         ghSetStatus('✓ Variante salva em ' + fileInfo.path, 'ok');
         ghUnlockSave();
-        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch();
+        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(fileInfo.path, '/*@@@@Senko - ' + variantName.toLowerCase() + ' */');
         return fileInfo.path;
       }).catch(function (e) {
         ghSetStatus('Erro ao salvar: ' + e.message, 'error');
@@ -262,7 +262,7 @@ function githubCreateVariant(parentId, variantName, objectCode) {
       SenkoLib.registerVariant(parentId, [{ name: variantName, html: html, css: css }]);
       ghSetStatus('✓ Arquivo criado: ' + fileInfo.path, 'ok');
       ghUnlockSave();
-      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch();
+      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(fileInfo.path, '/*@@@@Senko - ' + variantName.toLowerCase() + ' */');
       return fileInfo.path;
     }).catch(function (e) {
       ghSetStatus('Erro ao criar arquivo: ' + e.message, 'error');
@@ -332,7 +332,7 @@ function githubSaveVariant(parentId, originalName, objectCode) {
     ).then(function () {
       ghSetStatus('✓ Salvo em ' + filePath, 'ok');
       ghUnlockSave();
-      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch();
+      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(filePath, '/*@@@@Senko - ' + originalName.toLowerCase() + ' */');
       return filePath;
     });
 
@@ -420,7 +420,8 @@ function githubDeleteVariant(parentId, variantNome) {
       }).then(function () {
         ghvRemoveVariantFromMemory(parentId, variantNome);
         ghSetStatus('✓ Arquivo de variantes removido: ' + fileInfo.path, 'ok');
-        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch();
+        /* arquivo foi deletado — monitora o index.html como proxy */
+        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch('index.html', 'SenkoLib');
         return true;
       });
     }
@@ -442,7 +443,7 @@ function githubDeleteVariant(parentId, variantNome) {
     ).then(function () {
       ghvRemoveVariantFromMemory(parentId, variantNome);
       ghSetStatus('✓ Variante excluída: ' + variantNome, 'ok');
-      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch();
+      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(fileInfo.path, 'SenkoLib.registerVariant');
       return true;
     });
 
