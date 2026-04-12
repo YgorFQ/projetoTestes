@@ -685,35 +685,34 @@ function ghWriteDeployStatus(saving) {
   }).catch(function () {});
 }
 
-/* ── Lê deploy-status.json direto do GitHub Pages (sem cache) ── */
+/* ── Lê deploy-status.json via raw.githubusercontent.com (sem cache) ── */
 function ghReadDeployStatus() {
-  var base = window.location.origin + '/' + GITHUB_CONFIG.REPO + '/';
-  var url  = base + GH_STATUS_FILE + '?_=' + Date.now();
-  console.log('[SenkoLib] polling:', url);
+  var url = 'https://raw.githubusercontent.com/'
+    + GITHUB_CONFIG.OWNER + '/'
+    + GITHUB_CONFIG.REPO  + '/'
+    + GITHUB_CONFIG.BRANCH + '/'
+    + GH_STATUS_FILE
+    + '?_=' + Date.now();
+
   return fetch(url, { cache: 'no-store' })
     .then(function (res) {
-      if (!res.ok) {
-        console.log('[SenkoLib] deploy-status HTTP:', res.status);
-        return null;
-      }
+      if (!res.ok) return null;
       return res.text().then(function (text) {
-        try {
-          var parsed = JSON.parse(text);
-          console.log('[SenkoLib] deploy-status:', parsed);
-          return parsed;
-        } catch(e) { return null; }
+        try { return JSON.parse(text); } catch(e) { return null; }
       });
     })
-    .catch(function (e) {
-      console.log('[SenkoLib] deploy-status erro:', e);
-      return null;
-    });
+    .catch(function () { return null; });
 }
 
-/* ── Busca arquivo raw no GitHub Pages (para o dono detectar fim do deploy) ── */
+/* ── Busca arquivo raw do repositório para detectar mudança após save ── */
 function ghFetchRaw(filePath) {
-  var base = window.location.origin + '/' + GITHUB_CONFIG.REPO + '/';
-  var url  = base + filePath + '?_=' + Date.now();
+  var url = 'https://raw.githubusercontent.com/'
+    + GITHUB_CONFIG.OWNER + '/'
+    + GITHUB_CONFIG.REPO  + '/'
+    + GITHUB_CONFIG.BRANCH + '/'
+    + filePath
+    + '?_=' + Date.now();
+
   return fetch(url, { cache: 'no-store' })
     .then(function (res) { return res.ok ? res.text() : null; })
     .catch(function () { return null; });
