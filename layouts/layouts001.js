@@ -3943,14 +3943,5 @@ SenkoLib.register([
   },
 
 
-/*@@@@Senko - adulto */
-  /* variantes: variants/adulto.js */
-  {
-    id: 'adulto',
-    name: 'adulto',
-    tags: ['adulto'],
-    html: `adultoadultoadultoa`,
-    css: `adulto`
-  },
 
 ]);
