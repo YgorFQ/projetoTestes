@@ -671,13 +671,7 @@ function ghGetDeploymentStatus(deploymentId) {
 
 function ghShowDeployDot() {
   var dot = document.getElementById('ghDeployDot');
-  if (dot) { dot.style.display = 'flex'; return; }
-  /* Cria na primeira vez */
-  dot = document.createElement('div');
-  dot.id = 'ghDeployDot';
-  dot.title = 'Publicando no GitHub Pages…';
-  var header = document.querySelector('.header-controls');
-  if (header) header.insertBefore(dot, header.firstChild);
+  if (dot) dot.style.display = 'flex';
 }
 
 function ghHideDeployDot() {
@@ -1129,11 +1123,15 @@ document.addEventListener('DOMContentLoaded', function () {
     gearBtn.addEventListener('click', ghOpenConfigModal);
     ghUpdateConfigButton();
 
-    /* Se estiver no GitHub Pages (config automática), mostra engrenagem como
-       info apenas — não precisa configurar owner/repo, só o token */
     if (GITHUB_CONFIG._auto) {
       gearBtn.title = 'GitHub Pages detectado: ' + GITHUB_CONFIG.OWNER + '/' + GITHUB_CONFIG.REPO + ' — clique para ver/editar';
     }
+
+    /* Bolinha de deploy — criada uma única vez, oculta, ANTES da engrenagem */
+    var deployDot = document.createElement('div');
+    deployDot.id    = 'ghDeployDot';
+    deployDot.title = 'Publicando no GitHub Pages…';
+    gearBtn.parentNode.insertBefore(deployDot, gearBtn);
   }
 
   /* ─── Span de status oculto (para uso interno) ─── */
