@@ -1025,6 +1025,14 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById(id).addEventListener('input', updateEditCode);
   });
 
+  /* F5 → hard reload (ignora cache) */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'F5') {
+      e.preventDefault();
+      location.reload(true);
+    }
+  });
+
   /* Escape */
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
