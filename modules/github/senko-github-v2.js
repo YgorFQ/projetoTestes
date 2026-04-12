@@ -707,8 +707,8 @@ function ghReadDeployStatus() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   QUEM SALVA: grava saving=true, espera N segundos fixos, grava saving=false
-   Não monitora arquivo — evita loop de commits
+   QUEM SALVA: grava saving=true com timestamp.
+   Não precisa gravar false — o timeout é calculado pelo ts.
 ═══════════════════════════════════════════════════════════════════════ */
 function ghStartDeployWatch() {
   if (_ghDeployOwnPollTimer) {
@@ -717,46 +717,11 @@ function ghStartDeployWatch() {
   }
 
   ghShowDeployDot();
+  /* Cache local para reload instantâneo */
+  try { localStorage.setItem('senkolib_deploy_ts', Date.now().toString()); } catch(e) {}
   ghWriteDeployStatus(true);
-
-  /* GitHub Pages leva em média 30s-2min para processar.
-     Verifica a cada 5s se o deploy-status ainda é "saving".
-     O próprio timer encerra após gravar saving=false. */
-  var startTs = Date.now();
-  var settled = false;
-
-  /* Aguarda 15s antes de começar a checar — dá tempo do commit processar */
-  setTimeout(function () {
-    _ghDeployOwnPollTimer = setInterval(function () {
-      if (settled) return;
-
-      if (Date.now() - startTs > GH_DEPLOY_TIMEOUT) {
-        settled = true;
-        clearInterval(_ghDeployOwnPollTimer);
-        ghWriteDeployStatus(false);
-        ghHideDeployDot();
-        return;
-      }
-
-      /* Verifica se o commit do save já aparece na API
-         comparando o ts do deploy-status — quando mudar, o Pages processou */
-      ghReadDeployStatus().then(function (status) {
-        if (!status) return;
-        /* Se saving=false já foi gravado por outra instância, para */
-        if (!status.saving) {
-          settled = true;
-          clearInterval(_ghDeployOwnPollTimer);
-          ghHideDeployDot();
-        }
-      });
-
-    }, GH_DEPLOY_INTERVAL);
-  }, 15000);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   TODOS: polling compartilhado — lê deploy-status.json a cada 5s
-═══════════════════════════════════════════════════════════════════════ */
 function ghStartSharedPolling() {
   if (_ghDeployPollTimer) return;
 
@@ -764,24 +729,41 @@ function ghStartSharedPolling() {
     ghReadDeployStatus().then(function (status) {
       if (!status) return;
 
-      if (Date.now() - (status.ts || 0) > GH_DEPLOY_TIMEOUT) {
+      var age = Date.now() - (status.ts || 0);
+
+      if (!status.saving || age > GH_DEPLOY_TIMEOUT) {
         ghHideDeployDot();
+        try { localStorage.removeItem('senkolib_deploy_ts'); } catch(e) {}
         return;
       }
 
-      if (status.saving) {
-        ghShowDeployDot();
-      } else {
-        ghHideDeployDot();
-      }
+      ghShowDeployDot();
     });
   }, GH_DEPLOY_INTERVAL);
 }
 
 function ghInitDeployStatus() {
-  ghReadDeployStatus().then(function (status) {
-    if (status && status.saving && Date.now() - (status.ts || 0) < GH_DEPLOY_TIMEOUT) {
+  /* Mostra imediatamente se havia deploy recente em cache local */
+  try {
+    var cached = localStorage.getItem('senkolib_deploy_ts');
+    if (cached && Date.now() - parseInt(cached, 10) < GH_DEPLOY_TIMEOUT) {
       ghShowDeployDot();
+    }
+  } catch(e) {}
+
+  /* Confirma com a API e inicia polling */
+  ghReadDeployStatus().then(function (status) {
+    if (status && status.saving) {
+      var age = Date.now() - (status.ts || 0);
+      if (age < GH_DEPLOY_TIMEOUT) {
+        ghShowDeployDot();
+      } else {
+        ghHideDeployDot();
+        try { localStorage.removeItem('senkolib_deploy_ts'); } catch(e) {}
+      }
+    } else {
+      ghHideDeployDot();
+      try { localStorage.removeItem('senkolib_deploy_ts'); } catch(e) {}
     }
     ghStartSharedPolling();
   });
