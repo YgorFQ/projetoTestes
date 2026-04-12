@@ -1006,14 +1006,14 @@ document.addEventListener('DOMContentLoaded', function () {
   document.body.appendChild(hiddenStatus);
 
   /* ─── Modal edição — botão GitHub ─────────────────── */
-  var saveToFileBtn = document.getElementById('saveToFileBtn');
-  if (saveToFileBtn && !document.getElementById('ghSaveLayoutBtn')) {
+  var saveToFileAnchor = document.getElementById('saveToFileBtn');
+  if (saveToFileAnchor && !document.getElementById('ghSaveLayoutBtn')) {
     var ghEditBtn = document.createElement('button');
     ghEditBtn.id        = 'ghSaveLayoutBtn';
     ghEditBtn.className = 'btn-github';
     ghEditBtn.innerHTML = GH_ICON + ' GitHub';
     ghEditBtn.title     = 'Salvar diretamente no repositório GitHub';
-    saveToFileBtn.parentNode.insertBefore(ghEditBtn, saveToFileBtn);
+    saveToFileAnchor.parentNode.replaceChild(ghEditBtn, saveToFileAnchor);
 
     ghEditBtn.addEventListener('click', function () {
       var code = document.getElementById('editGeneratedCode').textContent;
@@ -1050,8 +1050,8 @@ document.addEventListener('DOMContentLoaded', function () {
      modules/github/senko-github-variants.js              */
 
   /* ─── Modal criação — select + botão GitHub ────────── */
-  var copyGeneratedBtn = document.getElementById('copyGeneratedBtn');
-  if (copyGeneratedBtn && !document.getElementById('ghNewLayoutGroup')) {
+  var copyGeneratedAnchor = document.getElementById('copyGeneratedBtn');
+  if (copyGeneratedAnchor && !document.getElementById('ghNewLayoutGroup')) {
 
     var ghSelect = document.createElement('select');
     ghSelect.id        = 'ghTargetFile';
@@ -1070,7 +1070,9 @@ document.addEventListener('DOMContentLoaded', function () {
     ghGroup.className = 'gh-auto-group';
     ghGroup.appendChild(ghSelect);
     ghGroup.appendChild(ghNewBtn);
-    copyGeneratedBtn.parentNode.insertBefore(ghGroup, copyGeneratedBtn.nextSibling);
+
+    /* Substitui o span âncora pelo grupo select+botão */
+    copyGeneratedAnchor.parentNode.replaceChild(ghGroup, copyGeneratedAnchor);
 
     function ghPopulateFileSelect() {
       if (!ghGetToken()) return;

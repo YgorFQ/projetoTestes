@@ -542,7 +542,8 @@ function ghvInjectNewVariantButton() {
   btn.innerHTML = GH_ICON + ' GitHub';
   btn.title     = 'Criar variante diretamente no repositório GitHub';
 
-  anchor.parentNode.insertBefore(btn, anchor.nextSibling);
+  /* Substitui o span âncora pelo botão */
+  anchor.parentNode.replaceChild(btn, anchor);
 
   btn.addEventListener('click', function () {
     var nomeRaw = document.getElementById('newVarName') ? document.getElementById('newVarName').value.trim() : '';
@@ -613,8 +614,8 @@ function ghvInjectEditVariantButton() {
   btn.innerHTML = GH_ICON + ' GitHub';
   btn.title     = 'Salvar variante editada no repositório GitHub';
 
-  /* Insere antes do botão FSA (saveVarToFileBtn) */
-  anchor.parentNode.insertBefore(btn, anchor);
+  /* Substitui o span âncora pelo botão */
+  anchor.parentNode.replaceChild(btn, anchor);
 
   btn.addEventListener('click', function () {
     if (!state.currentForVariant)  { alert('Nenhum layout pai selecionado.'); return; }

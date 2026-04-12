@@ -496,8 +496,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (document.getElementById('ghDeleteLayoutBtn')) return;
 
     var anchor = document.getElementById('ghSaveLayoutBtn')
-               || document.getElementById('saveToFileBtn')
-               || document.getElementById('copyEditBtn');
+               || document.getElementById('saveToFileBtn');
     if (!anchor) return;
 
     var deleteBtn = document.createElement('button');
