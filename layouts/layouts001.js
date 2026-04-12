@@ -3954,14 +3954,5 @@ SenkoLib.register([
 
 
 
-/*@@@@Senko - teste45 */
-  /* variantes: variants/teste45.js */
-  {
-    id: 'teste45',
-    name: 'teste45',
-    tags: ['teste45'],
-    html: `teste45`,
-    css: ``
-  },
 
 ]);
