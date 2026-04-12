@@ -1,8 +1,8 @@
 // @ts-nocheck
 SenkoLib.registerVariant('adulto', [
-/*@@@@Senko - section-gambling */
+/*@@@@Senko - section-gamblin */
   {
-    name: 'section-gambling',
+    name: 'section-gamblin',
     html: `Num comopensa `,
     css: ``,
   },
