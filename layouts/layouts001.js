@@ -3947,16 +3947,6 @@ SenkoLib.register([
 
 
 
-/*@@@@Senko - syuuuus */
-  /* variantes: variants/syuuuus.js */
-  {
-    id: 'syuuuus',
-    name: 'syuuuus',
-    tags: ['syuuuus'],
-    html: `syuuuus`,
-    css: ``
-  },
-
 
 
 ]);
