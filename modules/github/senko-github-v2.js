@@ -423,7 +423,7 @@ function githubSaveLayout(layoutId, objectCode) {
         }
         ghSetStatus('✓ Salvo em ' + target.entry.name, 'ok');
         ghUnlockSave();
-        ghStartDeployWatch(target.entry.path, '/*@@@@Senko - ' + layoutId.toLowerCase() + ' */');
+        ghStartDeployWatch(target.entry.path);
         renderGrid();
         return target.entry.name;
       });
@@ -499,7 +499,7 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
       SenkoLib.register([{ id: layoutId, name: name, tags: tags, html: html, css: css }]);
       ghSetStatus('✓ Salvo em layouts/' + fileName, 'ok');
       ghUnlockSave();
-      ghStartDeployWatch('layouts/' + fileName, '/*@@@@Senko - ' + layoutId.toLowerCase() + ' */');
+      ghStartDeployWatch('layouts/' + fileName);
       renderGrid();
       return fileName;
     });
@@ -616,7 +616,7 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
 
       ghSetStatus('✓ Salvo em ' + filePath, 'ok');
       ghUnlockSave();
-      ghStartDeployWatch(filePath, '/*@@@@Senko - ' + variantNome.toLowerCase() + ' */');
+      ghStartDeployWatch(filePath);
       renderGrid();
       return filePath;
     });
@@ -635,10 +635,9 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
    Aparece quando qualquer save é feito com sucesso.
    Desaparece quando o GitHub Pages confirma o deploy como "success".
 ═══════════════════════════════════════════════════════════════════════ */
-
 var _ghDeployPollTimer = null;
 var GH_DEPLOY_KEY      = 'senkolib_deploy_watching';
-var GH_DEPLOY_INTERVAL = 8000;
+var GH_DEPLOY_INTERVAL = 5000;
 var GH_DEPLOY_TIMEOUT  = 300000; /* 5 minutos máximo */
 
 function ghShowDeployDot() {
@@ -660,54 +659,51 @@ function ghStopDeployWatch() {
   try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
 }
 
-/* Busca o arquivo raw no GitHub Pages com cache-busting.
-   Se a resposta contiver o marcador esperado, o deploy terminou. */
-function ghCheckFileUpdated(filePath, marker) {
-  var url = window.location.origin
-    + '/' + GITHUB_CONFIG.REPO
-    + '/' + filePath
-    + '?_=' + Date.now();
-
+/* Busca o arquivo raw no GitHub Pages sem cache e retorna o conteúdo */
+function ghFetchRaw(filePath) {
+  var base = window.location.origin + '/' + GITHUB_CONFIG.REPO + '/';
+  var url  = base + filePath + '?_=' + Date.now();
   return fetch(url, { cache: 'no-store' })
-    .then(function (res) {
-      if (!res.ok) return false;
-      return res.text().then(function (text) {
-        return text.indexOf(marker) !== -1;
-      });
-    })
-    .catch(function () { return false; });
+    .then(function (res) { return res.ok ? res.text() : null; })
+    .catch(function () { return null; });
 }
 
-function ghStartDeployWatch(filePath, marker) {
+function ghStartDeployWatch(filePath) {
   if (_ghDeployPollTimer) {
     clearInterval(_ghDeployPollTimer);
     _ghDeployPollTimer = null;
   }
 
-  var startTs = Date.now();
-
-  try {
-    localStorage.setItem(GH_DEPLOY_KEY, JSON.stringify({
-      ts:     startTs,
-      file:   filePath,
-      marker: marker
-    }));
-  } catch(e) {}
-
   ghShowDeployDot();
 
-  _ghDeployPollTimer = setInterval(function () {
-    /* Timeout de segurança */
-    if (Date.now() - startTs > GH_DEPLOY_TIMEOUT) {
-      ghStopDeployWatch();
-      return;
-    }
+  /* Captura o tamanho ATUAL do arquivo antes do GitHub Pages atualizar */
+  ghFetchRaw(filePath).then(function (oldContent) {
+    var oldSize  = oldContent ? oldContent.length : -1;
+    var startTs  = Date.now();
 
-    ghCheckFileUpdated(filePath, marker).then(function (updated) {
-      if (updated) ghStopDeployWatch();
-    });
+    try {
+      localStorage.setItem(GH_DEPLOY_KEY, JSON.stringify({
+        ts:      startTs,
+        file:    filePath,
+        oldSize: oldSize
+      }));
+    } catch(e) {}
 
-  }, GH_DEPLOY_INTERVAL);
+    _ghDeployPollTimer = setInterval(function () {
+      if (Date.now() - startTs > GH_DEPLOY_TIMEOUT) {
+        ghStopDeployWatch();
+        return;
+      }
+
+      ghFetchRaw(filePath).then(function (newContent) {
+        var newSize = newContent ? newContent.length : -1;
+        if (newSize !== -1 && newSize !== oldSize) {
+          ghStopDeployWatch();
+        }
+      });
+
+    }, GH_DEPLOY_INTERVAL);
+  });
 }
 
 function ghResumeDeployWatchIfNeeded() {
@@ -721,39 +717,38 @@ function ghResumeDeployWatchIfNeeded() {
     return;
   }
 
+  if (!data.ts || !data.file) {
+    try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
+    return;
+  }
+
   /* Expirado */
-  if (!data.ts || Date.now() - data.ts > GH_DEPLOY_TIMEOUT) {
+  if (Date.now() - data.ts > GH_DEPLOY_TIMEOUT) {
     try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
     return;
   }
 
-  if (!data.file || !data.marker) {
-    try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
-    return;
-  }
-
-  /* Retoma — verifica imediatamente se já atualizou */
   ghShowDeployDot();
 
-  ghCheckFileUpdated(data.file, data.marker).then(function (updated) {
-    if (updated) {
+  var startTs  = data.ts;
+  var filePath = data.file;
+  var oldSize  = data.oldSize !== undefined ? data.oldSize : -1;
+
+  _ghDeployPollTimer = setInterval(function () {
+    if (Date.now() - startTs > GH_DEPLOY_TIMEOUT) {
       ghStopDeployWatch();
       return;
     }
-    /* Ainda não atualizou — inicia o polling */
-    var startTs = data.ts;
-    _ghDeployPollTimer = setInterval(function () {
-      if (Date.now() - startTs > GH_DEPLOY_TIMEOUT) {
-        ghStopDeployWatch();
-        return;
-      }
-      ghCheckFileUpdated(data.file, data.marker).then(function (updated) {
-        if (updated) ghStopDeployWatch();
-      });
-    }, GH_DEPLOY_INTERVAL);
-  });
-}
 
+    ghFetchRaw(filePath).then(function (newContent) {
+      var newSize = newContent ? newContent.length : -1;
+      if (newSize !== -1 && newSize !== oldSize) {
+        ghStopDeployWatch();
+      }
+    });
+
+  }, GH_DEPLOY_INTERVAL);
+}
 
 /* ═══════════════════════════════════════════════════════════════════════
    UI — Botão cadeado + botões GitHub nos modais
