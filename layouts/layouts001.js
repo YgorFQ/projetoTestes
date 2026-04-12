@@ -3956,14 +3956,5 @@ SenkoLib.register([
 
 
 
-/*@@@@Senko - section0999 */
-  /* variantes: variants/section0999.js */
-  {
-    id: 'section0999',
-    name: 'section0999',
-    tags: ['section0999'],
-    html: `section0999`,
-    css: ``
-  },
 
 ]);
