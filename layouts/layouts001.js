@@ -3949,4 +3949,15 @@ SenkoLib.register([
 
 
 
+
+/*@@@@Senko - awdfwd */
+  /* variantes: variants/awdfwd.js */
+  {
+    id: 'awdfwd',
+    name: 'awdfwd',
+    tags: ['awdfwd'],
+    html: `awdfwd`,
+    css: ``
+  },
+
 ]);
