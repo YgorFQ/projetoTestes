@@ -685,36 +685,50 @@ function ghWriteDeployStatus(saving) {
   }).catch(function () {});
 }
 
-/* ── Lê deploy-status.json via raw.githubusercontent.com (sem cache) ── */
+/* ── Lê deploy-status.json via GitHub API (tem CORS correto) ── */
 function ghReadDeployStatus() {
-  var url = 'https://raw.githubusercontent.com/'
+  var url = 'https://api.github.com/repos/'
     + GITHUB_CONFIG.OWNER + '/'
-    + GITHUB_CONFIG.REPO  + '/'
-    + GITHUB_CONFIG.BRANCH + '/'
+    + GITHUB_CONFIG.REPO  + '/contents/'
     + GH_STATUS_FILE
-    + '?_=' + Date.now();
+    + '?ref=' + GITHUB_CONFIG.BRANCH
+    + '&_=' + Date.now();
 
-  return fetch(url, { cache: 'no-store' })
+  return fetch(url, {
+    headers: { 'Accept': 'application/vnd.github+json' }
+  })
     .then(function (res) {
       if (!res.ok) return null;
-      return res.text().then(function (text) {
-        try { return JSON.parse(text); } catch(e) { return null; }
+      return res.json().then(function (data) {
+        if (!data || !data.content) return null;
+        try {
+          var decoded = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+          return JSON.parse(decoded);
+        } catch(e) { return null; }
       });
     })
     .catch(function () { return null; });
 }
 
-/* ── Busca arquivo raw do repositório para detectar mudança após save ── */
+/* ── Busca tamanho de arquivo via GitHub API para detectar mudança após save ── */
 function ghFetchRaw(filePath) {
-  var url = 'https://raw.githubusercontent.com/'
+  var url = 'https://api.github.com/repos/'
     + GITHUB_CONFIG.OWNER + '/'
-    + GITHUB_CONFIG.REPO  + '/'
-    + GITHUB_CONFIG.BRANCH + '/'
+    + GITHUB_CONFIG.REPO  + '/contents/'
     + filePath
-    + '?_=' + Date.now();
+    + '?ref=' + GITHUB_CONFIG.BRANCH
+    + '&_=' + Date.now();
 
-  return fetch(url, { cache: 'no-store' })
-    .then(function (res) { return res.ok ? res.text() : null; })
+  return fetch(url, {
+    headers: { 'Accept': 'application/vnd.github+json' }
+  })
+    .then(function (res) {
+      if (!res.ok) return null;
+      return res.json().then(function (data) {
+        /* Retorna o sha como "conteúdo" — muda a cada commit */
+        return data && data.sha ? data.sha : null;
+      });
+    })
     .catch(function () { return null; });
 }
 
@@ -765,13 +779,10 @@ function ghStartDeployWatch(filePath) {
   }
 
   ghShowDeployDot();
-
-  /* Sinaliza para todos que há um deploy em andamento */
   ghWriteDeployStatus(true);
 
-  /* Captura o tamanho atual do arquivo para detectar mudança */
-  ghFetchRaw(filePath).then(function (oldContent) {
-    var oldSize = oldContent ? oldContent.length : -1;
+  /* Captura o sha atual do arquivo para detectar mudança */
+  ghFetchRaw(filePath).then(function (oldSha) {
     var startTs = Date.now();
 
     _ghDeployOwnPollTimer = setInterval(function () {
@@ -783,9 +794,8 @@ function ghStartDeployWatch(filePath) {
         return;
       }
 
-      ghFetchRaw(filePath).then(function (newContent) {
-        var newSize = newContent ? newContent.length : -1;
-        if (newSize !== -1 && newSize !== oldSize) {
+      ghFetchRaw(filePath).then(function (newSha) {
+        if (newSha && newSha !== oldSha) {
           clearInterval(_ghDeployOwnPollTimer);
           _ghDeployOwnPollTimer = null;
           ghWriteDeployStatus(false);
