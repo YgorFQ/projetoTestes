@@ -554,6 +554,10 @@ function ghvInjectNewVariantButton() {
     if (!state.currentForVariant) { alert('Nenhum layout pai selecionado.'); return; }
 
     var nomeLower = nomeRaw.toLowerCase();
+    if (!/^[a-z0-9\-.]+$/.test(nomeLower)) {
+      alert('Nome inválido: "' + nomeRaw + '".\n\nUse apenas letras, números, hífen (-) e ponto (.).\nExemplo: section-1.2');
+      return;
+    }
     var parentId  = state.currentForVariant.id;
     var safeHtml  = html.replace(/`/g, '\\`');
     var safeCss   = css.replace(/`/g, '\\`');
@@ -629,6 +633,10 @@ function ghvInjectEditVariantButton() {
     var parentId     = state.currentForVariant.id;
 
     if (newName.length < 2) { alert('Preencha o nome da variante primeiro.'); return; }
+    if (!/^[a-z0-9\-.]+$/.test(newName)) {
+      alert('Nome inválido: "' + newName + '".\n\nUse apenas letras, números, hífen (-) e ponto (.).\nExemplo: section-1.2');
+      return;
+    }
 
     var safeHtml   = html.replace(/`/g, '\\`');
     var safeCss    = css.replace(/`/g, '\\`');
