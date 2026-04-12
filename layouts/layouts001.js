@@ -889,7 +889,7 @@ SenkoLib.register([
 
           <!-- Título padrão-->
           <h2>
-            Isso é um título. <br> Isso é um título.
+            Isso é um título2. <br> Isso é um título.
           </h2>
           <!-- Descrição padrão-->
           <p class="section-46-y-desc">
