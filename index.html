@@ -33,12 +33,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
   <title>SenkoLib — Biblioteca de Layouts</title>
   <script>(function(){var t=localStorage.getItem('senkolib_theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
-  <link rel="stylesheet" href="assets/styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -429,35 +425,58 @@
   <!-- Toast -->
   <div class="toast" id="toast">✓ Copiado!</div>
 
-  <script src="core/senkolib-core.js"></script>
+  <script>
+  /* ── Cache busting — força reload sem cache em cada visita ──────────────
+     Todos os scripts e o CSS local são carregados com ?v=[timestamp],
+     garantindo que o GitHub Pages nunca sirva versões cacheadas.
+     Para adicionar novos arquivos, inclua o caminho no array correto.
+  ──────────────────────────────────────────────────────────────────────── */
+  (function () {
+    var v = '?v=' + Date.now();
 
-  <!-- ═══════════════════════════════════════════════════
-       ARQUIVOS DE LAYOUTS
-       Para adicionar um novo pacote de layouts:
-         1. Crie /layouts/layoutsXXX.js
-         2. Adicione uma linha <script> abaixo
-         3. O arquivo deve chamar SenkoLib.register([...])
-  ════════════════════════════════════════════════════ -->
-  <script src="layouts/layouts001.js"></script>
-  <!-- <script src="layouts/layouts002.js"></script> -->
-  <!-- <script src="layouts/layouts003.js"></script> -->
+    var STYLES = [
+      'assets/styles.css',
+    ];
 
-  <!-- ═══════════════════════════════════════════════════
-       ARQUIVOS DE VARIANTES
-       Para cada layout que tiver variantes, adicione:
-         <script src="variants/<id-do-layout>.js"></script>
-  ════════════════════════════════════════════════════ -->
-  <script src="variants/section-1.js"></script>
-  <script src="variants/section-2.js"></script>
-  <script src="variants/comp-p.js"></script>
+    var SCRIPTS = [
+      'core/senkolib-core.js',
+      'layouts/layouts001.js',
+      /* 'layouts/layouts002.js', */
+      /* 'layouts/layouts003.js', */
+      'variants/section-1.js',
+      'variants/section-2.js',
+      'variants/comp-p.js',
+      'variants/section-3.js',
+      'variants/section-46.js',
+      'variants/section-41.js',
+      'core/script.js',
+      'modules/github/senko-github-v2.js',
+      'modules/github/senko-github-variants.js',
+      'modules/github/senko-github-delete.js',
+    ];
 
-  <script src="variants/section-3.js"></script>
-  <script src="variants/section-46.js"></script>
-  <script src="variants/section-41.js"></script>
-  <script src="core/script.js"></script>
-  <script src="modules/github/senko-github-v2.js"></script>
-  <script src="modules/github/senko-github-variants.js"></script>
-  <script src="modules/github/senko-github-delete.js"></script>
+    STYLES.forEach(function (href) {
+      var el = document.createElement('link');
+      el.rel  = 'stylesheet';
+      el.href = href + v;
+      document.head.appendChild(el);
+    });
+
+    /* Scripts precisam ser carregados em sequência (ordem importa) */
+    function loadNext(i) {
+      if (i >= SCRIPTS.length) return;
+      var el = document.createElement('script');
+      el.src = SCRIPTS[i] + v;
+      el.onload = function () { loadNext(i + 1); };
+      el.onerror = function () {
+        console.warn('[SenkoLib] Falha ao carregar:', SCRIPTS[i]);
+        loadNext(i + 1);
+      };
+      document.body.appendChild(el);
+    }
+    loadNext(0);
+  })();
+  </script>
   <script>
   (function () {
     var KEY = 'senkolib_theme';
