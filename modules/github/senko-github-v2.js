@@ -689,7 +689,7 @@ function ghStopDeployWatch() {
   try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
 }
 
-function ghPollLoop(knownId) {
+function ghPollLoop(sinceTs) {
   _ghDeployPollTimer = setInterval(function () {
     _ghDeployPollCount++;
 
@@ -700,15 +700,18 @@ function ghPollLoop(knownId) {
 
     ghGetDeployments().then(function (list) {
       if (!list || !list[0]) return;
-      var latest = list[0];
 
-      /* Ainda não apareceu um deployment novo — aguarda */
-      if (latest.id === knownId) return;
-
-      /* Novo deployment encontrado — verifica o status */
-      return ghGetDeploymentStatus(latest.id).then(function (statuses) {
+      return ghGetDeploymentStatus(list[0].id).then(function (statuses) {
         if (!statuses || !statuses[0]) return;
-        var state = statuses[0].state;
+        var latest = statuses[0];
+        var state  = latest.state;
+
+        /* Só considera encerrado se o status foi atualizado APÓS o save */
+        var updatedAt = latest.updated_at
+          ? new Date(latest.updated_at).getTime()
+          : 0;
+
+        if (updatedAt < sinceTs) return; /* status ainda é de antes do save */
 
         if (state === 'success') {
           ghStopDeployWatch();
@@ -732,30 +735,13 @@ function ghStartDeployWatch() {
   _ghDeployPollCount = 0;
   ghShowDeployDot();
 
-  /* Busca o id do deployment mais recente ANTES do save
-     para saber a partir de qual ponto monitorar */
-  ghGetDeployments().then(function (list) {
-    var knownId = (list && list[0]) ? list[0].id : null;
+  var sinceTs = Date.now();
 
-    /* Persiste: timestamp + knownId */
-    try {
-      localStorage.setItem(GH_DEPLOY_KEY, JSON.stringify({
-        ts:      Date.now(),
-        knownId: knownId
-      }));
-    } catch(e) {}
+  try {
+    localStorage.setItem(GH_DEPLOY_KEY, JSON.stringify({ ts: sinceTs }));
+  } catch(e) {}
 
-    ghPollLoop(knownId);
-  }).catch(function () {
-    /* Se não conseguiu buscar o id inicial, monitora por tempo */
-    try {
-      localStorage.setItem(GH_DEPLOY_KEY, JSON.stringify({
-        ts:      Date.now(),
-        knownId: null
-      }));
-    } catch(e) {}
-    ghPollLoop(null);
-  });
+  ghPollLoop(sinceTs);
 }
 
 /* Retoma o polling após reload se havia deploy em andamento */
@@ -770,17 +756,18 @@ function ghResumeDeployWatchIfNeeded() {
     return;
   }
 
+  var sinceTs = data.ts || 0;
+  var elapsed = Date.now() - sinceTs;
+
   /* Expirado — passou mais de 5 minutos */
-  var elapsed = Date.now() - (data.ts || 0);
   if (elapsed > GH_DEPLOY_MAX_POLLS * GH_DEPLOY_INTERVAL) {
     try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
     return;
   }
 
-  /* Retoma com o knownId salvo e contador ajustado pelo tempo já passado */
   _ghDeployPollCount = Math.floor(elapsed / GH_DEPLOY_INTERVAL);
   ghShowDeployDot();
-  ghPollLoop(data.knownId);
+  ghPollLoop(sinceTs);
 }
 
 
