@@ -639,7 +639,7 @@ var _ghDeployPollTimer    = null;
 var _ghDeployOwnPollTimer = null; /* timer do dono do save — monitora o arquivo real */
 var GH_DEPLOY_INTERVAL    = 5000;
 var GH_DEPLOY_TIMEOUT     = 300000; /* 5 minutos */
-var GH_STATUS_FILE        = '.deploy-status';
+var GH_STATUS_FILE        = 'deploy-status.json';
 
 function ghShowDeployDot() {
   var dot = document.getElementById('ghDeployDot');
@@ -685,18 +685,29 @@ function ghWriteDeployStatus(saving) {
   }).catch(function () {});
 }
 
-/* ── Lê .deploy-status direto do GitHub Pages (sem cache) ── */
+/* ── Lê deploy-status.json direto do GitHub Pages (sem cache) ── */
 function ghReadDeployStatus() {
   var base = window.location.origin + '/' + GITHUB_CONFIG.REPO + '/';
   var url  = base + GH_STATUS_FILE + '?_=' + Date.now();
+  console.log('[SenkoLib] polling:', url);
   return fetch(url, { cache: 'no-store' })
     .then(function (res) {
-      if (!res.ok) return null;
+      if (!res.ok) {
+        console.log('[SenkoLib] deploy-status HTTP:', res.status);
+        return null;
+      }
       return res.text().then(function (text) {
-        try { return JSON.parse(text); } catch(e) { return null; }
+        try {
+          var parsed = JSON.parse(text);
+          console.log('[SenkoLib] deploy-status:', parsed);
+          return parsed;
+        } catch(e) { return null; }
       });
     })
-    .catch(function () { return null; });
+    .catch(function (e) {
+      console.log('[SenkoLib] deploy-status erro:', e);
+      return null;
+    });
 }
 
 /* ── Busca arquivo raw no GitHub Pages (para o dono detectar fim do deploy) ── */
