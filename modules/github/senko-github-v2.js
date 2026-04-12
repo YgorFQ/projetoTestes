@@ -680,6 +680,49 @@ function ghHideDeployDot() {
   if (dot) dot.style.display = 'none';
 }
 
+function ghStopDeployWatch() {
+  if (_ghDeployPollTimer) {
+    clearInterval(_ghDeployPollTimer);
+    _ghDeployPollTimer = null;
+  }
+  ghHideDeployDot();
+  try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
+}
+
+function ghPollLoop(knownId) {
+  _ghDeployPollTimer = setInterval(function () {
+    _ghDeployPollCount++;
+
+    if (_ghDeployPollCount > GH_DEPLOY_MAX_POLLS) {
+      ghStopDeployWatch();
+      return;
+    }
+
+    ghGetDeployments().then(function (list) {
+      if (!list || !list[0]) return;
+      var latest = list[0];
+
+      /* Ainda não apareceu um deployment novo — aguarda */
+      if (latest.id === knownId) return;
+
+      /* Novo deployment encontrado — verifica o status */
+      return ghGetDeploymentStatus(latest.id).then(function (statuses) {
+        if (!statuses || !statuses[0]) return;
+        var state = statuses[0].state;
+
+        if (state === 'success') {
+          ghStopDeployWatch();
+        } else if (state === 'failure' || state === 'error' || state === 'inactive') {
+          ghStopDeployWatch();
+          console.warn('[SenkoLib] Deploy terminou com status:', state);
+        }
+        /* pending / in_progress → continua polling */
+      });
+    }).catch(function () {});
+
+  }, GH_DEPLOY_INTERVAL);
+}
+
 function ghStartDeployWatch() {
   if (_ghDeployPollTimer) {
     clearInterval(_ghDeployPollTimer);
@@ -689,99 +732,55 @@ function ghStartDeployWatch() {
   _ghDeployPollCount = 0;
   ghShowDeployDot();
 
-  /* Persiste o estado — sobrevive ao reload */
-  try { localStorage.setItem(GH_DEPLOY_KEY, Date.now().toString()); } catch(e) {}
-
-  var knownId = null;
-
+  /* Busca o id do deployment mais recente ANTES do save
+     para saber a partir de qual ponto monitorar */
   ghGetDeployments().then(function (list) {
-    if (list && list[0]) knownId = list[0].id;
-  }).catch(function () {});
+    var knownId = (list && list[0]) ? list[0].id : null;
 
-  _ghDeployPollTimer = setInterval(function () {
-    _ghDeployPollCount++;
+    /* Persiste: timestamp + knownId */
+    try {
+      localStorage.setItem(GH_DEPLOY_KEY, JSON.stringify({
+        ts:      Date.now(),
+        knownId: knownId
+      }));
+    } catch(e) {}
 
-    if (_ghDeployPollCount > GH_DEPLOY_MAX_POLLS) {
-      clearInterval(_ghDeployPollTimer);
-      _ghDeployPollTimer = null;
-      ghHideDeployDot();
-      try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
-      return;
-    }
-
-    ghGetDeployments().then(function (list) {
-      if (!list || !list[0]) return;
-      var latest = list[0];
-
-      if (knownId !== null && latest.id === knownId) return;
-      knownId = latest.id;
-
-      return ghGetDeploymentStatus(latest.id).then(function (statuses) {
-        if (!statuses || !statuses[0]) return;
-        var state = statuses[0].state;
-
-        if (state === 'success') {
-          clearInterval(_ghDeployPollTimer);
-          _ghDeployPollTimer = null;
-          ghHideDeployDot();
-          try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
-        } else if (state === 'failure' || state === 'error' || state === 'inactive') {
-          clearInterval(_ghDeployPollTimer);
-          _ghDeployPollTimer = null;
-          ghHideDeployDot();
-          try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
-          console.warn('[SenkoLib] Deploy terminou com status:', state);
-        }
-      });
-    }).catch(function () {});
-
-  }, GH_DEPLOY_INTERVAL);
+    ghPollLoop(knownId);
+  }).catch(function () {
+    /* Se não conseguiu buscar o id inicial, monitora por tempo */
+    try {
+      localStorage.setItem(GH_DEPLOY_KEY, JSON.stringify({
+        ts:      Date.now(),
+        knownId: null
+      }));
+    } catch(e) {}
+    ghPollLoop(null);
+  });
 }
 
-/* Retoma o polling se a página recarregou durante um deploy em andamento */
+/* Retoma o polling após reload se havia deploy em andamento */
 function ghResumeDeployWatchIfNeeded() {
   var stored;
   try { stored = localStorage.getItem(GH_DEPLOY_KEY); } catch(e) { return; }
   if (!stored) return;
 
-  /* Se passou mais de 5 minutos desde o início, considera expirado */
-  var elapsed = Date.now() - parseInt(stored, 10);
+  var data;
+  try { data = JSON.parse(stored); } catch(e) {
+    try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e2) {}
+    return;
+  }
+
+  /* Expirado — passou mais de 5 minutos */
+  var elapsed = Date.now() - (data.ts || 0);
   if (elapsed > GH_DEPLOY_MAX_POLLS * GH_DEPLOY_INTERVAL) {
     try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
     return;
   }
 
-  /* Retoma — ajusta o contador para refletir o tempo já passado */
+  /* Retoma com o knownId salvo e contador ajustado pelo tempo já passado */
   _ghDeployPollCount = Math.floor(elapsed / GH_DEPLOY_INTERVAL);
   ghShowDeployDot();
-
-  _ghDeployPollTimer = setInterval(function () {
-    _ghDeployPollCount++;
-
-    if (_ghDeployPollCount > GH_DEPLOY_MAX_POLLS) {
-      clearInterval(_ghDeployPollTimer);
-      _ghDeployPollTimer = null;
-      ghHideDeployDot();
-      try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
-      return;
-    }
-
-    ghGetDeployments().then(function (list) {
-      if (!list || !list[0]) return;
-      return ghGetDeploymentStatus(list[0].id).then(function (statuses) {
-        if (!statuses || !statuses[0]) return;
-        var state = statuses[0].state;
-        if (state === 'success' || state === 'failure' || state === 'error' || state === 'inactive') {
-          clearInterval(_ghDeployPollTimer);
-          _ghDeployPollTimer = null;
-          ghHideDeployDot();
-          try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
-          if (state !== 'success') console.warn('[SenkoLib] Deploy terminou com status:', state);
-        }
-      });
-    }).catch(function () {});
-
-  }, GH_DEPLOY_INTERVAL);
+  ghPollLoop(data.knownId);
 }
 
 
