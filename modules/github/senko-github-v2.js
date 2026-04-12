@@ -423,6 +423,7 @@ function githubSaveLayout(layoutId, objectCode) {
         }
         ghSetStatus('✓ Salvo em ' + target.entry.name, 'ok');
         ghUnlockSave();
+        ghStartDeployWatch();
         renderGrid();
         return target.entry.name;
       });
@@ -498,6 +499,7 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
       SenkoLib.register([{ id: layoutId, name: name, tags: tags, html: html, css: css }]);
       ghSetStatus('✓ Salvo em layouts/' + fileName, 'ok');
       ghUnlockSave();
+      ghStartDeployWatch();
       renderGrid();
       return fileName;
     });
@@ -614,6 +616,7 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
 
       ghSetStatus('✓ Salvo em ' + filePath, 'ok');
       ghUnlockSave();
+      ghStartDeployWatch();
       renderGrid();
       return filePath;
     });
@@ -624,6 +627,121 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
     alert('Erro ao salvar variante no GitHub:\n' + e.message);
     return false;
   });
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DEPLOY WATCH — bolinha de status no header
+   Aparece quando qualquer save é feito com sucesso.
+   Desaparece quando o GitHub Pages confirma o deploy como "success".
+═══════════════════════════════════════════════════════════════════════ */
+
+var _ghDeployPollTimer  = null;
+var _ghDeployPollCount  = 0;
+var GH_DEPLOY_MAX_POLLS = 30;   /* 30 × 10s = 5 min máximo           */
+var GH_DEPLOY_INTERVAL  = 10000; /* 10 segundos entre cada consulta    */
+
+function ghGetDeployments() {
+  var token = ghGetToken();
+  var url   = 'https://api.github.com/repos/'
+    + GITHUB_CONFIG.OWNER + '/' + GITHUB_CONFIG.REPO
+    + '/deployments?environment=github-pages&per_page=1';
+
+  return fetch(url, {
+    headers: {
+      'Authorization': 'token ' + token,
+      'Accept':        'application/vnd.github+json'
+    }
+  }).then(function (res) { return res.json(); });
+}
+
+function ghGetDeploymentStatus(deploymentId) {
+  var token = ghGetToken();
+  var url   = 'https://api.github.com/repos/'
+    + GITHUB_CONFIG.OWNER + '/' + GITHUB_CONFIG.REPO
+    + '/deployments/' + deploymentId + '/statuses?per_page=1';
+
+  return fetch(url, {
+    headers: {
+      'Authorization': 'token ' + token,
+      'Accept':        'application/vnd.github+json'
+    }
+  }).then(function (res) { return res.json(); });
+}
+
+function ghShowDeployDot() {
+  var dot = document.getElementById('ghDeployDot');
+  if (dot) { dot.style.display = 'flex'; return; }
+  /* Cria na primeira vez */
+  dot = document.createElement('div');
+  dot.id = 'ghDeployDot';
+  dot.title = 'Publicando no GitHub Pages…';
+  var header = document.querySelector('.header-controls');
+  if (header) header.insertBefore(dot, header.firstChild);
+}
+
+function ghHideDeployDot() {
+  var dot = document.getElementById('ghDeployDot');
+  if (dot) dot.style.display = 'none';
+}
+
+function ghStartDeployWatch() {
+  /* Cancela polling anterior se ainda estiver rodando */
+  if (_ghDeployPollTimer) {
+    clearInterval(_ghDeployPollTimer);
+    _ghDeployPollTimer = null;
+  }
+
+  _ghDeployPollCount = 0;
+  ghShowDeployDot();
+
+  /* Guarda o id do deployment mais recente no momento do save,
+     para detectar quando um deployment NOVO aparecer ou mudar de status */
+  var knownId = null;
+
+  ghGetDeployments().then(function (list) {
+    if (list && list[0]) knownId = list[0].id;
+  }).catch(function () {});
+
+  _ghDeployPollTimer = setInterval(function () {
+    _ghDeployPollCount++;
+
+    if (_ghDeployPollCount > GH_DEPLOY_MAX_POLLS) {
+      clearInterval(_ghDeployPollTimer);
+      _ghDeployPollTimer = null;
+      ghHideDeployDot();
+      return;
+    }
+
+    ghGetDeployments().then(function (list) {
+      if (!list || !list[0]) return;
+      var latest = list[0];
+
+      /* Novo deployment ainda não apareceu — continua aguardando */
+      if (knownId !== null && latest.id === knownId) return;
+
+      /* Atualiza o id conhecido */
+      knownId = latest.id;
+
+      return ghGetDeploymentStatus(latest.id).then(function (statuses) {
+        if (!statuses || !statuses[0]) return;
+        var state = statuses[0].state;
+
+        if (state === 'success') {
+          clearInterval(_ghDeployPollTimer);
+          _ghDeployPollTimer = null;
+          ghHideDeployDot();
+        } else if (state === 'failure' || state === 'error' || state === 'inactive') {
+          clearInterval(_ghDeployPollTimer);
+          _ghDeployPollTimer = null;
+          ghHideDeployDot();
+          console.warn('[SenkoLib] Deploy terminou com status:', state);
+        }
+        /* pending / in_progress → continua polling */
+      });
+    }).catch(function () { /* falha de rede — tenta de novo no próximo ciclo */ });
+
+  }, GH_DEPLOY_INTERVAL);
 }
 
 
@@ -683,6 +801,25 @@ document.addEventListener('DOMContentLoaded', function () {
     '  display: inline-flex;',
     '  align-items: center;',
     '  gap: .4rem;',
+    '}',
+    /* Bolinha de deploy */
+    '#ghDeployDot {',
+    '  display: none;',
+    '  align-items: center;',
+    '  justify-content: center;',
+    '  width: 10px;',
+    '  height: 10px;',
+    '  border-radius: 50%;',
+    '  background: #e3a008;',
+    '  box-shadow: 0 0 0 0 rgba(227,160,8,.6);',
+    '  animation: ghDeployPulse 1.4s ease-in-out infinite;',
+    '  flex-shrink: 0;',
+    '  margin-right: .25rem;',
+    '}',
+    '@keyframes ghDeployPulse {',
+    '  0%   { box-shadow: 0 0 0 0 rgba(227,160,8,.6); }',
+    '  70%  { box-shadow: 0 0 0 7px rgba(227,160,8,0); }',
+    '  100% { box-shadow: 0 0 0 0 rgba(227,160,8,0); }',
     '}',
   ].join('\n');
   document.head.appendChild(style);
