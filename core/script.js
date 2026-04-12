@@ -624,7 +624,21 @@ function updateNewVarCode() {
   var css       = document.getElementById('newVarCss').value;
   var copyBtn   = document.getElementById('newVarCopyBtn');
 
-  if (name.length < 3) {
+  /* Validação ao vivo do nome */
+  var nameEl      = document.getElementById('newVarName');
+  var nameValid   = name.length === 0 || /^[a-z0-9\-.]+$/.test(name);
+  var nameWarn    = document.getElementById('newVarNameWarn');
+  if (!nameWarn && nameEl) {
+    nameWarn = document.createElement('span');
+    nameWarn.id = 'newVarNameWarn';
+    nameWarn.style.cssText = 'color:#ef4444;font-size:.75rem;font-weight:700;display:none;margin-top:.2rem;';
+    nameWarn.textContent = '\u26a0 Use apenas letras, números, hífen (-) e ponto (.)';
+    nameEl.parentNode.insertBefore(nameWarn, nameEl.nextSibling);
+  }
+  if (nameWarn) nameWarn.style.display = (name.length > 0 && !nameValid) ? 'block' : 'none';
+
+  var allOk = name.length >= 2 && nameValid;
+  if (!allOk) {
     copyBtn.classList.add('btn-blocked');
     copyBtn.classList.remove('copied');
   } else {
@@ -725,8 +739,21 @@ function updateEditVarCode() {
   var html = document.getElementById('editVarHtml').value;
   var css  = document.getElementById('editVarCss').value;
 
+  /* Validação ao vivo do nome */
+  var nameEl    = document.getElementById('editVarName');
+  var nameValid = name.length === 0 || /^[a-z0-9\-.]+$/.test(name);
+  var nameWarn  = document.getElementById('editVarNameWarn');
+  if (!nameWarn && nameEl) {
+    nameWarn = document.createElement('span');
+    nameWarn.id = 'editVarNameWarn';
+    nameWarn.style.cssText = 'color:#ef4444;font-size:.75rem;font-weight:700;display:none;margin-top:.2rem;';
+    nameWarn.textContent = '\u26a0 Use apenas letras, números, hífen (-) e ponto (.)';
+    nameEl.parentNode.insertBefore(nameWarn, nameEl.nextSibling);
+  }
+  if (nameWarn) nameWarn.style.display = (name.length > 0 && !nameValid) ? 'block' : 'none';
+
   var copyBtn = document.getElementById('copyEditVarBtn');
-  var ok = name.length >= 3 && html.length >= 1;
+  var ok = name.length >= 2 && nameValid && html.length >= 1;
   if (copyBtn) {
     if (ok) copyBtn.classList.remove('btn-blocked');
     else    copyBtn.classList.add('btn-blocked');
