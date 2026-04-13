@@ -683,37 +683,27 @@ function ghWriteDeployStatus(saving) {
   }).catch(function () {});
 }
 
-/* ── Lê deploy-status.json via GitHub API ── */
+/* ── Lê deploy-status.json via raw.githubusercontent.com ── */
 function ghReadDeployStatus() {
-  var url = 'https://api.github.com/repos/'
+  var token = ghGetToken();
+  var url = 'https://raw.githubusercontent.com/'
     + GITHUB_CONFIG.OWNER + '/'
-    + GITHUB_CONFIG.REPO  + '/contents/'
+    + GITHUB_CONFIG.REPO  + '/'
+    + GITHUB_CONFIG.BRANCH + '/'
     + GH_STATUS_FILE
-    + '?ref=' + GITHUB_CONFIG.BRANCH
-    + '&_=' + Date.now();
+    + '?_=' + Date.now();
 
-  return fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } })
+  var headers = { 'Accept': 'application/json' };
+  if (token) headers['Authorization'] = 'token ' + token;
+
+  return fetch(url, { method: 'GET', mode: 'cors', cache: 'no-store', headers: headers })
     .then(function (res) {
-      console.log('[SenkoLib] deploy-status HTTP:', res.status);
       if (!res.ok) return null;
-      return res.json().then(function (data) {
-        console.log('[SenkoLib] deploy-status data.sha:', data && data.sha);
-        console.log('[SenkoLib] deploy-status content raw:', data && data.content && data.content.slice(0, 50));
-        if (!data || !data.content) return null;
-        try {
-          var decoded = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
-          console.log('[SenkoLib] deploy-status decoded:', decoded);
-          return JSON.parse(decoded);
-        } catch(e) {
-          console.log('[SenkoLib] deploy-status parse erro:', e);
-          return null;
-        }
+      return res.text().then(function (text) {
+        try { return JSON.parse(text); } catch(e) { return null; }
       });
     })
-    .catch(function (e) {
-      console.log('[SenkoLib] deploy-status fetch erro:', e);
-      return null;
-    });
+    .catch(function () { return null; });
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
