@@ -3964,4 +3964,15 @@ SenkoLib.register([
     css: ``
   },
 
+
+/*@@@@Senko - awdawdawd */
+  /* variantes: variants/awdawdawd.js */
+  {
+    id: 'awdawdawd',
+    name: 'wadawdawdaw',
+    tags: ['adwdawdawd'],
+    html: ``,
+    css: ``
+  },
+
 ]);
