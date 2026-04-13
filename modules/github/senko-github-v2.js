@@ -423,7 +423,7 @@ function githubSaveLayout(layoutId, objectCode) {
         }
         ghSetStatus('✓ Salvo em ' + target.entry.name, 'ok');
         ghUnlockSave();
-        ghStartDeployWatch();
+        ghStartDeployWatch(target.entry.path);
         renderGrid();
         return target.entry.name;
       });
@@ -499,7 +499,7 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
       SenkoLib.register([{ id: layoutId, name: name, tags: tags, html: html, css: css }]);
       ghSetStatus('✓ Salvo em layouts/' + fileName, 'ok');
       ghUnlockSave();
-      ghStartDeployWatch();
+      ghStartDeployWatch('layouts/' + fileName);
       renderGrid();
       return fileName;
     });
@@ -616,7 +616,7 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
 
       ghSetStatus('✓ Salvo em ' + filePath, 'ok');
       ghUnlockSave();
-      ghStartDeployWatch();
+      ghStartDeployWatch(filePath);
       renderGrid();
       return filePath;
     });
@@ -636,9 +636,9 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
    Desaparece quando o GitHub Pages confirma o deploy como "success".
 ═══════════════════════════════════════════════════════════════════════ */
 var _ghDeployPollTimer = null;
-var GH_DEPLOY_INTERVAL = 5000;   /* poll a cada 5s */
-var GH_DEPLOY_DURATION = 40000; /* bolinha some após 40s */
-var GH_STATUS_FILE     = 'deploy-status.json';
+var GH_DEPLOY_KEY      = 'senkolib_deploy_watching';
+var GH_DEPLOY_INTERVAL = 5000;
+var GH_DEPLOY_TIMEOUT  = 300000; /* 5 minutos máximo */
 
 function ghShowDeployDot() {
   var dot = document.getElementById('ghDeployDot');
@@ -650,143 +650,105 @@ function ghHideDeployDot() {
   if (dot) dot.style.display = 'none';
 }
 
-/* ── Grava deploy-status.json via GitHub API (apenas quem salva, tem token) ── */
-function ghWriteDeployStatus() {
-  var token = ghGetToken();
-  if (!token) return Promise.resolve();
-
-  var now = new Date();
-  var content = JSON.stringify({
-    ts:      now.getTime(),
-    updated: now.toISOString()
-  });
-  var url = 'https://api.github.com/repos/'
-    + GITHUB_CONFIG.OWNER + '/' + GITHUB_CONFIG.REPO
-    + '/contents/' + GH_STATUS_FILE;
-
-  return fetch(url, {
-    headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github+json' }
-  }).then(function (res) {
-    return res.ok ? res.json() : null;
-  }).then(function (existing) {
-    var body = {
-      message: '[SenkoLib] sync',
-      content: btoa(unescape(encodeURIComponent(content)))
-    };
-    if (existing && existing.sha) body.sha = existing.sha;
-    return fetch(url, {
-      method:  'PUT',
-      headers: {
-        'Authorization': 'token ' + token,
-        'Accept':        'application/vnd.github+json',
-        'Content-Type':  'application/json'
-      },
-      body: JSON.stringify(body)
-    });
-  }).catch(function () {});
-}
-
-/* ── Lê deploy-status.json — com token usa API, sem token usa raw ── */
-function ghReadDeployStatus() {
-  var token = ghGetToken();
-
-  if (token) {
-    var url = 'https://api.github.com/repos/'
-      + GITHUB_CONFIG.OWNER + '/'
-      + GITHUB_CONFIG.REPO  + '/contents/'
-      + GH_STATUS_FILE
-      + '?ref=' + GITHUB_CONFIG.BRANCH
-      + '&t=' + Date.now();
-    return fetch(url, {
-      headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github+json' }
-    }).then(function (res) {
-      if (!res.ok) return null;
-      return res.json().then(function (data) {
-        if (!data || !data.content) return null;
-        try {
-          return JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\n/g, '')))));
-        } catch(e) { return null; }
-      });
-    }).catch(function () { return null; });
+function ghStopDeployWatch() {
+  if (_ghDeployPollTimer) {
+    clearInterval(_ghDeployPollTimer);
+    _ghDeployPollTimer = null;
   }
-
-  /* Sem token — raw sem headers extras (sem preflight) */
-  var rawUrl = 'https://raw.githubusercontent.com/'
-    + GITHUB_CONFIG.OWNER + '/'
-    + GITHUB_CONFIG.REPO  + '/'
-    + GITHUB_CONFIG.BRANCH + '/'
-    + GH_STATUS_FILE
-    + '?t=' + Date.now();
-  return fetch(rawUrl)
-    .then(function (res) {
-      if (!res.ok) return null;
-      return res.text().then(function (t) {
-        try { return JSON.parse(t); } catch(e) { return null; }
-      });
-    }).catch(function () { return null; });
+  ghHideDeployDot();
+  try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   QUEM SALVA:
-   Grava { ts: agora } no deploy-status.json.
-   A bolinha some quando age > GH_DEPLOY_DURATION.
-   Sem precisar gravar "done" — o ts é a fonte da verdade.
-═══════════════════════════════════════════════════════════════════════ */
-function ghStartDeployWatch() {
+/* Busca o arquivo raw no GitHub Pages sem cache e retorna o conteúdo */
+function ghFetchRaw(filePath) {
+  var base = window.location.origin + '/' + GITHUB_CONFIG.REPO + '/';
+  var url  = base + filePath + '?_=' + Date.now();
+  return fetch(url, { cache: 'no-store' })
+    .then(function (res) { return res.ok ? res.text() : null; })
+    .catch(function () { return null; });
+}
+
+function ghStartDeployWatch(filePath) {
   if (_ghDeployPollTimer) {
     clearInterval(_ghDeployPollTimer);
     _ghDeployPollTimer = null;
   }
 
   ghShowDeployDot();
-  ghWriteDeployStatus();
 
-  /* Timer local: some após GH_DEPLOY_DURATION */
-  _ghDeployPollTimer = setTimeout(function () {
-    _ghDeployPollTimer = null;
-    ghHideDeployDot();
-  }, GH_DEPLOY_DURATION);
-}
+  /* Captura o tamanho ATUAL do arquivo antes do GitHub Pages atualizar */
+  ghFetchRaw(filePath).then(function (oldContent) {
+    var oldSize  = oldContent ? oldContent.length : -1;
+    var startTs  = Date.now();
 
-/* ═══════════════════════════════════════════════════════════════════════
-   TODOS (polling compartilhado):
-   Lê deploy-status.json a cada 5s.
-   Mostra bolinha se age < GH_DEPLOY_DURATION, some se expirou.
-═══════════════════════════════════════════════════════════════════════ */
-function ghStartSharedPolling() {
-  if (_ghDeployPollTimer) return;
+    try {
+      localStorage.setItem(GH_DEPLOY_KEY, JSON.stringify({
+        ts:      startTs,
+        file:    filePath,
+        oldSize: oldSize
+      }));
+    } catch(e) {}
 
-  _ghDeployPollTimer = setInterval(function () {
-    ghReadDeployStatus().then(function (status) {
-      if (!status || !status.ts) return;
-      var age = Date.now() - status.ts;
-      if (age < GH_DEPLOY_DURATION) {
-        ghShowDeployDot();
-      } else {
-        ghHideDeployDot();
+    _ghDeployPollTimer = setInterval(function () {
+      if (Date.now() - startTs > GH_DEPLOY_TIMEOUT) {
+        ghStopDeployWatch();
+        return;
       }
-    });
-  }, GH_DEPLOY_INTERVAL);
-}
 
-/* ═══════════════════════════════════════════════════════════════════════
-   INICIALIZAÇÃO (todo reload):
-   Verifica imediatamente o estado, depois inicia polling compartilhado.
-═══════════════════════════════════════════════════════════════════════ */
-function ghInitDeployStatus() {
-  ghReadDeployStatus().then(function (status) {
-    if (status && status.ts) {
-      var age = Date.now() - status.ts;
-      if (age < GH_DEPLOY_DURATION) {
-        ghShowDeployDot();
-      }
-    }
-    ghStartSharedPolling();
+      ghFetchRaw(filePath).then(function (newContent) {
+        var newSize = newContent ? newContent.length : -1;
+        if (newSize !== -1 && newSize !== oldSize) {
+          ghStopDeployWatch();
+        }
+      });
+
+    }, GH_DEPLOY_INTERVAL);
   });
 }
 
+function ghResumeDeployWatchIfNeeded() {
+  var stored;
+  try { stored = localStorage.getItem(GH_DEPLOY_KEY); } catch(e) { return; }
+  if (!stored) return;
 
+  var data;
+  try { data = JSON.parse(stored); } catch(e) {
+    try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e2) {}
+    return;
+  }
 
+  if (!data.ts || !data.file) {
+    try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
+    return;
+  }
+
+  /* Expirado */
+  if (Date.now() - data.ts > GH_DEPLOY_TIMEOUT) {
+    try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
+    return;
+  }
+
+  ghShowDeployDot();
+
+  var startTs  = data.ts;
+  var filePath = data.file;
+  var oldSize  = data.oldSize !== undefined ? data.oldSize : -1;
+
+  _ghDeployPollTimer = setInterval(function () {
+    if (Date.now() - startTs > GH_DEPLOY_TIMEOUT) {
+      ghStopDeployWatch();
+      return;
+    }
+
+    ghFetchRaw(filePath).then(function (newContent) {
+      var newSize = newContent ? newContent.length : -1;
+      if (newSize !== -1 && newSize !== oldSize) {
+        ghStopDeployWatch();
+      }
+    });
+
+  }, GH_DEPLOY_INTERVAL);
+}
 
 /* ═══════════════════════════════════════════════════════════════════════
    UI — Botão cadeado + botões GitHub nos modais
@@ -1182,8 +1144,8 @@ document.addEventListener('DOMContentLoaded', function () {
     deployDot.title = 'Publicando no GitHub Pages…';
     gearBtn.parentNode.insertBefore(deployDot, gearBtn);
 
-    /* Verifica estado do deploy e inicia polling compartilhado */
-    ghInitDeployStatus();
+    /* Retoma o polling se havia um deploy em andamento antes do reload */
+    ghResumeDeployWatchIfNeeded();
   }
 
   /* ─── Span de status oculto (para uso interno) ─── */
