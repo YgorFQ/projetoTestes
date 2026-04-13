@@ -3963,4 +3963,15 @@ SenkoLib.register([
 
 
 
+
+/*@@@@Senko - section0999 */
+  /* variantes: variants/section0999.js */
+  {
+    id: 'section0999',
+    name: 'caralho',
+    tags: ['caralho'],
+    html: `xsgwef`,
+    css: ``
+  },
+
 ]);
