@@ -638,7 +638,7 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
 var _ghDeployPollTimer    = null;
 var _ghDeployOwnPollTimer = null;
 var GH_DEPLOY_INTERVAL    = 5000;
-var GH_DEPLOY_TIMEOUT     = 300000;
+var GH_DEPLOY_TIMEOUT     = 120000; /* 2 minutos */
 var GH_STATUS_FILE        = 'deploy-status.json';
 
 function ghShowDeployDot() {
@@ -744,7 +744,6 @@ function ghStartDeployWatch() {
   }
 
   ghShowDeployDot();
-  /* Cache local para reload instantâneo */
   try { localStorage.setItem('senkolib_deploy_ts', Date.now().toString()); } catch(e) {}
   ghWriteDeployStatus(true);
 }
@@ -756,8 +755,8 @@ function ghStartSharedPolling() {
     ghReadDeployStatus().then(function (status) {
       if (!status) return;
 
+      /* Some se expirou (ts mais velho que 3 minutos) */
       var age = Date.now() - (status.ts || 0);
-
       if (!status.saving || age > GH_DEPLOY_TIMEOUT) {
         ghHideDeployDot();
         try { localStorage.removeItem('senkolib_deploy_ts'); } catch(e) {}
@@ -770,7 +769,6 @@ function ghStartSharedPolling() {
 }
 
 function ghInitDeployStatus() {
-  /* Mostra imediatamente se havia deploy recente em cache local */
   try {
     var cached = localStorage.getItem('senkolib_deploy_ts');
     if (cached && Date.now() - parseInt(cached, 10) < GH_DEPLOY_TIMEOUT) {
@@ -778,7 +776,6 @@ function ghInitDeployStatus() {
     }
   } catch(e) {}
 
-  /* Confirma com a API e inicia polling */
   ghReadDeployStatus().then(function (status) {
     if (status && status.saving) {
       var age = Date.now() - (status.ts || 0);
