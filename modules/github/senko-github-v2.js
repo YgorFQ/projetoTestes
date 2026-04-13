@@ -651,11 +651,15 @@ function ghHideDeployDot() {
 }
 
 /* ── Grava deploy-status.json via GitHub API (apenas quem salva, tem token) ── */
-function ghWriteDeployStatus(ts) {
+function ghWriteDeployStatus() {
   var token = ghGetToken();
   if (!token) return Promise.resolve();
 
-  var content = JSON.stringify({ ts: ts });
+  var now = new Date();
+  var content = JSON.stringify({
+    ts:      now.getTime(),
+    updated: now.toISOString()
+  });
   var url = 'https://api.github.com/repos/'
     + GITHUB_CONFIG.OWNER + '/' + GITHUB_CONFIG.REPO
     + '/contents/' + GH_STATUS_FILE;
@@ -666,7 +670,7 @@ function ghWriteDeployStatus(ts) {
     return res.ok ? res.json() : null;
   }).then(function (existing) {
     var body = {
-      message: '[SenkoLib] deploy status',
+      message: '[SenkoLib] sync',
       content: btoa(unescape(encodeURIComponent(content)))
     };
     if (existing && existing.sha) body.sha = existing.sha;
@@ -734,9 +738,8 @@ function ghStartDeployWatch() {
     _ghDeployPollTimer = null;
   }
 
-  var ts = Date.now();
   ghShowDeployDot();
-  ghWriteDeployStatus(ts);
+  ghWriteDeployStatus();
 
   /* Timer local: some após GH_DEPLOY_DURATION */
   _ghDeployPollTimer = setTimeout(function () {
