@@ -636,9 +636,9 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
    Desaparece quando o GitHub Pages confirma o deploy como "success".
 ═══════════════════════════════════════════════════════════════════════ */
 var _ghDeployPollTimer = null;
-var GH_DEPLOY_INTERVAL = 3000;
-var GH_DEPLOY_TIMEOUT  = 180000; /* 3 minutos */
-var GH_DEPLOY_LS_KEY   = 'senkolib_deploy';
+var GH_DEPLOY_INTERVAL = 5000;   /* poll a cada 5s */
+var GH_DEPLOY_DURATION = 40000; /* bolinha some após 40s */
+var GH_STATUS_FILE     = 'deploy-status.json';
 
 function ghShowDeployDot() {
   var dot = document.getElementById('ghDeployDot');
@@ -650,41 +650,83 @@ function ghHideDeployDot() {
   if (dot) dot.style.display = 'none';
 }
 
-function ghStopDeployPoll() {
-  if (_ghDeployPollTimer) {
-    clearInterval(_ghDeployPollTimer);
-    _ghDeployPollTimer = null;
-  }
-  ghHideDeployDot();
-  try { localStorage.removeItem(GH_DEPLOY_LS_KEY); } catch(e) {}
+/* ── Grava deploy-status.json via GitHub API (apenas quem salva, tem token) ── */
+function ghWriteDeployStatus(ts) {
+  var token = ghGetToken();
+  if (!token) return Promise.resolve();
+
+  var content = JSON.stringify({ ts: ts });
+  var url = 'https://api.github.com/repos/'
+    + GITHUB_CONFIG.OWNER + '/' + GITHUB_CONFIG.REPO
+    + '/contents/' + GH_STATUS_FILE;
+
+  return fetch(url, {
+    headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github+json' }
+  }).then(function (res) {
+    return res.ok ? res.json() : null;
+  }).then(function (existing) {
+    var body = {
+      message: '[SenkoLib] deploy status',
+      content: btoa(unescape(encodeURIComponent(content)))
+    };
+    if (existing && existing.sha) body.sha = existing.sha;
+    return fetch(url, {
+      method:  'PUT',
+      headers: {
+        'Authorization': 'token ' + token,
+        'Accept':        'application/vnd.github+json',
+        'Content-Type':  'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+  }).catch(function () {});
 }
 
-/* Busca o sha do commit mais recente do repositório via API pública */
-function ghGetLatestCommitSha() {
-  var url = 'https://api.github.com/repos/'
-    + GITHUB_CONFIG.OWNER + '/'
-    + GITHUB_CONFIG.REPO
-    + '/commits?per_page=1&sha=' + GITHUB_CONFIG.BRANCH;
-
-  var headers = { 'Accept': 'application/vnd.github+json', 'Cache-Control': 'no-cache' };
+/* ── Lê deploy-status.json — com token usa API, sem token usa raw ── */
+function ghReadDeployStatus() {
   var token = ghGetToken();
-  if (token) headers['Authorization'] = 'token ' + token;
 
-  return fetch(url, { headers: headers })
-    .then(function (res) {
+  if (token) {
+    var url = 'https://api.github.com/repos/'
+      + GITHUB_CONFIG.OWNER + '/'
+      + GITHUB_CONFIG.REPO  + '/contents/'
+      + GH_STATUS_FILE
+      + '?ref=' + GITHUB_CONFIG.BRANCH
+      + '&t=' + Date.now();
+    return fetch(url, {
+      headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github+json' }
+    }).then(function (res) {
       if (!res.ok) return null;
       return res.json().then(function (data) {
-        return (data && data[0]) ? data[0].sha : null;
+        if (!data || !data.content) return null;
+        try {
+          return JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\n/g, '')))));
+        } catch(e) { return null; }
       });
-    })
-    .catch(function () { return null; });
+    }).catch(function () { return null; });
+  }
+
+  /* Sem token — raw sem headers extras (sem preflight) */
+  var rawUrl = 'https://raw.githubusercontent.com/'
+    + GITHUB_CONFIG.OWNER + '/'
+    + GITHUB_CONFIG.REPO  + '/'
+    + GITHUB_CONFIG.BRANCH + '/'
+    + GH_STATUS_FILE
+    + '?t=' + Date.now();
+  return fetch(rawUrl)
+    .then(function (res) {
+      if (!res.ok) return null;
+      return res.text().then(function (t) {
+        try { return JSON.parse(t); } catch(e) { return null; }
+      });
+    }).catch(function () { return null; });
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
    QUEM SALVA:
-   1. Grava no localStorage: { ts, sha } — sha é o commit ANTES do save
-   2. Mostra a bolinha
-   3. Inicia polling: quando aparecer um sha novo → para
+   Grava { ts: agora } no deploy-status.json.
+   A bolinha some quando age > GH_DEPLOY_DURATION.
+   Sem precisar gravar "done" — o ts é a fonte da verdade.
 ═══════════════════════════════════════════════════════════════════════ */
 function ghStartDeployWatch() {
   if (_ghDeployPollTimer) {
@@ -692,81 +734,54 @@ function ghStartDeployWatch() {
     _ghDeployPollTimer = null;
   }
 
+  var ts = Date.now();
   ghShowDeployDot();
+  ghWriteDeployStatus(ts);
 
-  /* Captura o sha atual para saber qual é o "antes do save" */
-  ghGetLatestCommitSha().then(function (sha) {
-    var data = { ts: Date.now(), sha: sha };
-    try { localStorage.setItem(GH_DEPLOY_LS_KEY, JSON.stringify(data)); } catch(e) {}
-
-    var startTs = Date.now();
-
-    _ghDeployPollTimer = setInterval(function () {
-      if (Date.now() - startTs > GH_DEPLOY_TIMEOUT) {
-        ghStopDeployPoll();
-        return;
-      }
-
-      ghGetLatestCommitSha().then(function (newSha) {
-        if (newSha && newSha !== sha) {
-          ghStopDeployPoll();
-        }
-      });
-
-    }, GH_DEPLOY_INTERVAL);
-  });
+  /* Timer local: some após GH_DEPLOY_DURATION */
+  _ghDeployPollTimer = setTimeout(function () {
+    _ghDeployPollTimer = null;
+    ghHideDeployDot();
+  }, GH_DEPLOY_DURATION);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   TODOS (incluindo reload):
-   Lê o localStorage — se houver deploy em andamento recente,
-   mostra a bolinha e monitora commits até aparecer um novo.
+   TODOS (polling compartilhado):
+   Lê deploy-status.json a cada 5s.
+   Mostra bolinha se age < GH_DEPLOY_DURATION, some se expirou.
 ═══════════════════════════════════════════════════════════════════════ */
-function ghResumeOrWatchDeploy() {
-  var stored;
-  try { stored = localStorage.getItem(GH_DEPLOY_LS_KEY); } catch(e) { return; }
-  if (!stored) return;
+function ghStartSharedPolling() {
+  if (_ghDeployPollTimer) return;
 
-  var data;
-  try { data = JSON.parse(stored); } catch(e) {
-    try { localStorage.removeItem(GH_DEPLOY_LS_KEY); } catch(e2) {}
-    return;
-  }
-
-  var elapsed = Date.now() - (data.ts || 0);
-  if (elapsed > GH_DEPLOY_TIMEOUT) {
-    try { localStorage.removeItem(GH_DEPLOY_LS_KEY); } catch(e) {}
-    return;
-  }
-
-  /* Mostra imediatamente e verifica se já há commit novo */
-  ghShowDeployDot();
-
-  var knownSha = data.sha;
-  var startTs  = data.ts;
-
-  /* Verifica imediatamente antes de esperar o primeiro intervalo */
-  ghGetLatestCommitSha().then(function (newSha) {
-    if (newSha && newSha !== knownSha) {
-      ghStopDeployPoll();
-      return;
-    }
-
-    _ghDeployPollTimer = setInterval(function () {
-      if (Date.now() - startTs > GH_DEPLOY_TIMEOUT) {
-        ghStopDeployPoll();
-        return;
+  _ghDeployPollTimer = setInterval(function () {
+    ghReadDeployStatus().then(function (status) {
+      if (!status || !status.ts) return;
+      var age = Date.now() - status.ts;
+      if (age < GH_DEPLOY_DURATION) {
+        ghShowDeployDot();
+      } else {
+        ghHideDeployDot();
       }
+    });
+  }, GH_DEPLOY_INTERVAL);
+}
 
-      ghGetLatestCommitSha().then(function (newSha) {
-        if (newSha && newSha !== knownSha) {
-          ghStopDeployPoll();
-        }
-      });
-
-    }, GH_DEPLOY_INTERVAL);
+/* ═══════════════════════════════════════════════════════════════════════
+   INICIALIZAÇÃO (todo reload):
+   Verifica imediatamente o estado, depois inicia polling compartilhado.
+═══════════════════════════════════════════════════════════════════════ */
+function ghInitDeployStatus() {
+  ghReadDeployStatus().then(function (status) {
+    if (status && status.ts) {
+      var age = Date.now() - status.ts;
+      if (age < GH_DEPLOY_DURATION) {
+        ghShowDeployDot();
+      }
+    }
+    ghStartSharedPolling();
   });
 }
+
 
 
 
@@ -1164,8 +1179,8 @@ document.addEventListener('DOMContentLoaded', function () {
     deployDot.title = 'Publicando no GitHub Pages…';
     gearBtn.parentNode.insertBefore(deployDot, gearBtn);
 
-    /* Retoma deploy watch se havia um em andamento antes do reload */
-    ghResumeOrWatchDeploy();
+    /* Verifica estado do deploy e inicia polling compartilhado */
+    ghInitDeployStatus();
   }
 
   /* ─── Span de status oculto (para uso interno) ─── */
