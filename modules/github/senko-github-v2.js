@@ -694,16 +694,26 @@ function ghReadDeployStatus() {
 
   return fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } })
     .then(function (res) {
+      console.log('[SenkoLib] deploy-status HTTP:', res.status);
       if (!res.ok) return null;
       return res.json().then(function (data) {
+        console.log('[SenkoLib] deploy-status data.sha:', data && data.sha);
+        console.log('[SenkoLib] deploy-status content raw:', data && data.content && data.content.slice(0, 50));
         if (!data || !data.content) return null;
         try {
           var decoded = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+          console.log('[SenkoLib] deploy-status decoded:', decoded);
           return JSON.parse(decoded);
-        } catch(e) { return null; }
+        } catch(e) {
+          console.log('[SenkoLib] deploy-status parse erro:', e);
+          return null;
+        }
       });
     })
-    .catch(function () { return null; });
+    .catch(function (e) {
+      console.log('[SenkoLib] deploy-status fetch erro:', e);
+      return null;
+    });
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
