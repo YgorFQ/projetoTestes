@@ -683,27 +683,54 @@ function ghWriteDeployStatus(saving) {
   }).catch(function () {});
 }
 
-/* ── Lê deploy-status.json via raw.githubusercontent.com ── */
+/* ── Lê deploy-status.json ──
+   Sem token: raw.githubusercontent.com sem headers (sem preflight)
+   Com token: GitHub API autenticada                                ── */
 function ghReadDeployStatus() {
   var token = ghGetToken();
-  var url = 'https://raw.githubusercontent.com/'
-    + GITHUB_CONFIG.OWNER + '/'
-    + GITHUB_CONFIG.REPO  + '/'
-    + GITHUB_CONFIG.BRANCH + '/'
-    + GH_STATUS_FILE
-    + '?_=' + Date.now();
 
-  var headers = { 'Accept': 'application/json' };
-  if (token) headers['Authorization'] = 'token ' + token;
+  if (token) {
+    /* Usuário autenticado — usa GitHub API */
+    var url = 'https://api.github.com/repos/'
+      + GITHUB_CONFIG.OWNER + '/'
+      + GITHUB_CONFIG.REPO  + '/contents/'
+      + GH_STATUS_FILE
+      + '?ref=' + GITHUB_CONFIG.BRANCH
+      + '&_=' + Date.now();
 
-  return fetch(url, { method: 'GET', mode: 'cors', cache: 'no-store', headers: headers })
-    .then(function (res) {
+    return fetch(url, {
+      headers: {
+        'Authorization': 'token ' + token,
+        'Accept': 'application/vnd.github+json'
+      }
+    }).then(function (res) {
       if (!res.ok) return null;
-      return res.text().then(function (text) {
-        try { return JSON.parse(text); } catch(e) { return null; }
+      return res.json().then(function (data) {
+        if (!data || !data.content) return null;
+        try {
+          var decoded = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+          return JSON.parse(decoded);
+        } catch(e) { return null; }
       });
-    })
-    .catch(function () { return null; });
+    }).catch(function () { return null; });
+
+  } else {
+    /* Usuário sem token — raw sem headers (não dispara preflight) */
+    var rawUrl = 'https://raw.githubusercontent.com/'
+      + GITHUB_CONFIG.OWNER + '/'
+      + GITHUB_CONFIG.REPO  + '/'
+      + GITHUB_CONFIG.BRANCH + '/'
+      + GH_STATUS_FILE
+      + '?_=' + Date.now();
+
+    return fetch(rawUrl)
+      .then(function (res) {
+        if (!res.ok) return null;
+        return res.text().then(function (text) {
+          try { return JSON.parse(text); } catch(e) { return null; }
+        });
+      }).catch(function () { return null; });
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
