@@ -11,6 +11,10 @@ var state = {
   currentEditVariant: null,
   _fromVariant:       false,
 
+  /* ── Coleções ── */
+  activeView:              'library',  /* 'library' | 'collections' */
+  collectionsSearch:       '',
+  collectionsAuthorFilter: '',         /* '' = todos */
 };
 
 /* ─── Utilitários ─────────────────────────────────── */
@@ -1036,7 +1040,529 @@ document.addEventListener('DOMContentLoaded', function () {
     else closeModal();
   });
 
+  /* ── Coleções ── */
+  colInit();
+
 });
+
+/* ═══════════════════════════════════════════════════════════════════════
+   COLEÇÕES — view, grid, filtro por autor, modal de adição
+   ───────────────────────────────────────────────────────────────────────
+   Namespace completamente separado da Biblioteca oficial.
+   Usa SenkoLib.registerCollection / getCollections /
+       registerCollectionVariant / getCollectionVariants.
+
+   PALETA DE AUTORES:
+     32 cores definidas inline no index.html como
+     window.SENKO_AUTHOR_COLORS = { 'ygor': '#7F77DD', ... }
+     Se um autor não tiver cor mapeada, usa a cor-padrão #888.
+═══════════════════════════════════════════════════════════════════════ */
+
+/* ─── Cor de um autor ───────────────────────────────
+   Lê do mapa global injetado pelo index.html.
+   Fallback seguro caso o mapa não exista ainda.
+─────────────────────────────────────────────────── */
+function colGetAuthorColor(authorTag) {
+  var map = window.SENKO_AUTHOR_COLORS || {};
+  return map[authorTag] || map[(authorTag || '').toLowerCase()] || '#888888';
+}
+
+/* ─── Troca de view (Library ↔ Collections) ─────── */
+function colSwitchView(view) {
+  state.activeView = view;
+
+  /* Abas */
+  document.querySelectorAll('.senko-tab').forEach(function (t) {
+    t.classList.toggle('senko-tab--active', t.dataset.view === view);
+  });
+
+  /* Visibilidade das seções */
+  var libSection = document.getElementById('librarySection');
+  var colSection = document.getElementById('collectionsSection');
+  if (libSection) libSection.style.display = view === 'library'     ? '' : 'none';
+  if (colSection) colSection.style.display = view === 'collections' ? '' : 'none';
+
+  if (view === 'collections') colRenderGrid();
+}
+
+/* ─── Filtragem ──────────────────────────────────── */
+function colGetFiltered() {
+  var q      = state.collectionsSearch.toLowerCase();
+  var author = state.collectionsAuthorFilter;
+  return SenkoLib.getCollections().filter(function (l) {
+    var matchAuthor = !author || (l.authorTag || '').toLowerCase() === author.toLowerCase();
+    if (!matchAuthor) return false;
+    if (!q) return true;
+    return [l.name, l.author, l.authorTag]
+      .concat(l.tags || [])
+      .some(function (s) { return s && s.toLowerCase().indexOf(q) !== -1; });
+  }).sort(function (a, b) {
+    return naturalCompare(a.name, b.name);
+  });
+}
+
+/* ─── Grid de coleções ───────────────────────────── */
+function colRenderGrid() {
+  var grid    = document.getElementById('collectionsGrid');
+  var noRes   = document.getElementById('colNoResults');
+  var filtered = colGetFiltered();
+
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  colRenderAuthorFilters();
+  colUpdateStatsBar(filtered.length);
+
+  if (filtered.length === 0) {
+    if (noRes) noRes.classList.remove('hidden');
+    return;
+  }
+  if (noRes) noRes.classList.add('hidden');
+
+  filtered.forEach(function (layout, i) {
+    grid.appendChild(colCreateCard(layout, i));
+  });
+}
+
+/* ─── Stats bar de coleções ──────────────────────── */
+function colUpdateStatsBar(count) {
+  var bar = document.getElementById('colStatsBar');
+  if (!bar) return;
+  var total = SenkoLib.getCollections().length;
+  bar.innerHTML =
+    '<span>' + count + '</span> de <span>' + total + '</span> layouts';
+}
+
+/* ─── Pills de filtro por autor ──────────────────── */
+function colRenderAuthorFilters() {
+  var wrap = document.getElementById('colAuthorFilters');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+
+  /* Coleta autores únicos */
+  var seen    = {};
+  var authors = [];
+  SenkoLib.getCollections().forEach(function (l) {
+    var tag = (l.authorTag || '').toLowerCase();
+    if (tag && !seen[tag]) {
+      seen[tag] = true;
+      authors.push({ tag: tag, name: l.author || tag });
+    }
+  });
+
+  /* Pill "Todos" */
+  var pillAll = document.createElement('button');
+  pillAll.className = 'col-filter-pill' + (!state.collectionsAuthorFilter ? ' active' : '');
+  pillAll.textContent = 'Todos';
+  pillAll.addEventListener('click', function () {
+    state.collectionsAuthorFilter = '';
+    colRenderGrid();
+  });
+  wrap.appendChild(pillAll);
+
+  /* Um pill por autor */
+  authors.forEach(function (a) {
+    var color = colGetAuthorColor(a.tag);
+    var pill  = document.createElement('button');
+    pill.className = 'col-filter-pill' + (state.collectionsAuthorFilter === a.tag ? ' active' : '');
+    pill.innerHTML =
+      '<span class="col-filter-dot" style="background:' + color + '"></span>' +
+      a.name;
+    pill.addEventListener('click', function () {
+      state.collectionsAuthorFilter = a.tag;
+      colRenderGrid();
+    });
+    wrap.appendChild(pill);
+  });
+}
+
+/* ─── Card de coleção ────────────────────────────── */
+function colCreateCard(layout, index) {
+  var color = colGetAuthorColor(layout.authorTag || '');
+
+  var card = document.createElement('div');
+  card.className = 'card col-card';
+  card.style.animationDelay    = (index * 40) + 'ms';
+  card.style.borderLeft        = '3px solid ' + color;
+
+  /* Preview */
+  var preview = document.createElement('div');
+  preview.className = 'card-preview';
+  var iframe = document.createElement('iframe');
+  iframe.className = 'card-iframe';
+  iframe.sandbox   = 'allow-scripts';
+  iframe.title     = layout.name;
+  lazyIframe(iframe, layout.html, layout.css);
+  iframe.addEventListener('load', function () { scaleCardIframe(iframe); });
+  var ov = document.createElement('div');
+  ov.className = 'card-preview-overlay';
+  preview.append(iframe, ov);
+
+  /* Body */
+  var body    = document.createElement('div');
+  body.className = 'card-body';
+
+  var nameEl  = document.createElement('div');
+  nameEl.className   = 'card-name';
+  nameEl.textContent = layout.name;
+
+  /* Linha de autor */
+  var authorEl = document.createElement('div');
+  authorEl.className = 'col-card-author';
+  authorEl.innerHTML =
+    '<span class="col-author-dot" style="background:' + color + '"></span>' +
+    (layout.author || layout.authorTag || '');
+
+  /* Tags */
+  var tagsEl = document.createElement('div');
+  tagsEl.className = 'card-tags';
+
+  /* Tag do autor — colorida */
+  if (layout.authorTag) {
+    var authorTagEl = document.createElement('span');
+    authorTagEl.className = 'tag col-tag-author';
+    authorTagEl.textContent = layout.authorTag;
+    authorTagEl.style.cssText =
+      'background:' + color + '18;' +
+      'color:'      + color + ';' +
+      'border-color:' + color + '44;';
+    tagsEl.appendChild(authorTagEl);
+  }
+
+  /* Tags normais */
+  var sortedTags = (layout.tags || []).slice().filter(Boolean).sort(function (a, b) {
+    return a.localeCompare(b, 'pt-BR', { sensitivity: 'base' });
+  });
+  sortedTags.forEach(function (t) {
+    var tag = document.createElement('span');
+    tag.className   = 'tag';
+    tag.textContent = t;
+    tagsEl.appendChild(tag);
+  });
+
+  body.append(nameEl, authorEl, tagsEl);
+
+  /* Ações */
+  var actions = document.createElement('div');
+  actions.className = 'card-actions';
+
+  var btnH = document.createElement('button');
+  btnH.className = 'btn btn-ghost';
+  btnH.innerHTML = HTML_ICON + ' HTML';
+  btnH.addEventListener('click', function (e) {
+    e.stopPropagation();
+    copyToClipboard(layout.html, btnH, HTML_ICON + ' HTML');
+  });
+
+  var btnC = document.createElement('button');
+  btnC.className = 'btn btn-ghost';
+  btnC.innerHTML = HTML_ICON + ' CSS';
+  btnC.addEventListener('click', function (e) {
+    e.stopPropagation();
+    copyToClipboard(layout.css, btnC, HTML_ICON + ' CSS');
+  });
+
+  var btnFav = document.createElement('button');
+  btnFav.className = 'btn btn-fav' + (isFav('col__' + layout.id) ? ' active' : '');
+  btnFav.title     = 'Favorito';
+  btnFav.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+  btnFav.addEventListener('click', function (e) {
+    e.stopPropagation();
+    toggleFav('col__' + layout.id);
+    btnFav.classList.toggle('active');
+  });
+
+  var btnEdit = document.createElement('button');
+  btnEdit.className = 'btn btn-edit-icon';
+  btnEdit.title     = 'Editar layout de coleção';
+  btnEdit.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+  btnEdit.addEventListener('click', function (e) {
+    e.stopPropagation();
+    colOpenEditModal(layout);
+  });
+
+  /* Badge de variantes */
+  var variantCount = SenkoLib.getCollectionVariants(layout.id).length;
+  var btnPlus = document.createElement('button');
+  btnPlus.className = 'btn btn-variants';
+  btnPlus.title     = 'Variantes';
+  btnPlus.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+  if (variantCount > 0) {
+    var badge = document.createElement('span');
+    badge.className   = 'variant-badge';
+    badge.textContent = variantCount;
+    btnPlus.appendChild(badge);
+  }
+  btnPlus.addEventListener('click', function (e) {
+    e.stopPropagation();
+    colOpenVariantsModal(layout);
+  });
+
+  actions.append(btnH, btnC, btnFav, btnEdit, btnPlus);
+  card.addEventListener('click', function () { openModal(layout); });
+  card.append(preview, body, actions);
+  return card;
+}
+
+/* ─── Modal adicionar coleção ────────────────────── */
+function colOpenAddModal() {
+  ['colAddAuthor','colAddAuthorTag','colAddName','colAddTags','colAddHtml','colAddCss'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+
+  var genCode = document.getElementById('colGeneratedCode');
+  if (genCode) genCode.textContent = '// Preencha os campos acima para gerar o objeto…';
+
+  var iframe = document.getElementById('colAddPreviewIframe');
+  if (iframe) iframe.srcdoc = '';
+
+  /* Reset tabs */
+  document.querySelectorAll('.col-add-tab').forEach(function (b) { b.classList.remove('active'); });
+  document.querySelectorAll('.col-add-panel').forEach(function (p) { p.classList.remove('active'); });
+  var firstTab = document.querySelector('[data-coltab="html"]');
+  var firstPanel = document.getElementById('colAddPanelHtml');
+  if (firstTab)  firstTab.classList.add('active');
+  if (firstPanel) firstPanel.classList.add('active');
+
+  var overlay = document.getElementById('colAddOverlay');
+  if (!overlay) return;
+  overlay.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  overlay.scrollTop = 0;
+}
+
+function colCloseAddModal() {
+  var overlay = document.getElementById('colAddOverlay');
+  if (overlay) overlay.classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function colUpdateGeneratedCode() {
+  var author    = (document.getElementById('colAddAuthor')    || {}).value || '';
+  var authorTag = (document.getElementById('colAddAuthorTag') || {}).value || '';
+  var name      = (document.getElementById('colAddName')      || {}).value || '';
+  var tagsRaw   = (document.getElementById('colAddTags')      || {}).value || '';
+  var html      = (document.getElementById('colAddHtml')      || {}).value || '';
+  var css       = (document.getElementById('colAddCss')       || {}).value || '';
+
+  author    = author.trim();
+  authorTag = authorTag.trim().toLowerCase();
+  name      = name.trim();
+  var tags  = tagsRaw.split(',').map(function (t) { return t.trim(); }).filter(Boolean);
+
+  /* Validação do authorTag: só letras, números e hífen */
+  var tagEl   = document.getElementById('colAddAuthorTag');
+  var tagValid = /^[a-z0-9-]*$/.test(authorTag);
+  var tagWarn  = document.getElementById('colAddAuthorTagWarn');
+  if (!tagWarn && tagEl) {
+    tagWarn = document.createElement('span');
+    tagWarn.id = 'colAddAuthorTagWarn';
+    tagWarn.style.cssText = 'color:#ef4444;font-size:.75rem;font-weight:700;display:none;';
+    tagWarn.textContent = '\u26a0 Use apenas letras minúsculas, números e hífen';
+    tagEl.parentNode.insertBefore(tagWarn, tagEl.nextSibling);
+  }
+  if (tagWarn) tagWarn.style.display = (authorTag.length > 0 && !tagValid) ? 'block' : 'none';
+
+  /* Botão de salvar */
+  var saveBtn   = document.getElementById('colSaveBtn');
+  var allFilled = author.length >= 2 && authorTag.length >= 2 && tagValid &&
+                  name.length >= 2 && html.length >= 3;
+  if (saveBtn) {
+    if (allFilled) saveBtn.classList.remove('btn-blocked');
+    else           saveBtn.classList.add('btn-blocked');
+  }
+
+  var genCode = document.getElementById('colGeneratedCode');
+  if (!genCode) return;
+
+  if (!author && !name && !html) {
+    genCode.textContent = '// Preencha os campos acima para gerar o objeto…';
+    return;
+  }
+
+  var tagsStr  = tags.map(function (t) { return "'" + t + "'"; }).join(', ');
+  var safeHtml = html.replace(/`/g, '\\`');
+  var safeCss  = css.replace(/`/g, '\\`');
+  var id       = authorTag + '-' + name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
+
+  genCode.textContent =
+    '/*@@@@Senko - ' + id + ' */\n' +
+    '  {\n' +
+    "    id: '"         + id        + "',\n" +
+    "    name: '"       + name      + "',\n" +
+    "    tags: ["       + tagsStr   + '],\n' +
+    '    html: `'       + safeHtml  + '`,\n' +
+    '    css: `'        + safeCss   + '`,\n' +
+    "    author: '"     + author    + "',\n" +
+    "    authorTag: '"  + authorTag + "',\n" +
+    '  },';
+}
+
+/* ─── Modal editar coleção (reutiliza openEditModal com flag) ──────── */
+function colOpenEditModal(layout) {
+  /*
+   * Reutiliza o modal de edição existente (editModalOverlay).
+   * A única diferença é que ao salvar, o módulo senko-github-colecoes.js
+   * detecta que está em contexto de coleção via state.currentEditIsCollection.
+   */
+  state.currentEdit              = layout;
+  state.currentEditIsCollection  = true;
+
+  document.getElementById('editId').value   = layout.id   || '';
+  document.getElementById('editName').value = layout.name || '';
+  document.getElementById('editTags').value = (layout.tags || []).filter(Boolean).join(', ');
+  document.getElementById('editHtml').value = layout.html || '';
+  document.getElementById('editCss').value  = layout.css  || '';
+
+  var overlay = document.getElementById('editModalOverlay');
+  overlay.classList.remove('hidden');
+  overlay.scrollTop = 0;
+  setTimeout(function () { switchEditMode('preview'); updateEditCode(); }, 10);
+}
+
+/* ─── Modal de variantes de coleção ─────────────────
+   Reutiliza o overlay de variantes existente mas opera sobre
+   SenkoLib.getCollectionVariants em vez de getVariants.
+─────────────────────────────────────────────────── */
+function colOpenVariantsModal(layout) {
+  state.currentForVariant             = layout;
+  state.currentForVariantIsCollection = true;
+  var key = layout.id;
+
+  document.getElementById('variantsTitle').textContent    = layout.name;
+  document.getElementById('variantsLayoutId').textContent = key;
+
+  var vlist = SenkoLib.getCollectionVariants(key);
+  updateVariantsCount(key);
+  renderVariantBlocks(vlist);
+
+  var overlay = document.getElementById('variantsOverlay');
+  overlay.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+  overlay.scrollTop = 0;
+}
+
+/* ─── Patch em updateVariantsCount para suportar coleções ──────────
+   A função original só lê SenkoLib.getVariants.
+   Sobrescrevemos para detectar o contexto pelo flag no state.
+─────────────────────────────────────────────────── */
+(function () {
+  var _original = updateVariantsCount;
+  updateVariantsCount = function (parentId) {
+    if (state.currentForVariantIsCollection) {
+      /* Recalcula usando o namespace de coleções */
+      var countEl  = document.getElementById('variantsCount');
+      if (!countEl) return;
+      var total = SenkoLib.getCollectionVariants(parentId).length;
+      countEl.textContent = 'TOTAL: ' + total + (total === 1 ? ' VARIAÇÃO' : ' VARIAÇÕES');
+
+      var favBlock = document.getElementById('variantsFavCount');
+      var favSep   = document.getElementById('variantsFavSep');
+      var favNum   = document.getElementById('variantsFavNum');
+      var varFavs  = getVarFavs();
+      var favCount = (varFavs['col__' + parentId] && varFavs['col__' + parentId].length) || 0;
+      if (favCount > 0 && favBlock && favSep && favNum) {
+        favNum.textContent = favCount;
+        favBlock.classList.remove('hidden');
+        favSep.style.display = '';
+      } else if (favBlock && favSep) {
+        favBlock.classList.add('hidden');
+        favSep.style.display = 'none';
+      }
+      return;
+    }
+    _original(parentId);
+  };
+})();
+
+/* ─── Inicialização das Coleções ─────────────────── */
+function colInit() {
+  /* Busca na aba de coleções */
+  var searchInput = document.getElementById('colSearchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', function () {
+      state.collectionsSearch = this.value.trim();
+      colRenderGrid();
+    });
+  }
+
+  /* Modal de adição */
+  var openBtn = document.getElementById('colOpenAddModal');
+  if (openBtn) openBtn.addEventListener('click', colOpenAddModal);
+
+  var closeBtn = document.getElementById('colAddModalClose');
+  if (closeBtn) closeBtn.addEventListener('click', colCloseAddModal);
+
+  var overlay = document.getElementById('colAddOverlay');
+  if (overlay) {
+    overlay.addEventListener('click', overlayClick('colAdd', colCloseAddModal));
+  }
+
+  /* Live update do código gerado */
+  ['colAddAuthor','colAddAuthorTag','colAddName','colAddTags','colAddHtml','colAddCss'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('input', colUpdateGeneratedCode);
+  });
+
+  /* Tabs do modal de adição */
+  document.querySelectorAll('.col-add-tab').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var tab = this.dataset.coltab;
+      document.querySelectorAll('.col-add-tab').forEach(function (b) { b.classList.remove('active'); });
+      document.querySelectorAll('.col-add-panel').forEach(function (p) { p.classList.remove('active'); });
+      this.classList.add('active');
+      var panelId = 'colAddPanel' + tab.charAt(0).toUpperCase() + tab.slice(1);
+      var panel   = document.getElementById(panelId);
+      if (panel) panel.classList.add('active');
+      if (tab === 'preview') {
+        var h = (document.getElementById('colAddHtml') || {}).value || '';
+        var c = (document.getElementById('colAddCss')  || {}).value || '';
+        var f = document.getElementById('colAddPreviewIframe');
+        if (f) { f.srcdoc = ''; setTimeout(function () { if (h || c) f.srcdoc = buildSrcDoc(h, c); }, 50); }
+        colUpdateGeneratedCode();
+      }
+    });
+  });
+
+  /* Abas de navegação Library ↔ Collections */
+  document.querySelectorAll('.senko-tab').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      colSwitchView(this.dataset.view);
+    });
+  });
+
+  /* Escape fecha o modal de adição de coleção */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      var colOverlay = document.getElementById('colAddOverlay');
+      if (colOverlay && !colOverlay.classList.contains('hidden')) {
+        colCloseAddModal();
+      }
+    }
+  });
+
+  /* Fecha modal de variantes e reseta flag de coleção */
+  var varClose = document.getElementById('variantsClose');
+  if (varClose) {
+    /* Adiciona listener extra sem remover o original */
+    varClose.addEventListener('click', function () {
+      state.currentForVariantIsCollection = false;
+    });
+  }
+
+  /* Fecha modal de edição e reseta flag de coleção */
+  var editClose = document.getElementById('editModalClose');
+  if (editClose) {
+    editClose.addEventListener('click', function () {
+      state.currentEditIsCollection = false;
+    });
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Copy Base
+═══════════════════════════════════════════════════════════════════════ */
 
 /* Copy Base */
 
