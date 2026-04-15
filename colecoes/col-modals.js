@@ -43,6 +43,7 @@
 ═══════════════════════════════════════════════════════════════════════ */
 colState.currentCollection      = null; /* coleção aberta no modal de layouts */
 colState.currentEditCollection  = null; /* coleção aberta no modal de edição  */
+colState.selectedGroup          = null; /* grupo selecionado no modal de adição */
 
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -295,8 +296,10 @@ function colOpenAddModal() {
     if (el) el.value = '';
   });
 
-  /* Reseta cor selecionada */
+  /* Reseta cor selecionada e grupo */
   _colClearColorSelection();
+  colState.selectedGroup = null;
+  colUpdateGroupField();
 
   /* Limpa warnings */
   _colHideWarn('colAddSlugWarn');
@@ -348,7 +351,10 @@ function colValidateAddForm() {
   /* Validação de autor (opcional — mas se preenchido deve ser válido) */
   var authorValid = author.length === 0 || author.length >= 2;
 
-  var allOk = nameValid && slugValid && authorValid;
+  var groupValid = !!(colState.selectedGroup && colState.selectedGroup.slug);
+  _colToggleWarn('colAddGroupWarn', !groupValid && (colState.selectedGroup !== null || false),
+    '⚠ Selecione um grupo');
+  var allOk = nameValid && slugValid && authorValid && groupValid;
   var saveBtn = document.getElementById('colAddSaveBtn');
   if (saveBtn) {
     if (allOk) saveBtn.classList.remove('btn-blocked');
@@ -429,7 +435,7 @@ function colValidateEditForm() {
 ═══════════════════════════════════════════════════════════════════════ */
 
 /* Cor atualmente selecionada (estado local dos modais) */
-var _colSelectedColor = { add: '', edit: '' };
+var _colSelectedColor = { add: '', edit: '', newGroup: '' };
 
 function _colBuildColorPicker(containerId, mode) {
   var container = document.getElementById(containerId);
@@ -475,8 +481,9 @@ function _colSetColorSelection(hex) {
 }
 
 function _colClearColorSelection() {
-  _colSelectedColor.add  = '';
-  _colSelectedColor.edit = '';
+  _colSelectedColor.add     = '';
+  _colSelectedColor.edit    = '';
+  _colSelectedColor.newGroup = '';
   ['colAddColorPicker','colEditColorPicker'].forEach(function (id) {
     var container = document.getElementById(id);
     if (!container) return;
@@ -509,6 +516,357 @@ function _colHideWarn(warnId) {
 }
 
 
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CAMPO GRUPO — dropdown + botão criar
+═══════════════════════════════════════════════════════════════════════ */
+
+/* Estado do dropdown de grupos */
+var _colGroupDropdownOpen = false;
+
+/* Abre/fecha o dropdown de grupos */
+function colToggleGroupDropdown() {
+  var drop = document.getElementById('colGroupDropdown');
+  if (!drop) return;
+  _colGroupDropdownOpen = !_colGroupDropdownOpen;
+  drop.style.display = _colGroupDropdownOpen ? 'block' : 'none';
+  if (_colGroupDropdownOpen) colRenderGroupDropdown();
+}
+
+function colCloseGroupDropdown() {
+  var drop = document.getElementById('colGroupDropdown');
+  if (drop) drop.style.display = 'none';
+  _colGroupDropdownOpen = false;
+}
+
+/* Renderiza as opções do dropdown com os grupos existentes */
+function colRenderGroupDropdown() {
+  var drop = document.getElementById('colGroupDropdown');
+  if (!drop) return;
+  drop.innerHTML = '';
+
+  var groups = (typeof ColGroups !== 'undefined') ? ColGroups.getAll() : [];
+
+  if (groups.length === 0) {
+    var empty = document.createElement('div');
+    empty.className = 'col-group-empty';
+    empty.textContent = 'Nenhum grupo criado ainda. Use o + para criar.';
+    drop.appendChild(empty);
+    return;
+  }
+
+  groups.forEach(function (g) {
+    var opt = document.createElement('div');
+    opt.className = 'col-group-option' + (colState.selectedGroup && colState.selectedGroup.slug === g.slug ? ' selected' : '');
+    opt.innerHTML =
+      '<span class="col-group-dot" style="background:' + g.color + ';"></span>' +
+      '<span class="col-group-opt-name">' + g.name + '</span>' +
+      (colState.selectedGroup && colState.selectedGroup.slug === g.slug
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12" style="margin-left:auto;color:#6366f1"><polyline points="20 6 9 17 4 12"/></svg>'
+        : '');
+    opt.addEventListener('click', function () {
+      colState.selectedGroup = g;
+      colUpdateGroupField();
+      colCloseGroupDropdown();
+      colValidateAddForm();
+    });
+    drop.appendChild(opt);
+  });
+}
+
+/* Atualiza o visual do botão de seleção de grupo */
+function colUpdateGroupField() {
+  var btn = document.getElementById('colGroupSelectBtn');
+  if (!btn) return;
+  if (colState.selectedGroup) {
+    btn.innerHTML =
+      '<span class="col-group-dot" style="background:' + colState.selectedGroup.color + ';display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;flex-shrink:0;"></span>' +
+      '<span style="flex:1;">' + colState.selectedGroup.name + '</span>' +
+      '<svg class="col-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg>';
+    btn.classList.add('has-value');
+  } else {
+    btn.innerHTML =
+      '<span style="flex:1;color:var(--text3,#94a3b8);">Selecionar grupo…</span>' +
+      '<svg class="col-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg>';
+    btn.classList.remove('has-value');
+  }
+}
+
+/* Modal de criação de novo grupo (inline — sem overlay separado) */
+var _colNewGroupModalReady = false;
+
+function colOpenNewGroupModal() {
+  if (!_colNewGroupModalReady) {
+    _colNewGroupModalReady = true;
+    _colBuildNewGroupModal();
+  }
+  /* Limpa campos */
+  var nameEl  = document.getElementById('colNewGroupName');
+  var warnEl  = document.getElementById('colNewGroupWarn');
+  if (nameEl) nameEl.value = '';
+  if (warnEl) warnEl.style.display = 'none';
+  _colClearColorSelection();
+  /* Reseta botão salvar */
+  var saveBtn = document.getElementById('colNewGroupSaveBtn');
+  if (saveBtn) saveBtn.classList.add('btn-blocked');
+
+  var overlay = document.getElementById('colNewGroupOverlay');
+  if (overlay) {
+    overlay.classList.remove('gh-hidden');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function colCloseNewGroupModal() {
+  var overlay = document.getElementById('colNewGroupOverlay');
+  if (overlay) overlay.classList.add('gh-hidden');
+  document.body.style.overflow = '';
+}
+
+function _colBuildNewGroupModal() {
+  var overlay = document.createElement('div');
+  overlay.id        = 'colNewGroupOverlay';
+  overlay.className = 'gh-hidden';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:10001;padding:1rem;';
+
+  overlay.innerHTML = [
+    '<div id="colNewGroupModal" style="background:var(--card,#fff);border:1.5px solid var(--border,#e2e8f0);border-radius:calc(var(--radius,8px)*1.5);padding:0;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.18);">',
+    '  <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.1rem;border-bottom:.5px solid var(--border,#e2e8f0);">',
+    '    <h3 style="font-family:var(--font-body,sans-serif);font-size:.95rem;font-weight:800;color:var(--text1,#0f172a);margin:0;">Criar Grupo</h3>',
+    '    <button id="colNewGroupClose" style="background:none;border:none;font-size:1rem;color:var(--text3,#94a3b8);cursor:pointer;">✕</button>',
+    '  </div>',
+    '  <div style="padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.85rem;">',
+    '    <div class="field-group">',
+    '      <label>Nome do grupo <span class="req">*</span></label>',
+    '      <input type="text" id="colNewGroupName" placeholder="ex: eFácil" autocomplete="off" />',
+    '      <span id="colNewGroupWarn" class="col-field-warn"></span>',
+    '    </div>',
+    '    <div class="col-color-picker-wrap">',
+    '      <label>Cor <span class="req">*</span></label>',
+    '      <div class="col-color-grid" id="colNewGroupColorPicker"></div>',
+    '      <span id="colNewGroupColorWarn" class="col-field-warn"></span>',
+    '    </div>',
+    '  </div>',
+    '  <div style="display:flex;justify-content:flex-end;gap:.5rem;padding:.75rem 1.1rem;border-top:.5px solid var(--border,#e2e8f0);">',
+    '    <button id="colNewGroupCancelBtn" style="padding:.5rem .9rem;border:1.5px solid var(--border,#e2e8f0);border-radius:var(--radius,6px);background:none;color:var(--text2,#64748b);font-family:var(--font-body,sans-serif);font-size:.82rem;font-weight:700;cursor:pointer;">Cancelar</button>',
+    '    <button id="colNewGroupSaveBtn" class="btn-github btn-blocked">Salvar grupo</button>',
+    '  </div>',
+    '</div>',
+  ].join('');
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', function(e){ if(e.target===overlay) colCloseNewGroupModal(); });
+  document.getElementById('colNewGroupClose').addEventListener('click', colCloseNewGroupModal);
+  document.getElementById('colNewGroupCancelBtn').addEventListener('click', colCloseNewGroupModal);
+
+  /* Valida ao digitar */
+  document.getElementById('colNewGroupName').addEventListener('input', function() {
+    var name    = this.value.trim();
+    var warn    = document.getElementById('colNewGroupWarn');
+    var saveBtn = document.getElementById('colNewGroupSaveBtn');
+    var colorOk = !!_colSelectedColor.newGroup;
+    var nameOk  = name.length >= 2;
+    if (warn) {
+      warn.textContent   = (name.length > 0 && !nameOk) ? '⚠ Nome deve ter pelo menos 2 caracteres' : '';
+      warn.style.display = (name.length > 0 && !nameOk) ? 'block' : 'none';
+    }
+    if (saveBtn) {
+      if (nameOk && colorOk) saveBtn.classList.remove('btn-blocked');
+      else saveBtn.classList.add('btn-blocked');
+    }
+  });
+
+  /* Constrói seletor de cores */
+  _colBuildColorPicker('colNewGroupColorPicker', 'newGroup');
+
+  /* Salvar grupo — chama módulo GitHub se disponível, senão só memória */
+  document.getElementById('colNewGroupSaveBtn').addEventListener('click', function() {
+    var name  = (document.getElementById('colNewGroupName') || {}).value || '';
+    var color = _colSelectedColor.newGroup || '';
+    name = name.trim();
+
+    if (name.length < 2) return;
+    if (!color) {
+      var cw = document.getElementById('colNewGroupColorWarn');
+      if (cw) { cw.textContent = '⚠ Selecione uma cor'; cw.style.display = 'block'; }
+      return;
+    }
+
+    var slug = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    var btn  = this;
+    btn.textContent = 'Salvando…';
+    btn.disabled    = true;
+
+    /* Chama módulo GitHub para salvar no repositório */
+    if (typeof ghcGroupSave === 'function') {
+      ghcGroupSave({ slug: slug, name: name, color: color }).then(function(ok) {
+        if (ok) {
+          colCloseNewGroupModal();
+          /* Auto-seleciona o grupo recém criado */
+          colState.selectedGroup = ColGroups.getBySlug(slug);
+          colUpdateGroupField();
+          colValidateAddForm();
+          /* Reabre o dropdown atualizado */
+          colRenderGroupDropdown();
+        }
+        btn.textContent = 'Salvar grupo';
+        btn.disabled    = false;
+      });
+    } else {
+      /* Fallback local (sem GitHub) */
+      ColGroups.add({ slug: slug, name: name, color: color });
+      colCloseNewGroupModal();
+      colState.selectedGroup = ColGroups.getBySlug(slug);
+      colUpdateGroupField();
+      colValidateAddForm();
+      btn.textContent = 'Salvar grupo';
+      btn.disabled    = false;
+    }
+  });
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SELETOR DE COR ESTILO EXCEL
+   Sobrescreve _colBuildColorPicker para usar popup em vez de grid inline.
+═══════════════════════════════════════════════════════════════════════ */
+
+/* Popup de cor — criado uma vez e reutilizado */
+var _colColorPopup      = null;
+var _colColorPopupMode  = null; /* qual campo está sendo editado */
+
+function _colBuildColorPickerPopup() {
+  if (_colColorPopup) return;
+
+  var popup = document.createElement('div');
+  popup.id = 'colColorPopup';
+  popup.style.cssText = [
+    'position:absolute;',
+    'z-index:10100;',
+    'background:var(--card,#fff);',
+    'border:1.5px solid var(--border,#e2e8f0);',
+    'border-radius:var(--radius,8px);',
+    'padding:10px;',
+    'box-shadow:0 8px 32px rgba(0,0,0,.18);',
+    'display:none;',
+    'flex-wrap:wrap;',
+    'gap:5px;',
+    'width:196px;',
+  ].join('');
+
+  COL_PALETTE.forEach(function (hex) {
+    var dot = document.createElement('button');
+    dot.type            = 'button';
+    dot.dataset.hex     = hex;
+    dot.style.cssText   = 'width:22px;height:22px;border-radius:4px;background:' + hex + ';border:2px solid transparent;cursor:pointer;flex-shrink:0;transition:transform .1s,border-color .1s;';
+    dot.addEventListener('click', function (e) {
+      e.stopPropagation();
+      _colSelectedColor[_colColorPopupMode] = hex;
+      /* Atualiza visual do botão trigger */
+      var trigger = document.getElementById('colColorTrigger_' + _colColorPopupMode);
+      if (trigger) {
+        trigger.style.background = hex;
+        trigger.title            = hex;
+      }
+      /* Marca selecionado */
+      popup.querySelectorAll('button').forEach(function (b) {
+        b.style.borderColor = 'transparent';
+        b.style.transform   = 'scale(1)';
+      });
+      dot.style.borderColor = '#0f172a';
+      dot.style.transform   = 'scale(1.2)';
+      _colCloseColorPopup();
+      /* Revalida form */
+      if (_colColorPopupMode === 'newGroup') {
+        var nameEl  = document.getElementById('colNewGroupName');
+        var saveBtn = document.getElementById('colNewGroupSaveBtn');
+        var cw      = document.getElementById('colNewGroupColorWarn');
+        if (cw) cw.style.display = 'none';
+        if (saveBtn && nameEl && nameEl.value.trim().length >= 2) saveBtn.classList.remove('btn-blocked');
+      }
+      if (_colColorPopupMode === 'add' || _colColorPopupMode === 'edit') {
+        if (typeof colValidateAddForm  === 'function') colValidateAddForm();
+        if (typeof colValidateEditForm === 'function') colValidateEditForm();
+      }
+    });
+    popup.appendChild(dot);
+  });
+
+  document.body.appendChild(popup);
+  _colColorPopup = popup;
+
+  /* Fecha ao clicar fora */
+  document.addEventListener('click', function () { _colCloseColorPopup(); });
+}
+
+function _colOpenColorPopup(mode, triggerEl) {
+  _colBuildColorPickerPopup();
+  _colColorPopupMode = mode;
+
+  /* Posiciona popup abaixo do trigger */
+  var rect = triggerEl.getBoundingClientRect();
+  _colColorPopup.style.top     = (rect.bottom + window.scrollY + 4) + 'px';
+  _colColorPopup.style.left    = (rect.left   + window.scrollX)     + 'px';
+  _colColorPopup.style.display = 'flex';
+
+  /* Marca cor atual */
+  var current = _colSelectedColor[mode] || '';
+  _colColorPopup.querySelectorAll('button').forEach(function (b) {
+    var sel = b.dataset.hex === current;
+    b.style.borderColor = sel ? '#0f172a' : 'transparent';
+    b.style.transform   = sel ? 'scale(1.2)' : 'scale(1)';
+  });
+}
+
+function _colCloseColorPopup() {
+  if (_colColorPopup) _colColorPopup.style.display = 'none';
+  _colColorPopupMode = null;
+}
+
+/* Sobrescreve _colBuildColorPicker para usar botão trigger em vez de grid inline */
+function _colBuildColorPicker(containerId, mode) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+
+  /* Botão quadrado que abre o popup */
+  var trigger = document.createElement('button');
+  trigger.type      = 'button';
+  trigger.id        = 'colColorTrigger_' + mode;
+  trigger.className = 'col-color-trigger';
+  trigger.title     = _colSelectedColor[mode] || 'Selecionar cor';
+  trigger.style.cssText = [
+    'width:32px;height:32px;',
+    'border-radius:var(--radius,6px);',
+    'border:1.5px solid var(--border,#e2e8f0);',
+    'cursor:pointer;',
+    'background:' + (_colSelectedColor[mode] || 'var(--hover,#f1f5f9)') + ';',
+    'position:relative;',
+    'flex-shrink:0;',
+    'transition:border-color .15s;',
+  ].join('');
+
+  /* Ícone de conta-gotas pequeno quando sem cor */
+  if (!_colSelectedColor[mode]) {
+    trigger.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="opacity:.4;"><path d="M12 2a7 7 0 017 7c0 5-7 13-7 13S5 14 5 9a7 7 0 017-7z"/><circle cx="12" cy="9" r="2.5"/></svg>';
+  }
+
+  trigger.addEventListener('click', function (e) {
+    e.stopPropagation();
+    _colOpenColorPopup(mode, trigger);
+  });
+
+  container.appendChild(trigger);
+
+  /* Texto ao lado */
+  var hint = document.createElement('span');
+  hint.id        = 'colColorHint_' + mode;
+  hint.className = 'col-color-hint';
+  hint.textContent = _colSelectedColor[mode] || 'Clique para selecionar';
+  container.appendChild(hint);
+}
+
+
 /* ═══════════════════════════════════════════════════════════════════════
    INICIALIZAÇÃO
 ═══════════════════════════════════════════════════════════════════════ */
@@ -521,6 +879,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
   var colOverlay = document.getElementById('colCollectionOverlay');
   if (colOverlay) colOverlay.addEventListener('click', _colOverlayClick('colCollection', colCloseCollectionModal));
+
+  /* ── Campo de grupo ── */
+  var groupSelectBtn = document.getElementById('colGroupSelectBtn');
+  if (groupSelectBtn) {
+    groupSelectBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      colToggleGroupDropdown();
+    });
+  }
+  var groupAddBtn = document.getElementById('colGroupAddBtn');
+  if (groupAddBtn) groupAddBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    colCloseGroupDropdown();
+    colOpenNewGroupModal();
+  });
+  /* Fecha dropdown ao clicar fora */
+  document.addEventListener('click', colCloseGroupDropdown);
 
   /* ── Modal de adição ── */
   var addClose = document.getElementById('colAddClose');
@@ -569,6 +944,8 @@ document.addEventListener('DOMContentLoaded', function () {
     var colEditOv = document.getElementById('colEditOverlay');
     var colAddOv  = document.getElementById('colAddOverlay');
     var colColOv  = document.getElementById('colCollectionOverlay');
+    var colNGOv  = document.getElementById('colNewGroupOverlay');
+    if (colNGOv  && !colNGOv.classList.contains('gh-hidden'))  { colCloseNewGroupModal();  return; }
     if (colEditOv && !colEditOv.classList.contains('hidden')) { colCloseEditModal();       return; }
     if (colAddOv  && !colAddOv.classList.contains('hidden'))  { colCloseAddModal();        return; }
     if (colColOv  && !colColOv.classList.contains('hidden'))  { colCloseCollectionModal(); return; }

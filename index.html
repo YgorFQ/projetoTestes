@@ -554,17 +554,22 @@
           </div>
         </div>
 
-        <!-- Autor + Cor (linha única, ambos opcionais) -->
-        <div class="field-row col-author-color-row">
+        <!-- Campo Grupo (obrigatório) -->
+        <div class="field-row">
           <div class="field-group" style="flex:1;">
-            <label>Autor <span class="hint">(opcional)</span></label>
-            <input type="text" id="colAddAuthor" placeholder="ex: Ygor" autocomplete="off" />
-            <span class="field-desc">Nome exibido ao lado do bloco. Deixe vazio se não quiser.</span>
-          </div>
-          <div class="col-color-picker-wrap">
-            <label>Cor <span class="hint">(opcional)</span></label>
-            <div class="col-color-grid" id="colAddColorPicker"></div>
-            <span class="field-desc">Cor da borda e do ponto de autor.</span>
+            <label>Grupo <span class="req">*</span></label>
+            <div class="col-group-row">
+              <button type="button" id="colGroupAddBtn" class="col-group-add-btn" title="Criar novo grupo">+</button>
+              <div class="col-group-select-wrap">
+                <button type="button" id="colGroupSelectBtn" class="col-group-select-btn">
+                  <span style="flex:1;color:var(--text3,#94a3b8);">Selecionar grupo…</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div id="colGroupDropdown" class="col-group-dropdown" style="display:none;"></div>
+              </div>
+            </div>
+            <span class="col-field-warn" id="colAddGroupWarn"></span>
+            <span class="field-desc">O grupo define a cor da borda e aparece nos filtros.</span>
           </div>
         </div>
 
@@ -664,6 +669,7 @@
   <!-- ═══ COLEÇÕES ═══════════════════════════════════════════════════
        Motor e lógica de UI das coleções (completamente independentes)
   ════════════════════════════════════════════════════════════════════ -->
+  <script src="colecoes/col-groups.js"></script>
   <script src="colecoes/col-core.js"></script>
   <script src="colecoes/col-script.js"></script>
   <script src="colecoes/col-modals.js"></script>
@@ -674,10 +680,10 @@
        Cada arquivo chama ColLib.registerCollection({...}) e
        ColLib.registerLayout(slug, [...])
   ════════════════════════════════════════════════════════════════════ -->
-   <script src="colecoes/data/awdawdaw.js"></script>
-      <script src="colecoes/data/wda.js"></script>
-  <!-- <script src="colecoes/data/projetos-2025.js"></script> -->
+  <!-- Arquivo de grupos (gerado automaticamente) -->
+  <!-- <script src="colecoes/col-groups.js"></script> -->
 
+  <!-- <script src="colecoes/data/projetos-2025.js"></script> -->
 
   <!-- ═══ MÓDULOS GITHUB DAS COLEÇÕES ══════════════════════════════
        Só ativos no GitHub Pages — injetam botões de save/delete.
@@ -686,6 +692,7 @@
   <script src="modules/github/senko-github-col-edit.js"></script>
   <script src="modules/github/senko-github-col-delete.js"></script>
   <script src="modules/github/senko-github-col-layouts.js"></script>
+  <script src="modules/github/senko-github-col-groups.js"></script>
   <script>
   (function () {
     var KEY = 'senkolib_theme';

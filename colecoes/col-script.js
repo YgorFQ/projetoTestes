@@ -35,6 +35,7 @@ var colState = {
   search:      '',        /* termo de busca na aba Coleções */
   activeView:  'library', /* 'library' | 'collections'     */
   tagFilter:   '',        /* tag selecionada nos pills de filtro */
+  groupFilter: '',        /* slug do grupo selecionado nos pills */
 };
 
 
@@ -115,6 +116,10 @@ function colGetFiltered() {
   var q = colState.search.toLowerCase();
   return ColLib.getCollections()
     .filter(function (col) {
+      /* Filtro por grupo */
+      if (colState.groupFilter) {
+        if ((col.group || '') !== colState.groupFilter) return false;
+      }
       /* Filtro por tag pill */
       if (colState.tagFilter) {
         var hasTag = (col.tags || []).some(function (t) {
@@ -176,43 +181,75 @@ function colRenderGrid() {
 ═══════════════════════════════════════════════════════════════════════ */
 
 function colRenderTagFilters() {
+  /* Delega para a nova função que renderiza grupos + tags */
+  colRenderGroupFilters();
+}
+
+function colRenderGroupFilters() {
   var wrap = document.getElementById('colTagFilters');
   if (!wrap) return;
   wrap.innerHTML = '';
 
-  /* Coleta todas as tags únicas de todas as coleções */
-  var seen = {};
-  var tags = [];
+  var groups = (typeof ColGroups !== 'undefined') ? ColGroups.getAll() : [];
+  var hasGroups = groups.length > 0;
+
+  /* Coleta tags únicas */
+  var seen = {}, tags = [];
   ColLib.getCollections().forEach(function (col) {
     (col.tags || []).forEach(function (t) {
       var tl = t.toLowerCase();
       if (tl && !seen[tl]) { seen[tl] = true; tags.push(tl); }
     });
   });
-
-  /* Sem tags — esconde o container */
-  if (tags.length === 0) { wrap.style.display = 'none'; return; }
-  wrap.style.display = '';
-
   tags.sort();
 
-  /* Pill "Todos" */
+  if (!hasGroups && tags.length === 0) { wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+
+  /* Pill Todos */
+  var isAllActive = !colState.groupFilter && !colState.tagFilter;
   var pillAll = document.createElement('button');
-  pillAll.className = 'col-filter-pill' + (!colState.tagFilter ? ' active' : '');
+  pillAll.className = 'col-filter-pill' + (isAllActive ? ' active' : '');
   pillAll.textContent = 'Todos';
   pillAll.addEventListener('click', function () {
-    colState.tagFilter = '';
+    colState.groupFilter = '';
+    colState.tagFilter   = '';
     colRenderGrid();
   });
   wrap.appendChild(pillAll);
 
-  /* Um pill por tag */
+  /* Pills de grupos */
+  groups.forEach(function (g) {
+    var pill = document.createElement('button');
+    pill.className = 'col-filter-pill col-filter-pill--group' + (colState.groupFilter === g.slug ? ' active' : '');
+    pill.innerHTML =
+      '<span class="col-filter-dot" style="background:' + g.color + ';"></span>' + g.name;
+    if (colState.groupFilter === g.slug) {
+      pill.style.borderColor = g.color;
+      pill.style.color       = g.color;
+    }
+    pill.addEventListener('click', function () {
+      colState.groupFilter = g.slug;
+      colState.tagFilter   = '';
+      colRenderGrid();
+    });
+    wrap.appendChild(pill);
+  });
+
+  /* Pills de tags (separador visual se houver grupos e tags) */
+  if (hasGroups && tags.length > 0) {
+    var sep = document.createElement('span');
+    sep.className   = 'col-filter-sep';
+    sep.textContent = '·';
+    wrap.appendChild(sep);
+  }
   tags.forEach(function (tag) {
     var pill = document.createElement('button');
     pill.className = 'col-filter-pill' + (colState.tagFilter === tag ? ' active' : '');
     pill.textContent = tag;
     pill.addEventListener('click', function () {
-      colState.tagFilter = tag;
+      colState.tagFilter   = tag;
+      colState.groupFilter = '';
       colRenderGrid();
     });
     wrap.appendChild(pill);
@@ -234,9 +271,14 @@ function colCreateCard(col, index) {
   card.className = 'card col-card';
   card.style.animationDelay  = (index * 40) + 'ms';
 
-  /* Borda esquerda colorida só se tiver autor com cor */
-  if (hasAuthor && col.color) {
-    card.style.borderLeft             = '3px solid ' + color;
+  /* Borda esquerda: cor vem do grupo da coleção */
+  var groupColor = '';
+  if (col.group && typeof ColGroups !== 'undefined') {
+    var grp = ColGroups.getBySlug(col.group);
+    if (grp) groupColor = grp.color;
+  }
+  if (groupColor) {
+    card.style.borderLeft             = '3px solid ' + groupColor;
     card.style.borderTopLeftRadius    = '0';
     card.style.borderBottomLeftRadius = '0';
   }
@@ -274,15 +316,18 @@ function colCreateCard(col, index) {
   nameEl.className   = 'card-name';
   nameEl.textContent = col.name;
 
-  /* Linha de autor (só renderiza se tiver) */
+  /* Linha de grupo */
   var authorEl = document.createElement('div');
   authorEl.className = 'col-card-author';
-  if (hasAuthor) {
-    authorEl.innerHTML =
-      '<span class="col-author-dot" style="background:' + color + ';"></span>' +
-      col.author;
+  if (col.group && typeof ColGroups !== 'undefined') {
+    var grpInfo = ColGroups.getBySlug(col.group);
+    if (grpInfo) {
+      authorEl.innerHTML =
+        '<span class="col-author-dot" style="background:' + grpInfo.color + ';"></span>' +
+        grpInfo.name;
+    }
   } else {
-    authorEl.innerHTML = '<span class="col-author-empty">sem autor</span>';
+    authorEl.style.display = 'none';
   }
 
   /* Tags */
