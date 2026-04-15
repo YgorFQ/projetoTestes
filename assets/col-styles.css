@@ -1,0 +1,350 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   col-styles.css — Estilos das Coleções
+   Complementa o assets/styles.css sem modificá-lo.
+   Todos os seletores usam prefixo .col- ou .senko-tab para garantir
+   isolamento e não vazar para a Biblioteca oficial.
+═══════════════════════════════════════════════════════════════════════ */
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   BARRA DE ABAS (Biblioteca | Coleções)
+═══════════════════════════════════════════════════════════════════════ */
+
+.senko-tabs-bar {
+  background: var(--header-bg, #fff);
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  padding: 0 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+
+.senko-tabs {
+  display: flex;
+  gap: .25rem;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.senko-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .55rem 1rem;
+  font-family: var(--font-body, sans-serif);
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--text3, #94a3b8);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+  position: relative;
+  bottom: -1px;
+}
+
+.senko-tab:hover { color: var(--text2, #64748b); }
+
+.senko-tab--active {
+  color: var(--accent, #6366f1);
+  border-bottom-color: var(--accent, #6366f1);
+}
+
+.senko-tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: var(--hover, #f1f5f9);
+  color: var(--text3, #94a3b8);
+  font-size: .7rem;
+  font-weight: 700;
+}
+
+.senko-tab--active .senko-tab-count {
+  background: var(--accent-soft, #eef2ff);
+  color: var(--accent, #6366f1);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   SEÇÃO DE COLEÇÕES — header e busca
+═══════════════════════════════════════════════════════════════════════ */
+
+.col-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-bottom: 1rem;
+}
+
+.col-header-right {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   CARD DE COLEÇÃO
+═══════════════════════════════════════════════════════════════════════ */
+
+/* Preview do card — exibe ícone centralizado em vez de iframe */
+.col-card-preview {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--hover, #f8fafc);
+}
+
+.col-preview-icon-wrap {
+  opacity: .2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.col-preview-count {
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  font-family: var(--font-body, sans-serif);
+  font-size: .7rem;
+  color: var(--text3, #94a3b8);
+  background: var(--card, #fff);
+  border: .5px solid var(--border, #e2e8f0);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+
+/* Linha de autor */
+.col-card-author {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  font-family: var(--font-body, sans-serif);
+  font-size: .72rem;
+  color: var(--text3, #94a3b8);
+  margin-bottom: .3rem;
+}
+
+.col-author-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.col-author-empty {
+  font-style: italic;
+  color: var(--text3, #94a3b8);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MODAL DE LAYOUTS DA COLEÇÃO
+   Estrutura visual idêntica ao modal de variants, mas independente.
+═══════════════════════════════════════════════════════════════════════ */
+
+.col-collection-overlay {
+  /* Reutiliza .modal-overlay do styles.css */
+}
+
+.col-collection-modal {
+  /* Reutiliza .modal.variants-modal */
+}
+
+.col-collection-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  gap: 1rem;
+}
+
+.col-collection-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  min-width: 0;
+}
+
+.col-collection-header-right {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-shrink: 0;
+}
+
+.col-collection-meta {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+
+.col-collection-author-row {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  font-family: var(--font-body, sans-serif);
+  font-size: .78rem;
+  color: var(--text3, #94a3b8);
+}
+
+.col-collection-file {
+  font-family: var(--font-mono, monospace);
+  font-size: .73rem;
+  color: var(--text3, #94a3b8);
+  padding: .15rem .4rem;
+  background: var(--hover, #f8fafc);
+  border: .5px solid var(--border, #e2e8f0);
+  border-radius: 4px;
+}
+
+.col-count-badge {
+  font-family: var(--font-body, sans-serif);
+  font-size: .75rem;
+  font-weight: 700;
+  color: var(--text3, #94a3b8);
+  background: var(--hover, #f1f5f9);
+  border: .5px solid var(--border, #e2e8f0);
+  border-radius: 20px;
+  padding: .15rem .65rem;
+}
+
+.col-empty-msg {
+  font-family: var(--font-body, sans-serif);
+  font-size: .85rem;
+  color: var(--text3, #94a3b8);
+  text-align: center;
+  padding: 2rem 1rem;
+  grid-column: 1 / -1;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MODAL DE ADIÇÃO / EDIÇÃO DE COLEÇÃO
+═══════════════════════════════════════════════════════════════════════ */
+
+/* Linha autor + cor */
+.col-author-color-row {
+  display: flex;
+  gap: .75rem;
+  align-items: flex-start;
+}
+
+.col-author-color-row .field-group {
+  flex: 1;
+}
+
+/* Seletor de cor */
+.col-color-picker-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: .4rem;
+}
+
+.col-color-picker-wrap label {
+  font-family: var(--font-body, sans-serif);
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--text1, #0f172a);
+}
+
+.col-color-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: .5rem;
+  background: var(--hover, #f8fafc);
+  border: 1.5px solid var(--border, #e2e8f0);
+  border-radius: var(--radius, 8px);
+}
+
+/* Warning de validação */
+.col-field-warn {
+  font-family: var(--font-body, sans-serif);
+  font-size: .75rem;
+  font-weight: 700;
+  color: #ef4444;
+  display: none;
+  margin-top: .2rem;
+}
+
+/* Preview do autor no modal */
+.col-author-preview {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-family: var(--font-body, sans-serif);
+  font-size: .8rem;
+  color: var(--text2, #64748b);
+  min-height: 1.2rem;
+  margin-top: .3rem;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DARK MODE
+═══════════════════════════════════════════════════════════════════════ */
+
+[data-theme="dark"] .senko-tabs-bar {
+  background: var(--header-bg, #1a1b1e);
+  border-color: #363b3d;
+}
+
+[data-theme="dark"] .senko-tab { color: #b2aca2; }
+[data-theme="dark"] .senko-tab:hover { color: #d8d4cf; }
+
+[data-theme="dark"] .senko-tab--active {
+  color: #ef9f27;
+  border-bottom-color: #ef9f27;
+}
+
+[data-theme="dark"] .senko-tab-count {
+  background: #25282a;
+  color: #b2aca2;
+}
+
+[data-theme="dark"] .senko-tab--active .senko-tab-count {
+  background: #2a1f0a;
+  color: #ef9f27;
+}
+
+[data-theme="dark"] .col-card-preview {
+  background: #25282a;
+}
+
+[data-theme="dark"] .col-preview-count {
+  background: #1f2223;
+  border-color: #363b3d;
+  color: #b2aca2;
+}
+
+[data-theme="dark"] .col-collection-file {
+  background: #25282a;
+  border-color: #363b3d;
+  color: #b2aca2;
+}
+
+[data-theme="dark"] .col-count-badge {
+  background: #25282a;
+  border-color: #363b3d;
+  color: #b2aca2;
+}
+
+[data-theme="dark"] .col-color-grid {
+  background: #25282a;
+  border-color: #363b3d;
+}
+
+[data-theme="dark"] .col-color-picker-wrap label { color: #d8d4cf; }
