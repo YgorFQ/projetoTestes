@@ -136,6 +136,7 @@
     <div id="collectionsSection" style="display:none;">
       <div class="col-section-header">
         <div class="stats-bar" id="colStatsBar"></div>
+        <div class="col-tag-filters" id="colTagFilters" style="display:none;"></div>
         <div class="col-header-right">
           <div class="search-wrap">
             <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -600,14 +601,6 @@
 
         <div class="field-row">
           <div class="field-group" style="flex:1;">
-            <label>Nome Exibido <span class="req">*</span></label>
-            <input type="text" id="colEditName" placeholder="ex: Projetos 2025" />
-            <span class="col-field-warn" id="colEditNameWarn"></span>
-          </div>
-        </div>
-
-        <div class="field-row">
-          <div class="field-group" style="flex:1;">
             <label>Coleção</label>
             <input type="text" id="colEditSlug" readonly />
             <span class="field-desc">O slug não pode ser alterado após a criação.</span>
@@ -681,8 +674,6 @@
        Cada arquivo chama ColLib.registerCollection({...}) e
        ColLib.registerLayout(slug, [...])
   ════════════════════════════════════════════════════════════════════ -->
-  <script src="colecoes/data/awdawdaw.js"></script>
-  <script src="colecoes/data/wda.js"></script>
   <!-- <script src="colecoes/data/projetos-2025.js"></script> -->
 
   <!-- ═══ MÓDULOS GITHUB DAS COLEÇÕES ══════════════════════════════

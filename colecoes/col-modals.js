@@ -367,12 +367,10 @@ function colOpenEditModal(col) {
   colState.currentEditCollection = col;
 
   /* Preenche campos */
-  var nameEl   = document.getElementById('colEditName');
   var slugEl   = document.getElementById('colEditSlug');
   var tagsEl   = document.getElementById('colEditTags');
   var authorEl = document.getElementById('colEditAuthor');
 
-  if (nameEl)   nameEl.value   = col.name   || '';
   if (slugEl)   slugEl.value   = col.slug   || '';
   if (tagsEl)   tagsEl.value   = (col.tags  || []).join(', ');
   if (authorEl) authorEl.value = col.author || '';
@@ -385,8 +383,6 @@ function colOpenEditModal(col) {
     slugEl.readOnly = true;
     slugEl.title    = 'O slug não pode ser alterado após a criação (nome do arquivo)';
   }
-
-  _colHideWarn('colEditNameWarn');
 
   var saveBtn = document.getElementById('colEditSaveBtn');
   if (saveBtn) saveBtn.classList.remove('btn-blocked');
@@ -412,26 +408,18 @@ function colCloseEditModal() {
 
 /* Live validation do modal de edição */
 function colValidateEditForm() {
-  var name   = (document.getElementById('colEditName')   || {}).value || '';
   var author = (document.getElementById('colEditAuthor') || {}).value || '';
-
-  name   = name.trim();
   author = author.trim();
 
-  var nameValid   = name.length >= 2;
   var authorValid = author.length === 0 || author.length >= 2;
-
-  _colToggleWarn('colEditNameWarn', name.length > 0 && !nameValid,
-    '\u26a0 Nome deve ter pelo menos 2 caracteres');
-
-  var allOk = nameValid && authorValid;
+  var allOk = authorValid;
   var saveBtn = document.getElementById('colEditSaveBtn');
   if (saveBtn) {
     if (allOk) saveBtn.classList.remove('btn-blocked');
     else       saveBtn.classList.add('btn-blocked');
   }
 
-  return { name, author, allOk };
+  return { author, allOk };
 }
 
 
@@ -567,7 +555,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (editOverlay) editOverlay.addEventListener('click', _colOverlayClick('colEdit', colCloseEditModal));
 
   /* Live validation nos campos de edição */
-  ['colEditName','colEditTags','colEditAuthor'].forEach(function (id) {
+  ['colEditTags','colEditAuthor'].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) el.addEventListener('input', colValidateEditForm);
   });

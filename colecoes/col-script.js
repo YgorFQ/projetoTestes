@@ -34,6 +34,7 @@
 var colState = {
   search:      '',        /* termo de busca na aba Coleções */
   activeView:  'library', /* 'library' | 'collections'     */
+  tagFilter:   '',        /* tag selecionada nos pills de filtro */
 };
 
 
@@ -114,8 +115,15 @@ function colGetFiltered() {
   var q = colState.search.toLowerCase();
   return ColLib.getCollections()
     .filter(function (col) {
+      /* Filtro por tag pill */
+      if (colState.tagFilter) {
+        var hasTag = (col.tags || []).some(function (t) {
+          return t.toLowerCase() === colState.tagFilter;
+        });
+        if (!hasTag) return false;
+      }
+      /* Filtro por busca */
       if (!q) return true;
-      /* Busca em: slug, name, author, tags */
       return [col.slug, col.name, col.author]
         .concat(col.tags || [])
         .some(function (s) {
@@ -141,12 +149,14 @@ function colRenderGrid() {
   if (!grid) return;
   grid.innerHTML = '';
 
-  /* Stats bar */
+  /* Stats bar — "X coleções" */
   if (statsBar) {
     var total = ColLib.getCollections().length;
-    statsBar.innerHTML =
-      '<span>' + filtered.length + '</span> de <span>' + total + '</span> coleções';
+    statsBar.innerHTML = '<span>' + total + '</span> coleção' + (total !== 1 ? 'ões' : '');
   }
+
+  /* Pills de filtro por tag */
+  colRenderTagFilters();
 
   if (filtered.length === 0) {
     if (noRes) noRes.classList.remove('hidden');
@@ -156,6 +166,56 @@ function colRenderGrid() {
 
   filtered.forEach(function (col, i) {
     grid.appendChild(colCreateCard(col, i));
+  });
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PILLS DE FILTRO POR TAG
+   Renderiza abaixo do stats bar. Clicar filtra o grid pelo tag.
+═══════════════════════════════════════════════════════════════════════ */
+
+function colRenderTagFilters() {
+  var wrap = document.getElementById('colTagFilters');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+
+  /* Coleta todas as tags únicas de todas as coleções */
+  var seen = {};
+  var tags = [];
+  ColLib.getCollections().forEach(function (col) {
+    (col.tags || []).forEach(function (t) {
+      var tl = t.toLowerCase();
+      if (tl && !seen[tl]) { seen[tl] = true; tags.push(tl); }
+    });
+  });
+
+  /* Sem tags — esconde o container */
+  if (tags.length === 0) { wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+
+  tags.sort();
+
+  /* Pill "Todos" */
+  var pillAll = document.createElement('button');
+  pillAll.className = 'col-filter-pill' + (!colState.tagFilter ? ' active' : '');
+  pillAll.textContent = 'Todos';
+  pillAll.addEventListener('click', function () {
+    colState.tagFilter = '';
+    colRenderGrid();
+  });
+  wrap.appendChild(pillAll);
+
+  /* Um pill por tag */
+  tags.forEach(function (tag) {
+    var pill = document.createElement('button');
+    pill.className = 'col-filter-pill' + (colState.tagFilter === tag ? ' active' : '');
+    pill.textContent = tag;
+    pill.addEventListener('click', function () {
+      colState.tagFilter = tag;
+      colRenderGrid();
+    });
+    wrap.appendChild(pill);
   });
 }
 

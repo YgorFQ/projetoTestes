@@ -348,3 +348,56 @@
 }
 
 [data-theme="dark"] .col-color-picker-wrap label { color: #d8d4cf; }
+
+/* ── Pills de filtro por tag ─────────────────────────────────────── */
+.col-tag-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  margin-bottom: .25rem;
+}
+
+.col-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  height: 26px;
+  padding: 0 .75rem;
+  border-radius: 13px;
+  font-family: var(--font-body, sans-serif);
+  font-size: .75rem;
+  font-weight: 700;
+  border: 1.5px solid var(--border, #e2e8f0);
+  background: var(--card, #fff);
+  color: var(--text3, #94a3b8);
+  cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s;
+}
+
+.col-filter-pill:hover {
+  border-color: var(--text3, #94a3b8);
+  color: var(--text2, #64748b);
+}
+
+.col-filter-pill.active {
+  border-color: var(--accent, #6366f1);
+  color: var(--accent, #6366f1);
+  background: var(--accent-soft, #eef2ff);
+}
+
+[data-theme="dark"] .col-filter-pill {
+  background: #25282a;
+  border-color: #363b3d;
+  color: #b2aca2;
+}
+
+[data-theme="dark"] .col-filter-pill:hover {
+  border-color: #b2aca2;
+  color: #d8d4cf;
+}
+
+[data-theme="dark"] .col-filter-pill.active {
+  border-color: #b34b00;
+  color: #ef9f27;
+  background: #2a1f0a;
+}
