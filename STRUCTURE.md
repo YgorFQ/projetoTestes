@@ -1,30 +1,32 @@
-# SenkoLib — Estrutura do Projeto
-
-```
 SenkoLib/
 │
 ├── core/
-│   ├── senkolib-core.js        — motor de registro de layouts e variantes (obrigatório, carrega primeiro)
-│   └── script.js               — lógica principal da UI
+│   ├── senkolib-core.js        ← adiciona registerCollection/getCollections (só isso)
+│   └── script.js               ← adiciona colSwitchView + renderiza aba (só isso)
 │
 ├── modules/
 │   └── github/
-│       ├── senko-github-v2.js          — salvar layouts/variantes no GitHub via API
-│       ├── senko-github-variants.js    — criar e deletar variantes no GitHub
-│       └── senko-github-delete.js      — excluir layouts do GitHub
+│       ├── senko-github-v2.js           ← intocado
+│       ├── senko-github-variants.js     ← intocado
+│       ├── senko-github-delete.js       ← intocado
+│       │
+│       ├── senko-github-col-save.js     ← salvar/criar layout de coleção
+│       ├── senko-github-col-edit.js     ← editar layout de coleção
+│       └── senko-github-col-delete.js   ← excluir layout de coleção
+│
+├── colecoes/
+│   ├── col-core.js              ← motor de registro exclusivo das coleções
+│   ├── col-script.js            ← toda a lógica de UI das coleções
+│   ├── col-modals.js            ← modais (visualizar bloco, editar, adicionar)
+│   │
+│   ├── data/
+│   │   └── colecao-ygor.js      ← SenkoLib.registerCollection([...])
+│   │
+│   └── variants/
+│       └── colecao-ygor.js      ← SenkoLib.registerCollectionVariant(...)
 │
 ├── assets/
-│   ├── styles.css              — estilos globais da interface
-│   ├── senko.png               — logotipo
-│   └── senko.ico               — favicon
+│   ├── styles.css               ← intocado
+│   └── col-styles.css           ← estilos exclusivos das coleções
 │
-├── layouts/
-│   └── layouts001.js           — pacote de layouts (SenkoLib.register([...]))
-│
-├── variants/
-│   └── section-1.js            — variantes do layout section-1 (SenkoLib.registerVariant(...))
-│
-├── sw.js                       — Service Worker (Network First — todo reload busca versão mais recente)
-├── index.html                  — ponto de entrada da aplicação
-└── settings.json               — configurações do Live Server (VS Code)
-```
+└── index.html                   ← adiciona aba + carrega scripts de coleções
