@@ -291,10 +291,18 @@ function _colCreateLayoutCard(layout, col, index) {
 
 function colOpenAddModal() {
   /* Limpa campos */
-  ['colAddName','colAddSlug','colAddTags','colAddAuthor'].forEach(function (id) {
+  ['colAddName','colAddSlug'].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) el.value = '';
   });
+  /* Limpa chips de tags */
+  _colTagsList = [];
+  _colRenderTagChips();
+  var tagInput = document.getElementById('colAddTagsInput');
+  if (tagInput) tagInput.value = '';
+  /* Reseta hint do slug */
+  var slugHint = document.getElementById('colAddSlugHint');
+  if (slugHint) slugHint.textContent = 'slug';
 
   /* Reseta cor selecionada e grupo */
   _colClearColorSelection();
@@ -332,12 +340,10 @@ function colCloseAddModal() {
 function colValidateAddForm() {
   var name      = (document.getElementById('colAddName')   || {}).value || '';
   var slug      = (document.getElementById('colAddSlug')   || {}).value || '';
-  var author    = (document.getElementById('colAddAuthor') || {}).value || '';
+  var author = ''; /* removido */
 
   name   = name.trim();
   slug   = slug.trim().toLowerCase();
-  author = author.trim();
-
   /* Validação de nome */
   var nameValid = name.length >= 2;
   _colToggleWarn('colAddNameWarn', name.length > 0 && !nameValid,
@@ -518,6 +524,58 @@ function _colHideWarn(warnId) {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
+   CHIPS DE TAGS
+═══════════════════════════════════════════════════════════════════════ */
+var _colTagsList = [];
+
+function _colRenderTagChips() {
+  var wrap = document.getElementById('colTagsChips');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  _colTagsList.forEach(function (tag, i) {
+    var chip = document.createElement('span');
+    chip.className = 'col-tag-chip';
+    chip.innerHTML = tag +
+      '<button type="button" class="col-tag-chip-remove" data-idx="' + i + '" title="Remover">×</button>';
+    chip.querySelector('.col-tag-chip-remove').addEventListener('click', function () {
+      _colTagsList.splice(parseInt(this.dataset.idx), 1);
+      _colRenderTagChips();
+      colValidateAddForm();
+    });
+    wrap.appendChild(chip);
+  });
+}
+
+function _colInitTagChips() {
+  var input = document.getElementById('colAddTagsInput');
+  if (!input) return;
+  input.addEventListener('keydown', function (e) {
+    if (e.key === ',' || e.key === 'Enter') {
+      e.preventDefault();
+      var val = this.value.trim().toLowerCase().replace(/[^a-z0-9-]/g,'');
+      if (val.length >= 2 && _colTagsList.indexOf(val) === -1) {
+        _colTagsList.push(val);
+        _colRenderTagChips();
+      }
+      this.value = '';
+    }
+    if (e.key === 'Backspace' && !this.value && _colTagsList.length > 0) {
+      _colTagsList.pop();
+      _colRenderTagChips();
+    }
+  });
+  input.addEventListener('blur', function () {
+    var val = this.value.trim().toLowerCase().replace(/[^a-z0-9-]/g,'');
+    if (val.length >= 2 && _colTagsList.indexOf(val) === -1) {
+      _colTagsList.push(val);
+      _colRenderTagChips();
+      this.value = '';
+    }
+  });
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
    CAMPO GRUPO — dropdown + botão criar
 ═══════════════════════════════════════════════════════════════════════ */
 
@@ -547,48 +605,67 @@ function colRenderGroupDropdown() {
 
   var groups = (typeof ColGroups !== 'undefined') ? ColGroups.getAll() : [];
 
+  /* Grupos existentes */
   if (groups.length === 0) {
     var empty = document.createElement('div');
     empty.className = 'col-group-empty';
-    empty.textContent = 'Nenhum grupo criado ainda. Use o + para criar.';
+    empty.textContent = 'Nenhum grupo ainda.';
     drop.appendChild(empty);
-    return;
+  } else {
+    groups.forEach(function (g) {
+      var isSelected = colState.selectedGroup && colState.selectedGroup.slug === g.slug;
+      var opt = document.createElement('div');
+      opt.className = 'col-group-option' + (isSelected ? ' selected' : '');
+      opt.innerHTML =
+        '<span class="col-group-dot" style="background:' + g.color + ';"></span>' +
+        '<span class="col-group-opt-name">' + g.name + '</span>' +
+        (isSelected ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12" style="margin-left:auto;"><polyline points="20 6 9 17 4 12"/></svg>' : '');
+      opt.addEventListener('click', function () {
+        colState.selectedGroup = g;
+        colUpdateGroupField();
+        colCloseGroupDropdown();
+        colValidateAddForm();
+      });
+      drop.appendChild(opt);
+    });
   }
 
-  groups.forEach(function (g) {
-    var opt = document.createElement('div');
-    opt.className = 'col-group-option' + (colState.selectedGroup && colState.selectedGroup.slug === g.slug ? ' selected' : '');
-    opt.innerHTML =
-      '<span class="col-group-dot" style="background:' + g.color + ';"></span>' +
-      '<span class="col-group-opt-name">' + g.name + '</span>' +
-      (colState.selectedGroup && colState.selectedGroup.slug === g.slug
-        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12" style="margin-left:auto;color:#6366f1"><polyline points="20 6 9 17 4 12"/></svg>'
-        : '');
-    opt.addEventListener('click', function () {
-      colState.selectedGroup = g;
-      colUpdateGroupField();
-      colCloseGroupDropdown();
-      colValidateAddForm();
-    });
-    drop.appendChild(opt);
+  /* Separador */
+  var sep = document.createElement('div');
+  sep.style.cssText = 'height:0.5px;background:var(--border,#e2e8f0);margin:4px 0;';
+  drop.appendChild(sep);
+
+  /* Opção "+ Adicionar grupo" sempre no final */
+  var addOpt = document.createElement('div');
+  addOpt.className = 'col-group-option col-group-option--add';
+  addOpt.innerHTML =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13" style="opacity:.6;">' +
+    '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' +
+    '<span>Adicionar grupo</span>';
+  addOpt.addEventListener('click', function (e) {
+    e.stopPropagation();
+    colCloseGroupDropdown();
+    colOpenNewGroupModal();
   });
+  drop.appendChild(addOpt);
 }
 
 /* Atualiza o visual do botão de seleção de grupo */
 function colUpdateGroupField() {
-  var btn = document.getElementById('colGroupSelectBtn');
-  if (!btn) return;
+  var label = document.getElementById('colGroupSelectLabel');
+  var btn   = document.getElementById('colGroupSelectBtn');
+  if (!label) return;
   if (colState.selectedGroup) {
-    btn.innerHTML =
-      '<span class="col-group-dot" style="background:' + colState.selectedGroup.color + ';display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;flex-shrink:0;"></span>' +
-      '<span style="flex:1;">' + colState.selectedGroup.name + '</span>' +
-      '<svg class="col-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg>';
-    btn.classList.add('has-value');
+    label.innerHTML =
+      '<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' +
+      colState.selectedGroup.color + ';margin-right:7px;flex-shrink:0;vertical-align:middle;"></span>' +
+      colState.selectedGroup.name;
+    label.style.color = '';
+    if (btn) btn.classList.add('has-value');
   } else {
-    btn.innerHTML =
-      '<span style="flex:1;color:var(--text3,#94a3b8);">Selecionar grupo…</span>' +
-      '<svg class="col-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg>';
-    btn.classList.remove('has-value');
+    label.textContent = '+ Selecionar grupo…';
+    label.style.color = 'var(--text3,#94a3b8)';
+    if (btn) btn.classList.remove('has-value');
   }
 }
 
@@ -617,6 +694,39 @@ function colOpenNewGroupModal() {
   }
 }
 
+function _colCheckNewGroupForm(showWarns) {
+  var name  = ((document.getElementById('colNewGroupName')||{}).value||'').trim();
+  var color = _colSelectedColor.newGroup || '';
+  var warn  = document.getElementById('colNewGroupWarn');
+  var cw    = document.getElementById('colNewGroupColorWarn');
+  var btn   = document.getElementById('colNewGroupSaveBtn');
+
+  /* Verifica duplicata pelo nome */
+  var slug    = name.toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+  var isDup   = (typeof ColGroups !== 'undefined') && !!ColGroups.getBySlug(slug);
+  var nameOk  = name.length >= 2 && !isDup;
+  var colorOk = !!color;
+
+  if (warn) {
+    var msg = '';
+    if (showWarns && name.length > 0 && name.length < 2) msg = '⚠ Nome muito curto';
+    else if (name.length >= 2 && isDup) msg = '⚠ Já existe um grupo com este nome';
+    warn.textContent  = msg;
+    warn.style.display = msg ? 'block' : 'none';
+  }
+  if (cw && showWarns && !colorOk) {
+    cw.textContent  = '⚠ Selecione uma cor';
+    cw.style.display = 'block';
+  }
+
+  var ok = nameOk && colorOk;
+  if (btn) {
+    if (ok) btn.classList.remove('btn-blocked');
+    else    btn.classList.add('btn-blocked');
+  }
+  return ok;
+}
+
 function colCloseNewGroupModal() {
   var overlay = document.getElementById('colNewGroupOverlay');
   if (overlay) overlay.classList.add('gh-hidden');
@@ -627,99 +737,122 @@ function _colBuildNewGroupModal() {
   var overlay = document.createElement('div');
   overlay.id        = 'colNewGroupOverlay';
   overlay.className = 'gh-hidden';
-  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:10001;padding:1rem;';
+  overlay.style.cssText = [
+    'position:fixed;inset:0;',
+    'background:rgba(0,0,0,.6);',
+    'backdrop-filter:blur(4px);',
+    'display:flex;align-items:center;justify-content:center;',
+    'z-index:10001;padding:1rem;',
+  ].join('');
 
   overlay.innerHTML = [
-    '<div id="colNewGroupModal" style="background:var(--card,#fff);border:1.5px solid var(--border,#e2e8f0);border-radius:calc(var(--radius,8px)*1.5);padding:0;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.18);">',
-    '  <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.1rem;border-bottom:.5px solid var(--border,#e2e8f0);">',
-    '    <h3 style="font-family:var(--font-body,sans-serif);font-size:.95rem;font-weight:800;color:var(--text1,#0f172a);margin:0;">Criar Grupo</h3>',
-    '    <button id="colNewGroupClose" style="background:none;border:none;font-size:1rem;color:var(--text3,#94a3b8);cursor:pointer;">✕</button>',
+    '<div id="colNewGroupModal" style="',
+      'background:var(--card,#1e2022);',
+      'border:1.5px solid var(--border,#363b3d);',
+      'border-radius:14px;',
+      'width:100%;max-width:360px;',
+      'overflow:hidden;',
+      'box-shadow:0 24px 64px rgba(0,0,0,.35);',
+    '">',
+    /* Cabeçalho */
+    '  <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.25rem;border-bottom:0.5px solid var(--border,#363b3d);">',
+    '    <span style="font-family:var(--font-body,sans-serif);font-size:.82rem;font-weight:800;color:var(--text1,#d8d4cf);letter-spacing:.04em;text-transform:uppercase;">Novo Grupo</span>',
+    '    <button id="colNewGroupClose" title="Fechar" style="background:none;border:none;cursor:pointer;color:var(--text3,#94a3b8);font-size:1.1rem;line-height:1;padding:.2rem;border-radius:4px;">✕</button>',
     '  </div>',
-    '  <div style="padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.85rem;">',
-    '    <div class="field-group">',
-    '      <label>Nome do grupo <span class="req">*</span></label>',
-    '      <input type="text" id="colNewGroupName" placeholder="ex: eFácil" autocomplete="off" />',
-    '      <span id="colNewGroupWarn" class="col-field-warn"></span>',
+    /* Body */
+    '  <div style="padding:1.1rem 1.25rem;display:flex;flex-direction:column;gap:.9rem;">',
+    '    <div>',
+    '      <label style="display:block;font-family:var(--font-body,sans-serif);font-size:.8rem;font-weight:700;color:var(--text1,#d8d4cf);margin-bottom:.35rem;">Nome <span style="color:#ef4444;">*</span></label>',
+    '      <input type="text" id="colNewGroupName" autocomplete="off" placeholder="ex: eFácil" style="',
+    '        width:100%;height:36px;padding:0 .75rem;',
+    '        font-family:var(--font-body,sans-serif);font-size:.85rem;',
+    '        background:var(--bg,#25282a);color:var(--text1,#d8d4cf);',
+    '        border:1.5px solid var(--border,#363b3d);border-radius:8px;outline:none;',
+    '        transition:border-color .15s;',
+    '      "/>',
+    '      <span id="colNewGroupWarn" style="display:none;font-family:var(--font-body,sans-serif);font-size:.74rem;font-weight:700;color:#ef4444;margin-top:.3rem;"></span>',
     '    </div>',
-    '    <div class="col-color-picker-wrap">',
-    '      <label>Cor <span class="req">*</span></label>',
-    '      <div class="col-color-grid" id="colNewGroupColorPicker"></div>',
-    '      <span id="colNewGroupColorWarn" class="col-field-warn"></span>',
+    '    <div>',
+    '      <label style="display:block;font-family:var(--font-body,sans-serif);font-size:.8rem;font-weight:700;color:var(--text1,#d8d4cf);margin-bottom:.35rem;">Cor <span style="color:#ef4444;">*</span></label>',
+    '      <div id="colNewGroupColorGrid" style="display:flex;flex-wrap:wrap;gap:6px;padding:.65rem;background:var(--bg,#25282a);border:1.5px solid var(--border,#363b3d);border-radius:8px;"></div>',
+    '      <span id="colNewGroupColorWarn" style="display:none;font-family:var(--font-body,sans-serif);font-size:.74rem;font-weight:700;color:#ef4444;margin-top:.3rem;"></span>',
     '    </div>',
     '  </div>',
-    '  <div style="display:flex;justify-content:flex-end;gap:.5rem;padding:.75rem 1.1rem;border-top:.5px solid var(--border,#e2e8f0);">',
-    '    <button id="colNewGroupCancelBtn" style="padding:.5rem .9rem;border:1.5px solid var(--border,#e2e8f0);border-radius:var(--radius,6px);background:none;color:var(--text2,#64748b);font-family:var(--font-body,sans-serif);font-size:.82rem;font-weight:700;cursor:pointer;">Cancelar</button>',
-    '    <button id="colNewGroupSaveBtn" class="btn-github btn-blocked">Salvar grupo</button>',
+    /* Rodapé */
+    '  <div style="display:flex;justify-content:flex-end;gap:.5rem;padding:.8rem 1.25rem;border-top:0.5px solid var(--border,#363b3d);">',
+    '    <button id="colNewGroupCancelBtn" style="padding:.45rem .9rem;border:1.5px solid var(--border,#363b3d);border-radius:7px;background:none;color:var(--text2,#b2aca2);font-family:var(--font-body,sans-serif);font-size:.82rem;font-weight:700;cursor:pointer;">Cancelar</button>',
+    '    <button id="colNewGroupSaveBtn" class="btn-github btn-blocked" style="padding:.45rem 1rem;">Criar grupo</button>',
     '  </div>',
     '</div>',
   ].join('');
   document.body.appendChild(overlay);
 
+  /* Fechar */
   overlay.addEventListener('click', function(e){ if(e.target===overlay) colCloseNewGroupModal(); });
   document.getElementById('colNewGroupClose').addEventListener('click', colCloseNewGroupModal);
   document.getElementById('colNewGroupCancelBtn').addEventListener('click', colCloseNewGroupModal);
 
-  /* Valida ao digitar */
-  document.getElementById('colNewGroupName').addEventListener('input', function() {
-    var name    = this.value.trim();
-    var warn    = document.getElementById('colNewGroupWarn');
-    var saveBtn = document.getElementById('colNewGroupSaveBtn');
-    var colorOk = !!_colSelectedColor.newGroup;
-    var nameOk  = name.length >= 2;
-    if (warn) {
-      warn.textContent   = (name.length > 0 && !nameOk) ? '⚠ Nome deve ter pelo menos 2 caracteres' : '';
-      warn.style.display = (name.length > 0 && !nameOk) ? 'block' : 'none';
-    }
-    if (saveBtn) {
-      if (nameOk && colorOk) saveBtn.classList.remove('btn-blocked');
-      else saveBtn.classList.add('btn-blocked');
-    }
+  /* Grid de cores */
+  var colorGrid = document.getElementById('colNewGroupColorGrid');
+  COL_PALETTE.forEach(function (hex) {
+    var dot = document.createElement('button');
+    dot.type          = 'button';
+    dot.dataset.hex   = hex;
+    dot.title         = hex;
+    dot.style.cssText = 'width:20px;height:20px;border-radius:4px;background:' + hex + ';border:2px solid transparent;cursor:pointer;flex-shrink:0;transition:transform .1s,border-color .15s;';
+    dot.addEventListener('click', function(e) {
+      e.stopPropagation();
+      _colSelectedColor.newGroup = hex;
+      colorGrid.querySelectorAll('button').forEach(function(b) {
+        b.style.borderColor = 'transparent';
+        b.style.transform   = 'scale(1)';
+      });
+      dot.style.borderColor = '#fff';
+      dot.style.transform   = 'scale(1.25)';
+      var cw = document.getElementById('colNewGroupColorWarn');
+      if (cw) cw.style.display = 'none';
+      _colCheckNewGroupForm();
+    });
+    colorGrid.appendChild(dot);
   });
 
-  /* Constrói seletor de cores */
-  _colBuildColorPicker('colNewGroupColorPicker', 'newGroup');
+  /* Validação do nome */
+  document.getElementById('colNewGroupName').addEventListener('input', function() {
+    /* Bloqueia caracteres especiais em tempo real */
+    this.value = this.value.replace(/[^a-zA-ZÀ-ÿ0-9 _-]/g, '');
+    _colCheckNewGroupForm();
+  });
 
-  /* Salvar grupo — chama módulo GitHub se disponível, senão só memória */
+  /* Salvar */
   document.getElementById('colNewGroupSaveBtn').addEventListener('click', function() {
-    var name  = (document.getElementById('colNewGroupName') || {}).value || '';
+    if (!_colCheckNewGroupForm(true)) return;
+    var name  = (document.getElementById('colNewGroupName')||{}).value||'';
     var color = _colSelectedColor.newGroup || '';
     name = name.trim();
-
-    if (name.length < 2) return;
-    if (!color) {
-      var cw = document.getElementById('colNewGroupColorWarn');
-      if (cw) { cw.textContent = '⚠ Selecione uma cor'; cw.style.display = 'block'; }
-      return;
-    }
-
-    var slug = name.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    var slug = name.toLowerCase().replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
     var btn  = this;
     btn.textContent = 'Salvando…';
     btn.disabled    = true;
 
-    /* Chama módulo GitHub para salvar no repositório */
     if (typeof ghcGroupSave === 'function') {
       ghcGroupSave({ slug: slug, name: name, color: color }).then(function(ok) {
         if (ok) {
           colCloseNewGroupModal();
-          /* Auto-seleciona o grupo recém criado */
           colState.selectedGroup = ColGroups.getBySlug(slug);
           colUpdateGroupField();
           colValidateAddForm();
-          /* Reabre o dropdown atualizado */
-          colRenderGroupDropdown();
+          if (_colGroupDropdownOpen) colRenderGroupDropdown();
         }
-        btn.textContent = 'Salvar grupo';
+        btn.textContent = 'Criar grupo';
         btn.disabled    = false;
       });
     } else {
-      /* Fallback local (sem GitHub) */
       ColGroups.add({ slug: slug, name: name, color: color });
       colCloseNewGroupModal();
       colState.selectedGroup = ColGroups.getBySlug(slug);
       colUpdateGroupField();
       colValidateAddForm();
-      btn.textContent = 'Salvar grupo';
+      btn.textContent = 'Criar grupo';
       btn.disabled    = false;
     }
   });
@@ -905,19 +1038,39 @@ document.addEventListener('DOMContentLoaded', function () {
   if (addOverlay) addOverlay.addEventListener('click', _colOverlayClick('colAdd', colCloseAddModal));
 
   /* Live validation nos campos de adição */
-  ['colAddName','colAddSlug','colAddTags','colAddAuthor'].forEach(function (id) {
+  ['colAddName','colAddSlug'].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) el.addEventListener('input', colValidateAddForm);
   });
 
-  /* Normaliza slug em tempo real (força lowercase sem espaço) */
+  /* Slug: força lowercase + atualiza hint */
   var slugAddEl = document.getElementById('colAddSlug');
   if (slugAddEl) {
     slugAddEl.addEventListener('input', function () {
       this.value = this.value.toLowerCase().replace(/[^a-z0-9-]/g, '');
+      var hint = document.getElementById('colAddSlugHint');
+      if (hint) hint.textContent = this.value || 'slug';
       colValidateAddForm();
     });
   }
+  /* Nome auto-preenche slug */
+  var nameAddEl = document.getElementById('colAddName');
+  if (nameAddEl) {
+    nameAddEl.addEventListener('input', function () {
+      var slugEl = document.getElementById('colAddSlug');
+      if (slugEl && !slugEl._userEdited) {
+        slugEl.value = this.value.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+        var hint = document.getElementById('colAddSlugHint');
+        if (hint) hint.textContent = slugEl.value || 'slug';
+      }
+      colValidateAddForm();
+    });
+  }
+  if (slugAddEl) {
+    slugAddEl.addEventListener('input', function () { this._userEdited = true; });
+  }
+  /* Tags como chips */
+  _colInitTagChips();
 
   /* Constrói seletor de cores do modal de adição */
   _colBuildColorPicker('colAddColorPicker', 'add');

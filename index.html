@@ -511,75 +511,73 @@
 
   <!-- MODAL ADICIONAR COLEÇÃO -->
   <div class="modal-overlay hidden" id="colAddOverlay">
-    <div class="modal add-modal" id="colAddModal">
-      <div class="modal-header">
-        <div class="modal-meta">
-          <span class="modal-category">Nova Coleção</span>
-          <h2 class="modal-title">Criar Coleção</h2>
+    <div class="modal col-add-modal" id="colAddModal">
+
+      <!-- Cabeçalho -->
+      <div class="modal-header col-add-header">
+        <div class="col-add-header-left">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18" style="flex-shrink:0;opacity:.6;">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+          </svg>
+          <span class="modal-category" style="text-transform:uppercase;letter-spacing:.07em;">Criar Coleção</span>
         </div>
         <button class="modal-close" id="colAddClose" title="Fechar">✕</button>
       </div>
 
-      <div class="add-fields">
+      <div class="col-add-body">
 
-        <!-- Nome Exibido -->
-        <div class="field-row">
-          <div class="field-group" style="flex:1;">
-            <label>Nome Exibido <span class="req">*</span></label>
-            <input type="text" id="colAddName" placeholder="ex: Projetos 2025" />
-            <span class="field-desc">Nome de exibição da coleção na interface.</span>
+        <!-- Linha 1: Nome + Coleção lado a lado -->
+        <div class="col-add-row">
+          <div class="col-add-field">
+            <label class="col-add-label">Nome Exibido <span class="req">*</span></label>
+            <input type="text" id="colAddName" class="col-add-input" placeholder="ex: Projetos 2025" autocomplete="off" />
+            <span class="col-add-desc">Nome de exibição da coleção na interface.</span>
             <span class="col-field-warn" id="colAddNameWarn"></span>
           </div>
-        </div>
-
-        <!-- Coleção (slug / nome do arquivo) -->
-        <div class="field-row">
-          <div class="field-group" style="flex:1;">
-            <label>Coleção <span class="req">*</span></label>
-            <input type="text" id="colAddSlug" placeholder="ex: projetos-2025" autocomplete="off" />
-            <span class="field-desc">
-              Identificador único em minúsculo — vira o nome do arquivo.
-              Ex: <code>projetos-2025</code> → <code>colecoes/data/projetos-2025.js</code>
-            </span>
+          <div class="col-add-field">
+            <label class="col-add-label">Coleção <span class="req">*</span></label>
+            <div class="col-add-input-icon-wrap">
+              <input type="text" id="colAddSlug" class="col-add-input" placeholder="ex: projetos-2025" autocomplete="off" />
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" class="col-add-input-icon">
+                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
+              </svg>
+            </div>
+            <span class="col-add-desc">Vira o nome do arquivo: <code>colecoes/data/<span id="colAddSlugHint">slug</span>.js</code></span>
             <span class="col-field-warn" id="colAddSlugWarn"></span>
           </div>
         </div>
 
-        <!-- Tags -->
-        <div class="field-row">
-          <div class="field-group">
-            <label>Tags <span class="hint">(separadas por vírgula)</span></label>
-            <input type="text" id="colAddTags" placeholder="ex: hero, landing, pdp" />
-            <span class="field-desc">Palavras-chave para busca.</span>
+        <!-- Tags como chips -->
+        <div class="col-add-field">
+          <label class="col-add-label">Tags <span class="col-add-label-hint">(separadas por vírgula)</span></label>
+          <div class="col-tags-input-wrap" id="colTagsWrap">
+            <div class="col-tags-chips" id="colTagsChips"></div>
+            <input type="text" id="colAddTagsInput" class="col-tags-input" placeholder="ex: hero, landing…" autocomplete="off" />
           </div>
+          <span class="col-add-desc">Palavras-chave para busca e filtro.</span>
         </div>
 
-        <!-- Campo Grupo (obrigatório) -->
-        <div class="field-row">
-          <div class="field-group" style="flex:1;">
-            <label>Grupo <span class="req">*</span></label>
-            <div class="col-group-row">
-              <button type="button" id="colGroupAddBtn" class="col-group-add-btn" title="Criar novo grupo">+</button>
-              <div class="col-group-select-wrap">
-                <button type="button" id="colGroupSelectBtn" class="col-group-select-btn">
-                  <span style="flex:1;color:var(--text3,#94a3b8);">Selecionar grupo…</span>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg>
-                </button>
-                <div id="colGroupDropdown" class="col-group-dropdown" style="display:none;"></div>
-              </div>
-            </div>
-            <span class="col-field-warn" id="colAddGroupWarn"></span>
-            <span class="field-desc">O grupo define a cor da borda e aparece nos filtros.</span>
+        <!-- Campo Grupo unificado -->
+        <div class="col-add-field">
+          <label class="col-add-label">Grupo <span class="req">*</span></label>
+          <div class="col-group-select-wrap" style="position:relative;">
+            <button type="button" id="colGroupSelectBtn" class="col-group-select-btn col-add-input" style="width:100%;text-align:left;">
+              <span id="colGroupSelectLabel" style="flex:1;color:var(--text3,#94a3b8);">+ Selecionar grupo…</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" class="col-chevron"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div id="colGroupDropdown" class="col-group-dropdown" style="display:none;"></div>
           </div>
+          <span class="col-add-desc">O grupo define a cor da borda e aparece nos filtros.</span>
+          <span class="col-field-warn" id="colAddGroupWarn"></span>
         </div>
 
       </div>
 
-      <!-- Âncora para módulo GitHub injetar botão de salvar -->
-      <div class="add-result-section">
-        <div class="code-toolbar">
-          <span id="colAddSaveBtn" style="display:none;"></span>
-        </div>
+      <!-- Rodapé -->
+      <div class="col-add-footer">
+        <!-- Módulo GitHub injeta botão aqui -->
+        <span id="colAddSaveBtn" style="display:none;"></span>
       </div>
 
     </div>
@@ -682,8 +680,7 @@
   ════════════════════════════════════════════════════════════════════ -->
   <!-- Arquivo de grupos (gerado automaticamente) -->
   <!-- <script src="colecoes/col-groups.js"></script> -->
-          <script src="colecoes/data/awdawdaw.js"></script>
-          <script src="colecoes/data/wda.js"></script>
+
   <!-- <script src="colecoes/data/projetos-2025.js"></script> -->
 
   <!-- ═══ MÓDULOS GITHUB DAS COLEÇÕES ══════════════════════════════
