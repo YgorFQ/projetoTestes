@@ -34,63 +34,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SenkoLib — Biblioteca de Layouts</title>
-  <script>
-    /* ── Paleta de 32 cores de autores ──────────────────────────────────────
-       Associa authorTag → cor hexadecimal.
-       Edite este objeto para adicionar/alterar colaboradores.
-       As cores são usadas na borda esquerda dos cards e nas tags de autor.
-    ──────────────────────────────────────────────────────────────────── */
-    window.SENKO_AUTHOR_COLORS = {
-      /* Slots 1–8: Roxos e Azuis */
-      'slot-01': '#7F77DD',
-      'slot-02': '#534AB7',
-      'slot-03': '#378ADD',
-      'slot-04': '#185FA5',
-      /* Slots 5–8: Verdes e Teal */
-      'slot-05': '#1D9E75',
-      'slot-06': '#0F6E56',
-      'slot-07': '#639922',
-      'slot-08': '#3B6D11',
-      /* Slots 9–12: Laranjas e Ambar */
-      'slot-09': '#EF9F27',
-      'slot-10': '#BA7517',
-      'slot-11': '#D85A30',
-      'slot-12': '#993C1D',
-      /* Slots 13–16: Rosas e Coral */
-      'slot-13': '#D4537E',
-      'slot-14': '#993556',
-      'slot-15': '#ED93B1',
-      'slot-16': '#F0997B',
-      /* Slots 17–20: Cinzas */
-      'slot-17': '#888780',
-      'slot-18': '#5F5E5A',
-      'slot-19': '#444441',
-      'slot-20': '#2C2C2A',
-      /* Slots 21–24: Vermelhos */
-      'slot-21': '#E24B4A',
-      'slot-22': '#A32D2D',
-      'slot-23': '#F09595',
-      'slot-24': '#F7C1C1',
-      /* Slots 25–28: Extras vibrantes */
-      'slot-25': '#AFA9EC',
-      'slot-26': '#9FE1CB',
-      'slot-27': '#FAC775',
-      'slot-28': '#F5C4B3',
-      /* Slots 29–32: Reserva */
-      'slot-29': '#C0DD97',
-      'slot-30': '#85B7EB',
-      'slot-31': '#F4C0D1',
-      'slot-32': '#B5D4F4',
-      /*
-       * Para associar um colaborador a uma cor, adicione aqui:
-       * 'nomedotag': '#hexcor',
-       * Exemplo:
-       * 'ygor':  '#7F77DD',
-       * 'ana':   '#1D9E75',
-       * 'pedro': '#D85A30',
-       */
-    };
-  </script>
   <script>(function(){var t=localStorage.getItem('senkolib_theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
   <script>
     if ('serviceWorker' in navigator) {
@@ -98,169 +41,7 @@
     }
   </script>
   <link rel="stylesheet" href="assets/styles.css" />
-  <style>
-    /* ══════════════════════════════════════════════════════
-       COLEÇÕES — estilos adicionados por senko-colecoes
-       Complementa o assets/styles.css sem modificá-lo.
-    ══════════════════════════════════════════════════════ */
-
-    /* ─── Barra de abas ─────────────────────────────── */
-    .senko-tabs-bar {
-      background: var(--header-bg, #fff);
-      border-bottom: 1px solid var(--border, #e2e8f0);
-      padding: 0 1.5rem;
-      position: sticky;
-      top: 0;
-      z-index: 90;
-    }
-    .senko-tabs {
-      display: flex;
-      gap: .25rem;
-      max-width: 1600px;
-      margin: 0 auto;
-    }
-    .senko-tab {
-      display: inline-flex;
-      align-items: center;
-      gap: .4rem;
-      padding: .55rem 1rem;
-      font-family: var(--font-body, sans-serif);
-      font-size: .82rem;
-      font-weight: 700;
-      color: var(--text3, #94a3b8);
-      background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
-      cursor: pointer;
-      transition: color .15s, border-color .15s;
-      position: relative;
-      bottom: -1px;
-    }
-    .senko-tab:hover { color: var(--text2, #64748b); }
-    .senko-tab--active {
-      color: var(--accent, #6366f1);
-      border-bottom-color: var(--accent, #6366f1);
-    }
-    .senko-tab-count {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 18px;
-      height: 18px;
-      padding: 0 5px;
-      border-radius: 9px;
-      background: var(--hover, #f1f5f9);
-      color: var(--text3, #94a3b8);
-      font-size: .7rem;
-      font-weight: 700;
-    }
-    .senko-tab--active .senko-tab-count {
-      background: var(--accent-soft, #eef2ff);
-      color: var(--accent, #6366f1);
-    }
-
-    /* ─── Header da seção de coleções ───────────────── */
-    .col-section-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: .75rem;
-      margin-bottom: 1rem;
-    }
-    .col-header-left { display: flex; flex-direction: column; gap: .5rem; }
-    .col-header-right { display: flex; align-items: center; gap: .5rem; }
-
-    /* ─── Pills de filtro por autor ─────────────────── */
-    .col-author-filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: .35rem;
-    }
-    .col-filter-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: .35rem;
-      height: 26px;
-      padding: 0 .7rem;
-      border-radius: 13px;
-      font-family: var(--font-body, sans-serif);
-      font-size: .75rem;
-      font-weight: 700;
-      border: 1.5px solid var(--border, #e2e8f0);
-      background: var(--card, #fff);
-      color: var(--text3, #94a3b8);
-      cursor: pointer;
-      transition: border-color .15s, color .15s, background .15s;
-    }
-    .col-filter-pill:hover { border-color: var(--text3, #94a3b8); color: var(--text2, #64748b); }
-    .col-filter-pill.active {
-      border-color: var(--accent, #6366f1);
-      color: var(--accent, #6366f1);
-      background: var(--accent-soft, #eef2ff);
-    }
-    .col-filter-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    /* ─── Card de coleção ───────────────────────────── */
-    .col-card {
-      /* A borda esquerda colorida é aplicada via JS (style inline) */
-      /* Anula o border-radius do lado esquerdo para a borda não ficar arredondada */
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px;
-    }
-    .col-card-author {
-      display: flex;
-      align-items: center;
-      gap: .3rem;
-      font-family: var(--font-body, sans-serif);
-      font-size: .72rem;
-      color: var(--text3, #94a3b8);
-      margin-bottom: .3rem;
-    }
-    .col-author-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .col-tag-author {
-      /* Cor aplicada via JS (inline style) */
-      font-weight: 700;
-    }
-
-    /* ─── Dark mode ─────────────────────────────────── */
-    [data-theme="dark"] .senko-tabs-bar {
-      background: var(--header-bg, #1a1b1e);
-      border-color: #363b3d;
-    }
-    [data-theme="dark"] .col-filter-pill {
-      background: #25282a;
-      border-color: #363b3d;
-      color: #b2aca2;
-    }
-    [data-theme="dark"] .col-filter-pill:hover {
-      border-color: #b2aca2;
-      color: #d8d4cf;
-    }
-    [data-theme="dark"] .col-filter-pill.active {
-      border-color: #b34b00;
-      color: #ef9f27;
-      background: #2a1f0a;
-    }
-    [data-theme="dark"] .senko-tab--active {
-      color: #ef9f27;
-      border-bottom-color: #ef9f27;
-    }
-    [data-theme="dark"] .senko-tab--active .senko-tab-count {
-      background: #2a1f0a;
-      color: #ef9f27;
-    }
-  </style>
+  <link rel="stylesheet" href="assets/col-styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -317,7 +98,7 @@
     </div>
   </header>
 
-  <!-- NAVEGAÇÃO ENTRE VIEWS: Biblioteca | Coleções -->
+  <!-- BARRA DE ABAS: Biblioteca | Coleções -->
   <nav class="senko-tabs-bar">
     <div class="senko-tabs">
       <button class="senko-tab senko-tab--active" data-view="library">
@@ -341,7 +122,7 @@
 
   <!-- DASHBOARD -->
   <main class="dashboard" id="dashboard">
-    <!-- ── Seção: Biblioteca oficial ── -->
+    <!-- Seção: Biblioteca oficial -->
     <div id="librarySection">
       <div class="stats-bar" id="statsBar"></div>
       <div class="grid" id="layoutGrid"></div>
@@ -351,15 +132,10 @@
       </div>
     </div>
 
-    <!-- ── Seção: Coleções pessoais ── -->
+    <!-- Seção: Coleções -->
     <div id="collectionsSection" style="display:none;">
-
-      <!-- Header da seção de coleções -->
       <div class="col-section-header">
-        <div class="col-header-left">
-          <div class="stats-bar" id="colStatsBar"></div>
-          <div class="col-author-filters" id="colAuthorFilters"></div>
-        </div>
+        <div class="stats-bar" id="colStatsBar"></div>
         <div class="col-header-right">
           <div class="search-wrap">
             <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -377,10 +153,7 @@
           </button>
         </div>
       </div>
-
-      <!-- Grid de coleções -->
       <div class="grid" id="collectionsGrid"></div>
-
       <div class="no-results hidden" id="colNoResults">
         <img src="assets/senko.png" class="no-results-icon" alt="Sem resultados" />
         <p>Nenhuma coleção encontrada</p>
@@ -709,77 +482,156 @@
     </div>
   </div>
 
+  <!-- MODAL DE LAYOUTS DA COLEÇÃO -->
+  <div class="modal-overlay hidden" id="colCollectionOverlay">
+    <div class="modal variants-modal" id="colCollectionModal">
+
+      <div class="col-collection-header">
+        <div class="col-collection-header-left">
+          <span class="modal-category">Coleção</span>
+          <div class="col-collection-meta">
+            <h2 class="modal-title" id="colCollectionTitle"></h2>
+            <div class="col-collection-author-row" id="colCollectionAuthor" style="display:none;"></div>
+          </div>
+          <code class="col-collection-file">colecoes/data/<span id="colCollectionSlug"></span>.js</code>
+        </div>
+        <div class="col-collection-header-right">
+          <span class="col-count-badge" id="colCollectionCount"></span>
+          <button class="modal-close" id="colCollectionClose" title="Fechar">✕</button>
+        </div>
+      </div>
+
+      <div class="variants-grid-wrap">
+        <div class="variants-grid" id="colLayoutsGrid"></div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- MODAL ADICIONAR COLEÇÃO -->
   <div class="modal-overlay hidden" id="colAddOverlay">
     <div class="modal add-modal" id="colAddModal">
       <div class="modal-header">
         <div class="modal-meta">
           <span class="modal-category">Nova Coleção</span>
-          <h2 class="modal-title">Adicionar à Coleção</h2>
-          <p class="add-hint">O arquivo será salvo em
-            <code>colecoes/<span id="colHintAuthorTag">tag-autor</span>.js</code>
-          </p>
+          <h2 class="modal-title">Criar Coleção</h2>
         </div>
-        <button class="modal-close" id="colAddModalClose" title="Fechar">✕</button>
+        <button class="modal-close" id="colAddClose" title="Fechar">✕</button>
       </div>
 
-      <!-- Campos de metadados -->
       <div class="add-fields">
+
+        <!-- Nome Exibido -->
         <div class="field-row">
-          <div class="field-group">
-            <label>Nome do autor <span class="req">*</span></label>
-            <input type="text" id="colAddAuthor" placeholder="ex: Ygor Martins" />
-            <span class="field-desc">Nome de exibição do colaborador.</span>
-          </div>
-          <div class="field-group">
-            <label>Tag do autor <span class="req">*</span></label>
-            <input type="text" id="colAddAuthorTag" placeholder="ex: ygor" oninput="var h=document.getElementById('colHintAuthorTag');if(h)h.textContent=this.value.trim().toLowerCase()||'tag-autor';" />
-            <span class="field-desc">
-              Tag única em minúsculo — vira o nome do arquivo.
-              Ex: <code>ygor</code> → <code>colecoes/ygor.js</code>
-            </span>
+          <div class="field-group" style="flex:1;">
+            <label>Nome Exibido <span class="req">*</span></label>
+            <input type="text" id="colAddName" placeholder="ex: Projetos 2025" />
+            <span class="field-desc">Nome de exibição da coleção na interface.</span>
+            <span class="col-field-warn" id="colAddNameWarn"></span>
           </div>
         </div>
+
+        <!-- Coleção (slug / nome do arquivo) -->
+        <div class="field-row">
+          <div class="field-group" style="flex:1;">
+            <label>Coleção <span class="req">*</span></label>
+            <input type="text" id="colAddSlug" placeholder="ex: projetos-2025" autocomplete="off" />
+            <span class="field-desc">
+              Identificador único em minúsculo — vira o nome do arquivo.
+              Ex: <code>projetos-2025</code> → <code>colecoes/data/projetos-2025.js</code>
+            </span>
+            <span class="col-field-warn" id="colAddSlugWarn"></span>
+          </div>
+        </div>
+
+        <!-- Tags -->
         <div class="field-row">
           <div class="field-group">
-            <label>Nome do layout <span class="req">*</span></label>
-            <input type="text" id="colAddName" placeholder="ex: Hero Banner v2" />
-            <span class="field-desc">Nome de exibição do layout na coleção.</span>
-          </div>
-          <div class="field-group">
             <label>Tags <span class="hint">(separadas por vírgula)</span></label>
-            <input type="text" id="colAddTags" placeholder="ex: hero, banner, cta" />
+            <input type="text" id="colAddTags" placeholder="ex: hero, landing, pdp" />
             <span class="field-desc">Palavras-chave para busca.</span>
           </div>
         </div>
+
+        <!-- Autor + Cor (linha única, ambos opcionais) -->
+        <div class="field-row col-author-color-row">
+          <div class="field-group" style="flex:1;">
+            <label>Autor <span class="hint">(opcional)</span></label>
+            <input type="text" id="colAddAuthor" placeholder="ex: Ygor" autocomplete="off" />
+            <span class="field-desc">Nome exibido ao lado do bloco. Deixe vazio se não quiser.</span>
+          </div>
+          <div class="col-color-picker-wrap">
+            <label>Cor <span class="hint">(opcional)</span></label>
+            <div class="col-color-grid" id="colAddColorPicker"></div>
+            <span class="field-desc">Cor da borda e do ponto de autor.</span>
+          </div>
+        </div>
+
       </div>
 
-      <!-- Tabs HTML / CSS / Preview -->
-      <div class="code-section">
-        <div class="code-tabs">
-          <button class="tab-btn col-add-tab active" data-coltab="html">HTML</button>
-          <button class="tab-btn col-add-tab" data-coltab="css">CSS</button>
-          <button class="tab-btn col-add-tab" data-coltab="preview">Preview</button>
-        </div>
-        <div class="add-code-panel active" id="colAddPanelHtml">
-          <textarea id="colAddHtml" class="code-textarea" placeholder="Cole o HTML do layout aqui…"></textarea>
-        </div>
-        <div class="add-code-panel" id="colAddPanelCss">
-          <textarea id="colAddCss" class="code-textarea" placeholder="Cole o CSS do layout aqui…"></textarea>
-        </div>
-        <div class="add-code-panel" id="colAddPanelPreview">
-          <div class="preview-label">Preview ao vivo</div>
-          <iframe id="colAddPreviewIframe" class="modal-iframe" sandbox="allow-scripts"></iframe>
-        </div>
-      </div>
-
-      <!-- Código gerado + âncora para GitHub -->
+      <!-- Âncora para módulo GitHub injetar botão de salvar -->
       <div class="add-result-section">
-        <div class="code-toolbar" id="colAddResultToolbar">
-          <!-- senko-github-colecoes.js injeta o botão GitHub aqui -->
-          <span id="colSaveBtn" style="display:none;"></span>
+        <div class="code-toolbar">
+          <span id="colAddSaveBtn" style="display:none;"></span>
         </div>
-        <pre class="code-block" id="colGeneratedCode" style="display:none;"></pre>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL EDITAR COLEÇÃO -->
+  <div class="modal-overlay hidden" id="colEditOverlay">
+    <div class="modal add-modal" id="colEditModal">
+      <div class="modal-header">
+        <div class="modal-meta">
+          <span class="modal-category">Editar Coleção</span>
+          <h2 class="modal-title">Editar Coleção</h2>
+        </div>
+        <div style="display:flex;gap:.5rem;align-items:center;">
+          <!-- Módulo GitHub injeta botão de excluir aqui -->
+          <span id="colEditDeleteBtn" style="display:none;"></span>
+          <!-- Módulo GitHub injeta botão de salvar aqui -->
+          <span id="colEditSaveBtn" style="display:none;"></span>
+          <button class="modal-close" id="colEditClose" title="Fechar">✕</button>
+        </div>
+      </div>
+
+      <div class="add-fields">
+
+        <div class="field-row">
+          <div class="field-group" style="flex:1;">
+            <label>Nome Exibido <span class="req">*</span></label>
+            <input type="text" id="colEditName" placeholder="ex: Projetos 2025" />
+            <span class="col-field-warn" id="colEditNameWarn"></span>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group" style="flex:1;">
+            <label>Coleção</label>
+            <input type="text" id="colEditSlug" readonly />
+            <span class="field-desc">O slug não pode ser alterado após a criação.</span>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label>Tags <span class="hint">(separadas por vírgula)</span></label>
+            <input type="text" id="colEditTags" placeholder="ex: hero, landing, pdp" />
+          </div>
+        </div>
+
+        <div class="field-row col-author-color-row">
+          <div class="field-group" style="flex:1;">
+            <label>Autor <span class="hint">(opcional)</span></label>
+            <input type="text" id="colEditAuthor" placeholder="ex: Ygor" autocomplete="off" />
+          </div>
+          <div class="col-color-picker-wrap">
+            <label>Cor <span class="hint">(opcional)</span></label>
+            <div class="col-color-grid" id="colEditColorPicker"></div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -815,23 +667,28 @@
   <script src="modules/github/senko-github-v2.js"></script>
   <script src="modules/github/senko-github-variants.js"></script>
   <script src="modules/github/senko-github-delete.js"></script>
-  <script src="modules/github/senko-github-colecoes.js"></script>
 
-  <!-- ═══════════════════════════════════════════════════
-       ARQUIVOS DE COLEÇÕES PESSOAIS
-       Para cada colaborador que tiver coleção, adicione:
-         <script src="colecoes/<tag-autor>.js"></script>
-       Cada arquivo chama SenkoLib.registerCollection([...])
-  ════════════════════════════════════════════════════ -->
-  <!-- <script src="colecoes/ygor.js"></script> -->
-  <!-- <script src="colecoes/ana.js"></script>  -->
+  <!-- ═══ COLEÇÕES ═══════════════════════════════════════════════════
+       Motor e lógica de UI das coleções (completamente independentes)
+  ════════════════════════════════════════════════════════════════════ -->
+  <script src="colecoes/col-core.js"></script>
+  <script src="colecoes/col-script.js"></script>
+  <script src="colecoes/col-modals.js"></script>
 
-  <!-- ═══════════════════════════════════════════════════
-       VARIANTES DE COLEÇÕES
-       Para cada layout de coleção com variantes:
-         <script src="colecoes/variants/<id>.js"></script>
-       Cada arquivo chama SenkoLib.registerCollectionVariant(id, [...])
-  ════════════════════════════════════════════════════ -->
+  <!-- ═══ DADOS DAS COLEÇÕES ════════════════════════════════════════
+       Para cada coleção criada, adicione:
+         <script src="colecoes/data/[slug].js"></script>
+       Cada arquivo chama ColLib.registerCollection({...}) e
+       ColLib.registerLayout(slug, [...])
+  ════════════════════════════════════════════════════════════════════ -->
+  <!-- <script src="colecoes/data/projetos-2025.js"></script> -->
+
+  <!-- ═══ MÓDULOS GITHUB DAS COLEÇÕES ══════════════════════════════
+       Só ativos no GitHub Pages — injetam botões de save/delete.
+  ════════════════════════════════════════════════════════════════════ -->
+  <script src="modules/github/senko-github-col-save.js"></script>
+  <script src="modules/github/senko-github-col-edit.js"></script>
+  <script src="modules/github/senko-github-col-delete.js"></script>
   <script>
   (function () {
     var KEY = 'senkolib_theme';
@@ -851,12 +708,6 @@
 
     document.addEventListener('DOMContentLoaded', function () {
       apply(localStorage.getItem(KEY) || 'light');
-      /* Atualiza contadores das abas */
-      var libCount = document.getElementById('tabCountLibrary');
-      var colCount = document.getElementById('tabCountCollections');
-      if (libCount) libCount.textContent = SenkoLib.getAll().length || '';
-      if (colCount) colCount.textContent = SenkoLib.getCollections().length || '';
-
       document.getElementById('themeToggleBtn').addEventListener('click', function () {
         var next = (document.documentElement.getAttribute('data-theme') || 'light') === 'dark' ? 'light' : 'dark';
         localStorage.setItem(KEY, next);
