@@ -24,13 +24,16 @@ function _ghcSaveIcon() {
 
 /* ── Lê campos do modal ── */
 function ghcSaveReadFields() {
-  var name    = ((document.getElementById('colAddName')   || {}).value || '').trim();
-  var slug    = ((document.getElementById('colAddSlug')   || {}).value || '').trim().toLowerCase();
-  var tagsRaw = ((document.getElementById('colAddTags')   || {}).value || '').trim();
-  var author  = ((document.getElementById('colAddAuthor') || {}).value || '').trim();
-  var color   = (typeof colGetSelectedColor === 'function') ? colGetSelectedColor('add') : '';
-  var tags    = tagsRaw.split(',').map(function(t){ return t.trim(); }).filter(Boolean);
-  return { name: name, slug: slug, tags: tags, author: author, color: color };
+  var name = ((document.getElementById('colAddName') || {}).value || '').trim();
+  var slug = ((document.getElementById('colAddSlug') || {}).value || '').trim().toLowerCase();
+  /* Tags: usa chips (_colTagsList) ou input legado */
+  var tags = (typeof _colTagsList !== 'undefined' && _colTagsList.length > 0)
+    ? _colTagsList.slice()
+    : ((document.getElementById('colAddTags') || {}).value || '').split(',').map(function(t){return t.trim();}).filter(Boolean);
+  /* Grupo selecionado */
+  var group = (typeof colState !== 'undefined' && colState.selectedGroup)
+    ? colState.selectedGroup.slug : '';
+  return { name: name, slug: slug, tags: tags, group: group };
 }
 
 /* ── Monta conteúdo do arquivo .js ── */
@@ -39,11 +42,10 @@ function ghcSaveBuildFileContent(fields) {
   return (
     '// @ts-nocheck\n' +
     "ColLib.registerCollection({\n" +
-    "  slug:   '" + fields.slug                          + "',\n" +
-    "  name:   '" + (fields.name   ||'').replace(/'/g,"\\'") + "',\n" +
-    '  tags:   [' + tagsStr                              + '],\n' +
-    "  author: '" + (fields.author ||'').replace(/'/g,"\\'") + "',\n" +
-    "  color:  '" + (fields.color  ||'')                 + "',\n" +
+    "  slug:  '"  + fields.slug                         + "',\n" +
+    "  name:  '"  + (fields.name  ||'').replace(/'/g,"\\'") + "',\n" +
+    '  tags:  ['  + tagsStr                             + '],\n' +
+    "  group: '" + (fields.group  ||'')                 + "',\n" +
     '});\n\n' +
     "ColLib.registerLayout('" + fields.slug + "', [\n\n]);\n"
   );
@@ -122,10 +124,10 @@ function ghcSaveNewCollection(fields) {
       return ghcSaveRegisterScript(fields.slug);
 
     }).then(function() {
-      ColLib.registerCollection({
+      ColLib.registerCollection([{
         slug: fields.slug, name: fields.name, tags: fields.tags,
-        author: fields.author, color: fields.color,
-      });
+        group: fields.group || '',
+      }]);
       ghSetStatus('✓ Coleção criada: ' + filePath,'ok');
       ghUnlockSave();
       ghStartDeployWatch(filePath);
