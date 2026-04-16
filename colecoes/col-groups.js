@@ -23,4 +23,5 @@ ColGroups.register([
   { slug: 'efacil', name: 'eFácil', color: '#7F77DD' },
   { slug: 'efacil', name: 'eFácil', color: '#7F77DD' },
   { slug: 'jogue-na-minha-papae', name: 'Jogue na minha papae', color: '#3B6D11' },
+  { slug: 'awddsssss', name: 'awddsssss', color: '#7F77DD' },
 ]);
