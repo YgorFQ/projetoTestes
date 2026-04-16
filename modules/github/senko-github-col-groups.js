@@ -3,53 +3,47 @@
    senko-github-col-groups.js — Grupos das Coleções (GitHub)
 
    ARQUIVO DE DADOS: colecoes/col-groups-data.js
-   (separado do motor col-groups.js para não conflitar)
+   MOTOR: colecoes/col-groups.js (deve estar no repositório)
 
-   FLUXO DE GRUPOS PENDENTES:
-     1. Usuário cria grupo → só em memória via ColGroups.add()
-     2. No próximo commit (criar coleção, editar, add layout...)
-        ghcGroupsFlushPending() é chamado antes do PUT principal
-     3. Grupos pendentes são escritos em col-groups-data.js
-     4. Se o arquivo não existia, é criado e o <script> registrado
-
-   Transparente para o usuário. Sem localStorage.
-   Se recarregar sem ter commitado, pendentes somem.
+   FLUXO:
+     Usuário cria grupo → só em memória (pendente)
+     No próximo commit → ghcGroupsFlushPending() persiste tudo
 ═══════════════════════════════════════════════════════════════════════ */
 
 var GHC_GROUPS_PATH = 'colecoes/col-groups-data.js';
-
 var _ghcPendingGroups = [];
 
+/* ─── Helpers seguros ──────────────────────────────────────────────── */
+function _ghcColGroupsExists() {
+  return typeof ColGroups !== 'undefined' && typeof ColGroups.add === 'function';
+}
 
 /* ─── Registro pendente ─────────────────────────────────────────────
-   Só adiciona em memória. Não commita.
+   Adiciona em memória e na fila pendente. NÃO commita.
 ─────────────────────────────────────────────────────────────────── */
 function ghcGroupAddPending(groupObj) {
   var slug = (groupObj.slug || '').toLowerCase();
   var dup  = _ghcPendingGroups.some(function(g) { return g.slug === slug; });
   if (dup) return;
   _ghcPendingGroups.push({ slug: slug, name: groupObj.name, color: groupObj.color });
-  ColGroups.add(groupObj);
+  if (_ghcColGroupsExists()) ColGroups.add(groupObj);
 }
 
-
 /* ─── Flush ─────────────────────────────────────────────────────────
-   Persiste todos os pendentes antes de qualquer outro commit.
-   Retorna Promise<true> sempre (não bloqueia o commit principal).
+   Persiste pendentes antes de qualquer commit.
+   Retorna Promise<true> sempre — nunca bloqueia o commit principal.
 ─────────────────────────────────────────────────────────────────── */
 function ghcGroupsFlushPending() {
   if (_ghcPendingGroups.length === 0) return Promise.resolve(true);
 
   return ghcGroupsGetFile().then(function(fileInfo) {
     var existing = fileInfo.exists ? ghcGroupsParseExisting(fileInfo.content) : [];
-
     _ghcPendingGroups.forEach(function(pg) {
       var isDup = existing.some(function(g) { return g.slug === pg.slug; });
       if (!isDup) existing.push(pg);
     });
 
     var slugs = _ghcPendingGroups.map(function(g) { return g.slug; }).join(', ');
-
     return githubPutFile(
       GHC_GROUPS_PATH,
       ghcGroupsBuildFile(existing),
@@ -67,15 +61,13 @@ function ghcGroupsFlushPending() {
   });
 }
 
-
-/* ─── Utilitários ──────────────────────────────────────────────── */
-
+/* ─── Utilitários ──────────────────────────────────────────────────── */
 function ghcGroupsBuildFile(groups) {
   var lines = groups.map(function(g) {
     return (
       "  { slug: '" + g.slug + "'," +
-      " name: '"   + (g.name  || '').replace(/'/g, "\\'") + "'," +
-      " color: '"  + (g.color || '') + "' },"
+      " name: '" + (g.name || '').replace(/'/g, "\\'") + "'," +
+      " color: '" + (g.color || '') + "' },"
     );
   });
   return (
@@ -116,16 +108,18 @@ function ghcGroupsRegisterScript() {
     if (newIdx === data.content) return;
     return githubPutFile('index.html', newIdx, data.sha,
       '[SenkoLib] register col-groups-data.js');
-  });
+  }).catch(function() {}); /* não crítico */
 }
 
-
-/* ─── ghcGroupSave — chamado pelo modal de novo grupo ──────────────
-   Agora só registra pendente. Commit acontece no próximo save.
+/* ─── ghcGroupSave — chamado pelo botão "Criar grupo" ──────────────
+   Verifica duplicata, adiciona pendente, fecha modal, libera botão.
+   Retorna Promise<true|false>.
 ─────────────────────────────────────────────────────────────────── */
 function ghcGroupSave(groupObj) {
   var slug = (groupObj.slug || '').toLowerCase();
-  var inMemory  = typeof ColGroups !== 'undefined' && !!ColGroups.getBySlug(slug);
+
+  /* Verifica duplicata em memória e pendentes */
+  var inMemory  = _ghcColGroupsExists() && !!ColGroups.getBySlug(slug);
   var inPending = _ghcPendingGroups.some(function(g) { return g.slug === slug; });
 
   if (inMemory || inPending) {
@@ -135,10 +129,10 @@ function ghcGroupSave(groupObj) {
     return Promise.resolve(false);
   }
 
+  /* Adiciona pendente — commit acontece no próximo save de coleção/layout */
   ghcGroupAddPending(groupObj);
   return Promise.resolve(true);
 }
-
 
 document.addEventListener('DOMContentLoaded', function() {
   if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;

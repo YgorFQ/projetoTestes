@@ -846,26 +846,37 @@ function _colBuildNewGroupModal() {
     btn.textContent = 'Salvando…';
     btn.disabled    = true;
 
-    if (typeof ghcGroupSave === 'function') {
-      ghcGroupSave({ slug: slug, name: name, color: color }).then(function(ok) {
-        if (ok) {
-          colCloseNewGroupModal();
+    /* Função que finaliza após salvar (com ou sem GitHub) */
+    function _onGroupSaved(ok) {
+      if (ok) {
+        colCloseNewGroupModal();
+        /* Atualiza o campo de seleção de grupo */
+        if (typeof ColGroups !== 'undefined' && ColGroups.getBySlug) {
           colState.selectedGroup = ColGroups.getBySlug(slug);
-          colUpdateGroupField();
-          colValidateAddForm();
-          if (_colGroupDropdownOpen) colRenderGroupDropdown();
+        } else {
+          colState.selectedGroup = { slug: slug, name: name, color: color };
         }
-        btn.textContent = 'Criar grupo';
-        btn.disabled    = false;
-      });
-    } else {
-      ColGroups.add({ slug: slug, name: name, color: color });
-      colCloseNewGroupModal();
-      colState.selectedGroup = ColGroups.getBySlug(slug);
-      colUpdateGroupField();
-      colValidateAddForm();
+        colUpdateGroupField();
+        if (typeof colValidateAddForm === 'function') colValidateAddForm();
+        if (_colGroupDropdownOpen && typeof colRenderGroupDropdown === 'function') {
+          colRenderGroupDropdown();
+        }
+      }
       btn.textContent = 'Criar grupo';
       btn.disabled    = false;
+    }
+
+    if (typeof ghcGroupSave === 'function') {
+      /* GitHub Pages: ghcGroupSave retorna imediatamente (só pendente) */
+      ghcGroupSave({ slug: slug, name: name, color: color })
+        .then(_onGroupSaved)
+        .catch(function() { btn.textContent = 'Criar grupo'; btn.disabled = false; });
+    } else {
+      /* Fora do GitHub Pages: adiciona direto em memória */
+      if (typeof ColGroups !== 'undefined') {
+        ColGroups.add({ slug: slug, name: name, color: color });
+      }
+      _onGroupSaved(true);
     }
   });
 }
