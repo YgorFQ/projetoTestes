@@ -68,6 +68,7 @@ function ghcEditCollection(slug, fields) {
   var filePath = 'colecoes/data/' + slug + '.js';
   ghSetStatus('Lendo coleção…','saving');
 
+  return (typeof ghcGroupsFlushPending === 'function' ? ghcGroupsFlushPending() : Promise.resolve(true)).then(function() {
   return githubGetFile(filePath).then(function(data) {
 
     var newBlock   = ghcEditBuildBlock(slug, fields);
@@ -102,7 +103,7 @@ function ghcEditCollection(slug, fields) {
       return true;
     });
 
-  }).catch(function(e) {
+  }); }).catch(function(e) {
     console.error('[col-edit]', e);
     ghSetStatus('Erro: ' + e.message,'error');
     ghUnlockSave();

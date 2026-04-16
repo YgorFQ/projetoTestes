@@ -114,6 +114,7 @@ function ghcLayAddLayout(colSlug, id, name, tags, html, css) {
   var filePath = 'colecoes/data/' + colSlug + '.js';
   ghSetStatus('Lendo coleção…','saving');
 
+  return (typeof ghcGroupsFlushPending === 'function' ? ghcGroupsFlushPending() : Promise.resolve(true)).then(function() {
   return githubGetFile(filePath).then(function(data) {
     /* Verifica duplicata */
     var marker = '/*@@@@Col - ' + id.toLowerCase() + ' */';
@@ -144,7 +145,7 @@ function ghcLayAddLayout(colSlug, id, name, tags, html, css) {
       return true;
     });
 
-  }).catch(function(e) {
+  }); }).catch(function(e) {
     console.error('[col-layouts add]', e);
     ghSetStatus('Erro: '+e.message,'error');
     ghUnlockSave();

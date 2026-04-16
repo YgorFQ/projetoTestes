@@ -98,6 +98,8 @@ function ghcSaveNewCollection(fields) {
   var filePath = ghcSaveFilePath(fields.slug);
   ghSetStatus('Verificando coleção…','saving');
 
+  /* Flush de grupos pendentes — serão commitados junto com esta coleção */
+  return (typeof ghcGroupsFlushPending === 'function' ? ghcGroupsFlushPending() : Promise.resolve(true)).then(function() {
   return ghcSaveFileExists(fields.slug).then(function(exists) {
 
     if (exists) {
@@ -130,7 +132,7 @@ function ghcSaveNewCollection(fields) {
       return true;
     });
 
-  }).catch(function(e) {
+  }); }).catch(function(e) {
     console.error('[col-save]', e);
     ghSetStatus('Erro: ' + e.message,'error');
     ghUnlockSave();
