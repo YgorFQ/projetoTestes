@@ -55,11 +55,11 @@ var COL_PALETTE = [
   /* Roxos */  '#7F77DD','#534AB7','#AFA9EC','#CECBF6',
   /* Azuis */  '#378ADD','#185FA5','#85B7EB','#B5D4F4',
   /* Verdes */ '#1D9E75','#0F6E56','#5DCAA5','#9FE1CB',
-  /* Teal */   '#639922','#3B6D11','#97C459','#C0DD97',
+  /* Lima */   '#639922','#3B6D11','#97C459','#C0DD97',
   /* Ambar */  '#EF9F27','#BA7517','#FAC775','#FAEEDA',
   /* Coral */  '#D85A30','#993C1D','#F0997B','#F5C4B3',
   /* Rosa */   '#D4537E','#993556','#ED93B1','#F4C0D1',
-  /* Cinza */  '#888780','#5F5E5A','#444441','#2C2C2A',
+  /* Extra */  '#E24B4A','#0891B2','#7C3AED','#059669',
 ];
 
 
@@ -582,13 +582,25 @@ function _colInitTagChips() {
 /* Estado do dropdown de grupos */
 var _colGroupDropdownOpen = false;
 
-/* Abre/fecha o dropdown de grupos */
+/* Abre/fecha o dropdown de grupos — posiciona via getBoundingClientRect */
 function colToggleGroupDropdown() {
   var drop = document.getElementById('colGroupDropdown');
+  var btn  = document.getElementById('colGroupSelectBtn');
   if (!drop) return;
   _colGroupDropdownOpen = !_colGroupDropdownOpen;
-  drop.style.display = _colGroupDropdownOpen ? 'block' : 'none';
-  if (_colGroupDropdownOpen) colRenderGroupDropdown();
+  if (_colGroupDropdownOpen) {
+    /* Posiciona o dropdown logo abaixo do botão de seleção */
+    if (btn) {
+      var rect = btn.getBoundingClientRect();
+      drop.style.top   = (rect.bottom + 4) + 'px';
+      drop.style.left  = rect.left + 'px';
+      drop.style.width = rect.width + 'px';
+    }
+    drop.style.display = 'block';
+    colRenderGroupDropdown();
+  } else {
+    drop.style.display = 'none';
+  }
 }
 
 function colCloseGroupDropdown() {
@@ -689,7 +701,7 @@ function colOpenNewGroupModal() {
 
   var overlay = document.getElementById('colNewGroupOverlay');
   if (overlay) {
-    overlay.classList.remove('gh-hidden');
+    overlay.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   }
 }
@@ -729,58 +741,58 @@ function _colCheckNewGroupForm(showWarns) {
 
 function colCloseNewGroupModal() {
   var overlay = document.getElementById('colNewGroupOverlay');
-  if (overlay) overlay.classList.add('gh-hidden');
+  if (overlay) overlay.style.display = 'none';
   document.body.style.overflow = '';
 }
 
 function _colBuildNewGroupModal() {
   var overlay = document.createElement('div');
-  overlay.id        = 'colNewGroupOverlay';
-  overlay.className = 'gh-hidden';
+  overlay.id = 'colNewGroupOverlay';
+  overlay.style.display = 'none';
   overlay.style.cssText = [
     'position:fixed;inset:0;',
-    'background:rgba(0,0,0,.6);',
+    'background:rgba(0,0,0,.5);',
     'backdrop-filter:blur(4px);',
-    'display:flex;align-items:center;justify-content:center;',
+    'display:none;align-items:center;justify-content:center;',
     'z-index:10001;padding:1rem;',
   ].join('');
 
   overlay.innerHTML = [
     '<div id="colNewGroupModal" style="',
-      'background:var(--card,#1e2022);',
-      'border:1.5px solid var(--border,#363b3d);',
+      'background:var(--card,#fff);',
+      'border:1.5px solid var(--border,#e2e8f0);',
       'border-radius:14px;',
       'width:100%;max-width:360px;',
       'overflow:hidden;',
       'box-shadow:0 24px 64px rgba(0,0,0,.35);',
     '">',
     /* Cabeçalho */
-    '  <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.25rem;border-bottom:0.5px solid var(--border,#363b3d);">',
-    '    <span style="font-family:var(--font-body,sans-serif);font-size:.82rem;font-weight:800;color:var(--text1,#d8d4cf);letter-spacing:.04em;text-transform:uppercase;">Novo Grupo</span>',
+    '  <div style="display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.25rem;border-bottom:0.5px solid var(--border,#e2e8f0);">',
+    '    <span style="font-family:var(--font-body,sans-serif);font-size:.82rem;font-weight:800;color:var(--text1,#0f172a);letter-spacing:.04em;text-transform:uppercase;">Novo Grupo</span>',
     '    <button id="colNewGroupClose" title="Fechar" style="background:none;border:none;cursor:pointer;color:var(--text3,#94a3b8);font-size:1.1rem;line-height:1;padding:.2rem;border-radius:4px;">✕</button>',
     '  </div>',
     /* Body */
     '  <div style="padding:1.1rem 1.25rem;display:flex;flex-direction:column;gap:.9rem;">',
     '    <div>',
-    '      <label style="display:block;font-family:var(--font-body,sans-serif);font-size:.8rem;font-weight:700;color:var(--text1,#d8d4cf);margin-bottom:.35rem;">Nome <span style="color:#ef4444;">*</span></label>',
+    '      <label style="display:block;font-family:var(--font-body,sans-serif);font-size:.8rem;font-weight:700;color:var(--text1,#0f172a);margin-bottom:.35rem;">Nome <span style="color:#ef4444;">*</span></label>',
     '      <input type="text" id="colNewGroupName" autocomplete="off" placeholder="ex: eFácil" style="',
     '        width:100%;height:36px;padding:0 .75rem;',
     '        font-family:var(--font-body,sans-serif);font-size:.85rem;',
-    '        background:var(--bg,#25282a);color:var(--text1,#d8d4cf);',
-    '        border:1.5px solid var(--border,#363b3d);border-radius:8px;outline:none;',
+    '        background:var(--bg,#f8fafc);color:var(--text1,#0f172a);',
+    '        border:1.5px solid var(--border,#e2e8f0);border-radius:8px;outline:none;',
     '        transition:border-color .15s;',
     '      "/>',
     '      <span id="colNewGroupWarn" style="display:none;font-family:var(--font-body,sans-serif);font-size:.74rem;font-weight:700;color:#ef4444;margin-top:.3rem;"></span>',
     '    </div>',
     '    <div>',
-    '      <label style="display:block;font-family:var(--font-body,sans-serif);font-size:.8rem;font-weight:700;color:var(--text1,#d8d4cf);margin-bottom:.35rem;">Cor <span style="color:#ef4444;">*</span></label>',
-    '      <div id="colNewGroupColorGrid" style="display:flex;flex-wrap:wrap;gap:6px;padding:.65rem;background:var(--bg,#25282a);border:1.5px solid var(--border,#363b3d);border-radius:8px;"></div>',
+    '      <label style="display:block;font-family:var(--font-body,sans-serif);font-size:.8rem;font-weight:700;color:var(--text1,#0f172a);margin-bottom:.35rem;">Cor <span style="color:#ef4444;">*</span></label>',
+    '      <div id="colNewGroupColorGrid" style="display:flex;flex-wrap:wrap;gap:6px;padding:.65rem;background:var(--bg,#25282a);border:1.5px solid var(--border,#e2e8f0);border-radius:8px;"></div>',
     '      <span id="colNewGroupColorWarn" style="display:none;font-family:var(--font-body,sans-serif);font-size:.74rem;font-weight:700;color:#ef4444;margin-top:.3rem;"></span>',
     '    </div>',
     '  </div>',
     /* Rodapé */
-    '  <div style="display:flex;justify-content:flex-end;gap:.5rem;padding:.8rem 1.25rem;border-top:0.5px solid var(--border,#363b3d);">',
-    '    <button id="colNewGroupCancelBtn" style="padding:.45rem .9rem;border:1.5px solid var(--border,#363b3d);border-radius:7px;background:none;color:var(--text2,#b2aca2);font-family:var(--font-body,sans-serif);font-size:.82rem;font-weight:700;cursor:pointer;">Cancelar</button>',
+    '  <div style="display:flex;justify-content:flex-end;gap:.5rem;padding:.8rem 1.25rem;border-top:0.5px solid var(--border,#e2e8f0);">',
+    '    <button id="colNewGroupCancelBtn" style="padding:.45rem .9rem;border:1.5px solid var(--border,#e2e8f0);border-radius:7px;background:none;color:var(--text2,#64748b);font-family:var(--font-body,sans-serif);font-size:.82rem;font-weight:700;cursor:pointer;">Cancelar</button>',
     '    <button id="colNewGroupSaveBtn" class="btn-github btn-blocked" style="padding:.45rem 1rem;">Criar grupo</button>',
     '  </div>',
     '</div>',

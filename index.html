@@ -559,18 +559,19 @@
         </div>
 
         <!-- Campo Grupo unificado -->
-        <div class="col-add-field">
+        <div class="col-add-field" id="colGroupField">
           <label class="col-add-label">Grupo <span class="req">*</span></label>
-          <div class="col-group-select-wrap" style="position:relative;">
+          <div class="col-group-select-wrap">
             <button type="button" id="colGroupSelectBtn" class="col-group-select-btn col-add-input" style="width:100%;text-align:left;">
               <span id="colGroupSelectLabel" style="flex:1;color:var(--text3,#94a3b8);">+ Selecionar grupo…</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" class="col-chevron"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
-            <div id="colGroupDropdown" class="col-group-dropdown" style="display:none;"></div>
           </div>
           <span class="col-add-desc">O grupo define a cor da borda e aparece nos filtros.</span>
           <span class="col-field-warn" id="colAddGroupWarn"></span>
         </div>
+        <!-- Dropdown fora do scroll/overflow do modal -->
+        <div id="colGroupDropdown" class="col-group-dropdown" style="display:none;position:fixed;z-index:10050;min-width:260px;"></div>
 
       </div>
 
