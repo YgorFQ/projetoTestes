@@ -157,7 +157,10 @@ function colRenderGrid() {
   /* Stats bar — "X coleções" */
   if (statsBar) {
     var total = ColLib.getCollections().length;
-    statsBar.innerHTML = '<span>' + total + '</span> coleção' + (total !== 1 ? 'ões' : '');
+    var hasGroups = typeof ColGroups !== 'undefined' && ColGroups.getAll().length > 0;
+    statsBar.innerHTML =
+      '<strong>' + total + '</strong> ' + (total === 1 ? 'coleção' : 'coleções') +
+      (hasGroups ? ' &nbsp;·&nbsp; <span style="color:var(--text3,#94a3b8);font-size:.8rem;">filtrar por grupo:</span>' : '');
   }
 
   /* Pills de filtro por tag */
@@ -221,12 +224,13 @@ function colRenderGroupFilters() {
   /* Pills de grupos */
   groups.forEach(function (g) {
     var pill = document.createElement('button');
-    pill.className = 'col-filter-pill col-filter-pill--group' + (colState.groupFilter === g.slug ? ' active' : '');
-    pill.innerHTML =
-      '<span class="col-filter-dot" style="background:' + g.color + ';"></span>' + g.name;
-    if (colState.groupFilter === g.slug) {
+    var isActive = colState.groupFilter === g.slug;
+    pill.className = 'col-filter-pill col-filter-pill--group' + (isActive ? ' active' : '');
+    pill.innerHTML = '<span class="col-filter-dot" style="background:' + (isActive ? '#fff' : g.color) + ';"></span>' + g.name;
+    if (isActive) {
+      pill.style.background  = g.color;
       pill.style.borderColor = g.color;
-      pill.style.color       = g.color;
+      pill.style.color       = '#fff';
     }
     pill.addEventListener('click', function () {
       colState.groupFilter = g.slug;
@@ -262,88 +266,77 @@ function colRenderGroupFilters() {
 ═══════════════════════════════════════════════════════════════════════ */
 
 function colCreateCard(col, index) {
-  var color        = colGetAuthorColor(col.color);
-  var hasAuthor    = !!(col.author && col.author.trim());
-  var layoutCount  = ColLib.getLayouts(col.slug).length;
+  var layoutCount = ColLib.getLayouts(col.slug).length;
 
-  /* ── Wrapper ── */
-  var card = document.createElement('div');
-  card.className = 'card col-card';
-  card.style.animationDelay  = (index * 40) + 'ms';
-
-  /* Borda esquerda: cor vem do grupo da coleção */
+  /* Cor do grupo */
   var groupColor = '';
+  var groupName  = '';
   if (col.group && typeof ColGroups !== 'undefined') {
     var grp = ColGroups.getBySlug(col.group);
-    if (grp) groupColor = grp.color;
+    if (grp) { groupColor = grp.color; groupName = grp.name; }
   }
+
+  /* ── Wrapper — borda colorida em volta toda ── */
+  var card = document.createElement('div');
+  card.className = 'card col-card';
+  card.style.animationDelay = (index * 40) + 'ms';
   if (groupColor) {
-    card.style.borderLeft             = '3px solid ' + groupColor;
-    card.style.borderTopLeftRadius    = '0';
-    card.style.borderBottomLeftRadius = '0';
+    card.style.border       = '2px solid ' + groupColor;
+    card.style.borderRadius = 'var(--radius, 12px)';
   }
 
-  /* ── Preview ── */
+  /* ── Área de tags no topo (substitui preview com iframe) ── */
   var preview = document.createElement('div');
-  preview.className = 'card-preview col-card-preview';
+  preview.className = 'col-card-tags-area';
 
-  /* Ícone centralizado no preview */
-  var iconWrap = document.createElement('div');
-  iconWrap.className = 'col-preview-icon-wrap';
-  iconWrap.innerHTML =
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="28" height="28">' +
-    '<path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>' +
-    '<polyline points="9 22 9 12 15 12 15 22"/>' +
-    '</svg>';
+  var sortedTags = (col.tags || []).slice().filter(Boolean).sort(function(a,b){
+    return a.localeCompare(b,'pt-BR',{sensitivity:'base'});
+  });
 
-  /* Badge de contagem de layouts */
+  if (sortedTags.length > 0) {
+    sortedTags.forEach(function(t) {
+      var chip = document.createElement('span');
+      chip.className   = 'col-card-tag-chip';
+      chip.textContent = t;
+      preview.appendChild(chip);
+    });
+  } else {
+    var noTag = document.createElement('span');
+    noTag.className   = 'col-card-no-tags';
+    noTag.textContent = 'sem tags';
+    preview.appendChild(noTag);
+  }
+
+  /* Badge de contagem de layouts no canto inferior direito */
   var countBadge = document.createElement('span');
   countBadge.className   = 'col-preview-count';
   countBadge.textContent = layoutCount + (layoutCount === 1 ? ' layout' : ' layouts');
+  preview.appendChild(countBadge);
 
-  preview.append(iconWrap, countBadge);
-
-  /* Overlay clicável (abre modal da coleção) */
   var overlay = document.createElement('div');
   overlay.className = 'card-preview-overlay';
   preview.appendChild(overlay);
 
   /* ── Body ── */
-  var body   = document.createElement('div');
+  var body = document.createElement('div');
   body.className = 'card-body';
 
   var nameEl = document.createElement('div');
   nameEl.className   = 'card-name';
   nameEl.textContent = col.name;
 
-  /* Linha de grupo */
-  var authorEl = document.createElement('div');
-  authorEl.className = 'col-card-author';
-  if (col.group && typeof ColGroups !== 'undefined') {
-    var grpInfo = ColGroups.getBySlug(col.group);
-    if (grpInfo) {
-      authorEl.innerHTML =
-        '<span class="col-author-dot" style="background:' + grpInfo.color + ';"></span>' +
-        grpInfo.name;
-    }
+  /* Grupo com bolinha */
+  var groupEl = document.createElement('div');
+  groupEl.className = 'col-card-author';
+  if (groupColor && groupName) {
+    groupEl.innerHTML =
+      '<span class="col-author-dot" style="background:' + groupColor + ';"></span>' +
+      groupName;
   } else {
-    authorEl.style.display = 'none';
+    groupEl.style.display = 'none';
   }
 
-  /* Tags */
-  var tagsEl = document.createElement('div');
-  tagsEl.className = 'card-tags';
-  var sortedTags = (col.tags || []).slice().filter(Boolean).sort(function (a, b) {
-    return a.localeCompare(b, 'pt-BR', { sensitivity: 'base' });
-  });
-  sortedTags.forEach(function (t) {
-    var tag = document.createElement('span');
-    tag.className   = 'tag';
-    tag.textContent = t;
-    tagsEl.appendChild(tag);
-  });
-
-  body.append(nameEl, authorEl, tagsEl);
+  body.append(nameEl, groupEl);
 
   /* ── Ações ── */
   var actions = document.createElement('div');

@@ -776,3 +776,123 @@
 [data-theme="dark"] .col-tag-chip-remove { color: #ef9f27; }
 [data-theme="dark"] .col-group-option--add { color: #ef9f27; }
 [data-theme="dark"] .col-group-option--add:hover { background: #2a1f0a; }
+
+/* ── Tags no preview do card de coleção ─────────────────────────── */
+.col-preview-tags {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  z-index: 1;
+}
+
+.col-preview-tag {
+  font-size: 9px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(0,0,0,.45);
+  color: #fff;
+  border: none;
+  backdrop-filter: blur(2px);
+}
+
+/* Preview precisa de position:relative para as tags absolutas */
+.col-card-preview {
+  position: relative;
+}
+
+/* ── Card com borda de grupo em volta ───────────────────────────── */
+.col-card {
+  /* borda aplicada via JS com a cor do grupo */
+}
+
+/* Remove a antiga borda esquerda — agora é borda completa */
+.col-card[style*="border:"] {
+  border-left: none !important;
+}
+
+/* ── Pills de grupo — estilo inline com cor ─────────────────────── */
+.col-filter-pill--group .col-filter-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Stats bar ──────────────────────────────────────────────────── */
+#colStatsBar strong {
+  font-weight: 700;
+  color: var(--text1, #0f172a);
+}
+
+[data-theme="dark"] #colStatsBar strong { color: #d8d4cf; }
+[data-theme="dark"] .col-preview-tag { background: rgba(0,0,0,.6); }
+
+/* ── Card de coleção redesenhado ─────────────────────────────────── */
+
+/* Área de tags no topo — substitui o preview com iframe */
+.col-card-tags-area {
+  position: relative;
+  min-height: 72px;
+  padding: 10px 12px 28px;
+  background: var(--hover, #f8fafc);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-content: flex-start;
+  border-bottom: 0.5px solid var(--border, #e2e8f0);
+}
+
+.col-card-tag-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 11px;
+  font-family: var(--font-body, sans-serif);
+  font-size: .72rem;
+  font-weight: 700;
+  background: var(--card, #fff);
+  color: var(--text2, #64748b);
+  border: 0.5px solid var(--border, #e2e8f0);
+}
+
+.col-card-no-tags {
+  font-family: var(--font-body, sans-serif);
+  font-size: .75rem;
+  color: var(--text3, #94a3b8);
+  font-style: italic;
+}
+
+/* Badge de contagem no canto inferior direito da área de tags */
+.col-card-tags-area .col-preview-count {
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+}
+
+/* ── Stats bar com label de filtro ───────────────────────────────── */
+.col-stats-filter-label {
+  color: var(--text3, #94a3b8);
+  font-size: .8rem;
+}
+
+/* ── Pills de grupo preenchidas ──────────────────────────────────── */
+.col-filter-pill--group.active {
+  font-weight: 700;
+  /* cor background/border/color aplicados via JS com a cor do grupo */
+}
+
+/* Dark mode */
+[data-theme="dark"] .col-card-tags-area {
+  background: #25282a;
+  border-color: #363b3d;
+}
+
+[data-theme="dark"] .col-card-tag-chip {
+  background: #1f2223;
+  border-color: #363b3d;
+  color: #b2aca2;
+}
