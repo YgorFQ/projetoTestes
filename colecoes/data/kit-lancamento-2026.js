@@ -1,17 +1,16 @@
 // @ts-nocheck
 /* ═══════════════════════════════════════════════════════════════════════
-   colecoes/data/kit-lancamento-2026.js — Coleção de exemplo
+   colecoes/data/kit-lancamento-2026.js — Coleção: Kit Lançamento 2026
 
-   ATENÇÃO: Este arquivo é gerado e reescrito pelo módulo GitHub.
+   ATENÇÃO: Arquivo gerado pelo módulo GitHub do SenkoLib.
    NÃO edite manualmente em produção.
 ═══════════════════════════════════════════════════════════════════════ */
 ColLib.register({
   slug:  'kit-lancamento-2026',
   name:  'Kit Lançamento 2026',
-  group: 'projetos-2026',
+  group: 'carneiro',
   tags:  ['hero', 'cta', 'banner'],
   layouts: [
-
     /*@@@@Col - hero-principal */
     {
       id:   'hero-principal',
@@ -21,7 +20,7 @@ ColLib.register({
   <p style="color:rgba(255,255,255,.85);font-size:1rem;max-width:480px;margin:0 auto 24px;">Descrição do produto ou campanha com foco em conversão.</p>
   <a href="#" style="background:#fff;color:#ff6b00;font-weight:700;padding:12px 28px;border-radius:8px;text-decoration:none;font-size:.95rem;">Saiba mais</a>
 </div>`,
-      css: ``,
+      css:  ``,
     },
 
     /*@@@@Col - banner-cta */
@@ -35,8 +34,7 @@ ColLib.register({
   </div>
   <a href="#" style="background:#ff6b00;color:#fff;font-weight:700;padding:12px 24px;border-radius:8px;text-decoration:none;white-space:nowrap;">Comprar agora</a>
 </div>`,
-      css: ``,
+      css:  ``,
     },
-
   ]
 });
