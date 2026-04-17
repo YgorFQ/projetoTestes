@@ -8,7 +8,7 @@
 ColLib.register({
   slug:  'carneirotestes',
   name:  'CarneiroTestes',
-  group: 'carneiro',
+  group: 'pedro',
   tags:  ['Ygor'],
   layouts: [
   ]
