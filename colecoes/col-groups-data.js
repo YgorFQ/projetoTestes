@@ -6,5 +6,5 @@
    NÃO edite manualmente em produção.
 ═══════════════════════════════════════════════════════════════════════ */
 ColGroups.load([
-  { slug: 'carneiro', name: 'Carneiro', cor: '#1a9e52' },
+  { slug: 'ygor', name: 'Ygor', cor: '#1a9e52' },
 ]);

@@ -4117,6 +4117,4 @@ SenkoLib.register([
   </style>`
   },
 
-
-
 ]);
