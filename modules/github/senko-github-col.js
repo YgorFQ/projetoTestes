@@ -94,10 +94,33 @@ function colGhBuildFileContent(col) {
 /*
   Monta o conteúdo do arquivo de grupos a partir do estado atual de ColGroups.
   Chamado sempre que grupos confirmados mudam (flush de pendentes).
+
+  REGRA: só serializa grupos que são referenciados por pelo menos uma coleção
+  em memória, OU que estão na lista de pendentes da operação atual.
+  Isso evita que grupos órfãos (cujas coleções mudaram de grupo) fiquem
+  acumulando no arquivo e aparecendo na filter bar como pills fantasma.
 */
 function colGhBuildGroupsFileContent() {
-  var all = typeof ColGroups !== 'undefined' ? ColGroups.getAll() : [];
-  var lines = all.map(function (g) {
+  if (typeof ColGroups === 'undefined') return '';
+
+  /* Mapeia os slugs de grupo que alguma coleção ainda referencia */
+  var usedSlugs = {};
+  if (typeof ColLib !== 'undefined') {
+    ColLib.getAll().forEach(function (col) {
+      if (col.group) usedSlugs[col.group] = true;
+    });
+  }
+
+  /* Pendentes também são sempre incluídos (ainda não têm coleção apontada,
+     mas acabaram de ser criados e serão usados imediatamente) */
+  ColGroups.getPending().forEach(function (g) {
+    usedSlugs[g.slug] = true;
+  });
+
+  var all = ColGroups.getAll(); /* confirmados + pendentes */
+  var used = all.filter(function (g) { return usedSlugs[g.slug]; });
+
+  var lines = used.map(function (g) {
     return (
       "  { slug: '" + g.slug + "', name: '" + g.name.replace(/'/g, "\\'") + "', cor: '" + g.cor + "' },"
     );
@@ -386,13 +409,9 @@ function colGhEditCollection(colData) {
   var slug = colData.slug;
   ghSetStatus('Lendo coleção…', 'saving');
 
-  /* 1. Flush de grupos pendentes */
-  return colGhFlushGroups()
-
-  /* 2. Lê arquivo atual */
-  .then(function () {
-    return colGhGetFile(slug);
-  })
+  /* Lê arquivo atual (flush de grupos é feito APÓS salvar a coleção,
+     quando a memória já reflete o novo grupo — veja comentário abaixo) */
+  return colGhGetFile(slug)
   .then(function (fileInfo) {
     if (!fileInfo.exists) {
       ghSetStatus('Arquivo não encontrado', 'error');
@@ -420,16 +439,46 @@ function colGhEditCollection(colData) {
       fileInfo.sha,
       '[SenkoLib] edit collection: ' + slug
     ).then(function () {
+      /* Atualiza a memória ANTES do flush de grupos.
+         Assim colGhBuildGroupsFileContent já enxerga o grupo novo como
+         "usado" e o grupo antigo como órfão (se nenhuma outra coleção
+         apontar para ele), removendo-o do arquivo. */
       ColLib.updateCollection(slug, {
         name:  colData.name,
         group: colData.group,
         tags:  colData.tags,
       });
-      ghSetStatus('✓ Metadados salvos', 'ok');
-      ghUnlockSave();
-      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(fileInfo.path);
-      if (typeof colRenderGrid === 'function') colRenderGrid();
-      return true;
+
+      /* Flush pós-edição: sempre reescreve col-groups-data.js para limpar
+         grupos que ficaram sem nenhuma coleção apontando para eles. */
+      ghSetStatus('Atualizando grupos…', 'saving');
+      var groupsContent = colGhBuildGroupsFileContent();
+
+      return githubGetFile('colecoes/col-groups-data.js').then(function (gData) {
+        return githubPutFile(
+          'colecoes/col-groups-data.js',
+          groupsContent,
+          gData.sha,
+          '[SenkoLib] sync groups after edit: ' + slug
+        );
+      }).catch(function (err) {
+        if (err.message && err.message.indexOf('404') !== -1) {
+          return githubPutFile(
+            'colecoes/col-groups-data.js',
+            groupsContent,
+            null,
+            '[SenkoLib] create groups file'
+          );
+        }
+        throw err;
+      }).then(function () {
+        if (typeof ColGroups !== 'undefined') ColGroups.clearPending();
+        ghSetStatus('✓ Metadados salvos', 'ok');
+        ghUnlockSave();
+        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(fileInfo.path);
+        if (typeof colRenderGrid === 'function') colRenderGrid();
+        return true;
+      });
     });
   })
 
