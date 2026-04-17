@@ -11,10 +11,10 @@ ColLib.register({
   group: 'projetos-2026',
   tags:  ['Acessivel', 'comp', 'contraste', 'semantico'],
   layouts: [
-    /*@@@@Col - pedro-padrao */
+        /*@@@@Col - pedro-padrao */
     {
       id:   'pedro-padrao',
-      name: 'Padrão #1',
+      name: 'Padrão #2',
       html: `<div class="lp-container">
   <link rel="nestlenect" href="https://fonts.googleapis.com">
   <link rel="nestlenect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,7 +42,7 @@ ColLib.register({
         </div>
       </header>
         <section class="video-header__body">
-        <small class="video-header__brand">Marca</small>
+        <small class="video-header__brand">Marc2a</small>
         <h1 class="video-header__title">
           TÍTULO DO PRODUTO (Nome, modelo, diferencial...)s
         </h1>
