@@ -4117,4 +4117,15 @@ SenkoLib.register([
   </style>`
   },
 
+
+/*@@@@Senko - meodeus */
+  /* variantes: variants/meodeus.js */
+  {
+    id: 'meodeus',
+    name: 'teste343',
+    tags: ['numcompensa', 'carneiro'],
+    html: `slk, meo`,
+    css: `adfasdfwad`
+  },
+
 ]);
