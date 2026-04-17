@@ -3,7 +3,7 @@ SenkoLib.registerVariant('meodeus', [
 /*@@@@Senko - sectiuon8888888 */
   {
     name: 'sectiuon8888888',
-    html: `cawrawd`,
-    css: `awdawdawd`,
+    html: `cawrawdawdawd waw d aAEQDeawdac`,
+    css: `awdawdawddawdwd`,
   },
 ]);
