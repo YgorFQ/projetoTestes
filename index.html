@@ -108,55 +108,6 @@
     </div>
   </main>
 
-  <!-- MODAL VISUALIZAR -->
-  <div class="modal-overlay hidden" id="modalOverlay">
-    <div class="modal" id="modal">
-      <div class="modal-header">
-        <div class="modal-meta">
-          <h2 class="modal-title" id="modalTitle"></h2>
-          <div class="modal-tags" id="modalTags"></div>
-        </div>
-        <button class="modal-close" id="modalClose" title="Fechar">✕</button>
-      </div>
-      <div class="modal-preview-wrap">
-        <div class="preview-label">Preview</div>
-        <iframe id="modalIframe" class="modal-iframe" sandbox="allow-scripts" title="Preview"></iframe>
-      </div>
-      <div class="code-section">
-        <div class="code-tabs">
-          <button class="tab-btn active" data-tab="html">HTML</button>
-          <button class="tab-btn" data-tab="css">CSS</button>
-        </div>
-        <div class="code-panel active" id="panelHtml">
-          <div class="code-toolbar">
-            <span class="code-lang">HTML</span>
-            <button class="copy-btn" id="copyHtmlBtn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                <rect x="9" y="9" width="13" height="13" rx="2" />
-                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
-              </svg>
-              Copiar HTML
-            </button>
-          </div>
-          <pre class="code-block" id="codeHtml"></pre>
-        </div>
-        <div class="code-panel" id="panelCss">
-          <div class="code-toolbar">
-            <span class="code-lang">CSS</span>
-            <button class="copy-btn" id="copyCssBtn">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                <rect x="9" y="9" width="13" height="13" rx="2" />
-                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
-              </svg>
-              Copiar CSS
-            </button>
-          </div>
-          <pre class="code-block" id="codeCss"></pre>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- MODAL EDITAR LAYOUT -->
   <div class="modal-overlay hidden" id="editModalOverlay">
     <div class="modal edit-modal" id="editModal">
@@ -488,7 +439,6 @@
   <script src="colecoes/data/carneiro-colecoes.js"></script>
   <script src="colecoes/data/colecao-joel.js"></script>
   <script src="colecoes/data/colecao-pedro.js"></script>
-  <script src="colecoes/data/teste-adawd.js"></script>
   <script src="colecoes/col-script.js"></script>
   <script src="colecoes/col-modals.js"></script>
   <script src="modules/github/senko-github-col.js"></script>

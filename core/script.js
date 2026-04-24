@@ -5,19 +5,12 @@
 
 var state = {
   search:             '',
-  current:            null,
   currentEdit:        null,
   currentForVariant:  null,
   currentEditVariant: null,
-  _fromVariant:       false,
-
 };
 
 /* ─── Utilitários ─────────────────────────────────── */
-function escapeHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
 function buildSrcDoc(html, css) {
   return '<!DOCTYPE html><html><head><meta charset="UTF-8">'
     + '<style>' + css + '</style></head><body>' + html + '</body></html>';
@@ -303,53 +296,9 @@ function createCard(layout, index) {
   btnPlus.addEventListener('click', function (e) { e.stopPropagation(); openVariantsModal(layout); });
 
   actions.append(btnH, btnC, btnFav, btnEdit, btnPlus);
-  card.addEventListener('click', function () { openModal(layout); });
+  card.addEventListener('click', function () { openEditModal(layout); });
   card.append(preview, body, actions);
   return card;
-}
-
-/* ─── Modal visualizar ──────────────────────────────── */
-function openModal(layout) {
-  state.current = layout;
-  document.getElementById('modalTitle').textContent = layout.name;
-
-  var tagsEl = document.getElementById('modalTags');
-  tagsEl.innerHTML = '';
-  layout.tags.slice().filter(Boolean).sort(function(a,b){ return a.localeCompare(b,'pt-BR',{sensitivity:'base'}); }).forEach(function (t) {
-    var s = document.createElement('span'); s.className = 'tag'; s.textContent = t; tagsEl.appendChild(s);
-  });
-
-  document.getElementById('codeHtml').innerHTML = escapeHtml(layout.html);
-  document.getElementById('codeCss').innerHTML  = escapeHtml(layout.css);
-
-  document.querySelectorAll('#modal .tab-btn').forEach(function (b) { b.classList.remove('active'); });
-  document.querySelectorAll('#modal .code-panel').forEach(function (p) { p.classList.remove('active'); });
-  document.querySelector('#modal [data-tab="html"]').classList.add('active');
-  document.getElementById('panelHtml').classList.add('active');
-
-  document.getElementById('copyHtmlBtn').innerHTML = COPY_ICON + ' Copiar HTML';
-  document.getElementById('copyCssBtn').innerHTML  = COPY_ICON + ' Copiar CSS';
-  document.getElementById('copyHtmlBtn').classList.remove('copied');
-  document.getElementById('copyCssBtn').classList.remove('copied');
-
-  var overlay = document.getElementById('modalOverlay');
-  overlay.classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
-  overlay.scrollTop = 0;
-
-  var iframeEl = document.getElementById('modalIframe');
-  iframeEl.srcdoc = '';
-  requestAnimationFrame(function () { iframeEl.srcdoc = buildSrcDoc(layout.html, layout.css); });
-}
-
-function closeModal() {
-  document.getElementById('modalOverlay').classList.add('hidden');
-  document.body.style.overflow = '';
-  state.current = null;
-  if (state._fromVariant) {
-    state._fromVariant = false;
-    document.getElementById('variantsOverlay').classList.remove('hidden');
-  }
 }
 
 /* ─── Modal adicionar layout ────────────────────────── */
@@ -573,8 +522,6 @@ function renderVariantBlocks(variants) {
     actions.append(bH, bC, bFav, bEdit, bDel);
     block.append(previewWrap, body, actions);
 
-    block.addEventListener('click', function () { openVariantPreview(v); });
-
     grid.appendChild(block);
   });
 
@@ -781,43 +728,6 @@ function updateEditVarCode() {
 }
 
 
-/* ─── Preview de variante (reutiliza modal visualizar) ── */
-function openVariantPreview(v) {
-  /* Fecha o modal de variantes temporariamente e abre o de visualização */
-  document.getElementById('variantsOverlay').classList.add('hidden');
-
-  document.getElementById('modalTitle').textContent = v.name || '';
-
-  var tagsEl = document.getElementById('modalTags');
-  tagsEl.innerHTML = '';
-
-  document.getElementById('codeHtml').innerHTML = escapeHtml(v.html);
-  document.getElementById('codeCss').innerHTML  = escapeHtml(v.css);
-
-  document.querySelectorAll('#modal .tab-btn').forEach(function (b) { b.classList.remove('active'); });
-  document.querySelectorAll('#modal .code-panel').forEach(function (p) { p.classList.remove('active'); });
-  document.querySelector('#modal [data-tab="html"]').classList.add('active');
-  document.getElementById('panelHtml').classList.add('active');
-
-  document.getElementById('copyHtmlBtn').innerHTML = COPY_ICON + ' Copiar HTML';
-  document.getElementById('copyCssBtn').innerHTML  = COPY_ICON + ' Copiar CSS';
-  document.getElementById('copyHtmlBtn').classList.remove('copied');
-  document.getElementById('copyCssBtn').classList.remove('copied');
-
-  /* ao fechar o modal de visualização, reabre o de variantes */
-  state._fromVariant = true;
-  state.current = { html: v.html, css: v.css };
-
-  var overlay = document.getElementById('modalOverlay');
-  overlay.classList.remove('hidden');
-  overlay.scrollTop = 0;
-
-  var iframeEl = document.getElementById('modalIframe');
-  iframeEl.srcdoc = '';
-  requestAnimationFrame(function () { iframeEl.srcdoc = buildSrcDoc(v.html, v.css); });
-}
-
-
 /* ─── Fechar overlay com confirmação (2 cliques) ─────── */
 var _overlayConfirm = {};
 function overlayClick(id, closeFn) {
@@ -925,25 +835,6 @@ document.addEventListener('DOMContentLoaded', function () {
     renderGrid();
   });
 
-  /* Modal visualizar */
-  document.getElementById('modalClose').addEventListener('click', closeModal);
-  document.getElementById('modalOverlay').addEventListener('click', overlayClick('modal', closeModal));
-  document.getElementById('copyHtmlBtn').addEventListener('click', function () {
-    if (state.current) copyToClipboard(state.current.html, this, COPY_ICON + ' Copiar HTML');
-  });
-  document.getElementById('copyCssBtn').addEventListener('click', function () {
-    if (state.current) copyToClipboard(state.current.css, this, COPY_ICON + ' Copiar CSS');
-  });
-  document.querySelectorAll('#modal .tab-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var tab = this.dataset.tab;
-      document.querySelectorAll('#modal .tab-btn').forEach(function (b) { b.classList.remove('active'); });
-      document.querySelectorAll('#modal .code-panel').forEach(function (p) { p.classList.remove('active'); });
-      this.classList.add('active');
-      document.getElementById('panel' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
-    });
-  });
-
   /* Modal adicionar */
   document.getElementById('openAddModal').addEventListener('click', openAddModal);
   document.getElementById('addModalClose').addEventListener('click', closeAddModal);
@@ -1033,7 +924,6 @@ document.addEventListener('DOMContentLoaded', function () {
     else if (!document.getElementById('variantsOverlay').classList.contains('hidden'))   closeVariantsModal();
     else if (!document.getElementById('editModalOverlay').classList.contains('hidden'))  closeEditModal();
     else if (!document.getElementById('addModalOverlay').classList.contains('hidden'))   closeAddModal();
-    else closeModal();
   });
 
 });
