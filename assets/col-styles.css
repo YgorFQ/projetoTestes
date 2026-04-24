@@ -1,0 +1,896 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   col-styles.css — Estilos do sistema de Coleções
+   Prefixo: .col-   (nunca conflita com styles.css existente)
+   Usa exclusivamente variáveis CSS do tema (--bg, --border, --accent etc.)
+═══════════════════════════════════════════════════════════════════════ */
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   BARRA DE ABAS — Biblioteca / Coleções
+═══════════════════════════════════════════════════════════════════════ */
+
+.col-tab-bar {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+  padding: 1rem 1.5rem .5rem;
+  border-bottom: 1.5px solid var(--border);
+  background: var(--bg2);
+}
+
+.col-tab-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--font-body);
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--text3);
+  cursor: pointer;
+  padding: .4rem .9rem;
+  border-radius: var(--radius);
+  transition: color var(--transition), background var(--transition);
+  position: relative;
+}
+
+.col-tab-btn:hover {
+  color: var(--text2);
+  background: var(--bg3);
+}
+
+.col-tab-btn.active {
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.col-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0; right: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px 2px 0 0;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DASHBOARD DE COLEÇÕES
+═══════════════════════════════════════════════════════════════════════ */
+
+.col-dashboard {
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Barra de grupos — pills de filtro */
+.col-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.col-filter-label {
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-right: .25rem;
+}
+
+.col-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 99px;
+  padding: .28rem .85rem;
+  font-family: var(--font-body);
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.col-pill:hover {
+  border-color: var(--border2);
+  color: var(--text);
+}
+
+/* A cor do pill ativo usa a cor do grupo (injetada via style inline) */
+.col-pill.active {
+  color: #fff;
+  /* background e border-color são definidos inline pelo JS */
+}
+
+.col-pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  /* background é definido inline pelo JS com a cor do grupo */
+}
+
+/* Stats bar */
+.col-stats-bar {
+  font-size: .82rem;
+  color: var(--text3);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.col-stats-bar span {
+  color: var(--text2);
+  font-weight: 800;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   GRID DE CARDS DE COLEÇÃO
+═══════════════════════════════════════════════════════════════════════ */
+
+.col-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.2rem;
+}
+
+.col-card {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  animation: col-fadeIn .25s ease both;
+  /* Borda superior colorida com a cor do grupo — injetada inline pelo JS */
+  border-top-width: 3px;
+}
+
+.col-card:hover {
+  border-color: var(--border2);
+  box-shadow: var(--shadow);
+  transform: translateY(-2px);
+}
+
+@keyframes col-fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Área de tags no topo do card */
+.col-card-tags {
+  padding: .8rem 1rem .4rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem;
+  min-height: 2.2rem;
+}
+
+/* Pill de grupo dentro do card */
+.col-card-group-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .72rem;
+  font-weight: 800;
+  padding: .18rem .6rem;
+  border-radius: 99px;
+  letter-spacing: .02em;
+  /* background e color são injetados inline */
+}
+
+/* Tags genéricas */
+.col-card .tag {
+  background: var(--bg3);
+  color: var(--text2);
+  border-radius: 99px;
+  padding: .18rem .6rem;
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+/* Corpo do card */
+.col-card-body {
+  padding: .5rem 1rem .8rem;
+  flex: 1;
+}
+
+.col-card-name {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.3;
+  margin-bottom: .3rem;
+}
+
+.col-card-meta {
+  font-size: .8rem;
+  color: var(--text3);
+  font-weight: 600;
+}
+
+.col-card-meta strong {
+  color: var(--text2);
+}
+
+/* Rodapé do card — ações */
+.col-card-actions {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  padding: .6rem 1rem;
+  border-top: 1.5px solid var(--border);
+}
+
+.col-card-actions .btn {
+  font-size: .78rem;
+  padding: .28rem .7rem;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   ESTADO VAZIO
+═══════════════════════════════════════════════════════════════════════ */
+
+.col-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  color: var(--text3);
+  gap: .8rem;
+  text-align: center;
+}
+
+.col-empty-icon {
+  width: 56px;
+  height: 56px;
+  opacity: .35;
+}
+
+.col-empty p {
+  font-size: .95rem;
+  font-weight: 600;
+  max-width: 280px;
+}
+
+.col-empty-hint {
+  font-size: .82rem !important;
+  color: var(--text3);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MODAL DE COLEÇÃO — wrapper (layouts internos)
+═══════════════════════════════════════════════════════════════════════ */
+
+.col-modal {
+  max-width: 1200px;
+  width: calc(100vw - 2rem);
+  max-height: calc(100vh - 4rem);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  /* Borda topo colorida — injetada inline */
+  border-top: 3px solid transparent;
+}
+
+/* Header do modal de coleção */
+.col-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.2rem 1.5rem 1rem;
+  border-bottom: 1.5px solid var(--border);
+  flex-shrink: 0;
+  gap: 1rem;
+}
+
+.col-modal-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+  min-width: 0;
+}
+
+.col-modal-category {
+  font-size: .72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--text3);
+}
+
+.col-modal-title {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.col-modal-group-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .75rem;
+  font-weight: 800;
+  padding: .2rem .65rem;
+  border-radius: 99px;
+  width: fit-content;
+}
+
+.col-modal-header-right {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  flex-shrink: 0;
+}
+
+/* Grid de layouts dentro do modal */
+.col-modal-layouts-wrap {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.2rem 1.5rem;
+}
+
+.col-modal-layouts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+/* Card de layout dentro da coleção */
+.col-layout-block {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  animation: col-fadeIn .2s ease both;
+}
+
+.col-layout-block:hover {
+  border-color: var(--border2);
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+.col-layout-preview {
+  width: 100%;
+  height: 160px;
+  position: relative;
+  background: var(--bg2);
+  overflow: hidden;
+}
+
+.col-layout-preview .card-iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 1280px;
+  height: 100%;
+  border: none;
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+.col-layout-preview-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.col-layout-body {
+  padding: .5rem .8rem .4rem;
+}
+
+.col-layout-name {
+  font-size: .85rem;
+  font-weight: 800;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.col-layout-footer {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+  padding: .4rem .8rem;
+  border-top: 1.5px solid var(--border);
+}
+
+.col-layout-footer .btn {
+  font-size: .75rem;
+  padding: .22rem .6rem;
+}
+
+/* Card "Adicionar layout" */
+.col-layout-add-card {
+  border: 2px dashed var(--border2);
+  border-radius: var(--radius);
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  cursor: pointer;
+  color: var(--text3);
+  font-family: var(--font-body);
+  font-size: .85rem;
+  font-weight: 700;
+  background: transparent;
+  transition: border-color var(--transition), color var(--transition), background var(--transition);
+}
+
+.col-layout-add-card:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.col-layout-add-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MODAIS DE CRIAR / EDITAR COLEÇÃO
+═══════════════════════════════════════════════════════════════════════ */
+
+.col-form-modal {
+  max-width: 560px;
+  width: calc(100vw - 2rem);
+  background: var(--bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.col-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.2rem 1.5rem 1rem;
+  border-bottom: 1.5px solid var(--border);
+  flex-shrink: 0;
+}
+
+.col-form-body {
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+}
+
+.col-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .5rem;
+  padding: 1rem 1.5rem;
+  border-top: 1.5px solid var(--border);
+  flex-shrink: 0;
+}
+
+/* Campo de formulário */
+.col-field {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+
+.col-field label {
+  font-size: .82rem;
+  font-weight: 800;
+  color: var(--text2);
+}
+
+.col-field input,
+.col-field textarea {
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: .5rem .8rem;
+  font-family: var(--font-body);
+  font-size: .9rem;
+  color: var(--text);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  outline: none;
+}
+
+.col-field input:focus,
+.col-field textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+  background: var(--bg);
+}
+
+.col-field-hint {
+  font-size: .75rem;
+  color: var(--text3);
+  font-weight: 600;
+}
+
+.col-field-error {
+  font-size: .75rem;
+  color: var(--red);
+  font-weight: 700;
+  display: none;
+}
+
+.col-field-slug-preview {
+  font-family: var(--font-code);
+  font-size: .78rem;
+  color: var(--text2);
+  background: var(--bg3);
+  border-radius: 6px;
+  padding: .2rem .5rem;
+  width: fit-content;
+}
+
+/* Linha de dois campos lado a lado */
+.col-field-row {
+  display: flex;
+  gap: .75rem;
+}
+
+.col-field-row .col-field {
+  flex: 1;
+}
+
+/* Dropdown de grupo */
+.col-group-select-wrap {
+  position: relative;
+}
+
+.col-group-select {
+  width: 100%;
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: .5rem .8rem;
+  font-family: var(--font-body);
+  font-size: .9rem;
+  color: var(--text);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23aaaaaa' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right .7rem center;
+  background-size: 16px;
+  padding-right: 2.2rem;
+  transition: border-color var(--transition);
+  outline: none;
+}
+
+.col-group-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+/* Botão "Criar novo grupo" ao lado do select */
+.col-group-new-btn {
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: .5rem .8rem;
+  font-family: var(--font-body);
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--text2);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+
+.col-group-new-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+/* Preview de cor do grupo */
+.col-color-preview {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+
+.col-color-preview:hover {
+  border-color: var(--border2);
+}
+
+/* Palete de cores rápida */
+.col-color-palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+}
+
+.col-color-swatch {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform var(--transition), border-color var(--transition);
+}
+
+.col-color-swatch:hover,
+.col-color-swatch.active {
+  transform: scale(1.15);
+  border-color: var(--text);
+}
+
+/* Input de cor customizada */
+.col-color-custom-wrap {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.col-color-hex-input {
+  width: 100px;
+  background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: .35rem .6rem;
+  font-family: var(--font-code);
+  font-size: .82rem;
+  color: var(--text);
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.col-color-hex-input:focus {
+  border-color: var(--accent);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MODAL DE NOVO GRUPO
+═══════════════════════════════════════════════════════════════════════ */
+
+.col-newgroup-modal {
+  max-width: 400px;
+  width: calc(100vw - 2rem);
+  background: var(--bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MODAL DE ADICIONAR / EDITAR LAYOUT DENTRO DE COLEÇÃO
+═══════════════════════════════════════════════════════════════════════ */
+
+.col-layout-form-modal {
+  max-width: 860px;
+  width: calc(100vw - 2rem);
+  max-height: calc(100vh - 4rem);
+  background: var(--bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Barra de modo HTML / CSS / Preview */
+.col-edit-mode-bar {
+  display: flex;
+  gap: .25rem;
+  padding: .6rem 1.2rem;
+  border-bottom: 1.5px solid var(--border);
+  flex-shrink: 0;
+  background: var(--bg2);
+}
+
+.col-edit-mode-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--font-body);
+  font-size: .82rem;
+  font-weight: 700;
+  color: var(--text3);
+  cursor: pointer;
+  padding: .3rem .75rem;
+  border-radius: var(--radius);
+  transition: all var(--transition);
+}
+
+.col-edit-mode-btn:hover { color: var(--text2); background: var(--bg3); }
+.col-edit-mode-btn.active { color: var(--accent); background: var(--accent-bg); }
+
+.col-edit-panel {
+  display: none;
+  flex: 1;
+  overflow: hidden;
+}
+
+.col-edit-panel.active {
+  display: flex;
+  flex-direction: column;
+}
+
+.col-edit-textarea {
+  flex: 1;
+  resize: none;
+  border: none;
+  outline: none;
+  padding: 1rem 1.2rem;
+  font-family: var(--font-code);
+  font-size: .85rem;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+}
+
+.col-edit-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  flex: 1;
+}
+
+.col-edit-main {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 360px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MODAL DE CONFIRMAÇÃO DE EXCLUSÃO
+═══════════════════════════════════════════════════════════════════════ */
+
+.col-confirm-modal {
+  max-width: 380px;
+  width: calc(100vw - 2rem);
+  background: var(--bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  padding: 1.8rem 1.8rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.col-confirm-title {
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.col-confirm-body {
+  font-size: .88rem;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+.col-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: .5rem;
+  margin-top: .25rem;
+}
+
+/* Botão cancelar */
+.col-btn-cancel {
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: .45rem 1.1rem;
+  font-family: var(--font-body);
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.col-btn-cancel:hover {
+  border-color: var(--border2);
+  color: var(--text);
+}
+
+/* Botão de ação primária */
+.col-btn-primary {
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius);
+  padding: .45rem 1.1rem;
+  font-family: var(--font-body);
+  font-size: .88rem;
+  font-weight: 800;
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.col-btn-primary:hover { background: var(--accent2); }
+.col-btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Botão vermelho de excluir */
+.col-btn-delete {
+  background: var(--red);
+  border: none;
+  border-radius: var(--radius);
+  padding: .45rem 1.1rem;
+  font-family: var(--font-body);
+  font-size: .88rem;
+  font-weight: 800;
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.col-btn-delete:hover { background: #c02020; }
+.col-btn-delete:disabled { opacity: .5; cursor: not-allowed; }
+
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DARK MODE
+═══════════════════════════════════════════════════════════════════════ */
+
+[data-theme="dark"] .col-edit-textarea {
+  background: var(--bg);
+  color: var(--text);
+}
+
+[data-theme="dark"] .col-group-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23555555' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+}
+
+[data-theme="dark"] .col-field input,
+[data-theme="dark"] .col-field textarea,
+[data-theme="dark"] .col-group-select,
+[data-theme="dark"] .col-color-hex-input {
+  background: var(--bg3);
+  color: var(--text);
+}
