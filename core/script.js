@@ -879,7 +879,6 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   /* Modal adicionar */
-  document.getElementById('openAddModal').addEventListener('click', openAddModal);
   document.getElementById('addModalClose').addEventListener('click', closeAddModal);
   document.getElementById('addModalOverlay').addEventListener('click', overlayClick('addModal', closeAddModal));
   document.querySelectorAll('.add-tab').forEach(function (btn) {
