@@ -80,12 +80,6 @@ function colInjectTabBar() {
 
   btnLib.addEventListener('click', function () { colSwitchTab('biblioteca'); });
   btnCol.addEventListener('click', function () { colSwitchTab('colecoes'); });
-
-  /* Restaura a aba que estava ativa antes do reload */
-  try {
-    var savedTab = localStorage.getItem('senkolib_active_tab');
-    if (savedTab === 'colecoes') colSwitchTab('colecoes');
-  } catch(e) {}
 }
 
 
@@ -271,7 +265,7 @@ function colRenderGrid() {
         '<rect x="14" y="14" width="7" height="7" rx="1"/>' +
       '</svg>' +
       '<p>Nenhuma coleção' + (colState.activeGroup ? ' neste grupo' : '') + ' ainda.</p>' +
-      '<p class="col-empty-hint">Clique em "Nova Coleção" para começar.</p>';
+      '<p class="col-empty-hint">Clique em "+ Adicionar" para criar sua primeira coleção.</p>';
     grid.appendChild(empty);
     colUpdateStatsBar(0);
     return;
@@ -406,5 +400,10 @@ document.addEventListener('DOMContentLoaded', function () {
   colInjectTabBar();
   colCreateDashboard();
   colHookSearch();
-  /* Grid não é renderizado aqui — só quando a aba é aberta pela primeira vez */
+
+  /* Restaura a aba ativa — feito aqui pois o #colDashboard já existe */
+  try {
+    var savedTab = localStorage.getItem('senkolib_active_tab');
+    if (savedTab === 'colecoes') colSwitchTab('colecoes');
+  } catch(e) {}
 });
