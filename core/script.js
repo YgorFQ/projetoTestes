@@ -301,6 +301,36 @@ function createCard(layout, index) {
   return card;
 }
 
+/* ─── Picker Adicionar ──────────────────────────────── */
+function openAdicionarPicker() {
+  /* Reseta para aba Layout sempre que abre */
+  _pickerSetTab('layout');
+  var overlay = document.getElementById('pickerOverlay');
+  overlay.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAdicionarPicker() {
+  document.getElementById('pickerOverlay').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function _pickerSetTab(tab) {
+  var btnLayout  = document.getElementById('pickerTabLayout');
+  var btnColecao = document.getElementById('pickerTabColecao');
+  var title      = document.getElementById('pickerTitle');
+  if (!btnLayout || !btnColecao) return;
+  if (tab === 'layout') {
+    btnLayout.classList.add('active');
+    btnColecao.classList.remove('active');
+    if (title) title.textContent = 'Adicionar Layout';
+  } else {
+    btnColecao.classList.add('active');
+    btnLayout.classList.remove('active');
+    if (title) title.textContent = 'Nova Coleção';
+  }
+}
+
 /* ─── Modal adicionar layout ────────────────────────── */
 function openAddModal() {
   ['addId','addName','addTags','addHtml','addCss'].forEach(function (id) {
@@ -835,6 +865,19 @@ document.addEventListener('DOMContentLoaded', function () {
     renderGrid();
   });
 
+  /* Picker adicionar */
+  document.getElementById('openAddModal').addEventListener('click', openAdicionarPicker);
+  document.getElementById('pickerClose').addEventListener('click', closeAdicionarPicker);
+  document.getElementById('pickerOverlay').addEventListener('click', overlayClick('picker', closeAdicionarPicker));
+  document.getElementById('pickerTabLayout').addEventListener('click', function () {
+    closeAdicionarPicker();
+    openAddModal();
+  });
+  document.getElementById('pickerTabColecao').addEventListener('click', function () {
+    closeAdicionarPicker();
+    if (typeof colOpenCreateModal === 'function') colOpenCreateModal();
+  });
+
   /* Modal adicionar */
   document.getElementById('openAddModal').addEventListener('click', openAddModal);
   document.getElementById('addModalClose').addEventListener('click', closeAddModal);
@@ -919,7 +962,8 @@ document.addEventListener('DOMContentLoaded', function () {
   /* Escape */
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    if (!document.getElementById('editVarOverlay').classList.contains('hidden'))         closeEditVariantModal();
+    if (!document.getElementById('pickerOverlay').classList.contains('hidden'))          closeAdicionarPicker();
+    else if (!document.getElementById('editVarOverlay').classList.contains('hidden'))    closeEditVariantModal();
     else if (!document.getElementById('newVarOverlay').classList.contains('hidden'))     closeNewVariantModal();
     else if (!document.getElementById('variantsOverlay').classList.contains('hidden'))   closeVariantsModal();
     else if (!document.getElementById('editModalOverlay').classList.contains('hidden'))  closeEditModal();

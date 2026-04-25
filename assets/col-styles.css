@@ -894,3 +894,69 @@
   background: var(--bg3);
   color: var(--text);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PICKER ADICIONAR
+═══════════════════════════════════════════════════════════════════════ */
+
+.picker-modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+  overflow: hidden;
+}
+
+.picker-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 1rem 1.5rem 1.25rem;
+}
+
+.picker-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 1.1rem 1rem;
+  background: var(--bg2);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text2);
+  cursor: pointer;
+  transition: border-color .15s, color .15s, background .15s;
+}
+
+.picker-tab svg {
+  width: 22px;
+  height: 22px;
+  opacity: .5;
+  transition: opacity .15s;
+}
+
+.picker-tab:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.picker-tab:hover svg {
+  opacity: .8;
+}
+
+.picker-tab.active {
+  border-color: var(--accent);
+  background: var(--accent-alpha, rgba(227,106,0,.08));
+  color: var(--accent);
+}
+
+.picker-tab.active svg {
+  opacity: 1;
+}
+
+[data-theme="dark"] .picker-tab {
+  background: var(--bg3);
+}
