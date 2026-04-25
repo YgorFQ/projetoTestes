@@ -895,3 +895,80 @@
   background: var(--bg3);
   color: var(--text);
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   PICKER ADICIONAR
+═══════════════════════════════════════════════════════════════════════ */
+
+#pickerOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn .2s ease;
+}
+
+#pickerOverlay.hidden { display: none !important; }
+
+.picker-modal {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow-lg);
+  animation: modalIn .25s cubic-bezier(.4,0,.2,1);
+}
+
+.picker-tabs {
+  display: flex;
+  gap: .75rem;
+  padding: 1rem 1.5rem 1.5rem;
+}
+
+.picker-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .6rem;
+  padding: 1.1rem 1rem;
+  background: var(--bg2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--text2);
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition), background var(--transition);
+}
+
+.picker-tab svg {
+  opacity: .45;
+  transition: opacity var(--transition);
+}
+
+.picker-tab:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.picker-tab:hover svg { opacity: .8; }
+
+.picker-tab.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.picker-tab.active svg { opacity: 1; }
+
+[data-theme="dark"] .picker-modal { background: var(--bg); border-color: var(--border); }
+[data-theme="dark"] .picker-tab   { background: var(--bg3); }

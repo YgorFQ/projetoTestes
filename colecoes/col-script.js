@@ -99,7 +99,6 @@ function colSwitchTab(tab) {
   var btnLib       = document.getElementById('colTabBiblioteca');
   var btnCol       = document.getElementById('colTabColecoes');
 
-  /* Persiste a aba ativa para sobreviver ao reload */
   try { localStorage.setItem('senkolib_active_tab', tab); } catch(e) {}
 
   if (tab === 'biblioteca') {
@@ -208,21 +207,6 @@ function colRenderFilterBar() {
 
     bar.appendChild(pill);
   });
-
-  /* Botão "Nova Coleção" no final da barra */
-  var btnNew = document.createElement('button');
-  btnNew.id        = 'colBtnNewCollection';
-  btnNew.className = 'btn-add';
-  btnNew.style.marginLeft = 'auto';
-  btnNew.innerHTML =
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">' +
-      '<line x1="12" y1="5" x2="12" y2="19"/>' +
-      '<line x1="5" y1="12" x2="19" y2="12"/>' +
-    '</svg> Nova Coleção';
-  btnNew.addEventListener('click', function () {
-    if (typeof colOpenCreateModal === 'function') colOpenCreateModal();
-  });
-  bar.appendChild(btnNew);
 }
 
 
