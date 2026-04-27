@@ -562,8 +562,8 @@ function ghvInjectNewVariantButton() {
     var nomeLower = nomeRaw.toLowerCase();
     if (!/^[a-z0-9\-.]+$/.test(nomeLower)) { return; }
     var parentId  = state.currentForVariant.id;
-    var safeHtml  = html.replace(/`/g, '\\`');
-    var safeCss   = css.replace(/`/g, '\\`');
+    var safeHtml  = escapeTemplateLiteral(html);
+    var safeCss   = escapeTemplateLiteral(css);
 
     var objectCode =
       '/*@@@@Senko - ' + nomeLower + ' */\n' +
@@ -638,8 +638,8 @@ function ghvInjectEditVariantButton() {
     if (newName.length < 2) { alert('Preencha o nome da variante primeiro.'); return; }
     if (!/^[a-z0-9\-.]+$/.test(newName)) { return; }
 
-    var safeHtml   = html.replace(/`/g, '\\`');
-    var safeCss    = css.replace(/`/g, '\\`');
+    var safeHtml   = escapeTemplateLiteral(html);
+    var safeCss    = escapeTemplateLiteral(css);
     var objectCode =
       '/*@@@@Senko - ' + newName + ' */\n' +
       '  {\n' +

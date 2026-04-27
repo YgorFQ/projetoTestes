@@ -16,6 +16,13 @@ function escapeHtml(str) {
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+function escapeTemplateLiteral(value) {
+  return String(value || '')
+    .replace(/\\/g, '\\\\')
+    .replace(/`/g, '\\`')
+    .replace(/\$\{/g, '\\${');
+}
+
 function buildSrcDoc(html, css) {
   return '<!DOCTYPE html><html><head><meta charset="UTF-8">'
     + '<style>' + css + '</style></head><body>' + html + '</body></html>';
@@ -392,8 +399,8 @@ function updateGeneratedCode() {
   }
 
   var tagsStr  = tags.map(function (t) { return "'" + t + "'"; }).join(', ');
-  var safeHtml = html.replace(/`/g, '\\`');
-  var safeCss  = css.replace(/`/g, '\\`');
+  var safeHtml = escapeTemplateLiteral(html);
+  var safeCss  = escapeTemplateLiteral(css);
 
   document.getElementById('generatedCode').textContent =
     '/*@@@@Senko - ' + id.toLowerCase() + ' */\n' +
@@ -630,8 +637,8 @@ function updateNewVarCode() {
     return;
   }
 
-  var safeHtml = html.replace(/`/g, '\\`');
-  var safeCss  = css.replace(/`/g, '\\`');
+  var safeHtml = escapeTemplateLiteral(html);
+  var safeCss  = escapeTemplateLiteral(css);
 
   document.getElementById('newVarGeneratedCode').textContent =
     '/*@@@@Senko - ' + name + ' */\n' +
@@ -738,8 +745,8 @@ function updateEditVarCode() {
     else    copyBtn.classList.add('btn-blocked');
   }
 
-  var safeHtml = html.replace(/`/g, '\\`');
-  var safeCss  = css.replace(/`/g, '\\`');
+  var safeHtml = escapeTemplateLiteral(html);
+  var safeCss  = escapeTemplateLiteral(css);
 
   var genCode = document.getElementById('editVarGeneratedCode');
   if (genCode) genCode.textContent =
@@ -839,8 +846,8 @@ function updateEditCode() {
   }
 
   var tagsStr  = tags.map(function(t){ return "'" + t + "'"; }).join(', ');
-  var safeHtml = html.replace(/`/g, '\\`');
-  var safeCss  = css.replace(/`/g, '\\`');
+  var safeHtml = escapeTemplateLiteral(html);
+  var safeCss  = escapeTemplateLiteral(css);
 
   document.getElementById('editGeneratedCode').textContent =
     '/*@@@@Senko - ' + id + ' */\n' +

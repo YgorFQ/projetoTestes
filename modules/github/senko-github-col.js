@@ -59,8 +59,8 @@ function colGhBuildFileContent(col) {
     .join(', ');
 
   var layoutsCode = (col.layouts || []).map(function (l) {
-    var safeHtml = (l.html || '').replace(/`/g, '\\`');
-    var safeCss  = (l.css  || '').replace(/`/g, '\\`');
+    var safeHtml = escapeTemplateLiteral(l.html);
+    var safeCss  = escapeTemplateLiteral(l.css);
     return (
       '\n    /*@@@@Col - ' + l.id + ' */\n' +
       '    {\n' +
@@ -193,8 +193,8 @@ function colGhFindLayoutBounds(content, layoutId) {
   Monta o bloco de código de um layout para inserção/substituição no arquivo.
 */
 function colGhBuildLayoutBlock(layout) {
-  var safeHtml = (layout.html || '').replace(/`/g, '\\`');
-  var safeCss  = (layout.css  || '').replace(/`/g, '\\`');
+  var safeHtml = escapeTemplateLiteral(layout.html);
+  var safeCss  = escapeTemplateLiteral(layout.css);
   return (
     '    /*@@@@Col - ' + layout.id + ' */\n' +
     '    {\n' +
