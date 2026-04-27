@@ -112,6 +112,17 @@ function ghDecodeBase64(b64) {
   return decodeURIComponent(escape(atob(b64)));
 }
 
+/* ═══════════════════════════════════════════════════════════════════════
+   VALIDAÇÃO DE CONTEÚDO MÍNIMO
+   Garante que o valor tem pelo menos 3 letras, números ou hífens.
+   Caracteres especiais (\, `, $, <, >, etc.) não contam.
+   Retorna false se str for null, undefined, vazio ou só especiais.
+═══════════════════════════════════════════════════════════════════════ */
+function ghHasMinContent(str) {
+  if (!str || typeof str !== 'string') return false;
+  return str.replace(/[^a-zA-Z0-9\-]/g, '').length >= 3;
+}
+
 
 /* ═══════════════════════════════════════════════════════════════════════
    STATUS — atualiza o span #ghStatus (agora só no console, sem barra)
@@ -1334,9 +1345,22 @@ document.addEventListener('DOMContentLoaded', function () {
     ghEditBtn.addEventListener('click', function () {
       var code = document.getElementById('editGeneratedCode').textContent;
       var id   = document.getElementById('editId').value.trim().toLowerCase();
+      var name = document.getElementById('editName') ? document.getElementById('editName').value.trim() : '';
+      var html = document.getElementById('editHtml') ? document.getElementById('editHtml').value : '';
+      var css  = document.getElementById('editCss')  ? document.getElementById('editCss').value  : '';
 
       if (!id || code.indexOf('//') === 0) {
-        alert('Preencha os campos primeiro.');
+        ghShowErrorModal('Preencha os campos primeiro.');
+        return;
+      }
+
+      var erros = [];
+      if (!ghHasMinContent(name)) erros.push('Nome (mínimo 3 letras, números ou hífens)');
+      if (!ghHasMinContent(html)) erros.push('HTML (mínimo 3 letras, números ou hífens)');
+      if (css && !ghHasMinContent(css)) erros.push('CSS (mínimo 3 letras, números ou hífens)');
+
+      if (erros.length > 0) {
+        ghShowErrorModal('Campos inválidos:\n• ' + erros.join('\n• '));
         return;
       }
 
@@ -1430,14 +1454,28 @@ document.addEventListener('DOMContentLoaded', function () {
     ghNewBtn.addEventListener('click', function () {
       var code     = document.getElementById('generatedCode').textContent;
       var id       = document.getElementById('addId').value.trim().toLowerCase();
+      var name     = document.getElementById('addName') ? document.getElementById('addName').value.trim() : '';
+      var html     = document.getElementById('addHtml') ? document.getElementById('addHtml').value : '';
+      var css      = document.getElementById('addCss')  ? document.getElementById('addCss').value  : '';
       var fileName = ghSelect.value;
 
       if (!id || code.indexOf('//') === 0) {
-        alert('Preencha os campos primeiro.');
+        ghShowErrorModal('Preencha os campos primeiro.');
         return;
       }
       if (!fileName) {
-        alert('Selecione o arquivo de destino no dropdown.');
+        ghShowErrorModal('Selecione o arquivo de destino no dropdown.');
+        return;
+      }
+
+      var erros = [];
+      if (!ghHasMinContent(id))   erros.push('ID (mínimo 3 letras, números ou hífens)');
+      if (!ghHasMinContent(name)) erros.push('Nome (mínimo 3 letras, números ou hífens)');
+      if (!ghHasMinContent(html)) erros.push('HTML (mínimo 3 letras, números ou hífens)');
+      if (css && !ghHasMinContent(css)) erros.push('CSS (mínimo 3 letras, números ou hífens)');
+
+      if (erros.length > 0) {
+        ghShowErrorModal('Campos inválidos:\n• ' + erros.join('\n• '));
         return;
       }
 
