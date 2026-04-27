@@ -3614,4 +3614,15 @@ SenkoLib.register([
     css: ``
   },
 
+
+/*@@@@Senko - adwd */
+  /* variantes: variants/adwd.js */
+  {
+    id: 'adwd',
+    name: 'adwad',
+    tags: ['awdawd'],
+    html: `\\\awd`,
+    css: `awd`
+  },
+
 ]);
