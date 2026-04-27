@@ -8,6 +8,7 @@ var state = {
   currentEdit:        null,
   currentForVariant:  null,
   currentEditVariant: null,
+  _editFromVariant:   false,
 };
 
 /* ─── Utilitários ─────────────────────────────────── */
@@ -547,6 +548,8 @@ function renderVariantBlocks(variants) {
     block.addEventListener('click', function (e) {
       /* Ignora cliques nos botões de ação */
       if (e.target.closest('.variant-actions')) return;
+      document.getElementById('variantsOverlay').classList.add('hidden');
+      state._editFromVariant = true;
       openEditModal(v);
     });
 
@@ -809,6 +812,10 @@ function switchEditMode(mode) {
 
 function closeEditModal() {
   document.getElementById('editModalOverlay').classList.add('hidden');
+  if (state._editFromVariant) {
+    state._editFromVariant = false;
+    document.getElementById('variantsOverlay').classList.remove('hidden');
+  }
 }
 
 function updateEditCode() {
