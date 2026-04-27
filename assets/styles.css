@@ -512,7 +512,6 @@ body {
 [data-theme="dark"] .btn-ghost:hover { border-color: #b34b00; color: var(--accent); }
 [data-theme="dark"] .btn-fav         { border-color: #363b3d; color: #b2aca2; }
 [data-theme="dark"] .btn-fav-header  { border-color: #363b3d; color: #b2aca2; background: #25282a; }
-[data-theme="dark"] .btn-edit-icon   { border-color: #363b3d; color: #b2aca2; }
 [data-theme="dark"] .btn-variants    { border-color: #363b3d; color: #b2aca2; }
 [data-theme="dark"] .tab-btn         { border-color: #363b3d; color: #b2aca2; background: transparent; }
 [data-theme="dark"] .edit-mode-btn,
@@ -931,25 +930,6 @@ body {
   transition: all var(--transition);
 }
 .btn-edit-layout:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-bg);
-}
-
-/* ─── Botão editar (ícone) no card ──────────────────── */
-.btn-edit-icon {
-  flex: none;
-  width: 34px;
-  display: inline-flex; align-items: center; justify-content: center;
-  padding: .42rem;
-  border-radius: var(--radius);
-  background: transparent;
-  border: 1.5px solid var(--border);
-  color: var(--text3);
-  cursor: pointer;
-  transition: all var(--transition);
-}
-.btn-edit-icon:hover {
   border-color: var(--accent);
   color: var(--accent);
   background: var(--accent-bg);
