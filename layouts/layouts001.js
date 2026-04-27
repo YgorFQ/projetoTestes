@@ -3603,4 +3603,15 @@ SenkoLib.register([
 </style>`
   },
 
+
+/*@@@@Senko - wda */
+  /* variantes: variants/wda.js */
+  {
+    id: 'wda',
+    name: 'awdawd',
+    tags: ['awd'],
+    html: `wdawd`,
+    css: ``
+  },
+
 ]);
