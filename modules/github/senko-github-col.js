@@ -808,11 +808,6 @@ function colGhInjectCreateButton() {
     var data = typeof colGetCreateFormData === 'function' ? colGetCreateFormData() : null;
     if (!data) return;
 
-    var erros = [];
-    if (!ghHasMinContent(data.name)) erros.push('Nome (mínimo 3 letras, números ou hífens)');
-    if (!ghHasMinContent(data.slug)) erros.push('Slug (mínimo 3 letras, números ou hífens)');
-    if (erros.length > 0) { ghShowErrorModal('Campos inválidos:\n• ' + erros.join('\n• ')); return; }
-
     btn.textContent = 'Criando…';
     btn.disabled    = true;
 
@@ -853,10 +848,6 @@ function colGhInjectEditButton() {
 
     var data = typeof colGetEditFormData === 'function' ? colGetEditFormData() : null;
     if (!data) return;
-
-    var erros = [];
-    if (!ghHasMinContent(data.name)) erros.push('Nome (mínimo 3 letras, números ou hífens)');
-    if (erros.length > 0) { ghShowErrorModal('Campos inválidos:\n• ' + erros.join('\n• ')); return; }
 
     btn.textContent = 'Salvando…';
     btn.disabled    = true;
@@ -943,14 +934,12 @@ function colGhInjectAddLayoutButton() {
     var data = typeof colGetAddLayoutFormData === 'function' ? colGetAddLayoutFormData() : null;
     if (!data) return;
 
+    /* Precisa saber em qual coleção está — lê do _colCurrentCollection */
     var col = (typeof _colCurrentCollection !== 'undefined') ? _colCurrentCollection : null;
-    if (!col) { ghShowErrorModal('Nenhuma coleção selecionada.'); return; }
-
-    var erros = [];
-    if (!ghHasMinContent(data.id))   erros.push('ID (mínimo 3 letras, números ou hífens)');
-    if (!ghHasMinContent(data.name)) erros.push('Nome (mínimo 3 letras, números ou hífens)');
-    if (!ghHasMinContent(data.html)) erros.push('Conteúdo (mínimo 3 letras, números ou hífens)');
-    if (erros.length > 0) { ghShowErrorModal('Campos inválidos:\n• ' + erros.join('\n• ')); return; }
+    if (!col) {
+      ghShowErrorModal('Nenhuma coleção selecionada.');
+      return;
+    }
 
     btn.textContent = 'Salvando…';
     btn.disabled    = true;
@@ -996,12 +985,8 @@ function colGhInjectEditLayoutButton() {
     var col = (typeof _colCurrentCollection !== 'undefined') ? _colCurrentCollection : null;
     if (!col) { ghShowErrorModal('Nenhuma coleção selecionada.'); return; }
 
+    /* ID do layout vem do campo hidden colEditLayoutId */
     var layoutId = (document.getElementById('colEditLayoutId') || {}).value || data.id;
-
-    var erros = [];
-    if (!ghHasMinContent(data.name)) erros.push('Nome (mínimo 3 letras, números ou hífens)');
-    if (!ghHasMinContent(data.html)) erros.push('Conteúdo (mínimo 3 letras, números ou hífens)');
-    if (erros.length > 0) { ghShowErrorModal('Campos inválidos:\n• ' + erros.join('\n• ')); return; }
 
     btn.textContent = 'Salvando…';
     btn.disabled    = true;

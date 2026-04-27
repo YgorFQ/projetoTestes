@@ -556,17 +556,11 @@ function ghvInjectNewVariantButton() {
     var html    = document.getElementById('newVarHtml') ? document.getElementById('newVarHtml').value : '';
     var css     = document.getElementById('newVarCss')  ? document.getElementById('newVarCss').value  : '';
 
-    if (nomeRaw.length < 2) { ghShowErrorModal('Preencha o nome da variante primeiro.'); return; }
-    if (!state.currentForVariant) { ghShowErrorModal('Nenhum layout pai selecionado.'); return; }
+    if (nomeRaw.length < 2) { alert('Preencha o nome da variante primeiro.'); return; }
+    if (!state.currentForVariant) { alert('Nenhum layout pai selecionado.'); return; }
 
     var nomeLower = nomeRaw.toLowerCase();
     if (!/^[a-z0-9\-.]+$/.test(nomeLower)) { return; }
-
-    var erros = [];
-    if (!ghHasMinContent(nomeLower)) erros.push('Nome (mínimo 3 letras, números ou hífens)');
-    if (!ghHasMinContent(html))      erros.push('HTML (mínimo 3 letras, números ou hífens)');
-    if (css && !ghHasMinContent(css)) erros.push('CSS (mínimo 3 letras, números ou hífens)');
-    if (erros.length > 0) { ghShowErrorModal('Campos inválidos:\n• ' + erros.join('\n• ')); return; }
     var parentId  = state.currentForVariant.id;
     var safeHtml  = html.replace(/`/g, '\\`');
     var safeCss   = css.replace(/`/g, '\\`');
@@ -631,8 +625,8 @@ function ghvInjectEditVariantButton() {
   anchor.parentNode.replaceChild(btn, anchor);
 
   btn.addEventListener('click', function () {
-    if (!state.currentForVariant)  { ghShowErrorModal('Nenhum layout pai selecionado.'); return; }
-    if (!state.currentEditVariant) { ghShowErrorModal('Nenhuma variante selecionada.');  return; }
+    if (!state.currentForVariant)  { alert('Nenhum layout pai selecionado.'); return; }
+    if (!state.currentEditVariant) { alert('Nenhuma variante selecionada.');  return; }
 
     /* ⚠ Nome ORIGINAL: lido do state, não do campo editável */
     var originalName = state.currentEditVariant.name || '';
@@ -641,14 +635,8 @@ function ghvInjectEditVariantButton() {
     var css          = document.getElementById('editVarCss').value;
     var parentId     = state.currentForVariant.id;
 
-    if (newName.length < 2) { ghShowErrorModal('Preencha o nome da variante primeiro.'); return; }
+    if (newName.length < 2) { alert('Preencha o nome da variante primeiro.'); return; }
     if (!/^[a-z0-9\-.]+$/.test(newName)) { return; }
-
-    var erros = [];
-    if (!ghHasMinContent(newName)) erros.push('Nome (mínimo 3 letras, números ou hífens)');
-    if (!ghHasMinContent(html))    erros.push('HTML (mínimo 3 letras, números ou hífens)');
-    if (css && !ghHasMinContent(css)) erros.push('CSS (mínimo 3 letras, números ou hífens)');
-    if (erros.length > 0) { ghShowErrorModal('Campos inválidos:\n• ' + erros.join('\n• ')); return; }
 
     var safeHtml   = html.replace(/`/g, '\\`');
     var safeCss    = css.replace(/`/g, '\\`');
