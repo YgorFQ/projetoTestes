@@ -871,48 +871,51 @@ function colGhInjectEditButton() {
   });
 }
 
-/* ── 3. Botão de EXCLUIR COLEÇÃO (injetado no card do grid) ── */
+/* ── 3. Botão de EXCLUIR COLEÇÃO (dentro do modal de editar coleção) ── */
 function colGhInjectDeleteButtons() {
-  /* Re-injetado sempre que o grid re-renderiza */
-  document.querySelectorAll('.col-delete-anchor').forEach(function (anchor) {
-    /* Evita duplicata */
-    if (anchor.querySelector('.col-gh-delete-btn')) return;
+  var anchor = document.getElementById('colEditDeleteAnchor');
+  if (!anchor || document.getElementById('colGhDeleteCollectionBtn')) return;
 
-    var slug = anchor.dataset.colSlug;
+  var btn       = document.createElement('button');
+  btn.id        = 'colGhDeleteCollectionBtn';
+  btn.className = 'col-btn-delete';
+  btn.type      = 'button';
+  btn.textContent = 'Excluir';
+  btn.title     = 'Excluir coleção';
+
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (!ghEnsureToken()) return;
+
+    var slug = (document.getElementById('colEditSlug') || {}).value || '';
     if (!slug) return;
 
-    var btn       = document.createElement('button');
-    btn.className = 'btn btn-fav col-gh-delete-btn';
-    btn.title     = 'Excluir coleção';
-    btn.style.cssText = 'color:var(--red);';
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>';
+    var col = typeof ColLib !== 'undefined' ? ColLib.getBySlug(slug) : null;
+    var layoutCount = col ? (col.layouts || []).length : 0;
+    var body = 'A coleção "' + (col ? col.name : slug) + '" será excluída permanentemente do repositório.';
+    if (layoutCount > 0) {
+      body += '\n\nATENÇÃO: ela contém ' + layoutCount + ' layout' + (layoutCount > 1 ? 's' : '') + ' que também serão perdidos.';
+    }
 
-    btn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      if (!ghEnsureToken()) return;
-
-      var col = typeof ColLib !== 'undefined' ? ColLib.getBySlug(slug) : null;
-      var layoutCount = col ? (col.layouts || []).length : 0;
-      var body = 'A coleção "' + (col ? col.name : slug) + '" será excluída permanentemente do repositório.';
-      if (layoutCount > 0) {
-        body += '\n\nATENÇÃO: ela contém ' + layoutCount + ' layout' + (layoutCount > 1 ? 's' : '') + ' que também serão perdidos.';
-      }
-
-      if (typeof colOpenConfirm === 'function') {
-        colOpenConfirm({
-          title:     'Excluir Coleção?',
-          body:      body,
-          labelOk:   'Excluir',
-          danger:    true,
-          onConfirm: function () {
-            colGhDeleteCollection(slug);
-          },
-        });
-      }
-    });
-
-    anchor.appendChild(btn);
+    if (typeof colOpenConfirm === 'function') {
+      colOpenConfirm({
+        title:     'Excluir Coleção?',
+        body:      body,
+        labelOk:   'Excluir',
+        danger:    true,
+        onConfirm: function () {
+          colGhDeleteCollection(slug).then(function (ok) {
+            if (ok) {
+              if (typeof colCloseEditModal === 'function') colCloseEditModal();
+              if (typeof colCloseCollectionModal === 'function') colCloseCollectionModal();
+            }
+          });
+        },
+      });
+    }
   });
+
+  anchor.appendChild(btn);
 }
 
 /* ── 4. Botão "GitHub" no modal de ADICIONAR LAYOUT ── */
@@ -1010,42 +1013,44 @@ function colGhInjectEditLayoutButton() {
   });
 }
 
-/* ── 6. Botões de EXCLUIR LAYOUT (dentro do modal de coleção) ── */
+/* ── 6. Botão de EXCLUIR LAYOUT (dentro do modal de editar layout) ── */
 function colGhInjectDeleteLayoutButtons() {
-  document.querySelectorAll('.col-layout-delete-anchor').forEach(function (anchor) {
-    if (anchor.querySelector('.col-gh-del-layout-btn')) return;
+  var anchor = document.getElementById('colEditLayoutDelAnchor');
+  if (!anchor || document.getElementById('colGhDelLayoutBtn')) return;
 
-    var layoutId = anchor.dataset.layoutId;
+  var btn       = document.createElement('button');
+  btn.id        = 'colGhDelLayoutBtn';
+  btn.className = 'col-btn-delete';
+  btn.type      = 'button';
+  btn.textContent = 'Excluir';
+  btn.title     = 'Excluir layout';
+
+  btn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (!ghEnsureToken()) return;
+
+    var col = (typeof _colCurrentCollection !== 'undefined') ? _colCurrentCollection : null;
+    if (!col) return;
+
+    var layoutId = (document.getElementById('colEditLayoutId') || {}).value || '';
     if (!layoutId) return;
 
-    var btn       = document.createElement('button');
-    btn.className = 'btn btn-fav col-gh-del-layout-btn';
-    btn.title     = 'Excluir layout';
-    btn.style.cssText = 'color:var(--red);';
-    btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>';
-
-    btn.addEventListener('click', function (e) {
-      e.stopPropagation();
-      if (!ghEnsureToken()) return;
-
-      var col = (typeof _colCurrentCollection !== 'undefined') ? _colCurrentCollection : null;
-      if (!col) return;
-
-      if (typeof colOpenConfirm === 'function') {
-        colOpenConfirm({
-          title:     'Excluir Layout?',
-          body:      'O layout "' + layoutId + '" será removido permanentemente da coleção "' + col.name + '".',
-          labelOk:   'Excluir',
-          danger:    true,
-          onConfirm: function () {
-            colGhDeleteLayout(col.slug, layoutId);
-          },
-        });
-      }
-    });
-
-    anchor.appendChild(btn);
+    if (typeof colOpenConfirm === 'function') {
+      colOpenConfirm({
+        title:     'Excluir Layout?',
+        body:      'O layout "' + layoutId + '" será removido permanentemente da coleção "' + col.name + '".',
+        labelOk:   'Excluir',
+        danger:    true,
+        onConfirm: function () {
+          colGhDeleteLayout(col.slug, layoutId).then(function (ok) {
+            if (ok && typeof colCloseEditLayoutModal === 'function') colCloseEditLayoutModal();
+          });
+        },
+      });
+    }
   });
+
+  anchor.appendChild(btn);
 }
 
 
@@ -1062,39 +1067,22 @@ function colGhObserveModals() {
         var id = node.id || '';
 
         /* Injeções nos overlays recém-criados */
-        if (id === 'colCreateOverlay')    setTimeout(colGhInjectCreateButton,    0);
-        if (id === 'colEditOverlay')      setTimeout(colGhInjectEditButton,      0);
-        if (id === 'colAddLayoutOverlay') setTimeout(colGhInjectAddLayoutButton, 0);
-        if (id === 'colEditLayoutOverlay')setTimeout(colGhInjectEditLayoutButton,0);
-
-        /* Re-injeta botões de delete quando o grid de layouts é re-renderizado */
-        if (id === 'colColLayoutsGrid' || (node.className && node.className.indexOf && node.className.indexOf('col-layout-delete-anchor') !== -1)) {
-          setTimeout(colGhInjectDeleteLayoutButtons, 0);
+        if (id === 'colCreateOverlay')    setTimeout(colGhInjectCreateButton,       0);
+        if (id === 'colEditOverlay') {
+          setTimeout(colGhInjectEditButton,         0);
+          setTimeout(colGhInjectDeleteButtons,      0);
+        }
+        if (id === 'colAddLayoutOverlay') setTimeout(colGhInjectAddLayoutButton,    0);
+        if (id === 'colEditLayoutOverlay') {
+          setTimeout(colGhInjectEditLayoutButton,   0);
+          setTimeout(colGhInjectDeleteLayoutButtons,0);
         }
       });
-
-      /* Re-injeta delete de layouts quando o conteúdo do grid muda */
-      if (m.target && m.target.id === 'colColLayoutsGrid') {
-        setTimeout(colGhInjectDeleteLayoutButtons, 0);
-      }
     });
   });
 
   observer.observe(document.body, { childList: true, subtree: true });
 }
-
-/* Re-injeta botões de delete no grid de coleções após cada renderização */
-function colGhHookGridRender() {
-  var originalRenderGrid = typeof colRenderGrid === 'function' ? colRenderGrid : null;
-  if (!originalRenderGrid) return;
-
-  /* Wraps colRenderGrid para injetar os botões de delete depois */
-  window.colRenderGrid = function () {
-    originalRenderGrid();
-    setTimeout(colGhInjectDeleteButtons, 0);
-  };
-}
-
 
 /* ═══════════════════════════════════════════════════════════════════════
    INICIALIZAÇÃO — só ativa no GitHub Pages
@@ -1104,7 +1092,6 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;
 
   colGhObserveModals();
-  colGhHookGridRender();
 
   /* Injeções iniciais para overlays já existentes no DOM
      (caso os modais tenham sido criados antes deste script) */

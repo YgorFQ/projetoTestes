@@ -505,6 +505,11 @@
   flex-shrink: 0;
 }
 
+#colEditDeleteAnchor,
+#colEditLayoutDelAnchor {
+  margin-right: auto;
+}
+
 /* Campo de formulário */
 .col-field {
   display: flex;

@@ -340,13 +340,7 @@ function colCreateCard(col, index) {
     if (typeof colOpenEditModal === 'function') colOpenEditModal(col);
   });
 
-  /* Âncora para o módulo GitHub injetar botão de excluir */
-  var deleteAnchor = document.createElement('span');
-  deleteAnchor.className = 'col-delete-anchor';
-  deleteAnchor.dataset.colSlug = col.slug;
-
   actions.appendChild(btnEdit);
-  actions.appendChild(deleteAnchor);
 
   card.appendChild(tagsArea);
   card.appendChild(body);

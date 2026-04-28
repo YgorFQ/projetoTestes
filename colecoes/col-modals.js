@@ -274,31 +274,15 @@ function _colRenderLayoutsGrid(col) {
       if (typeof copyToClipboard === 'function') copyToClipboard(tudo, bAll, COPY_ICON + ' Copiar tudo');
     });
 
-    var bEdit = document.createElement('button');
-    bEdit.className = 'btn btn-edit-icon';
-    bEdit.title = 'Editar layout';
-    bEdit.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
-    bEdit.addEventListener('click', function (e) {
-      e.stopPropagation();
-      colOpenEditLayoutModal(_colCurrentCollection, layout);
-    });
-
-    /* Âncora de delete — senko-github-col.js injeta botão aqui */
-    var delAnchor = document.createElement('span');
-    delAnchor.className = 'col-layout-delete-anchor';
-    delAnchor.dataset.layoutId = layout.id || '';
-
     footer.appendChild(bAll);
-    footer.appendChild(bEdit);
-    footer.appendChild(delAnchor);
 
     block.appendChild(previewWrap);
     block.appendChild(body);
     block.appendChild(footer);
 
-    /* Clique no bloco abre preview ampliado (placeholder — futura implementação) */
+    /* Clique no bloco abre a edição do layout */
     block.addEventListener('click', function () {
-      /* Por ora, não faz nada ao clicar no bloco — ações ficam nos botões */
+      colOpenEditLayoutModal(_colCurrentCollection, layout);
     });
 
     grid.appendChild(block);
@@ -528,6 +512,7 @@ function _colBuildEditModal() {
       '</div>' +
 
       '<div class="col-form-footer">' +
+        '<span id="colEditDeleteAnchor"></span>' +
         '<span id="colEditGhAnchor" style="display:none;"></span>' +
         '<button class="col-btn-cancel" id="colEditCancel">Cancelar</button>' +
       '</div>' +
@@ -899,7 +884,7 @@ function _colBuildEditLayoutModal() {
       '</div>' +
 
       '<div class="col-form-footer">' +
-        '<span id="colEditLayoutDelAnchor" style="display:none;"></span>' +
+        '<span id="colEditLayoutDelAnchor"></span>' +
         '<button class="col-btn-cancel" id="colEditLayoutCancel">Cancelar</button>' +
       '</div>' +
 
