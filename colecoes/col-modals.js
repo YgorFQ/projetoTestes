@@ -95,19 +95,36 @@ function colCloseAllModals() {
 
 /* Gera slug a partir do nome */
 function _colSlugify(name) {
+  if (typeof senkoSlugifyIdentifier === 'function') {
+    return senkoSlugifyIdentifier(name);
+  }
   if (typeof ColGroups !== 'undefined' && typeof ColGroups.slugify === 'function') {
     return ColGroups.slugify(name);
   }
   return (name || '')
     .toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9\s-]/g, '').trim()
-    .replace(/\s+/g, '-').replace(/-+/g, '-');
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
 }
 
 /* Valida slug: só letras minúsculas, números e hífen */
 function _colValidSlug(slug) {
   return /^[a-z0-9-]+$/.test(slug) && slug.length >= 2;
+}
+
+function _colSyncGeneratedId(nameId, targetId, previewId) {
+  var nameEl = document.getElementById(nameId);
+  var target = document.getElementById(targetId);
+  if (!nameEl || !target) return '';
+  var slug = _colSlugify(nameEl.value);
+  target.value = slug;
+  if (previewId) {
+    var preview = document.getElementById(previewId);
+    if (preview) preview.textContent = slug || 'slug';
+  }
+  return slug;
 }
 
 /* Preview de iframe — limpa e recarrega */
@@ -333,10 +350,9 @@ function _colBuildCreateModal() {
 
         /* Slug */
         '<div class="col-field">' +
-          '<label>Slug <span class="req">*</span></label>' +
-          '<input type="text" id="colCreateSlug" placeholder="ex: kit-lancamento-2026" />' +
-          '<span class="col-field-hint">Identificador único e imutável. Vira o nome do arquivo: <code>colecoes/data/<span id="colCreateSlugPreview">slug</span>.js</code></span>' +
-          '<span class="col-field-error" id="colCreateSlugErr">⚠ Use apenas letras minúsculas, números e hífen</span>' +
+          '<label>Slug gerado</label>' +
+          '<input type="text" id="colCreateSlug" placeholder="gerado pelo nome" readonly />' +
+          '<span class="col-field-hint">Gerado automaticamente a partir do nome. Vira o arquivo: <code>colecoes/data/<span id="colCreateSlugPreview">slug</span>.js</code></span>' +
         '</div>' +
 
         /* Grupo */
@@ -367,18 +383,10 @@ function _colBuildCreateModal() {
     '</div>';
 
   var nameInput = document.getElementById('colCreateName');
-  var slugInput = document.getElementById('colCreateSlug');
 
   /* Auto-gera slug a partir do nome */
   nameInput.addEventListener('input', function () {
-    var slug = _colSlugify(this.value);
-    slugInput.value = slug;
-    document.getElementById('colCreateSlugPreview').textContent = slug || 'slug';
-    _colValidateCreateForm();
-  });
-
-  slugInput.addEventListener('input', function () {
-    document.getElementById('colCreateSlugPreview').textContent = this.value || 'slug';
+    _colSyncGeneratedId('colCreateName', 'colCreateSlug', 'colCreateSlugPreview');
     _colValidateCreateForm();
   });
 
@@ -411,7 +419,7 @@ function colOpenCreateModal() {
   _colPopulateGroupSelect(document.getElementById('colCreateGroup'), null);
 
   /* Esconde erros */
-  ['colCreateNameErr', 'colCreateSlugErr', 'colCreateGroupErr'].forEach(function (id) {
+  ['colCreateNameErr', 'colCreateGroupErr'].forEach(function (id) {
     document.getElementById(id).style.display = 'none';
   });
 
@@ -427,7 +435,7 @@ function colCloseCreateModal() {
 
 function _colValidateCreateForm() {
   var name  = (document.getElementById('colCreateName')  || {}).value || '';
-  var slug  = (document.getElementById('colCreateSlug')  || {}).value || '';
+  var slug  = _colSyncGeneratedId('colCreateName', 'colCreateSlug', 'colCreateSlugPreview');
   var group = (document.getElementById('colCreateGroup') || {}).value || '';
 
   var nameOk  = name.trim().length >= 3;
@@ -435,7 +443,6 @@ function _colValidateCreateForm() {
   var groupOk = !!group;
 
   _colShowFieldError('colCreateNameErr',  !nameOk  && name.length > 0);
-  _colShowFieldError('colCreateSlugErr',  !slugOk  && slug.length > 0);
   _colShowFieldError('colCreateGroupErr', false); /* só mostra no submit */
 
   return nameOk && slugOk && groupOk;
@@ -449,7 +456,7 @@ function _colShowFieldError(id, show) {
 /* Lê os dados do formulário de criação — usado pelo módulo GitHub */
 function colGetCreateFormData() {
   var name  = (document.getElementById('colCreateName')  || {}).value || '';
-  var slug  = (document.getElementById('colCreateSlug')  || {}).value || '';
+  var slug  = _colSyncGeneratedId('colCreateName', 'colCreateSlug', 'colCreateSlugPreview');
   var group = (document.getElementById('colCreateGroup') || {}).value || '';
   var tags  = ((document.getElementById('colCreateTags') || {}).value || '')
     .split(',').map(function (t) { return t.trim(); }).filter(Boolean);
@@ -458,7 +465,6 @@ function colGetCreateFormData() {
   var ok = name.trim().length >= 3 && _colValidSlug(slug.trim()) && !!group;
   if (!ok) {
     _colShowFieldError('colCreateNameErr',  name.trim().length < 3);
-    _colShowFieldError('colCreateSlugErr',  !_colValidSlug(slug.trim()));
     _colShowFieldError('colCreateGroupErr', !group);
   }
   return ok ? { name: name.trim(), slug: slug.trim(), group: group, tags: tags } : null;
@@ -727,9 +733,9 @@ function _colBuildAddLayoutModal() {
       '<div class="col-form-body" style="padding-bottom:0;flex-shrink:0;">' +
         '<div class="col-field-row">' +
           '<div class="col-field">' +
-            '<label>ID <span class="req">*</span></label>' +
-            '<input type="text" id="colAddLayoutId" placeholder="ex: hero-principal" />' +
-            '<span class="col-field-error" id="colAddLayoutIdErr">⚠ Use apenas letras minúsculas, números e hífen</span>' +
+            '<label>ID gerado</label>' +
+            '<input type="text" id="colAddLayoutId" placeholder="gerado pelo nome" readonly />' +
+            '<span class="col-field-hint">Gerado automaticamente a partir do nome.</span>' +
           '</div>' +
           '<div class="col-field">' +
             '<label>Nome <span class="req">*</span></label>' +
@@ -778,10 +784,9 @@ function _colBuildAddLayoutModal() {
     });
   });
 
-  /* Validação inline de ID */
-  document.getElementById('colAddLayoutId').addEventListener('input', function () {
-    var id = this.value.trim();
-    _colShowFieldError('colAddLayoutIdErr', id.length > 0 && !_colValidSlug(id));
+  document.getElementById('colAddLayoutName').addEventListener('input', function () {
+    _colSyncGeneratedId('colAddLayoutName', 'colAddLayoutId');
+    _colShowFieldError('colAddLayoutNameErr', this.value.trim().length < 1 && this.value.length > 0);
   });
 
   document.getElementById('colAddLayoutClose').addEventListener('click', colCloseAddLayoutModal);
@@ -799,7 +804,7 @@ function colOpenAddLayoutModal(col) {
   ['colAddLayoutId', 'colAddLayoutName', 'colAddLayoutContent'].forEach(function (id) {
     document.getElementById(id).value = '';
   });
-  ['colAddLayoutIdErr', 'colAddLayoutNameErr'].forEach(function (id) {
+  ['colAddLayoutNameErr'].forEach(function (id) {
     document.getElementById(id).style.display = 'none';
   });
 
@@ -822,14 +827,12 @@ function colCloseAddLayoutModal() {
 
 /* Lê dados do formulário de novo layout — usado pelo módulo GitHub */
 function colGetAddLayoutFormData() {
-  var id      = (document.getElementById('colAddLayoutId')      || {}).value || '';
   var name    = (document.getElementById('colAddLayoutName')    || {}).value || '';
+  var id      = _colSyncGeneratedId('colAddLayoutName', 'colAddLayoutId');
   var content = (document.getElementById('colAddLayoutContent') || {}).value || '';
 
-  id = id.trim().toLowerCase();
   var ok = _colValidSlug(id) && name.trim().length >= 1;
   if (!ok) {
-    _colShowFieldError('colAddLayoutIdErr',   !_colValidSlug(id));
     _colShowFieldError('colAddLayoutNameErr', name.trim().length < 1);
   }
   return ok ? { id: id, name: name.trim(), html: content, css: '' } : null;

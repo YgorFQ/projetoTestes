@@ -125,14 +125,16 @@ var ColGroups = (function () {
        remove caracteres especiais, colapsa hífens múltiplos.
     ───────────────────────────────────────────────────────────────── */
     slugify: function (name) {
+      if (typeof senkoSlugifyIdentifier === 'function') {
+        return senkoSlugifyIdentifier(name);
+      }
       return (name || '')
         .toLowerCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')  /* remove acentos */
-        .replace(/[^a-z0-9\s-]/g, '')     /* remove especiais */
-        .trim()
-        .replace(/\s+/g, '-')             /* espaço → hífen */
-        .replace(/-+/g, '-');             /* colapsa hífens duplos */
+        .replace(/[^a-z0-9]+/g, '-')      /* especiais/separadores → hífen */
+        .replace(/-+/g, '-')              /* colapsa hífens duplos */
+        .replace(/^-|-$/g, '');           /* remove hífen das bordas */
     },
 
   };

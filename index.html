@@ -173,7 +173,7 @@
         <div class="modal-meta">
 
           <h2 class="modal-title">Adicionar Layout</h2>
-          <p class="add-hint">O ID vira o nome do futuro arquivo de variantes:
+          <p class="add-hint">O nome gera automaticamente o futuro arquivo de variantes:
             <code>variants/<span id="hintVariantPath">id</span>.js</code>
           </p>
         </div>
@@ -182,10 +182,9 @@
       <div class="add-fields">
         <div class="field-row">
           <div class="field-group">
-            <label>ID <span class="req">*</span></label>
-            <input type="text" id="addId" placeholder="ex: section-58" />
-            <span class="field-desc">Identificador único, sempre em minúsculo. Vira o nome do arquivo de variantes. Ex:
-              <code>section-58</code> → <code>variants/section-58.js</code></span>
+            <label>ID gerado</label>
+            <input type="text" id="addId" placeholder="gerado pelo nome" readonly />
+            <span class="field-desc">Gerado automaticamente a partir do nome. Vira o nome do arquivo de variantes.</span>
           </div>
           <div class="field-group">
             <label>Nome <span class="req">*</span></label>
@@ -304,8 +303,8 @@
         <div class="field-row">
           <div class="field-group" style="flex:1;">
             <label>Nome <span class="req">*</span></label>
-            <input type="text" id="editVarName" placeholder="ex: section-1.2" />
-            <span class="field-desc">Nome da variante em minúsculo.</span>
+            <input type="text" id="editVarName" placeholder="ex: section-1-2" />
+            <span class="field-desc">Nome oficial da variante. Caracteres especiais viram hífen automaticamente.</span>
           </div>
         </div>
       </div>
@@ -348,9 +347,8 @@
         <div class="field-row">
           <div class="field-group">
             <label>Nome <span class="req">*</span></label>
-            <input type="text" id="newVarName" placeholder="ex: section-49.1" />
-            <span class="field-desc">Nome da variante em minúsculo. Geralmente o nome do layout pai seguido de um
-              número. Ex: <code>section-49.1</code></span>
+            <input type="text" id="newVarName" placeholder="ex: section-49-1" />
+            <span class="field-desc">Nome oficial da variante. Caracteres especiais viram hífen automaticamente.</span>
           </div>
         </div>
       </div>

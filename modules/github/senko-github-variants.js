@@ -552,15 +552,17 @@ function ghvInjectNewVariantButton() {
   anchor.parentNode.replaceChild(btn, anchor);
 
   btn.addEventListener('click', function () {
-    var nomeRaw = document.getElementById('newVarName') ? document.getElementById('newVarName').value.trim() : '';
+    var nomeRaw = typeof senkoSyncIdentifierInput === 'function'
+      ? senkoSyncIdentifierInput('newVarName', true)
+      : (document.getElementById('newVarName') ? document.getElementById('newVarName').value.trim().toLowerCase() : '');
     var html    = document.getElementById('newVarHtml') ? document.getElementById('newVarHtml').value : '';
     var css     = document.getElementById('newVarCss')  ? document.getElementById('newVarCss').value  : '';
 
     if (nomeRaw.length < 2) { alert('Preencha o nome da variante primeiro.'); return; }
     if (!state.currentForVariant) { alert('Nenhum layout pai selecionado.'); return; }
 
-    var nomeLower = nomeRaw.toLowerCase();
-    if (!/^[a-z0-9\-.]+$/.test(nomeLower)) { return; }
+    var nomeLower = typeof senkoSlugifyIdentifier === 'function' ? senkoSlugifyIdentifier(nomeRaw) : nomeRaw.toLowerCase();
+    if (!/^[a-z0-9-]+$/.test(nomeLower)) { return; }
     var parentId  = state.currentForVariant.id;
     var safeHtml  = escapeTemplateLiteral(html);
     var safeCss   = escapeTemplateLiteral(css);
@@ -630,13 +632,15 @@ function ghvInjectEditVariantButton() {
 
     /* ⚠ Nome ORIGINAL: lido do state, não do campo editável */
     var originalName = state.currentEditVariant.name || '';
-    var newName      = document.getElementById('editVarName').value.trim().toLowerCase();
+    var newName      = typeof senkoSyncIdentifierInput === 'function'
+      ? senkoSyncIdentifierInput('editVarName', true)
+      : document.getElementById('editVarName').value.trim().toLowerCase();
     var html         = document.getElementById('editVarHtml').value;
     var css          = document.getElementById('editVarCss').value;
     var parentId     = state.currentForVariant.id;
 
     if (newName.length < 2) { alert('Preencha o nome da variante primeiro.'); return; }
-    if (!/^[a-z0-9\-.]+$/.test(newName)) { return; }
+    if (!/^[a-z0-9-]+$/.test(newName)) { return; }
 
     var safeHtml   = escapeTemplateLiteral(html);
     var safeCss    = escapeTemplateLiteral(css);

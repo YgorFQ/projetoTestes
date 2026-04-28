@@ -23,6 +23,24 @@ function escapeTemplateLiteral(value) {
     .replace(/\$\{/g, '\\${');
 }
 
+function senkoSlugifyIdentifier(value) {
+  return String(value || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function senkoSyncIdentifierInput(inputId, force) {
+  var el = document.getElementById(inputId);
+  if (!el) return '';
+  var value = senkoSlugifyIdentifier(el.value);
+  if (force || document.activeElement === el) el.value = value;
+  return value;
+}
+
 function buildSrcDoc(html, css) {
   return '<!DOCTYPE html><html><head><meta charset="UTF-8">'
     + '<style>' + css + '</style></head><body>' + html + '</body></html>';
@@ -337,9 +355,11 @@ function _pickerSetTab(tab) {
 
 /* ─── Modal adicionar layout ────────────────────────── */
 function openAddModal() {
-  ['addId','addName','addTags','addHtml','addCss'].forEach(function (id) {
+  ['addName','addTags','addHtml','addCss'].forEach(function (id) {
     document.getElementById(id).value = '';
   });
+  document.getElementById('addId').readOnly = true;
+  document.getElementById('addId').value = '';
   document.getElementById('generatedCode').textContent = '// Preencha os campos acima para gerar o objeto…';
   document.getElementById('addPreviewIframe').srcdoc = '';
 
@@ -360,8 +380,9 @@ function closeAddModal() {
 }
 
 function updateGeneratedCode() {
-  var id      = document.getElementById('addId').value.trim().toLowerCase();
   var name    = document.getElementById('addName').value.trim();
+  var id      = senkoSlugifyIdentifier(name);
+  document.getElementById('addId').value = id;
   var tagsRaw = document.getElementById('addTags').value;
   var html    = document.getElementById('addHtml').value;
   var css     = document.getElementById('addCss').value;
@@ -370,21 +391,8 @@ function updateGeneratedCode() {
   var hintEl = document.getElementById('hintVariantPath');
   if (hintEl) hintEl.textContent = id || 'id';
 
-  /* Valida id: só letras, números e hífen — sem espaços ou caracteres especiais */
-  var idEl    = document.getElementById('addId');
-  var idValid = /^[a-z0-9-]+$/.test(id);
-  var idWarn  = document.getElementById('addIdWarn');
-  if (!idWarn && idEl) {
-    idWarn = document.createElement('span');
-    idWarn.id = 'addIdWarn';
-    idWarn.style.cssText = 'color:#ef4444;font-size:.75rem;font-weight:700;display:none;';
-    idWarn.textContent = '\u26a0 Use apenas letras minúsculas, números e hífen (sem espaços)';
-    idEl.parentNode.insertBefore(idWarn, idEl.nextSibling);
-  }
-  if (idWarn) idWarn.style.display = (id.length > 0 && !idValid) ? 'block' : 'none';
-
   var copyBtn = document.getElementById('copyGeneratedBtn');
-  var allFilled = id.length >= 3 && idValid && name.length >= 3 && html.length >= 3;
+  var allFilled = id.length >= 3 && name.length >= 3 && html.length >= 3;
   if (copyBtn) {
     if (allFilled) {
       copyBtn.classList.remove('btn-blocked');
@@ -604,25 +612,12 @@ function closeNewVariantModal() {
 }
 
 function updateNewVarCode() {
-  var name      = document.getElementById('newVarName').value.trim().toLowerCase();
+  var name      = senkoSyncIdentifierInput('newVarName', true);
   var html      = document.getElementById('newVarHtml').value;
   var css       = document.getElementById('newVarCss').value;
   var copyBtn   = document.getElementById('newVarCopyBtn');
 
-  /* Validação ao vivo do nome */
-  var nameEl      = document.getElementById('newVarName');
-  var nameValid   = name.length === 0 || /^[a-z0-9\-.]+$/.test(name);
-  var nameWarn    = document.getElementById('newVarNameWarn');
-  if (!nameWarn && nameEl) {
-    nameWarn = document.createElement('span');
-    nameWarn.id = 'newVarNameWarn';
-    nameWarn.style.cssText = 'color:#ef4444;font-size:.75rem;font-weight:700;display:none;margin-top:.2rem;';
-    nameWarn.textContent = '\u26a0 Use apenas letras, números, hífen (-) e ponto (.)';
-    nameEl.parentNode.insertBefore(nameWarn, nameEl.nextSibling);
-  }
-  if (nameWarn) nameWarn.style.display = (name.length > 0 && !nameValid) ? 'block' : 'none';
-
-  var allOk = name.length >= 2 && nameValid;
+  var allOk = name.length >= 2;
   if (copyBtn) {
     if (!allOk) {
       copyBtn.classList.add('btn-blocked');
@@ -660,6 +655,7 @@ function openEditVariantModal(v) {
 
   document.getElementById('editVarParentName').textContent  = parentNm;
   document.getElementById('editVarName').value              = v.name || '';
+  senkoSyncIdentifierInput('editVarName', true);
   document.getElementById('editVarHtml').value              = v.html || '';
   document.getElementById('editVarCss').value               = v.css  || '';
 
@@ -721,25 +717,12 @@ function switchEditVarMode(mode) {
 }
 
 function updateEditVarCode() {
-  var name = document.getElementById('editVarName').value.trim().toLowerCase();
+  var name = senkoSyncIdentifierInput('editVarName', false);
   var html = document.getElementById('editVarHtml').value;
   var css  = document.getElementById('editVarCss').value;
 
-  /* Validação ao vivo do nome */
-  var nameEl    = document.getElementById('editVarName');
-  var nameValid = name.length === 0 || /^[a-z0-9\-.]+$/.test(name);
-  var nameWarn  = document.getElementById('editVarNameWarn');
-  if (!nameWarn && nameEl) {
-    nameWarn = document.createElement('span');
-    nameWarn.id = 'editVarNameWarn';
-    nameWarn.style.cssText = 'color:#ef4444;font-size:.75rem;font-weight:700;display:none;margin-top:.2rem;';
-    nameWarn.textContent = '\u26a0 Use apenas letras, números, hífen (-) e ponto (.)';
-    nameEl.parentNode.insertBefore(nameWarn, nameEl.nextSibling);
-  }
-  if (nameWarn) nameWarn.style.display = (name.length > 0 && !nameValid) ? 'block' : 'none';
-
   var copyBtn = document.getElementById('copyEditVarBtn');
-  var ok = name.length >= 2 && nameValid && html.length >= 1;
+  var ok = name.length >= 2 && html.length >= 1;
   if (copyBtn) {
     if (ok) copyBtn.classList.remove('btn-blocked');
     else    copyBtn.classList.add('btn-blocked');
@@ -966,7 +949,7 @@ document.addEventListener('DOMContentLoaded', function () {
       updateEditCode();
     });
   });
-  ['editId','editName','editTags','editHtml','editCss'].forEach(function (id) {
+  ['editName','editTags','editHtml','editCss'].forEach(function (id) {
     document.getElementById(id).addEventListener('input', updateEditCode);
   });
 
