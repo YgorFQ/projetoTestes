@@ -1,19 +1,19 @@
 // @ts-nocheck
 
- /*  layouts001.js — Primeiro pacote de layouts do SenkoLib
+/*  layouts001.js — Primeiro pacote de layouts do SenkoLib
 
-   RESPONSABILIDADE:
-     Registra o array principal de layouts via SenkoLib.register().
-     Cada objeto representa um bloco HTML/CSS reutilizável.
+  RESPONSABILIDADE:
+    Registra o array principal de layouts via SenkoLib.register().
+    Cada objeto representa um bloco HTML/CSS reutilizável.
 
-   ESTRUTURA DE CADA LAYOUT:
-     {
-       id:   'section-X',         // identificador único (minúsculo)
-       name: 'Section-X (...)',   // nome de exibição
-       tags: ['tag1', 'tag2'],    // palavras-chave para busca
-       html: `...`,               // HTML do layout
-       css:  `...`,               // CSS do layout
-     }
+  ESTRUTURA DE CADA LAYOUT:
+    {
+      id:   'section-X',         // identificador único (minúsculo)
+      name: 'Section-X (...)',   // nome de exibição
+      tags: ['tag1', 'tag2'],    // palavras-chave para busca
+      html: `...`,               // HTML do layout
+      css:  `...`,               // CSS do layout
+    }
 
 //  MARCADORES:
 //   Cada objeto é precedido por  /*@@@@Senko - [id] */
@@ -437,9 +437,9 @@ SenkoLib.register([
 </style>`
   },
 
-  
-  
-  
+
+
+
   /*@@@@Senko - section 39.3 (caderno) */
   /* variantes: variants/section 39.3 (caderno).js */
   {
@@ -555,7 +555,7 @@ SenkoLib.register([
     html: `<div class="bookcontainer3">
   <div class="book3">
     <div class="bookfront3">
-      <div class="bookcover3 frontcover3"
+      <div class="bookcover3 frontcover3" 
         style="background-image: url('https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/sessao39.2.png')">
       </div>
     </div>
@@ -708,7 +708,7 @@ SenkoLib.register([
     html: `      <div class="section-46-y reverse-46 ">
         <!--    AQUI É POSSIVEL TROCAR SE A IMAGEM FICA EM CIMA OU EM BAIXO TIRANDO A CLASSE "TROCAR-ORDEM-730PX"-->
         <div class="section-46-y-img trocar-ordem-730px">
-          <img
+          <img loading="lazy"
             src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/sessao4.jpg"
             alt="Imagem representativa do do produto">
         </div>
@@ -1467,7 +1467,7 @@ SenkoLib.register([
     html: `  <div class="section-33__container">
     <section class="section-33__mov-section" aria-label="Seção de destaque em vídeo">
       <figure class="section-33__mov-figure">
-        <video class="section-33__mov-figure__video"
+        <video class="section-33__mov-figure__video" loading="lazy"
           src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/metalfrio/2223537_video2.mov"
           autoplay muted loop playsinline style="border-radius: 0px 0px 0px 0px;" width="1600" height="865"
           aria-label="Vídeo de destaque do produto">
@@ -1631,7 +1631,7 @@ SenkoLib.register([
     }`
   },
 
-  
+
   /*@@@@Senko - section 39.1 (caderno) */
   /* variantes: variants/section 39.1 (caderno).js */
   {
@@ -1790,12 +1790,12 @@ SenkoLib.register([
 </style>`
   },
 
-  
 
 
 
 
-/*@@@@Senko - section-6 */
+
+  /*@@@@Senko - section-6 */
   /* variantes: variants/section-6.js */
   {
     id: 'section-6',
@@ -1809,7 +1809,7 @@ SenkoLib.register([
         <img class="section-6__image"
           src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/section-49-1.png"
           alt="Caderno Funny Cat com estampa de gatinhos, capa colorida e espiral" width="1600" height="650"
-          loading="eager" fetchpriority="high" decoding="async">
+          loading="lazy" fetchpriority="high" decoding="async">
       </picture>
       <div class="section-6__content">
         <h1 class="section-6__title">Caderno Funny Cat</h1>
@@ -1930,7 +1930,7 @@ SenkoLib.register([
 
 
 
-/*@@@@Senko - section-7 */
+  /*@@@@Senko - section-7 */
   /* variantes: variants/section-7.js */
   {
     id: 'section-7',
@@ -1939,23 +1939,23 @@ SenkoLib.register([
     html: `<section class="section-7__banner" style="--d1:0.1; --d2:0.7; --d3:0.3; --d4:0.5; --d5:0.2;"
   aria-label="Banner promocional">
   <!-- Falling items (decorativos, aria-hidden) -->
-  <img class="section-7__falling-item"
+  <img class="section-7__falling-item" loading="lazy"
     src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo-efacil.png"
     width="200" height="200" aria-hidden="true" alt="">
-  <img class="section-7__falling-item"
+  <img class="section-7__falling-item" loading="lazy"
     src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo-efacil.png"
     width="200" height="200" aria-hidden="true" alt="">
-  <img class="section-7__falling-item"
+  <img class="section-7__falling-item" loading="lazy"
     src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo-efacil.png"
     width="200" height="200" aria-hidden="true" alt="">
-  <img class="section-7__falling-item"
+  <img class="section-7__falling-item" loading="lazy"
     src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo-efacil.png"
     width="200" height="200" aria-hidden="true" alt="">
-  <img class="section-7__falling-item"
+  <img class="section-7__falling-item" loading="lazy"
     src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo-efacil.png"
     width="200" height="200" aria-hidden="true" alt="">
   <!-- Imagem de fundo -->
-  <img class="section-7__banner-image"
+  <img class="section-7__banner-image" loading="lazy"
     src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/sessao32.jpg"
     width="1600" height="865" alt="Produto em destaque — qualidade, praticidade e estilo no dia a dia">
   <!-- Overlay de texto -->
@@ -2223,75 +2223,75 @@ SenkoLib.register([
   },
 
 
-/*@@@@Senko - section-9 */
+  /*@@@@Senko - section-9 */
   /* variantes: variants/section-9.js */
   {
     id: 'section-9',
     name: 'Section-9',
     tags: ['Section 9', '9', 'grid'],
-    html: `        <section class="section-9" aria-labelledby="section-9-title">
-            <div class="section-9__header">
-                <h2 class="section-9__title" id="section-9-title">Resolva suas dúvidas</h2>
-                <p class="section-9__subtitle">Saiba por que o Dove Hialuron-Vit é o favorito para o uso diário</p>
-            </div>
-            <ul class="section-9__list">
-                <li class="section-9__item">
-                    <details class="section-9__item">
-                        <summary>
-                            <span class="section-9__q-text">O ácido hialurônico serve para o meu cabelo?</span>
-                            <span class="section-9__icon" aria-hidden="true"></span>
-                        </summary>
-                        <div class="section-9__a-inner">
-                            <p class="section-9__a-text">Sim. Ele funciona em todos os tipos de fios, agindo como um imã de hidratação para cabelos ressecados e sem brilho.</p>
-                        </div>
-                    </details>
-                </li>
-                <li class="section-9__item">
-                    <details class="section-9__item">
-                        <summary>
-                            <span class="section-9__q-text">Ele deixa o cabelo pesado ou oleoso?</span>
-                            <span class="section-9__icon" aria-hidden="true"></span>
-                        </summary>
-                        <div class="section-9__a-inner">
-                            <p class="section-9__a-text">Não. A fórmula é leve e garante fios 100% mais macios, mantendo o movimento natural sem pesar.</p>
-                        </div>
-                    </details>
-                </li>
-                <li class="section-9__item">
-                    <details class="section-9__item">
-                        <summary>
-                            <span class="section-9__q-text">Posso usar todos os dias?</span>
-                            <span class="section-9__icon" aria-hidden="true"></span>
-                        </summary>
-                        <div class="section-9__a-inner">
-                            <p class="section-9__a-text">Sim. Ele é dermatologicamente testado e ideal para uso diário, proporcionando hidratação contínua.</p>
-                        </div>
-                    </details>
-                </li>
-                <li class="section-9__item">
-                    <details class="section-9__item">
-                        <summary>
-                            <span class="section-9__q-text">Onde ele entra no meu Cronograma Capilar?</span>
-                            <span class="section-9__icon" aria-hidden="true"></span>
-                        </summary>
-                        <div class="section-9__a-inner">
-                            <p class="section-9__a-text">Ele é o aliado perfeito para a etapa de Hidratação, retendo a umidade e combatendo o ressecamento.</p>
-                        </div>
-                    </details>
-                </li>
-                <li class="section-9__item">
-                    <details class="section-9__item">
-                        <summary>
-                            <span class="section-9__q-text">Cabelo com química ou tintura pode usar?</span>
-                            <span class="section-9__icon" aria-hidden="true"></span>
-                        </summary>
-                        <div class="section-9__a-inner">
-                            <p class="section-9__a-text">Com certeza. Ele ajuda a recuperar a maciez e o brilho que os fios perdem durante processos químicos.</p>
-                        </div>
-                    </details>
-                </li>
-            </ul>
-        </section>`,
+    html: `<section class="section-9" aria-labelledby="section-9-title">
+    <div class="section-9__header">
+        <h3 class="section-9__title" id="section-9-title">Título Principal</h3>
+        <p class="section-9__subtitle">Sub-título</p>
+    </div>
+    <ul class="section-9__list">
+        <li class="section-9__item">
+            <details class="section-9__item">
+                <summary>
+                    <h3 class="section-9__q-text">Pergunta</h3>
+                    <span class="section-9__icon" aria-hidden="true"></span>
+                </summary>
+                <div class="section-9__a-inner">
+                    <p class="section-9__a-text">Resposta</p>
+                </div>
+            </details>
+        </li>
+        <li class="section-9__item">
+            <details class="section-9__item">
+                <summary>
+                    <h3 class="section-9__q-text">Pergunta</h3>
+                    <span class="section-9__icon" aria-hidden="true"></span>
+                </summary>
+                <div class="section-9__a-inner">
+                    <p class="section-9__a-text">Resposta</p>
+                </div>
+            </details>
+        </li>
+        <li class="section-9__item">
+            <details class="section-9__item">
+                <summary>
+                    <h3 class="section-9__q-text">Pergunta</h3>
+                    <span class="section-9__icon" aria-hidden="true"></span>
+                </summary>
+                <div class="section-9__a-inner">
+                    <p class="section-9__a-text">Resposta</p>
+                </div>
+            </details>
+        </li>
+        <li class="section-9__item">
+            <details class="section-9__item">
+                <summary>
+                    <h3 class="section-9__q-text">Pergunta</h3>
+                    <span class="section-9__icon" aria-hidden="true"></span>
+                </summary>
+                <div class="section-9__a-inner">
+                    <p class="section-9__a-text">Resposta</p>
+                </div>
+            </details>
+        </li>
+        <li class="section-9__item">
+            <details class="section-9__item">
+                <summary>
+                    <h3 class="section-9__q-text">Pergunta</h3>
+                    <span class="section-9__icon" aria-hidden="true"></span>
+                </summary>
+                <div class="section-9__a-inner">
+                    <p class="section-9__a-text">Resposta</p>
+                </div>
+            </details>
+        </li>
+    </ul>
+</section>`,
     css: ` <style>
         .section-9 {
             width: 100%;
@@ -2423,7 +2423,7 @@ SenkoLib.register([
   },
 
 
-/*@@@@Senko - section-8 */
+  /*@@@@Senko - section-8 */
   /* variantes: variants/section-8.js */
   {
     id: 'section-8',
@@ -2616,7 +2616,7 @@ SenkoLib.register([
 
 
 
-/*@@@@Senko - section-100 */
+  /*@@@@Senko - section-100 */
   /* variantes: variants/section-100.js */
   {
     id: 'section-100',
@@ -2631,7 +2631,7 @@ SenkoLib.register([
                     Ao escolher um condutor que une a máxima segurança contra incêndios, a eficiência energética para seus equipamentos de alta potência e a flexibilidade necessária para uma instalação ágil, você garante a proteção do seu patrimônio e a tranquilidade de saber que sua estrutura elétrica foi feita para durar uma vida inteira, sem surpresas na conta de luz ou a necessidade de reformas precoces
                 </p>
             </div>
-            <img src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/sessao4.jpg" alt="Eletricista com capacete branco e colete laranja em obra garantindo qualidade e segurança Corfio" class="pdp-row-product-image" />
+            <img loading="lazy" src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/sessao4.jpg" alt="Eletricista com capacete branco e colete laranja em obra garantindo qualidade e segurança Corfio" class="pdp-row-product-image" />
         </div>`,
     css: `    <style>
         .pdp-row-product {
@@ -2808,7 +2808,7 @@ SenkoLib.register([
   },
 
 
-/*@@@@Senko - section-11 */
+  /*@@@@Senko - section-11 */
   /* variantes: variants/section-11.js */
   {
     id: 'section-11',
@@ -2953,7 +2953,7 @@ SenkoLib.register([
   },
 
 
-/*@@@@Senko - section-12 */
+  /*@@@@Senko - section-12 */
   /* variantes: variants/section-12.js */
   {
     id: 'section-12',
@@ -2962,7 +2962,7 @@ SenkoLib.register([
     html: `    <section class="section-12-container">
       <figure class="section-12 section-12--minimal" aria-label="Comparador antes e depois minimalista">
         <div class="section-12__wrapper" role="img" aria-label="Animação comparando antes e depois">
-          <img class="section-12__image-after"
+          <img class="section-12__image-after" 
             src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/philco/smart-tv-philco-4k-uhd-tecnologia-hdr10-otimizada-01577-22-11928-10.png"
             alt="Tecnologia HDR10 e 4K UHD em Smart TV Philco proporcionando brilho e nitidez superior" loading="lazy"
             decoding="async" />
@@ -3114,7 +3114,7 @@ SenkoLib.register([
   },
 
 
-/*@@@@Senko - section-13 */
+  /*@@@@Senko - section-13 */
   /* variantes: variants/section-13.js */
   {
     id: 'section-13',
@@ -3127,7 +3127,7 @@ SenkoLib.register([
             <div class="section-13__notch" aria-hidden="true"></div>
             <!-- Tela -->
             <div class="section-13__screen">
-              <video class="section-13__video" src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/risque/Lollapalooza.mov" autoplay muted loop playsinline
+              <video class="section-13__video" src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/risque/Lollapalooza.mov" autoplay muted loop playsinline loading="lazy"
                 aria-label="Demonstração em vídeo do produto"></video>
             </div>
           </div>
@@ -3300,7 +3300,7 @@ SenkoLib.register([
   },
 
 
-/*@@@@Senko - section-14 */
+  /*@@@@Senko - section-14 */
   /* variantes: variants/section-14.js */
   {
     id: 'section-14',
@@ -3323,7 +3323,7 @@ SenkoLib.register([
       <div class="section-14__column section-14__column--left">
         <article class="section-14__feature">
           <img
-            class="section-14__icon"
+            class="section-14__icon" loading="lazy"
             src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/check2.png"
             width="56" height="56"
             alt="Ícone de confirmação representando a característica 1"
@@ -3600,6 +3600,316 @@ SenkoLib.register([
       padding: 0;
     }
   }
+</style>`
+  },
+
+
+  /*@@@@Senko - section-15 */
+  /* variantes: variants/section-15.js */
+  {
+    id: 'section-15',
+    name: 'Section-15',
+    tags: ['Section-15', 'Split', 'Icons', 'Responsivo'],
+    html: `<div class="section-15-container">
+    <div class="section-15">
+        <div class="section-15__content">
+            <!-- ══ TÍTULO + DESCRIÇÃO (apague este bloco se não quiser usar) ══ -->
+            <h2 class="section-15__title">
+                A garantia de que o que está por trás das paredes nunca será um problema
+            </h2>
+            <p class="section-15__desc">
+                Ao escolher um condutor que une a máxima segurança contra incêndios, a eficiência energética para seus
+                equipamentos de alta potência e a flexibilidade necessária para uma instalação ágil, você garante a
+                proteção do seu patrimônio e a tranquilidade de saber que sua estrutura elétrica foi feita para durar
+                uma vida inteira.
+            </p>
+            <!-- ══ FIM TÍTULO + DESCRIÇÃO ══ -->
+            <ul class="section-15__feature-list" aria-label="Benefícios do produto">
+                <li class="section-15__feature-item">
+                    <img class="section-15__feature-item-icon" loading="lazy" src="C:\\Users\\ygorq\\Downloads\\2222455_03-2-1.png"
+                        alt="Ícone" />
+                    <div class="section-15__feature-item-body">
+                        <strong class="section-15__feature-item-title">Manhãs Sem Pausa</strong>
+                        <p class="section-15__feature-item-text">Prepare vitaminas nutritivas em segundos e use a função
+                            autolimpeza para sair de casa sem deixar bagunça na pia</p>
+                    </div>
+                </li>
+                <li class="section-15__feature-item">
+                    <img class="section-15__feature-item-icon" loading="lazy" src="C:\\Users\\ygorq\\Downloads\\2222455_03-2-2.png"
+                        alt="Ícone" />
+                    <div class="section-15__feature-item-body">
+                        <strong class="section-15__feature-item-title">Receitas de uma Só Vez</strong>
+                        <p class="section-15__feature-item-text">A jarra de 2,1L permite cozinhar para a família inteira
+                            sem precisar bater os ingredientes em várias etapas</p>
+                    </div>
+                </li>
+                <li class="section-15__feature-item">
+                    <img class="section-15__feature-item-icon" loading="lazy" src="C:\\Users\\ygorq\Downloads\\2222455_03-2-3.png"
+                        alt="Ícone" />
+                    <div class="section-15__feature-item-body">
+                        <strong class="section-15__feature-item-title">Cozinha Sempre Organizada</strong>
+                        <p class="section-15__feature-item-text">O sistema enrola-cabo e o design leve eliminam a briga
+                            com fios e facilitam o armazenamento após o uso</p>
+                    </div>
+                </li>
+                <li class="section-15__feature-item">
+                    <img class="section-15__feature-item-icon" loading="lazy" src="C:\\Users\\ygorq\\Downloads\\2222455_03-2-4.png"
+                        alt="Ícone" />
+                    <div class="section-15__feature-item-body">
+                        <strong class="section-15__feature-item-title">Cuidado com o Bolso</strong>
+                        <p class="section-15__feature-item-text">Durabilidade garantida por lâminas de aço inox e 1 ano
+                            de garantia, evitando gastos inesperados com trocas precoces</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="section-15__image-wrapper">
+            <picture>
+                <source media="(min-width: 960px)" loading="lazy" srcset="C:\\Users\\ygorq\\Downloads\\2222455_03-1.jpg" />
+                <img class="section-15__image" src="C:\\Users\\ygorq\\Downloads\\2222455_03-2.jpg"
+                    alt="Eletricista com capacete branco e colete laranja em obra" />
+            </picture>
+        </div>
+    </div>
+</div>`,
+    css: `<style>
+    .section-15-container {
+        background-color: #f16425;
+        padding: 1.5rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .section-15 {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 1.25rem;
+        margin: 0 auto;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .section-15__image-wrapper {
+        width: 100%;
+        flex-shrink: 0;
+    }
+
+    .section-15__image {
+        margin: auto;
+        border-radius: 16px;
+        display: block;
+        object-fit: cover;
+        width: 100%;
+        max-width: 530px;
+        aspect-ratio: 16 / 9;
+    }
+
+    .section-15__content {
+        display: flex;
+        flex-direction: column;
+        width: 95%;
+        margin: auto;
+        box-sizing: border-box;
+    }
+
+    .section-15__title {
+        color: #f3f3f3;
+        font-size: 32px;
+        font-weight: 600;
+        line-height: 40px;
+        margin: 0 0 1rem;
+        text-align: left;
+    }
+
+    .section-15__desc {
+        color: #f3f3f3;
+        font-size: 14px;
+        line-height: 22px;
+        margin: 0 0 1.5rem;
+        text-align: left;
+    }
+
+    .section-15__feature-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        list-style: none;
+        margin: 0;
+        gap: 22px;
+        padding: 0;
+    }
+
+    .section-15__feature-item {
+        align-items: flex-start;
+        display: flex;
+        flex-direction: row;
+        gap: 0.75rem;
+    }
+
+    .section-15__feature-item-icon {
+        border-radius: 8px;
+        flex-shrink: 0;
+        height: 44px;
+        object-fit: contain;
+        width: 44px;
+    }
+
+    .section-15__feature-item-body {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+
+    .section-15__feature-item-title {
+        color: #f5f5f5;
+        font-size: 1.05rem;
+        font-weight: 700;
+        line-height: 1.35;
+        margin: 0;
+    }
+
+    .section-15__feature-item-text {
+        color: #f5f5f5;
+        font-size: 0.8125rem;
+        line-height: 1.55;
+        margin: 0;
+    }
+
+    @media (min-width: 480px) {
+        .section-15-container {
+            padding: 1.75rem;
+        }
+
+        .section-15__feature-item-title {
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .section-15-container {
+            padding: 2rem;
+        }
+
+        .section-15 {
+            max-width: 768px;
+        }
+
+        .section-15__image {
+            border-radius: 20px;
+            aspect-ratio: 16 / 9;
+        }
+    }
+
+    @media (min-width: 760px) {
+        .section-15 {
+            align-items: center;
+            flex-direction: row;
+            gap: 1.5rem;
+            justify-content: center;
+            max-width: 960px;
+        }
+
+        .section-15--reverse {
+            flex-direction: row-reverse;
+        }
+
+        .section-15__image-wrapper {
+            flex: 0 0 48%;
+            max-width: 48%;
+        }
+
+        .section-15__image {
+            aspect-ratio: 4 / 3;
+            height: 100%;
+            max-height: 420px;
+        }
+
+        .section-15__content {
+            flex: 1 1 0;
+            min-width: 0;
+        }
+
+        .section-15__feature-list--icon-right .section-15__feature-item {
+            flex-direction: row-reverse;
+        }
+
+        .section-15__feature-list--icon-right .section-15__feature-item-body {
+            align-items: flex-end;
+        }
+
+        .section-15__feature-list--icon-right .section-15__feature-item-title,
+        .section-15__feature-list--icon-right .section-15__feature-item-text {
+            text-align: right;
+        }
+
+        .section-15__feature-item-icon {
+            height: 48px;
+            width: 48px;
+        }
+
+        .section-15__feature-item-title {
+            font-size: 1.2rem;
+        }
+
+        .section-15__feature-item-text {
+            font-size: 0.875rem;
+        }
+    }
+
+    @media (min-width: 1060px) {
+        .section-15 {
+            max-width: 1060px;
+            gap: 2rem;
+        }
+
+        .section-15__feature-list {
+            gap: 1.25rem;
+        }
+    }
+
+    @media (min-width: 1280px) {
+        .section-15 {
+            max-width: 1280px;
+            gap: 2.5rem;
+        }
+
+        .section-15__image-wrapper {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+
+        .section-15__image {
+            max-height: 460px;
+        }
+
+        .section-15__feature-item-title {
+            font-size: 1.3rem;
+        }
+
+        .section-15__feature-item-text {
+            font-size: 0.9rem;
+        }
+    }
+
+    .is-reverse {
+        flex-direction: row-reverse;
+    }
+
+    @media (max-width: 760px) {
+        .is-reverse {
+            flex-direction: column-reverse;
+        }
+    }
+
+    .is-reverse-760 {
+        flex-direction: row-reverse;
+    }
+
+    @media (max-width: 760px) {
+        .is-reverse-760 {
+            flex-direction: column;
+        }
+    }
 </style>`
   },
 

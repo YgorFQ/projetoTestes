@@ -971,52 +971,248 @@ document.addEventListener('DOMContentLoaded', function () {
 function copiarBasics() {
 
   const htmlBasico = `<div class="lp-container">
-    <meta charset="UTF-8">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Varela+Round&display=swap');
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Varela+Round&display=swap');
 
-        * {
-            padding: 0;
-            margin: 0;
-        }
+    * {
+      padding: 0;
+      margin: 0;
+    }
 
-        .pdp {
-            display: flex;
-            flex-direction: column;
-            font-family: Roboto, sans-serif
-        }
+    .pdp {
+      display: flex;
+      flex-direction: column;
+      font-family: Roboto, sans-serif
+    }
 
-        .pdp * {
-            box-sizing: border-box;
-            margin: 0;
-        }
+    .pdp * {
+      box-sizing: border-box;
+      margin: 0;
+    }
 
-        .pdp-text-gradient {
-            background: linear-gradient(90deg, #c29869, #ddbc88, #e6c588);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            color: transparent;
-            background-clip: text;
-        }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-        rel="stylesheet">
-    <title>PDP - eFácil</title>
-    <!-- ---------------------------------------- ÁREA PARA COLOCAR STYLES ----------------------------------------------------------- -->
-
-
-
-    <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
-    <div class="pdp" id="pdp"> <!-- HTML fica dentro dessa div PDP -->
+    .pdp-text-gradient {
+      background: linear-gradient(90deg, #c29869, #ddbc88, #e6c588);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      background-clip: text;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
+  <title>PDP - eFácil</title>
+  <!-- ---------------------------------------- ÁREA PARA COLOCAR STYLES ----------------------------------------------------------- -->
 
 
-        
-        
-        <p style="color: #8a8a8a; font-family: sans-serif; font-size: clamp(1rem, 2vw, 1.2rem); text-wrap: pretty; text-align: center; padding: 30px 0;"> IMAGENS MERAMENTE ILUSTRATIVAS</p>
-    </div>
+
+  <style>
+    .section-9 {
+      width: 100%;
+      padding: 2rem 16px;
+      box-sizing: border-box;
+      margin: 0 auto 25px;
+      padding-top: 0;
+      font-family: sans-serif;
+    }
+
+    .section-9__header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .section-9__title {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: bold;
+      color: #333;
+      margin: 0 0 12px;
+      line-height: 98%;
+    }
+
+    .section-9__subtitle {
+      font-size: 1rem;
+      color: #666;
+      margin: 0;
+    }
+
+    .section-9__list {
+      list-style: none;
+      margin: 0 auto;
+      padding: 0;
+      max-width: 56rem;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .section-9__item {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .section-9__item summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 20px;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .section-9__item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .section-9__item summary:hover {
+      background: #f9f9f9;
+    }
+
+    .section-9__q-text {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #333;
+      flex: 1;
+    }
+
+    .section-9__q-text:hover {
+      color: #ea5b0c;
+    }
+
+    .section-9__icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .section-9__icon::before,
+    .section-9__icon::after {
+      content: '';
+      position: absolute;
+      background: #888;
+      border-radius: 2px;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .section-9__icon::before {
+      width: 12px;
+      height: 1.5px;
+      top: 9px;
+      left: 4px;
+    }
+
+    .section-9__icon::after {
+      width: 1.5px;
+      height: 12px;
+      top: 4px;
+      left: 9px;
+    }
+
+    .section-9__item[open] .section-9__icon::after {
+      transform: rotate(90deg);
+      opacity: 0;
+    }
+
+    .section-9__a-inner {
+      padding: 14px 20px 16px;
+      border-top: 1px solid #e5e5e5;
+    }
+
+    .section-9__a-text {
+      font-size: 0.9rem;
+      color: #555;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    @media (max-width: 480px) {
+      .section-9__q-text {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+
+  <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
+  <div class="pdp" id="pdp"> <!-- HTML fica dentro dessa div PDP -->
+
+
+
+
+    <!-- Área de FAQ -->
+    <section class="section-9" aria-labelledby="section-9-title">
+      <div class="section-9__header">
+        <h3 class="section-9__title" id="section-9-title">Título Principal</h3>
+        <p class="section-9__subtitle">Sub-título</p>
+      </div>
+      <ul class="section-9__list">
+        <li class="section-9__item">
+          <details class="section-9__item">
+            <summary>
+              <h3 class="section-9__q-text">Pergunta</h3>
+              <span class="section-9__icon" aria-hidden="true"></span>
+            </summary>
+            <div class="section-9__a-inner">
+              <p class="section-9__a-text">Resposta</p>
+            </div>
+          </details>
+        </li>
+        <li class="section-9__item">
+          <details class="section-9__item">
+            <summary>
+              <h3 class="section-9__q-text">Pergunta</h3>
+              <span class="section-9__icon" aria-hidden="true"></span>
+            </summary>
+            <div class="section-9__a-inner">
+              <p class="section-9__a-text">Resposta</p>
+            </div>
+          </details>
+        </li>
+        <li class="section-9__item">
+          <details class="section-9__item">
+            <summary>
+              <h3 class="section-9__q-text">Pergunta</h3>
+              <span class="section-9__icon" aria-hidden="true"></span>
+            </summary>
+            <div class="section-9__a-inner">
+              <p class="section-9__a-text">Resposta</p>
+            </div>
+          </details>
+        </li>
+        <li class="section-9__item">
+          <details class="section-9__item">
+            <summary>
+              <h3 class="section-9__q-text">Pergunta</h3>
+              <span class="section-9__icon" aria-hidden="true"></span>
+            </summary>
+            <div class="section-9__a-inner">
+              <p class="section-9__a-text">Resposta</p>
+            </div>
+          </details>
+        </li>
+        <li class="section-9__item">
+          <details class="section-9__item">
+            <summary>
+              <h3 class="section-9__q-text">Pergunta</h3>
+              <span class="section-9__icon" aria-hidden="true"></span>
+            </summary>
+            <div class="section-9__a-inner">
+              <p class="section-9__a-text">Resposta</p>
+            </div>
+          </details>
+        </li>
+      </ul>
+    </section>
+
+    <p
+      style="color: #8a8a8a; font-family: sans-serif; font-size: clamp(1rem, 2vw, 1.2rem); text-wrap: pretty; text-align: center; padding: 30px 0;">
+      IMAGENS MERAMENTE ILUSTRATIVAS</p>
+  </div>
 </div>`
 
   navigator.clipboard.writeText(htmlBasico);  
