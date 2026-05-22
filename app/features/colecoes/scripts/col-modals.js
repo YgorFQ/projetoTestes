@@ -127,6 +127,32 @@ function _colSyncGeneratedId(nameId, targetId, previewId) {
   return slug;
 }
 
+function _colBindMetadataInput(inputId, allowTagSeparator) {
+  if (typeof senkoBindMetadataInput === 'function') {
+    senkoBindMetadataInput(inputId, allowTagSeparator);
+  }
+}
+
+function _colReadMetadataInput(inputId, allowTagSeparator) {
+  if (typeof senkoGetMetadataInputValue === 'function') {
+    return senkoGetMetadataInputValue(inputId, allowTagSeparator);
+  }
+
+  var input = document.getElementById(inputId);
+  return input ? input.value : '';
+}
+
+function _colReadMetadataTags(inputId) {
+  var value = _colReadMetadataInput(inputId, true);
+  if (typeof senkoParseMetadataTags === 'function') {
+    return senkoParseMetadataTags(value);
+  }
+
+  return value.split(',').map(function (tag) {
+    return tag.trim();
+  }).filter(Boolean);
+}
+
 /* Preview de iframe — limpa e recarrega */
 function _colRefreshPreview(iframeId, htmlVal, cssVal) {
   var iframe = document.getElementById(iframeId);
@@ -378,6 +404,8 @@ function _colBuildCreateModal() {
     '</div>';
 
   var nameInput = document.getElementById('colCreateName');
+  _colBindMetadataInput('colCreateName', false);
+  _colBindMetadataInput('colCreateTags', true);
 
   /* Auto-gera slug a partir do nome */
   nameInput.addEventListener('input', function () {
@@ -427,7 +455,7 @@ function colCloseCreateModal() {
 }
 
 function _colValidateCreateForm() {
-  var name  = (document.getElementById('colCreateName')  || {}).value || '';
+  var name  = _colReadMetadataInput('colCreateName', false);
   var slug  = _colSyncGeneratedId('colCreateName', 'colCreateSlug');
   var group = (document.getElementById('colCreateGroup') || {}).value || '';
 
@@ -448,11 +476,10 @@ function _colShowFieldError(id, show) {
 
 /* Lê os dados do formulário de criação — usado pelo módulo GitHub */
 function colGetCreateFormData() {
-  var name  = (document.getElementById('colCreateName')  || {}).value || '';
+  var name  = _colReadMetadataInput('colCreateName', false);
   var slug  = _colSyncGeneratedId('colCreateName', 'colCreateSlug');
   var group = (document.getElementById('colCreateGroup') || {}).value || '';
-  var tags  = ((document.getElementById('colCreateTags') || {}).value || '')
-    .split(',').map(function (t) { return t.trim(); }).filter(Boolean);
+  var tags  = _colReadMetadataTags('colCreateTags');
 
   /* Validação final */
   var ok = name.trim().length >= 3 && _colValidSlug(slug.trim()) && !!group;
@@ -518,6 +545,8 @@ function _colBuildEditModal() {
 
     '</div>';
 
+  _colBindMetadataInput('colEditName', false);
+  _colBindMetadataInput('colEditTags', true);
   document.getElementById('colEditName').addEventListener('input', function () {
     _colShowFieldError('colEditNameErr', this.value.trim().length < 3 && this.value.length > 0);
   });
@@ -561,10 +590,9 @@ function colCloseEditModal() {
 /* Lê dados do formulário de edição — usado pelo módulo GitHub */
 function colGetEditFormData() {
   var slug  = (document.getElementById('colEditSlug')  || {}).value || '';
-  var name  = (document.getElementById('colEditName')  || {}).value || '';
+  var name  = _colReadMetadataInput('colEditName', false);
   var group = (document.getElementById('colEditGroup') || {}).value || '';
-  var tags  = ((document.getElementById('colEditTags') || {}).value || '')
-    .split(',').map(function (t) { return t.trim(); }).filter(Boolean);
+  var tags  = _colReadMetadataTags('colEditTags');
 
   var ok = name.trim().length >= 3 && !!group;
   if (!ok) {
@@ -628,6 +656,8 @@ function _colBuildNewGroupModal() {
 
     '</div>';
 
+  _colBindMetadataInput('colNewGroupName', false);
+
   /* Seleção de cor */
   document.getElementById('colNewGroupPalette').addEventListener('click', function (e) {
     var sw = e.target.closest('.col-color-swatch');
@@ -648,7 +678,7 @@ function _colBuildNewGroupModal() {
   });
 
   document.getElementById('colNewGroupConfirm').addEventListener('click', function () {
-    var name = (document.getElementById('colNewGroupName').value || '').trim();
+    var name = _colReadMetadataInput('colNewGroupName', false).trim();
     var slug = _colSlugify(name);
     if (!name || !_colValidSlug(slug)) {
       document.getElementById('colNewGroupNameErr').style.display = 'block';
@@ -770,6 +800,7 @@ function _colBuildAddLayoutModal() {
     });
   });
 
+  _colBindMetadataInput('colAddLayoutName', false);
   document.getElementById('colAddLayoutName').addEventListener('input', function () {
     var id = _colSyncGeneratedId('colAddLayoutName', 'colAddLayoutId');
     _colShowFieldError('colAddLayoutNameErr', !_colValidSlug(id) && this.value.length > 0);
@@ -813,7 +844,7 @@ function colCloseAddLayoutModal() {
 
 /* Lê dados do formulário de novo layout — usado pelo módulo GitHub */
 function colGetAddLayoutFormData() {
-  var name    = (document.getElementById('colAddLayoutName')    || {}).value || '';
+  var name    = _colReadMetadataInput('colAddLayoutName', false);
   var id      = _colSyncGeneratedId('colAddLayoutName', 'colAddLayoutId');
   var content = (document.getElementById('colAddLayoutContent') || {}).value || '';
 
@@ -896,6 +927,7 @@ function _colBuildEditLayoutModal() {
     });
   });
 
+  _colBindMetadataInput('colEditLayoutName', false);
   document.getElementById('colEditLayoutClose').addEventListener('click', colCloseEditLayoutModal);
   document.getElementById('colEditLayoutCancel').addEventListener('click', colCloseEditLayoutModal);
   _colOverlayClick('colEditLayoutOverlay', 'colEditLayoutModal', colCloseEditLayoutModal);
@@ -936,7 +968,7 @@ function colCloseEditLayoutModal() {
 /* Lê dados do formulário de edição de layout — usado pelo módulo GitHub */
 function colGetEditLayoutFormData() {
   var id      = (document.getElementById('colEditLayoutId')      || {}).value || '';
-  var name    = (document.getElementById('colEditLayoutName')    || {}).value || '';
+  var name    = _colReadMetadataInput('colEditLayoutName', false);
   var content = (document.getElementById('colEditLayoutContent') || {}).value || '';
 
   var ok = name.trim().length >= 1;

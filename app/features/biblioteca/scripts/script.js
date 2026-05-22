@@ -23,6 +23,86 @@ function escapeTemplateLiteral(value) {
     .replace(/\$\{/g, '\\${');
 }
 
+/* Escapa metadados gravados em strings JS delimitadas por aspas simples. */
+function escapeJsSingleQuotedString(value) {
+  return String(value == null ? '' : value)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/\r/g, '\\r')
+    .replace(/\n/g, '\\n')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+}
+
+/*
+ * Metadados salvos como JavaScript aceitam texto legivel, mas nao simbolos
+ * que possam virar sintaxe do arquivo. Tags mantem virgula como separador.
+ */
+function senkoSanitizeMetadataValue(value, allowTagSeparator) {
+  var raw = String(value == null ? '' : value).normalize('NFC');
+  var invalidChars = allowTagSeparator
+    ? /[^\p{L}\p{N} .,()_-]+/gu
+    : /[^\p{L}\p{N} .()_-]+/gu;
+  return raw.replace(invalidChars, '');
+}
+
+function senkoSanitizeVariantInputValue(value) {
+  return String(value == null ? '' : value).replace(/[^a-zA-Z0-9 -]+/g, '');
+}
+
+function senkoSyncSanitizedInput(input, sanitizer) {
+  if (!input) return '';
+
+  var raw = input.value || '';
+  var sanitized = sanitizer(raw);
+  if (sanitized === raw) return sanitized;
+
+  var selectionStart = typeof input.selectionStart === 'number'
+    ? input.selectionStart
+    : raw.length;
+  var cursor = sanitizer(raw.slice(0, selectionStart)).length;
+
+  input.value = sanitized;
+  if (typeof input.setSelectionRange === 'function') {
+    input.setSelectionRange(cursor, cursor);
+  }
+  return sanitized;
+}
+
+function senkoGetMetadataInputValue(inputId, allowTagSeparator) {
+  var input = document.getElementById(inputId);
+  return senkoSyncSanitizedInput(input, function (value) {
+    return senkoSanitizeMetadataValue(value, allowTagSeparator);
+  });
+}
+
+function senkoBindMetadataInput(inputId, allowTagSeparator) {
+  var input = document.getElementById(inputId);
+  if (!input || input.dataset.senkoMetadataBound) return;
+
+  input.dataset.senkoMetadataBound = 'true';
+  input.addEventListener('input', function () {
+    senkoGetMetadataInputValue(inputId, allowTagSeparator);
+  });
+}
+
+function senkoBindVariantNameInput(inputId) {
+  var input = document.getElementById(inputId);
+  if (!input || input.dataset.senkoVariantBound) return;
+
+  input.dataset.senkoVariantBound = 'true';
+  input.addEventListener('input', function () {
+    senkoSyncSanitizedInput(input, senkoSanitizeVariantInputValue);
+  });
+}
+
+function senkoParseMetadataTags(value) {
+  return senkoSanitizeMetadataValue(value, true)
+    .split(',')
+    .map(function (tag) { return tag.trim(); })
+    .filter(Boolean);
+}
+
 function senkoSlugifyIdentifier(value) {
   return String(value || '')
     .toLowerCase()
@@ -403,13 +483,13 @@ function closeAddModal() {
 }
 
 function updateGeneratedCode() {
-  var name    = document.getElementById('addName').value.trim();
+  var name    = senkoGetMetadataInputValue('addName', false).trim();
   var id      = senkoSlugifyIdentifier(name);
   document.getElementById('addId').value = id;
-  var tagsRaw = document.getElementById('addTags').value;
+  var tagsRaw = senkoGetMetadataInputValue('addTags', true);
   var html    = document.getElementById('addHtml').value;
   var css     = document.getElementById('addCss').value;
-  var tags    = tagsRaw.split(',').map(function (t) { return t.trim(); }).filter(Boolean);
+  var tags    = senkoParseMetadataTags(tagsRaw);
 
   var copyBtn = document.getElementById('copyGeneratedBtn');
   var allFilled = id.length >= 3 && name.length >= 3 && html.length >= 3;
@@ -426,7 +506,8 @@ function updateGeneratedCode() {
     return;
   }
 
-  var tagsStr  = tags.map(function (t) { return "'" + t + "'"; }).join(', ');
+  var tagsStr  = tags.map(function (t) { return "'" + escapeJsSingleQuotedString(t) + "'"; }).join(', ');
+  var safeName = escapeJsSingleQuotedString(name);
   var safeHtml = escapeTemplateLiteral(html);
   var safeCss  = escapeTemplateLiteral(css);
 
@@ -435,7 +516,7 @@ function updateGeneratedCode() {
     '  /* variantes: app/features/biblioteca/data/variants/' + id.toLowerCase() + '.js */\n' +
     '  {\n' +
     "    id: '"   + id.toLowerCase() + "',\n" +
-    "    name: '" + name             + "',\n" +
+    "    name: '" + safeName         + "',\n" +
     '    tags: [' + tagsStr          + '],\n' +
     '    html: `' + safeHtml         + '`,\n' +
     '    css: `'  + safeCss          + '`\n' +
@@ -842,11 +923,11 @@ function closeEditModal() {
 
 function updateEditCode() {
   var id      = document.getElementById('editId').value.trim().toLowerCase();
-  var name    = document.getElementById('editName').value.trim();
-  var tagsRaw = document.getElementById('editTags').value;
+  var name    = senkoGetMetadataInputValue('editName', false).trim();
+  var tagsRaw = senkoGetMetadataInputValue('editTags', true);
   var html    = document.getElementById('editHtml').value;
   var css     = document.getElementById('editCss').value;
-  var tags    = tagsRaw.split(',').map(function(t){ return t.trim(); }).filter(Boolean);
+  var tags    = senkoParseMetadataTags(tagsRaw);
 
   var copyBtn = document.getElementById('copyEditBtn');
   var allFilled = id.length >= 3 && name.length >= 3 && html.length >= 3;
@@ -860,7 +941,8 @@ function updateEditCode() {
     return;
   }
 
-  var tagsStr  = tags.map(function(t){ return "'" + t + "'"; }).join(', ');
+  var tagsStr  = tags.map(function(t){ return "'" + escapeJsSingleQuotedString(t) + "'"; }).join(', ');
+  var safeName = escapeJsSingleQuotedString(name);
   var safeHtml = escapeTemplateLiteral(html);
   var safeCss  = escapeTemplateLiteral(css);
 
@@ -869,7 +951,7 @@ function updateEditCode() {
     '  /* variantes: app/features/biblioteca/data/variants/' + id + '.js */\n' +
     '  {\n' +
     "    id: '"   + id   + "',\n" +
-    "    name: '" + name + "',\n" +
+    "    name: '" + safeName + "',\n" +
     '    tags: [' + tagsStr + '],\n' +
     '    html: `' + safeHtml + '`,\n' +
     '    css: `'  + safeCss  + '`\n' +
@@ -878,6 +960,13 @@ function updateEditCode() {
 
 /* ─── Inicialização ─────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', function () {
+
+  senkoBindMetadataInput('addName', false);
+  senkoBindMetadataInput('addTags', true);
+  senkoBindMetadataInput('editName', false);
+  senkoBindMetadataInput('editTags', true);
+  senkoBindVariantNameInput('newVarName');
+  senkoBindVariantNameInput('editVarName');
 
   renderGrid();
 

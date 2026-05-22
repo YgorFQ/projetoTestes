@@ -411,8 +411,16 @@ function githubSaveLayout(layoutId, objectCode) {
             var editTags = document.getElementById('editTags');
             var editHtml = document.getElementById('editHtml');
             var editCss  = document.getElementById('editCss');
-            if (editName) layouts[i].name = editName.value.trim();
-            if (editTags) layouts[i].tags = editTags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean);
+            if (editName) {
+              layouts[i].name = typeof senkoGetMetadataInputValue === 'function'
+                ? senkoGetMetadataInputValue('editName', false).trim()
+                : editName.value.trim();
+            }
+            if (editTags) {
+              layouts[i].tags = typeof senkoParseMetadataTags === 'function'
+                ? senkoParseMetadataTags(editTags.value)
+                : editTags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean);
+            }
             if (editHtml) layouts[i].html = editHtml.value;
             if (editCss)  layouts[i].css  = editCss.value;
             break;
@@ -488,9 +496,15 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
       var addTags = document.getElementById('addTags');
       var html = addHtml ? addHtml.value : '';
       var css  = addCss  ? addCss.value  : '';
-      var name = addName ? addName.value.trim() : layoutId;
+      var name = addName
+        ? (typeof senkoGetMetadataInputValue === 'function'
+          ? senkoGetMetadataInputValue('addName', false).trim()
+          : addName.value.trim())
+        : layoutId;
       var tags = addTags
-        ? addTags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean)
+        ? (typeof senkoParseMetadataTags === 'function'
+          ? senkoParseMetadataTags(addTags.value)
+          : addTags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean))
         : [];
 
       SenkoLib.register([{ id: layoutId, name: name, tags: tags, html: html, css: css }]);

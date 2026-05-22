@@ -49,13 +49,27 @@ function colGhFilePath(slug) {
   return 'app/features/colecoes/data/' + slug.toLowerCase() + '.js';
 }
 
+function colGhEscapeJsString(value) {
+  if (typeof escapeJsSingleQuotedString === 'function') {
+    return escapeJsSingleQuotedString(value);
+  }
+
+  return String(value == null ? '' : value)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/\r/g, '\\r')
+    .replace(/\n/g, '\\n')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+}
+
 /*
   Monta o conteúdo completo de um arquivo de coleção a partir de um objeto.
   Usado na criação e também para reescrever após edições de metadados.
 */
 function colGhBuildFileContent(col) {
   var tagsStr = (col.tags || [])
-    .map(function (t) { return "'" + t + "'"; })
+    .map(function (t) { return "'" + colGhEscapeJsString(t) + "'"; })
     .join(', ');
 
   var layoutsCode = (col.layouts || []).map(function (l) {
@@ -64,8 +78,8 @@ function colGhBuildFileContent(col) {
     return (
       '\n    /*@@@@Col - ' + l.id + ' */\n' +
       '    {\n' +
-      "      id:   '" + l.id   + "',\n" +
-      "      name: '" + l.name + "',\n" +
+      "      id:   '" + colGhEscapeJsString(l.id)   + "',\n" +
+      "      name: '" + colGhEscapeJsString(l.name) + "',\n" +
       '      html: `' + safeHtml + '`,\n' +
       '      css:  `' + safeCss  + '`,\n' +
       '    },'
@@ -81,9 +95,9 @@ function colGhBuildFileContent(col) {
     '   NÃO edite manualmente em produção.\n' +
     '═══════════════════════════════════════════════════════════════════════ */\n' +
     'ColLib.register({\n' +
-    "  slug:  '" + col.slug  + "',\n" +
-    "  name:  '" + col.name  + "',\n" +
-    "  group: '" + col.group + "',\n" +
+    "  slug:  '" + colGhEscapeJsString(col.slug)  + "',\n" +
+    "  name:  '" + colGhEscapeJsString(col.name)  + "',\n" +
+    "  group: '" + colGhEscapeJsString(col.group) + "',\n" +
     '  tags:  [' + tagsStr   + '],\n' +
     '  layouts: [' + layoutsCode + '\n' +
     '  ]\n' +
@@ -122,7 +136,7 @@ function colGhBuildGroupsFileContent() {
 
   var lines = used.map(function (g) {
     return (
-      "  { slug: '" + g.slug + "', name: '" + g.name.replace(/'/g, "\\'") + "', cor: '" + g.cor + "' },"
+      "  { slug: '" + colGhEscapeJsString(g.slug) + "', name: '" + colGhEscapeJsString(g.name) + "', cor: '" + colGhEscapeJsString(g.cor) + "' },"
     );
   });
 
@@ -198,8 +212,8 @@ function colGhBuildLayoutBlock(layout) {
   return (
     '    /*@@@@Col - ' + layout.id + ' */\n' +
     '    {\n' +
-    "      id:   '" + layout.id   + "',\n" +
-    "      name: '" + layout.name.replace(/'/g, "\\'") + "',\n" +
+    "      id:   '" + colGhEscapeJsString(layout.id)   + "',\n" +
+    "      name: '" + colGhEscapeJsString(layout.name) + "',\n" +
     '      html: `' + safeHtml + '`,\n' +
     '      css:  `' + safeCss  + '`,\n' +
     '    },'
