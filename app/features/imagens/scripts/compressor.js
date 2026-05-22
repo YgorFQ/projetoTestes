@@ -235,7 +235,7 @@
     const zipNames = uniqueZipNames(ready);
     ready.forEach(item => zip.file(zipNames.get(item.id), item.resultBlob));
     const blob = await zip.generateAsync({ type: 'blob' });
-    downloadBlob(blob, 'imgscope-comprimidas.zip');
+    downloadBlob(blob, 'imagens-comprimidas.zip');
   }
 
   function removeItem(id) {

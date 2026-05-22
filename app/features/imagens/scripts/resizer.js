@@ -76,7 +76,7 @@
     items = items.concat(nextItems);
     hideRunLog();
     renderFiles();
-    setStatus('', `${nextItems.length} imagem(ns) no resizer`);
+    setStatus('', `${nextItems.length} imagem(ns) no redimensionador`);
   }
 
   function renderFiles() {

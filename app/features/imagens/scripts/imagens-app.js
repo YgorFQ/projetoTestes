@@ -9,7 +9,9 @@
         document.querySelectorAll('.view').forEach(function (view) {
           view.classList.toggle('is-active', view.id === 'view-' + target);
         });
-        if (typeof setStatus === 'function') setStatus('', target);
+        if (typeof setStatus === 'function') {
+          setStatus('', target === 'resizer' ? 'redimensionador' : 'compressor');
+        }
       });
     });
   }
@@ -18,6 +20,6 @@
     initTabs();
     if (typeof initCompressor === 'function') initCompressor();
     if (typeof initResizer === 'function') initResizer();
-    if (typeof setStatus === 'function') setStatus('', 'aguardando');
+    if (typeof setStatus === 'function') setStatus('', 'compressor');
   });
 })();

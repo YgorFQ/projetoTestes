@@ -4,37 +4,48 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SenkoLib</title>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script>
+    (function () {
+      function applyTheme() {
+        var theme = localStorage.getItem('senkolib_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+      }
+
+      applyTheme();
+      window.addEventListener('storage', function (event) {
+        if (event.key === 'senkolib_theme') applyTheme();
+      });
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../shared/styles/img-tools.css">
+  <link rel="stylesheet" href="styles/imagens.css">
 </head>
 <body>
-  <header class="header">
-    <div class="header__logo">ImgScope<span>.imagens</span></div>
-    <div class="tabs" role="tablist" aria-label="Ferramentas de imagens">
-      <button class="tab is-active" type="button" data-tab="compressor">Compressor</button>
-      <button class="tab" type="button" data-tab="resizer">Redimensionador</button>
-    </div>
-    <div class="header__status">
-      <div class="dot" id="dot"></div>
-      <span id="status-text">aguardando</span>
-    </div>
-  </header>
+  <div class="image-tool-app">
+    <nav class="image-tool-nav" aria-label="Ferramentas de imagens">
+      <div class="tabs" role="tablist" aria-label="Ferramentas de imagens">
+        <button class="tab is-active" type="button" data-tab="compressor">Compressor</button>
+        <button class="tab" type="button" data-tab="resizer">Redimensionador</button>
+      </div>
+      <div class="header__status" aria-live="polite">
+        <div class="dot" id="dot"></div>
+        <span id="status-text">aguardando</span>
+      </div>
+    </nav>
 
-  <main>
-    <section class="view is-active" id="view-compressor" aria-label="Compressor">
-      <div class="compressor-layout">
-        <aside class="compressor-controls">
-          <div class="panel__head">
-            <div class="panel__label">Entrada</div>
-          </div>
-
-          <label class="dropzone" id="dropzone" for="image-input">
-            <span class="dropzone__title">Solte imagens aqui</span>
-            <span class="dropzone__text">PNG, JPG, JPEG ou WebP</span>
+    <main class="image-tool-main">
+      <section class="view is-active" id="view-compressor" aria-label="Compressor">
+        <div class="tool-command tool-command--compressor">
+          <label class="dropzone command-dropzone" id="dropzone" for="image-input">
+            <span class="dropzone__title">Selecionar imagens</span>
+            <span class="dropzone__text">Arraste PNG, JPG, JPEG ou WebP</span>
           </label>
           <input class="visually-hidden" id="image-input" type="file" accept="image/png,image/jpeg,image/webp" multiple>
 
-          <div class="control-group">
+          <div class="command-card">
             <label class="field-label" for="quality-range">Qualidade</label>
             <div class="range-row">
               <input id="quality-range" type="range" min="65" max="92" value="82">
@@ -42,16 +53,16 @@
             </div>
           </div>
 
-          <div class="control-group">
+          <div class="command-card">
             <span class="field-label">Preset</span>
-            <div class="segmented">
+            <div class="segmented segmented--compact">
               <button class="segment" type="button" data-quality="88">Alta</button>
-              <button class="segment is-active" type="button" data-quality="82">Balanceada</button>
+              <button class="segment is-active" type="button" data-quality="82">Equilibrada</button>
               <button class="segment" type="button" data-quality="74">Leve</button>
             </div>
           </div>
 
-          <div class="control-group">
+          <div class="command-card">
             <label class="field-label" for="png-colors">PNG</label>
             <select id="png-colors" class="select">
               <option value="256" selected>256 cores</option>
@@ -60,16 +71,16 @@
             </select>
           </div>
 
-          <div class="actions actions--stack">
+          <div class="command-actions">
             <button class="btn btn-primary" id="btn-compress" disabled>Comprimir</button>
             <button class="btn btn-ghost" id="btn-download-all" disabled>Baixar ZIP</button>
             <button class="btn btn-ghost" id="btn-clear-images" disabled>Limpar</button>
           </div>
-        </aside>
+        </div>
 
-        <section class="compressor-results">
+        <section class="tool-results">
           <div class="panel__head">
-            <div class="panel__label">Imagens</div>
+            <div class="panel__label">Resultados</div>
             <div class="panel__label panel__badge" id="compressor-badge">0 arquivos</div>
           </div>
           <div class="image-list" id="image-list">
@@ -79,30 +90,26 @@
             </div>
           </div>
         </section>
-      </div>
-    </section>
+      </section>
 
-    <section class="view" id="view-resizer" aria-label="Redimensionador">
-      <div class="resizer-layout">
-        <aside class="resizer-controls">
-          <div class="panel__head">
-            <div class="panel__label">Variantes</div>
-          </div>
-
-          <label class="dropzone" id="resize-dropzone" for="resize-image-input">
-            <span class="dropzone__title">Solte imagens aqui</span>
-            <span class="dropzone__text">PNG, JPG, JPEG ou WebP</span>
+      <section class="view" id="view-resizer" aria-label="Redimensionador">
+        <div class="tool-command tool-command--resizer">
+          <label class="dropzone command-dropzone" id="resize-dropzone" for="resize-image-input">
+            <span class="dropzone__title">Selecionar imagens</span>
+            <span class="dropzone__text">Arraste PNG, JPG, JPEG ou WebP</span>
           </label>
           <input class="visually-hidden" id="resize-image-input" type="file" accept="image/png,image/jpeg,image/webp" multiple>
 
-          <div class="control-group">
-            <span class="field-label">Breakpoints</span>
+          <div class="command-card command-card--breakpoints">
+            <div class="command-card__head">
+              <span class="field-label">Breakpoints</span>
+              <button class="btn btn-ghost resize-add" id="btn-add-resize-breakpoint" type="button">Adicionar medida</button>
+            </div>
             <div class="resize-breakpoints" id="resize-breakpoints"></div>
-            <button class="btn btn-ghost resize-add" id="btn-add-resize-breakpoint" type="button">Adicionar medida</button>
             <div class="resize-name-preview" id="resize-name-preview"></div>
           </div>
 
-          <div class="control-group">
+          <div class="command-card">
             <span class="field-label">Formato final</span>
             <div class="segmented" id="resize-format-options">
               <button class="segment is-active" type="button" data-resize-format="webp">WebP</button>
@@ -111,30 +118,29 @@
             </div>
           </div>
 
-          <div class="control-group">
+          <div class="command-card">
             <label class="field-label" for="resize-quality-range">Qualidade</label>
             <div class="range-row">
               <input id="resize-quality-range" type="range" min="50" max="100" value="80">
               <span class="range-value" id="resize-quality-value">80%</span>
             </div>
-          </div>
-
-          <div class="resize-progress is-hidden" id="resize-progress">
-            <div class="resize-progress__track">
-              <div class="resize-progress__fill" id="resize-progress-fill"></div>
+            <div class="resize-progress is-hidden" id="resize-progress">
+              <div class="resize-progress__track">
+                <div class="resize-progress__fill" id="resize-progress-fill"></div>
+              </div>
+              <div class="resize-progress__label" id="resize-progress-label">aguardando</div>
             </div>
-            <div class="resize-progress__label" id="resize-progress-label">aguardando</div>
           </div>
 
-          <div class="actions actions--stack">
+          <div class="command-actions">
             <button class="btn btn-primary" id="btn-generate-resize-zip" disabled>Gerar ZIP</button>
             <button class="btn btn-ghost" id="btn-clear-resize-images" disabled>Limpar</button>
           </div>
-        </aside>
+        </div>
 
-        <section class="resizer-results">
+        <section class="tool-results">
           <div class="panel__head">
-            <div class="panel__label">Redimensionador</div>
+            <div class="panel__label">Resultados</div>
             <div class="panel__label panel__badge" id="resize-badge">0 arquivos</div>
           </div>
           <div class="resizer-output">
@@ -147,9 +153,9 @@
             <div class="resize-log is-hidden" id="resize-log"></div>
           </div>
         </section>
-      </div>
-    </section>
-  </main>
+      </section>
+    </main>
+  </div>
 
   <script src="vendor/jszip.min.js"></script>
   <script src="vendor/UPNG.min.js"></script>
