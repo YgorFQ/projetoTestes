@@ -7,7 +7,7 @@
    Equivalente a Ctrl+Shift+R em todo reload.
 ═══════════════════════════════════════════════════════════════════════ */
 
-var CACHE_NAME = 'senkolib-v1';
+var CACHE_NAME = 'senkolib-v2';
 
 /* ── Install: ativa imediatamente sem esperar abas fecharem ── */
 self.addEventListener('install', function (e) {

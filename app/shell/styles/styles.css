@@ -139,15 +139,6 @@ body {
   background: #0d0d0f;
 }
 
-body[data-senko-feature="imagens"] .search-wrap,
-body[data-senko-feature="imagens"] #copyAllBtn,
-body[data-senko-feature="imagens"] #openAddModal,
-body[data-senko-feature="sources"] .search-wrap,
-body[data-senko-feature="sources"] #copyAllBtn,
-body[data-senko-feature="sources"] #openAddModal {
-  display: none;
-}
-
 .search-icon {
   position: absolute; left: .75rem;
   width: 15px; height: 15px; color: var(--text3); pointer-events: none;

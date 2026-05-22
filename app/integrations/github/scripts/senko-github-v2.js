@@ -956,19 +956,6 @@ document.addEventListener('DOMContentLoaded', function () {
     '}',
     '.btn-github:hover { background: #30363d; border-color: #8b949e; }',
     '.btn-github:active { background: #161b22; }',
-    '.gh-file-select {',
-    '  font-family: var(--font-body, sans-serif);',
-    '  font-size: .85rem;',
-    '  font-weight: 700;',
-    '  padding: .35rem .7rem;',
-    '  border: 1.5px solid var(--border, #e2e8f0);',
-    '  border-radius: var(--radius, 6px);',
-    '  background: var(--bg, #fff);',
-    '  color: var(--text2, #64748b);',
-    '  cursor: pointer;',
-    '  height: 34px;',
-    '  width: 200px;',
-    '}',
     '.gh-auto-group {',
     '  display: inline-flex;',
     '  align-items: center;',
@@ -1365,86 +1352,38 @@ document.addEventListener('DOMContentLoaded', function () {
   /* Botões de variante (nova e editar) foram movidos para
      app/integrations/github/scripts/senko-github-variants.js */
 
-  /* ─── Modal criação — select + botão GitHub ────────── */
+  /* ─── Modal criação — botão GitHub ────────── */
   var copyGeneratedAnchor = document.getElementById('copyGeneratedBtn');
   if (copyGeneratedAnchor && !document.getElementById('ghNewLayoutGroup')) {
-
-    var ghSelect = document.createElement('select');
-    ghSelect.id        = 'ghTargetFile';
-    ghSelect.className = 'gh-file-select';
-    ghSelect.disabled  = true;
-    ghSelect.innerHTML = '<option value="">-- selecione o arquivo --</option>';
+    var ghNewLayoutTargetFile = 'layouts001.js';
 
     var ghNewBtn = document.createElement('button');
     ghNewBtn.id        = 'ghSaveNewLayoutBtn';
     ghNewBtn.className = 'btn-github';
     ghNewBtn.innerHTML = GH_ICON + ' GitHub';
-    ghNewBtn.title     = 'Salvar novo layout direto no repositório GitHub';
+    ghNewBtn.title     = 'Salvar novo layout em layouts001.js no repositório GitHub';
 
     var ghGroup = document.createElement('div');
     ghGroup.id        = 'ghNewLayoutGroup';
     ghGroup.className = 'gh-auto-group';
-    ghGroup.appendChild(ghSelect);
     ghGroup.appendChild(ghNewBtn);
 
-    /* Substitui o span âncora pelo grupo select+botão */
+    /* Substitui o span âncora pelo botão com destino fixo. */
     copyGeneratedAnchor.parentNode.replaceChild(ghGroup, copyGeneratedAnchor);
-
-    function ghPopulateFileSelect() {
-      if (!ghGetToken()) return;
-
-      ghSelect.innerHTML = '<option value="">Carregando…</option>';
-      ghSelect.disabled  = true;
-
-      githubListDir('app/features/biblioteca/data/layouts').then(function (entries) {
-        var jsFiles = entries
-          .filter(function (e) { return e.type === 'file' && e.name.endsWith('.js'); })
-          .map(function (e) { return e.name; })
-          .sort();
-
-        ghSelect.innerHTML = '<option value="">-- selecione o arquivo --</option>';
-        jsFiles.forEach(function (name) {
-          var opt = document.createElement('option');
-          opt.value       = name;
-          opt.textContent = 'app/features/biblioteca/data/layouts/' + name;
-          ghSelect.appendChild(opt);
-        });
-        ghSelect.disabled = false;
-      }).catch(function () {
-        ghSelect.innerHTML = '<option value="">Erro ao listar</option>';
-        ghSelect.disabled  = true;
-      });
-    }
-
-    var openAddBtn = document.getElementById('openAddModal');
-    if (openAddBtn) {
-      openAddBtn.addEventListener('click', function () {
-        setTimeout(ghPopulateFileSelect, 60);
-      });
-    }
-
-    if (ghGetToken()) {
-      ghPopulateFileSelect();
-    }
 
     ghNewBtn.addEventListener('click', function () {
       var code     = document.getElementById('generatedCode').textContent;
       var id       = document.getElementById('addId').value.trim().toLowerCase();
-      var fileName = ghSelect.value;
 
       if (!id || code.indexOf('//') === 0) {
         alert('Preencha os campos primeiro.');
-        return;
-      }
-      if (!fileName) {
-        alert('Selecione o arquivo de destino no dropdown.');
         return;
       }
 
       ghNewBtn.textContent = 'Salvando…';
       ghNewBtn.disabled    = true;
 
-      githubSaveNewLayout(fileName, code, id).then(function (result) {
+      githubSaveNewLayout(ghNewLayoutTargetFile, code, id).then(function (result) {
         if (result) {
           ghNewBtn.innerHTML = GH_ICON + ' Salvo!';
           setTimeout(function () {
