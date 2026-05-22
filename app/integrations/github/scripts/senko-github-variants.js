@@ -176,6 +176,13 @@ function githubCreateVariant(parentId, variantName, objectCode) {
   }
 
   var nameLower = variantName.toLowerCase();
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(nameLower)) {
+    ghUnlockSave();
+    ghSetStatus('Nome de variante inválido', 'error');
+    alert('O nome da variante precisa usar apenas letras minúsculas, números e hífen depois da normalização.');
+    return Promise.resolve(false);
+  }
+
   ghSetStatus('Verificando arquivo de variantes…', 'saving');
 
   return ghvGetVariantFile(parentId).then(function (fileInfo) {
@@ -552,6 +559,12 @@ function ghvInjectNewVariantButton() {
   anchor.parentNode.replaceChild(btn, anchor);
 
   btn.addEventListener('click', function () {
+    var nameInput = document.getElementById('newVarName');
+    var nameIssue = typeof senkoVariantNameIssue === 'function' && nameInput
+      ? senkoVariantNameIssue(nameInput.value)
+      : '';
+    if (nameIssue) { alert(nameIssue); return; }
+
     var nomeRaw = typeof senkoSyncIdentifierInput === 'function'
       ? senkoSyncIdentifierInput('newVarName', true)
       : (document.getElementById('newVarName') ? document.getElementById('newVarName').value.trim().toLowerCase() : '');
@@ -632,6 +645,12 @@ function ghvInjectEditVariantButton() {
 
     /* ⚠ Nome ORIGINAL: lido do state, não do campo editável */
     var originalName = state.currentEditVariant.name || '';
+    var editNameInput = document.getElementById('editVarName');
+    var nameIssue = typeof senkoVariantNameIssue === 'function' && editNameInput
+      ? senkoVariantNameIssue(editNameInput.value)
+      : '';
+    if (nameIssue) { alert(nameIssue); return; }
+
     var newName      = typeof senkoSyncIdentifierInput === 'function'
       ? senkoSyncIdentifierInput('editVarName', true)
       : document.getElementById('editVarName').value.trim().toLowerCase();

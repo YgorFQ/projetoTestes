@@ -294,6 +294,24 @@
   flex-shrink: 0;
 }
 
+.col-modal-header-right #colColEditMetaBtn {
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+}
+
+.col-modal-header-right #colColEditMetaBtn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.col-modal-header-right #colColClose {
+  width: 42px;
+  height: 42px;
+  font-size: 1rem;
+}
+
 /* Grid de layouts dentro do modal */
 .col-modal-layouts-wrap {
   flex: 1;

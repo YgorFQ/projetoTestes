@@ -20,7 +20,7 @@ SenkoLib/
 |   |   |   `-- styles/                  - estilos exclusivos da feature
 |   |   |
 |   |   |-- imagens/
-|   |   |   |-- index.html               - Compressor e Masqueico dentro da aba Imagens
+|   |   |   |-- index.html               - Compressor e Redimensionador dentro da aba Imagens
 |   |   |   |-- scripts/                 - scripts da feature
 |   |   |   `-- vendor/                  - bibliotecas locais usadas pela imagem
 |   |   |

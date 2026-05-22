@@ -33,11 +33,34 @@ function senkoSlugifyIdentifier(value) {
     .replace(/^-|-$/g, '');
 }
 
+function senkoNormalizeVariantName(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function senkoVariantNameIssue(value) {
+  var raw = String(value || '');
+  if (!raw.trim()) return 'Preencha o nome da variante primeiro.';
+  if (!/^[a-zA-Z0-9 -]+$/.test(raw)) {
+    return 'Use somente letras, numeros, espacos e hifen no nome da variante.';
+  }
+
+  var normalized = senkoNormalizeVariantName(raw);
+  if (normalized.length < 2 || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(normalized)) {
+    return 'O nome da variante precisa gerar pelo menos dois caracteres validos.';
+  }
+  return '';
+}
+
 function senkoSyncIdentifierInput(inputId, force) {
   var el = document.getElementById(inputId);
   if (!el) return '';
-  var value = senkoSlugifyIdentifier(el.value);
-  if (force || document.activeElement === el) el.value = value;
+  var value = senkoNormalizeVariantName(el.value);
+  if (force && !senkoVariantNameIssue(el.value)) el.value = value;
   return value;
 }
 
@@ -612,12 +635,14 @@ function closeNewVariantModal() {
 }
 
 function updateNewVarCode() {
-  var name      = senkoSyncIdentifierInput('newVarName', true);
+  var nameInput = document.getElementById('newVarName').value;
+  var nameIssue = senkoVariantNameIssue(nameInput);
+  var name      = senkoSyncIdentifierInput('newVarName', false);
   var html      = document.getElementById('newVarHtml').value;
   var css       = document.getElementById('newVarCss').value;
   var copyBtn   = document.getElementById('newVarCopyBtn');
 
-  var allOk = name.length >= 2;
+  var allOk = !nameIssue;
   if (copyBtn) {
     if (!allOk) {
       copyBtn.classList.add('btn-blocked');
@@ -627,8 +652,13 @@ function updateNewVarCode() {
     }
   }
 
-  if (!name && !html) {
+  if (!name && !html && !css) {
     document.getElementById('newVarGeneratedCode').textContent = '// Preencha os campos acima para gerar o objeto…';
+    return;
+  }
+
+  if (nameIssue) {
+    document.getElementById('newVarGeneratedCode').textContent = '// ' + nameIssue;
     return;
   }
 
@@ -717,12 +747,14 @@ function switchEditVarMode(mode) {
 }
 
 function updateEditVarCode() {
-  var name = senkoSyncIdentifierInput('editVarName', false);
-  var html = document.getElementById('editVarHtml').value;
-  var css  = document.getElementById('editVarCss').value;
+  var nameInput = document.getElementById('editVarName').value;
+  var nameIssue = senkoVariantNameIssue(nameInput);
+  var name      = senkoSyncIdentifierInput('editVarName', false);
+  var html      = document.getElementById('editVarHtml').value;
+  var css       = document.getElementById('editVarCss').value;
 
   var copyBtn = document.getElementById('copyEditVarBtn');
-  var ok = name.length >= 2 && html.length >= 1;
+  var ok = !nameIssue && html.length >= 1;
   if (copyBtn) {
     if (ok) copyBtn.classList.remove('btn-blocked');
     else    copyBtn.classList.add('btn-blocked');
@@ -732,6 +764,11 @@ function updateEditVarCode() {
   var safeCss  = escapeTemplateLiteral(css);
 
   var genCode = document.getElementById('editVarGeneratedCode');
+  if (genCode && nameIssue) {
+    genCode.textContent = '// ' + nameIssue;
+    return;
+  }
+
   if (genCode) genCode.textContent =
     '/*@@@@Senko - ' + name + ' */\n' +
     '  {\n' +
