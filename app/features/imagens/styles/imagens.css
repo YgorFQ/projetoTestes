@@ -165,11 +165,48 @@ textarea {
 .view {
   display: none;
   height: 100%;
-  grid-template-rows: auto minmax(0, 1fr);
 }
 
 .view.is-active {
+  display: block;
+}
+
+.tool-shell {
+  height: 100%;
+  min-height: 0;
   display: grid;
+  grid-template-columns: 340px minmax(0, 1fr);
+  background: var(--bg2);
+}
+
+.tool-shell--resizer {
+  grid-template-columns: 380px minmax(0, 1fr);
+}
+
+.tool-sidebar {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  border-right: 1.5px solid var(--border);
+  background: var(--bg);
+}
+
+.sidebar__head {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1.5px solid var(--border);
+  padding: .8rem 1rem;
+}
+
+.sidebar__body {
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
 }
 
 .tool-command {
@@ -206,6 +243,15 @@ textarea {
   padding: .8rem;
 }
 
+.tool-sidebar .command-card,
+.tool-sidebar .command-actions {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
 .command-card--breakpoints {
   gap: .65rem;
 }
@@ -225,9 +271,14 @@ textarea {
   padding: .8rem;
 }
 
+.tool-sidebar .command-actions .btn {
+  width: 100%;
+}
+
 .dropzone {
   min-height: 94px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: .2rem;
@@ -236,6 +287,11 @@ textarea {
   padding: .9rem;
   text-align: center;
   transition: border-color var(--transition), background var(--transition), transform var(--transition);
+}
+
+.tool-sidebar .dropzone {
+  min-height: 160px;
+  box-shadow: none;
 }
 
 .dropzone:hover,
@@ -397,10 +453,11 @@ input[type="range"] {
 }
 
 .tool-results {
+  height: 100%;
   min-height: 0;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  padding: 0 2rem 1.25rem;
+  padding: 0;
   background: var(--bg2);
 }
 
@@ -409,9 +466,9 @@ input[type="range"] {
   display: flex;
   align-items: center;
   gap: .5rem;
-  border-bottom: 0;
-  background: transparent;
-  padding: .8rem 0 .55rem;
+  border-bottom: 1.5px solid var(--border);
+  background: var(--bg2);
+  padding: .8rem 1rem;
 }
 
 .panel__badge {
@@ -427,18 +484,23 @@ input[type="range"] {
   grid-template-columns: repeat(auto-fill, minmax(276px, 1fr));
   align-content: start;
   gap: 1rem;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--bg);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
   padding: 1rem;
-  box-shadow: var(--shadow-card);
+  box-shadow: none;
 }
 
 .resizer-output {
+  height: 100%;
   min-height: 0;
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
   gap: .85rem;
+  padding: 1rem;
+}
+
+.resizer-output .resize-file-list {
   padding: 0;
 }
 
@@ -588,6 +650,11 @@ input[type="range"] {
   gap: .55rem;
 }
 
+.tool-sidebar .resize-breakpoints {
+  display: flex;
+  flex-direction: column;
+}
+
 .resize-breakpoint {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -632,6 +699,7 @@ input[type="range"] {
 .resize-add {
   min-height: 30px;
   flex-shrink: 0;
+  min-width: 132px;
   padding: .3rem .65rem;
   white-space: nowrap;
 }
@@ -758,28 +826,19 @@ input[type="range"] {
   background: var(--accent);
 }
 
-@media (max-width: 1240px) {
-  .tool-command--compressor,
-  .tool-command--resizer {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .command-card--breakpoints {
-    grid-column: 1 / -1;
+@media (max-width: 1120px) {
+  .tool-shell,
+  .tool-shell--resizer {
+    grid-template-columns: 320px minmax(0, 1fr);
   }
 }
 
 @media (max-width: 760px) {
-  .image-tool-nav,
-  .tool-command,
-  .tool-results {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
   .image-tool-nav {
     align-items: stretch;
     flex-direction: column;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
   .header__status {
@@ -796,19 +855,24 @@ input[type="range"] {
     min-width: 0;
   }
 
-  .tool-command--compressor,
-  .tool-command--resizer {
+  .tool-shell,
+  .tool-shell--resizer {
+    height: 100%;
     grid-template-columns: 1fr;
+    grid-template-rows: minmax(300px, 48%) minmax(0, 1fr);
   }
 
-  .command-actions {
-    flex-direction: row;
-    flex-wrap: wrap;
+  .tool-sidebar {
+    border-right: 0;
+    border-bottom: 1.5px solid var(--border);
   }
 
-  .command-actions .btn {
-    flex: 1;
-    min-width: 120px;
+  .sidebar__body {
+    padding: 1rem;
+  }
+
+  .tool-sidebar .dropzone {
+    min-height: 124px;
   }
 
   .image-list,
