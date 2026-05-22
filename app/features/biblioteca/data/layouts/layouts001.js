@@ -4479,4 +4479,15 @@ input[type="radio"]:focus + .c32-nav label[for="c32-s2"] {
     css: `sefsfzezx\\cft `
   },
 
+
+/*@@@@Senko - num-compesa-adfiqw3o7o3289wedaw-da-d-a-da-d-a21-3-2-ea-d-s-d-ad-a-a-z */
+  /* variantes: app/features/biblioteca/data/variants/num-compesa-adfiqw3o7o3289wedaw-da-d-a-da-d-a21-3-2-ea-d-s-d-ad-a-a-z.js */
+  {
+    id: 'num-compesa-adfiqw3o7o3289wedaw-da-d-a-da-d-a21-3-2-ea-d-s-d-ad-a-a-z',
+    name: 'Num Compesa adfiqw3o7o3289wedaw/da/d }[]a[[da [d[]a21[3´2[eá[d´~[s´d[]ad´~[] /;.a;.a;.;z',
+    tags: ['issso é um tedss303-q2-=][[] []^^´``´1'12ww z;/;;', '.ç'],
+    html: `Num Compesa adfiqw3o7o3289wedaw/da/d }[]a[[da [d[]a21[3´2[eá[d´~[s´d[]ad´~[] /;.a;.a;.;z`,
+    css: `Num Compesa adfiqw3o7o3289wedaw/da/d }[]a[[da [d[]a21[3´2[eá[d´~[s´d[]ad´~[] /;.a;.a;.;z`
+  },
+
 ]);
