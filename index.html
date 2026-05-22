@@ -173,19 +173,12 @@
         <div class="modal-meta">
 
           <h2 class="modal-title">Adicionar Layout</h2>
-          <p class="add-hint">O nome gera automaticamente o futuro arquivo de variantes:
-            <code>app/features/biblioteca/data/variants/<span id="hintVariantPath">id</span>.js</code>
-          </p>
         </div>
         <button class="modal-close" id="addModalClose" title="Fechar">✕</button>
       </div>
+      <input type="hidden" id="addId" />
       <div class="add-fields">
         <div class="field-row">
-          <div class="field-group">
-            <label>ID gerado</label>
-            <input type="text" id="addId" placeholder="gerado pelo nome" readonly />
-            <span class="field-desc">Gerado automaticamente a partir do nome. Vira o nome do arquivo de variantes.</span>
-          </div>
           <div class="field-group">
             <label>Nome <span class="req">*</span></label>
             <input type="text" id="addName" placeholder="ex: Section-58" />
@@ -238,9 +231,6 @@
         <div class="variants-header-left">
           <span class="modal-category">Variantes</span>
           <h2 class="modal-title" id="variantsTitle"></h2>
-          <p class="variants-hint">
-            Arquivo: <code>app/features/biblioteca/data/variants/<span id="variantsLayoutId"></span>.js</code>
-          </p>
         </div>
         <div class="variants-header-right">
           <!-- Badge de contagem — sem background, só border laranja -->
@@ -304,7 +294,7 @@
           <div class="field-group" style="flex:1;">
             <label>Nome <span class="req">*</span></label>
             <input type="text" id="editVarName" placeholder="ex: section-1-2" />
-            <span class="field-desc">Espacos viram hifen. Use apenas letras, numeros, espacos e hifen.</span>
+            <span class="field-desc">Use apenas letras, numeros, espacos e hifen.</span>
           </div>
         </div>
       </div>
@@ -348,7 +338,7 @@
           <div class="field-group">
             <label>Nome <span class="req">*</span></label>
             <input type="text" id="newVarName" placeholder="ex: section-49-1" />
-            <span class="field-desc">Espacos viram hifen. Use apenas letras, numeros, espacos e hifen.</span>
+            <span class="field-desc">Use apenas letras, numeros, espacos e hifen.</span>
           </div>
         </div>
       </div>

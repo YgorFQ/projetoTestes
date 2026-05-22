@@ -332,9 +332,9 @@ function colGhCreateCollection(colData) {
   })
   .then(function (fileInfo) {
     if (fileInfo.exists) {
-      ghSetStatus('Slug já existe', 'error');
+      ghSetStatus('Coleção já existe', 'error');
       ghUnlockSave();
-      ghShowErrorModal('Já existe uma coleção com o slug "' + slug + '" no repositório.\nEscolha outro nome/slug.');
+      ghShowErrorModal('Já existe uma coleção com esse nome no repositório.\nEscolha outro nome.');
       return false;
     }
 
@@ -596,12 +596,12 @@ function colGhAddLayout(slug, layoutData) {
     var content = fileInfo.content;
     var sha     = fileInfo.sha;
 
-    /* Verifica ID duplicado */
+    /* Verifica o identificador interno gerado a partir do nome. */
     var idMarker = '/*@@@@Col - ' + layoutData.id + ' */';
     if (content.indexOf(idMarker) !== -1) {
-      ghSetStatus('ID de layout duplicado', 'error');
+      ghSetStatus('Nome de layout duplicado', 'error');
       ghUnlockSave();
-      ghShowErrorModal('Já existe um layout com o ID "' + layoutData.id + '" nesta coleção.\nEscolha outro ID.');
+      ghShowErrorModal('Já existe um layout com esse nome nesta coleção.\nEscolha outro nome.');
       return false;
     }
 

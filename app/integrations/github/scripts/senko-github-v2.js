@@ -455,9 +455,9 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
 
     var marker = '/*@@@@Senko - ' + layoutId.toLowerCase() + ' */';
     if (content.indexOf(marker) !== -1) {
-      ghSetStatus('ID já existe', 'error');
+      ghSetStatus('Nome já existe', 'error');
       ghUnlockSave();
-      ghShowErrorModal('O ID "' + layoutId + '" já existe em ' + fileName + '. Use o botão de editar no card para modificar layouts existentes.');
+      ghShowErrorModal('Já existe um layout com esse nome em ' + fileName + '. Use o botão de editar no card para modificar layouts existentes.');
       return false;
     }
 

@@ -345,15 +345,10 @@ function _colBuildCreateModal() {
           '<label>Nome <span class="req">*</span></label>' +
           '<input type="text" id="colCreateName" placeholder="ex: Kit Lançamento 2026" />' +
           '<span class="col-field-hint">Nome de exibição na biblioteca de Coleções.</span>' +
-          '<span class="col-field-error" id="colCreateNameErr">⚠ Nome obrigatório (mínimo 3 caracteres)</span>' +
+          '<span class="col-field-error" id="colCreateNameErr">⚠ Informe um nome com letras ou números (mínimo 3 caracteres)</span>' +
         '</div>' +
 
-        /* Slug */
-        '<div class="col-field">' +
-          '<label>Slug gerado</label>' +
-          '<input type="text" id="colCreateSlug" placeholder="gerado pelo nome" readonly />' +
-          '<span class="col-field-hint">Gerado automaticamente a partir do nome. Vira o arquivo: <code>app/features/colecoes/data/<span id="colCreateSlugPreview">slug</span>.js</code></span>' +
-        '</div>' +
+        '<input type="hidden" id="colCreateSlug" />' +
 
         /* Grupo */
         '<div class="col-field">' +
@@ -386,7 +381,7 @@ function _colBuildCreateModal() {
 
   /* Auto-gera slug a partir do nome */
   nameInput.addEventListener('input', function () {
-    _colSyncGeneratedId('colCreateName', 'colCreateSlug', 'colCreateSlugPreview');
+    _colSyncGeneratedId('colCreateName', 'colCreateSlug');
     _colValidateCreateForm();
   });
 
@@ -413,8 +408,6 @@ function colOpenCreateModal() {
   ['colCreateName', 'colCreateSlug', 'colCreateTags'].forEach(function (id) {
     document.getElementById(id).value = '';
   });
-  document.getElementById('colCreateSlugPreview').textContent = 'slug';
-
   /* Popula grupos */
   _colPopulateGroupSelect(document.getElementById('colCreateGroup'), null);
 
@@ -435,14 +428,14 @@ function colCloseCreateModal() {
 
 function _colValidateCreateForm() {
   var name  = (document.getElementById('colCreateName')  || {}).value || '';
-  var slug  = _colSyncGeneratedId('colCreateName', 'colCreateSlug', 'colCreateSlugPreview');
+  var slug  = _colSyncGeneratedId('colCreateName', 'colCreateSlug');
   var group = (document.getElementById('colCreateGroup') || {}).value || '';
 
   var nameOk  = name.trim().length >= 3;
   var slugOk  = _colValidSlug(slug.trim());
   var groupOk = !!group;
 
-  _colShowFieldError('colCreateNameErr',  !nameOk  && name.length > 0);
+  _colShowFieldError('colCreateNameErr', (!nameOk || !slugOk) && name.length > 0);
   _colShowFieldError('colCreateGroupErr', false); /* só mostra no submit */
 
   return nameOk && slugOk && groupOk;
@@ -456,7 +449,7 @@ function _colShowFieldError(id, show) {
 /* Lê os dados do formulário de criação — usado pelo módulo GitHub */
 function colGetCreateFormData() {
   var name  = (document.getElementById('colCreateName')  || {}).value || '';
-  var slug  = _colSyncGeneratedId('colCreateName', 'colCreateSlug', 'colCreateSlugPreview');
+  var slug  = _colSyncGeneratedId('colCreateName', 'colCreateSlug');
   var group = (document.getElementById('colCreateGroup') || {}).value || '';
   var tags  = ((document.getElementById('colCreateTags') || {}).value || '')
     .split(',').map(function (t) { return t.trim(); }).filter(Boolean);
@@ -464,7 +457,7 @@ function colGetCreateFormData() {
   /* Validação final */
   var ok = name.trim().length >= 3 && _colValidSlug(slug.trim()) && !!group;
   if (!ok) {
-    _colShowFieldError('colCreateNameErr',  name.trim().length < 3);
+    _colShowFieldError('colCreateNameErr', name.trim().length < 3 || !_colValidSlug(slug.trim()));
     _colShowFieldError('colCreateGroupErr', !group);
   }
   return ok ? { name: name.trim(), slug: slug.trim(), group: group, tags: tags } : null;
@@ -614,7 +607,7 @@ function _colBuildNewGroupModal() {
         '<div class="col-field">' +
           '<label>Nome <span class="req">*</span></label>' +
           '<input type="text" id="colNewGroupName" placeholder="ex: Projetos 2027" />' +
-          '<span class="col-field-error" id="colNewGroupNameErr">⚠ Nome obrigatório</span>' +
+          '<span class="col-field-error" id="colNewGroupNameErr">⚠ Informe um nome com pelo menos 2 letras ou números</span>' +
         '</div>' +
 
         '<div class="col-field">' +
@@ -656,13 +649,12 @@ function _colBuildNewGroupModal() {
 
   document.getElementById('colNewGroupConfirm').addEventListener('click', function () {
     var name = (document.getElementById('colNewGroupName').value || '').trim();
-    if (!name) {
+    var slug = _colSlugify(name);
+    if (!name || !_colValidSlug(slug)) {
       document.getElementById('colNewGroupNameErr').style.display = 'block';
       return;
     }
     var cor  = document.getElementById('colNewGroupColorHex').value || COL_PRESET_COLORS[4];
-    var slug = _colSlugify(name);
-    if (!slug) { slug = 'grupo-' + Date.now(); }
 
     var grupo = { slug: slug, name: name, cor: cor };
 
@@ -729,19 +721,13 @@ function _colBuildAddLayoutModal() {
         '<button class="modal-close" id="colAddLayoutClose" title="Fechar">✕</button>' +
       '</div>' +
 
-      /* Campo ID e Nome */
+      /* O identificador interno nasce do nome e fica oculto. */
+      '<input type="hidden" id="colAddLayoutId" />' +
       '<div class="col-form-body" style="padding-bottom:0;flex-shrink:0;">' +
-        '<div class="col-field-row">' +
-          '<div class="col-field">' +
-            '<label>ID gerado</label>' +
-            '<input type="text" id="colAddLayoutId" placeholder="gerado pelo nome" readonly />' +
-            '<span class="col-field-hint">Gerado automaticamente a partir do nome.</span>' +
-          '</div>' +
-          '<div class="col-field">' +
-            '<label>Nome <span class="req">*</span></label>' +
-            '<input type="text" id="colAddLayoutName" placeholder="ex: Hero Principal" />' +
-            '<span class="col-field-error" id="colAddLayoutNameErr">⚠ Nome obrigatório</span>' +
-          '</div>' +
+        '<div class="col-field">' +
+          '<label>Nome <span class="req">*</span></label>' +
+          '<input type="text" id="colAddLayoutName" placeholder="ex: Hero Principal" />' +
+          '<span class="col-field-error" id="colAddLayoutNameErr">⚠ Informe um nome com pelo menos 2 letras ou números</span>' +
         '</div>' +
       '</div>' +
 
@@ -785,8 +771,8 @@ function _colBuildAddLayoutModal() {
   });
 
   document.getElementById('colAddLayoutName').addEventListener('input', function () {
-    _colSyncGeneratedId('colAddLayoutName', 'colAddLayoutId');
-    _colShowFieldError('colAddLayoutNameErr', this.value.trim().length < 1 && this.value.length > 0);
+    var id = _colSyncGeneratedId('colAddLayoutName', 'colAddLayoutId');
+    _colShowFieldError('colAddLayoutNameErr', !_colValidSlug(id) && this.value.length > 0);
   });
 
   document.getElementById('colAddLayoutClose').addEventListener('click', colCloseAddLayoutModal);
@@ -833,7 +819,7 @@ function colGetAddLayoutFormData() {
 
   var ok = _colValidSlug(id) && name.trim().length >= 1;
   if (!ok) {
-    _colShowFieldError('colAddLayoutNameErr', name.trim().length < 1);
+    _colShowFieldError('colAddLayoutNameErr', name.trim().length < 1 || !_colValidSlug(id));
   }
   return ok ? { id: id, name: name.trim(), html: content, css: '' } : null;
 }

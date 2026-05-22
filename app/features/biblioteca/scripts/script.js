@@ -382,7 +382,6 @@ function openAddModal() {
   ['addName','addTags','addHtml','addCss'].forEach(function (id) {
     document.getElementById(id).value = '';
   });
-  document.getElementById('addId').readOnly = true;
   document.getElementById('addId').value = '';
   document.getElementById('generatedCode').textContent = '// Preencha os campos acima para gerar o objeto…';
   document.getElementById('addPreviewIframe').srcdoc = '';
@@ -411,9 +410,6 @@ function updateGeneratedCode() {
   var html    = document.getElementById('addHtml').value;
   var css     = document.getElementById('addCss').value;
   var tags    = tagsRaw.split(',').map(function (t) { return t.trim(); }).filter(Boolean);
-
-  var hintEl = document.getElementById('hintVariantPath');
-  if (hintEl) hintEl.textContent = id || 'id';
 
   var copyBtn = document.getElementById('copyGeneratedBtn');
   var allFilled = id.length >= 3 && name.length >= 3 && html.length >= 3;
@@ -475,7 +471,6 @@ function openVariantsModal(layout) {
   var key = layout.id;
 
   document.getElementById('variantsTitle').textContent    = layout.name;
-  document.getElementById('variantsLayoutId').textContent = key;
 
   var vlist = SenkoLib.getVariants(key);
   updateVariantsCount(key);
@@ -930,7 +925,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   });
-  ['addId','addName','addTags','addHtml','addCss'].forEach(function (id) {
+  ['addName','addTags','addHtml','addCss'].forEach(function (id) {
     document.getElementById(id).addEventListener('input', updateGeneratedCode);
   });
 
