@@ -1,9 +1,9 @@
 // @ts-nocheck
 SenkoLib.registerVariant('testegamered', [
-/*@@@@Senko - cavalo */
+/*@@@@Senko - 6323e3432 */
   {
-    name: 'cavalo',
-    html: `ssfssfdsfdsfsf`,
+    name: '6323e3432',
+    html: `ssfssfdsfdsfsfioklfujfijdhfihdhf hfhfhfhfhfh`,
     css: ``,
   },
 ]);
