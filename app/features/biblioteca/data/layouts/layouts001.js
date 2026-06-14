@@ -1515,201 +1515,203 @@ SenkoLib.register([
 
 
   /*@@@@Senko - section-9 */
-  /* variantes: variants/section-9.js */
+  /* variantes: app/features/biblioteca/data/variants/section-9.js */
   {
     id: 'section-9',
     name: 'Section-9',
     tags: ['Section 9', '9', 'grid'],
-    html: `<section class="faq-section" aria-labelledby="faq-section-title">
-  <div class="faq-section__header">
-    <h2 class="faq-section__title" id="faq-section-title">Título Principal</h2>
-    <p class="faq-section__subtitle">Sub-título</p>
-  </div>
-  <ul class="faq-section__list">
-    <li class="faq-section__item">
-      <details class="faq-section__item">
-        <summary>
-          <h3 class="faq-section__q-text">Pergunta</h3>
-          <span class="faq-section__icon" aria-hidden="true"></span>
-        </summary>
-        <div class="faq-section__a-inner">
-          <p class="faq-section__a-text">Resposta</p>
-        </div>
-      </details>
-    </li>
-    <li class="faq-section__item">
-      <details class="faq-section__item">
-        <summary>
-          <h3 class="faq-section__q-text">Pergunta</h3>
-          <span class="faq-section__icon" aria-hidden="true"></span>
-        </summary>
-        <div class="faq-section__a-inner">
-          <p class="faq-section__a-text">Resposta</p>
-        </div>
-      </details>
-    </li>
-    <li class="faq-section__item">
-      <details class="faq-section__item">
-        <summary>
-          <h3 class="faq-section__q-text">Pergunta</h3>
-          <span class="faq-section__icon" aria-hidden="true"></span>
-        </summary>
-        <div class="faq-section__a-inner">
-          <p class="faq-section__a-text">Resposta</p>
-        </div>
-      </details>
-    </li>
-    <li class="faq-section__item">
-      <details class="faq-section__item">
-        <summary>
-          <h3 class="faq-section__q-text">Pergunta</h3>
-          <span class="faq-section__icon" aria-hidden="true"></span>
-        </summary>
-        <div class="faq-section__a-inner">
-          <p class="faq-section__a-text">Resposta</p>
-        </div>
-      </details>
-    </li>
-    <li class="faq-section__item">
-      <details class="faq-section__item">
-        <summary>
-          <h3 class="faq-section__q-text">Pergunta</h3>
-          <span class="faq-section__icon" aria-hidden="true"></span>
-        </summary>
-        <div class="faq-section__a-inner">
-          <p class="faq-section__a-text">Resposta</p>
-        </div>
-      </details>
-    </li>
-  </ul>
+    html: `<section id="faq-section" aria-labelledby="faq-section-title">
+    <div id="faq-section__header">
+        <h2 id="faq-section__title" id="faq-section-title">Título Principal</h2>
+        <p id="faq-section__subtitle">Sub-título</p>
+    </div>
+    <ul id="faq-section__list">
+        <li id="faq-section__item">
+            <details id="faq-section__item">
+                <summary>
+                    <h3 id="faq-section__q-text">Pergunta</h3>
+                    <span id="faq-section__icon" aria-hidden="true"></span>
+                </summary>
+                <div id="faq-section__a-inner">
+                    <p id="faq-section__a-text">Resposta</p>
+                </div>
+            </details>
+        </li>
+        <li id="faq-section__item">
+            <details id="faq-section__item">
+                <summary>
+                    <h3 id="faq-section__q-text">Pergunta</h3>
+                    <span id="faq-section__icon" aria-hidden="true"></span>
+                </summary>
+                <div id="faq-section__a-inner">
+                    <p id="faq-section__a-text">Resposta</p>
+                </div>
+            </details>
+        </li>
+        <li id="faq-section__item">
+            <details id="faq-section__item">
+                <summary>
+                    <h3 id="faq-section__q-text">Pergunta</h3>
+                    <span id="faq-section__icon" aria-hidden="true"></span>
+                </summary>
+                <div id="faq-section__a-inner">
+                    <p id="faq-section__a-text">Resposta</p>
+                </div>
+            </details>
+        </li>
+        <li id="faq-section__item">
+            <details id="faq-section__item">
+                <summary>
+                    <h3 id="faq-section__q-text">Pergunta</h3>
+                    <span id="faq-section__icon" aria-hidden="true"></span>
+                </summary>
+                <div id="faq-section__a-inner">
+                    <p id="faq-section__a-text">Resposta</p>
+                </div>
+            </details>
+        </li>
+        <li id="faq-section__item">
+            <details id="faq-section__item">
+                <summary>
+                    <h3 id="faq-section__q-text">Pergunta</h3>
+                    <span id="faq-section__icon" aria-hidden="true"></span>
+                </summary>
+                <div id="faq-section__a-inner">
+                    <p id="faq-section__a-text">Resposta</p>
+                </div>
+            </details>
+        </li>
+    </ul>
 </section>`,
     css: `<style>
-  .faq-section {
-    width: 100%;
-    padding: 2rem 16px;
-    box-sizing: border-box;
-    margin: 0 auto 25px;
-    padding-top: 0;
-    font-family: sans-serif;
-  }
-
-  .faq-section__header {
-    text-align: center;
-    margin: 1rem 0;
-  }
-
-  .faq-section__title {
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: bold;
-    color: #333;
-    margin: 0 0 12px;
-    line-height: 98%;
-  }
-
-  .faq-section__subtitle {
-    font-size: 1rem;
-    color: #666;
-    margin: 0;
-  }
-
-  .faq-section__list {
-    list-style: none;
-    margin: 0 auto;
-    padding: 0;
-    max-width: 56rem;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .faq-section__item {
-    background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  .faq-section__item summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 16px 20px;
-    cursor: pointer;
-    list-style: none;
-  }
-
-  .faq-section__item summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .faq-section__item summary:hover {
-    background: #f9f9f9;
-  }
-
-  .faq-section__q-text {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #333;
-    flex: 1;
-  }
-
-  .faq-section__q-text:hover {
-    color: #ea5b0c;
-  }
-
-  .faq-section__icon {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    position: relative;
-  }
-
-  .faq-section__icon::before,
-  .faq-section__icon::after {
-    content: '';
-    position: absolute;
-    background: #888;
-    border-radius: 2px;
-    transition: transform 0.25s ease, opacity 0.25s ease;
-  }
-
-  .faq-section__icon::before {
-    width: 12px;
-    height: 1.5px;
-    top: 9px;
-    left: 4px;
-  }
-
-  .faq-section__icon::after {
-    width: 1.5px;
-    height: 12px;
-    top: 4px;
-    left: 9px;
-  }
-
-  .faq-section__item[open] .faq-section__icon::after {
-    transform: rotate(90deg);
-    opacity: 0;
-  }
-
-  .faq-section__a-inner {
-    padding: 14px 20px 16px;
-    border-top: 1px solid #e5e5e5;
-  }
-
-  .faq-section__a-text {
-    font-size: 0.9rem;
-    color: #555;
-    line-height: 1.6;
-    margin: 0;
-  }
-
-  @media (max-width: 480px) {
-    .faq-section__q-text {
-      font-size: 0.9rem;
+    /*inicio-area-de-faq*/
+    #faq-section {
+        width: 100%;
+        padding: 2rem 16px;
+        box-sizing: border-box;
+        margin: 0 auto 25px;
+        padding-top: 0;
+        font-family: sans-serif;
     }
-  }
+
+    #faq-section__header {
+        text-align: center;
+        margin: 1rem 0;
+    }
+
+    #faq-section__title {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-weight: bold;
+        color: #333;
+        margin: 0 0 12px;
+        line-height: 98%;
+    }
+
+    #faq-section__subtitle {
+        font-size: 1rem;
+        color: #666;
+        margin: 0;
+    }
+
+    #faq-section__list {
+        list-style: none;
+        margin: 0 auto;
+        padding: 0;
+        max-width: 60rem;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    #faq-section__item {
+        background: #fff;
+        border: 1px solid #e5e5e5;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    #faq-section__item summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 16px 20px;
+        cursor: pointer;
+        list-style: none;
+    }
+
+    #faq-section__item summary::-webkit-details-marker {
+        display: none;
+    }
+
+    #faq-section__item summary:hover {
+        background: #f9f9f9;
+    }
+
+    #faq-section__q-text {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #333;
+        flex: 1;
+    }
+
+    #faq-section__q-text:hover {
+        color: #ea5b0c;
+    }
+
+    #faq-section__icon {
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        position: relative;
+    }
+
+    #faq-section__icon::before,
+    #faq-section__icon::after {
+        content: '';
+        position: absolute;
+        background: #888;
+        border-radius: 2px;
+        transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    #faq-section__icon::before {
+        width: 12px;
+        height: 1.5px;
+        top: 9px;
+        left: 4px;
+    }
+
+    #faq-section__icon::after {
+        width: 1.5px;
+        height: 12px;
+        top: 4px;
+        left: 9px;
+    }
+
+    #faq-section__item[open] #faq-section__icon::after {
+        transform: rotate(90deg);
+        opacity: 0;
+    }
+
+    #faq-section__a-inner {
+        padding: 14px 20px 16px;
+        border-top: 1px solid #e5e5e5;
+    }
+
+    #faq-section__a-text {
+        font-size: 0.9rem;
+        color: #555;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    @media (max-width: 480px) {
+        #faq-section__q-text {
+            font-size: 0.9rem;
+        }
+    }
+    /*final-area-de-faq*/
 </style>`
   },
 
@@ -2705,320 +2707,7 @@ SenkoLib.register([
   },
 
 
-  /*@@@@Senko - section-15 */
-  /* variantes: variants/section-15.js */
-  {
-    id: 'section-15',
-    name: 'Section-15',
-    tags: ['Section-15', 'Split', 'Icons', 'Responsivo'],
-    html: `<div class="section-15-container">
-    <div class="section-15">
-        <div class="section-15__content">
-            <!-- ══ TÍTULO + DESCRIÇÃO (apague este bloco se não quiser usar) ══ -->
-            <h2 class="section-15__title">
-                A garantia de que o que está por trás das paredes nunca será um problema
-            </h2>
-            <p class="section-15__desc">
-                Ao escolher um condutor que une a máxima segurança contra incêndios, a eficiência energética para seus
-                equipamentos de alta potência e a flexibilidade necessária para uma instalação ágil, você garante a
-                proteção do seu patrimônio e a tranquilidade de saber que sua estrutura elétrica foi feita para durar
-                uma vida inteira.
-            </p>
-            <!-- ══ FIM TÍTULO + DESCRIÇÃO ══ -->
-            <ul class="section-15__feature-list" aria-label="Benefícios do produto">
-                <li class="section-15__feature-item">
-                    <img class="section-15__feature-item-icon" loading="lazy" src="C:\\Users\\ygorq\\Downloads\\2222455_03-2-1.png"
-                        alt="Ícone" />
-                    <div class="section-15__feature-item-body">
-                        <strong class="section-15__feature-item-title">Manhãs Sem Pausa</strong>
-                        <p class="section-15__feature-item-text">Prepare vitaminas nutritivas em segundos e use a função
-                            autolimpeza para sair de casa sem deixar bagunça na pia</p>
-                    </div>
-                </li>
-                <li class="section-15__feature-item">
-                    <img class="section-15__feature-item-icon" loading="lazy" src="C:\\Users\\ygorq\\Downloads\\2222455_03-2-2.png"
-                        alt="Ícone" />
-                    <div class="section-15__feature-item-body">
-                        <strong class="section-15__feature-item-title">Receitas de uma Só Vez</strong>
-                        <p class="section-15__feature-item-text">A jarra de 2,1L permite cozinhar para a família inteira
-                            sem precisar bater os ingredientes em várias etapas</p>
-                    </div>
-                </li>
-                <li class="section-15__feature-item">
-                    <img class="section-15__feature-item-icon" loading="lazy" src="C:\\Users\\ygorqDownloads\\2222455_03-2-3.png"
-                        alt="Ícone" />
-                    <div class="section-15__feature-item-body">
-                        <strong class="section-15__feature-item-title">Cozinha Sempre Organizada</strong>
-                        <p class="section-15__feature-item-text">O sistema enrola-cabo e o design leve eliminam a briga
-                            com fios e facilitam o armazenamento após o uso</p>
-                    </div>
-                </li>
-                <li class="section-15__feature-item">
-                    <img class="section-15__feature-item-icon" loading="lazy" src="C:\\Users\\ygorq\\Downloads\\2222455_03-2-4.png"
-                        alt="Ícone" />
-                    <div class="section-15__feature-item-body">
-                        <strong class="section-15__feature-item-title">Cuidado com o Bolso</strong>
-                        <p class="section-15__feature-item-text">Durabilidade garantida por lâminas de aço inox e 1 ano
-                            de garantia, evitando gastos inesperados com trocas precoces</p>
-                    </div>
-                </li>
-            </ul>
-        </div>
-        <div class="section-15__image-wrapper">
-            <img class="section-15__image" src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/sessao4.jpg"
-                 alt="Eletricista com capacete branco e colete laranja em obra" />
-        </div>
-    </div>
-</div>`,
-    css: `<style>
-  .section-15-container {
-      background-color: #f16425;
-      padding: 1.5rem;
-      width: 100%;
-      box-sizing: border-box;
-  }
   
-  .section-15 {
-      display: flex;
-      flex-direction: column; /* ← era column-reverse */
-      gap: 1.25rem;
-      margin: 0 auto;
-      width: 100%;
-      box-sizing: border-box;
-  }
-  
-  .section-15__image-wrapper {
-      width: 100%;
-      flex-shrink: 0;
-  }
-  
-  .section-15__image {
-      margin: auto;
-      border-radius: 16px;
-      display: block;
-      object-fit: cover;
-      width: 100%;
-      max-width: 530px;
-      aspect-ratio: 16 / 9;
-  }
-  
-  .section-15__content {
-      display: flex;
-      flex-direction: column;
-      width: 95%;
-      margin: auto;
-      box-sizing: border-box;
-  }
-  
-  .section-15__title {
-      color: #f3f3f3;
-      font-size: 32px;
-      font-weight: 600;
-      line-height: 40px;
-      margin: 0 0 1rem;
-      text-align: left;
-  }
-  
-  .section-15__desc {
-      color: #f3f3f3;
-      font-size: 14px;
-      line-height: 22px;
-      margin: 0 0 1.5rem;
-      text-align: left;
-  }
-  
-  .section-15__feature-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      list-style: none;
-      margin: 0;
-      gap: 22px;
-      padding: 0;
-  }
-  
-  .section-15__feature-item {
-      align-items: flex-start;
-      display: flex;
-      flex-direction: row;
-      gap: 0.75rem;
-  }
-  
-  .section-15__feature-item-icon {
-      border-radius: 8px;
-      flex-shrink: 0;
-      height: 44px;
-      object-fit: contain;
-      width: 44px;
-  }
-  
-  .section-15__feature-item-body {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-  }
-  
-  .section-15__feature-item-title {
-      color: #f5f5f5;
-      font-size: 1.05rem;
-      font-weight: 700;
-      line-height: 1.35;
-      margin: 0;
-  }
-  
-  .section-15__feature-item-text {
-      color: #f5f5f5;
-      font-size: 0.8125rem;
-      line-height: 1.55;
-      margin: 0;
-  }
-  
-  /* ── NOVO: aspect-ratio e desc oculta no mobile ── */
-  @media (max-width: 759px) {
-      .section-15__image {
-          aspect-ratio: 4 / 3;
-      }
-  }
-  
-  @media (min-width: 480px) {
-      .section-15-container {
-          padding: 1.75rem;
-      }
-  
-      .section-15__feature-item-title {
-          font-size: 1.1rem;
-      }
-  }
-  
-  @media (min-width: 768px) {
-      .section-15-container {
-          padding: 2rem;
-      }
-  
-      .section-15 {
-          max-width: 768px;
-      }
-  
-      .section-15__image {
-          border-radius: 20px;
-          aspect-ratio: 16 / 9;
-      }
-  }
-  
-  @media (min-width: 760px) {
-      .section-15 {
-          align-items: center;
-          flex-direction: row;
-          gap: 1.5rem;
-          justify-content: center;
-          max-width: 960px;
-      }
-  
-      .section-15--reverse {
-          flex-direction: row-reverse;
-      }
-  
-      .section-15__image-wrapper {
-          flex: 0 0 48%;
-          max-width: 48%;
-      }
-  
-      .section-15__image {
-          aspect-ratio: 4 / 3;
-          height: 100%;
-          max-height: 420px;
-      }
-  
-      .section-15__content {
-          flex: 1 1 0;
-          min-width: 0;
-      }
-  
-      .section-15__feature-list--icon-right .section-15__feature-item {
-          flex-direction: row-reverse;
-      }
-  
-      .section-15__feature-list--icon-right .section-15__feature-item-body {
-          align-items: flex-end;
-      }
-  
-      .section-15__feature-list--icon-right .section-15__feature-item-title,
-      .section-15__feature-list--icon-right .section-15__feature-item-text {
-          text-align: right;
-      }
-  
-      .section-15__feature-item-icon {
-          height: 48px;
-          width: 48px;
-      }
-  
-      .section-15__feature-item-title {
-          font-size: 1.2rem;
-      }
-  
-      .section-15__feature-item-text {
-          font-size: 0.875rem;
-      }
-  }
-  
-  @media (min-width: 1060px) {
-      .section-15 {
-          max-width: 1060px;
-          gap: 2rem;
-      }
-  
-      .section-15__feature-list {
-          gap: 1.25rem;
-      }
-  }
-  
-  @media (min-width: 1280px) {
-      .section-15 {
-          max-width: 1280px;
-          gap: 2.5rem;
-      }
-  
-      .section-15__image-wrapper {
-          flex: 0 0 50%;
-          max-width: 50%;
-      }
-  
-      .section-15__image {
-          max-height: 460px;
-      }
-  
-      .section-15__feature-item-title {
-          font-size: 1.3rem;
-      }
-  
-      .section-15__feature-item-text {
-          font-size: 0.9rem;
-      }
-  }
-  
-  .is-reverse {
-      flex-direction: row-reverse;
-  }
-  
-  @media (max-width: 760px) {
-      .is-reverse {
-          flex-direction: column-reverse;
-      }
-  }
-  
-  .is-reverse-760 {
-      flex-direction: row-reverse;
-  }
-  
-  @media (max-width: 760px) {
-      .is-reverse-760 {
-          flex-direction: column;
-      }
-  }
-</style>`
-  },
-
-
 /*@@@@Senko - section-16 */
   /* variantes: variants/section-16.js */
   {
@@ -4477,6 +4166,1838 @@ input[type="radio"]:focus + .c32-nav label[for="c32-s2"] {
     tags: ['tsrtwatdwi'],
     html: `adea/.\\jdhzkg.`,
     css: `sefsfzezx\\cft `
+  },
+
+
+/*@@@@Senko - section-15 */
+  /* variantes: app/features/biblioteca/data/variants/section-15.js */
+  {
+    id: 'section-15',
+    name: 'Section-15',
+    tags: ['Split', 'Section 15', '15'],
+    html: `<div class="section-15-container">
+    <div class="section-15">
+        <div class="section-15__content">
+            <!-- ══ TÍTULO + DESCRIÇÃO (apague este bloco se não quiser usar) ══ -->
+            <h2 class="section-15__title">
+                A garantia de que o que está por trás das paredes nunca será um problema
+            </h2>
+            <p class="section-15__desc">
+                Ao escolher um condutor que une a máxima segurança contra incêndios, a eficiência energética para seus
+                equipamentos de alta potência e a flexibilidade necessária para uma instalação ágil, você garante a
+                proteção do seu patrimônio e a tranquilidade de saber que sua estrutura elétrica foi feita para durar
+                uma vida inteira.
+            </p>
+            <!-- ══ FIM TÍTULO + DESCRIÇÃO ══ -->
+            <ul class="section-15__feature-list" aria-label="Benefícios do produto">
+                <li class="section-15__feature-item">
+                    <img class="section-15__feature-item-icon" loading="lazy" src="C:\\Users\\ygorq\\Downloads\\2222455_03-2-1.png"
+                        alt="Ícone" />
+                    <div class="section-15__feature-item-body">
+                        <strong class="section-15__feature-item-title">Manhãs Sem Pausa</strong>
+                        <p class="section-15__feature-item-text">Prepare vitaminas nutritivas em segundos e use a função
+                            autolimpeza para sair de casa sem deixar bagunça na pia</p>
+                    </div>
+                </li>
+                <li class="section-15__feature-item">
+                    <img class="section-15__feature-item-icon" loading="lazy" src="C:\\Users\\ygorq\\Downloads\\2222455_03-2-2.png"
+                        alt="Ícone" />
+                    <div class="section-15__feature-item-body">
+                        <strong class="section-15__feature-item-title">Receitas de uma Só Vez</strong>
+                        <p class="section-15__feature-item-text">A jarra de 2,1L permite cozinhar para a família inteira
+                            sem precisar bater os ingredientes em várias etapas</p>
+                    </div>
+                </li>
+                <li class="section-15__feature-item">
+                    <img class="section-15__feature-item-icon" loading="lazy" src="C:\\Users\\ygorqDownloads\\2222455_03-2-3.png"
+                        alt="Ícone" />
+                    <div class="section-15__feature-item-body">
+                        <strong class="section-15__feature-item-title">Cozinha Sempre Organizada</strong>
+                        <p class="section-15__feature-item-text">O sistema enrola-cabo e o design leve eliminam a briga
+                            com fios e facilitam o armazenamento após o uso</p>
+                    </div>
+                </li>
+                <li class="section-15__feature-item">
+                    <img class="section-15__feature-item-icon" loading="lazy" src="C:\\Users\\ygorq\\Downloads\\2222455_03-2-4.png"
+                        alt="Ícone" />
+                    <div class="section-15__feature-item-body">
+                        <strong class="section-15__feature-item-title">Cuidado com o Bolso</strong>
+                        <p class="section-15__feature-item-text">Durabilidade garantida por lâminas de aço inox e 1 ano
+                            de garantia, evitando gastos inesperados com trocas precoces</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="section-15__image-wrapper">
+            <img class="section-15__image" src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/sessao4.jpg"
+                 alt="Eletricista com capacete branco e colete laranja em obra" />
+        </div>
+    </div>
+</div>`,
+    css: `<style>
+  .section-15-container {
+      background-color: #f16425;
+      padding: 1.5rem;
+      width: 100%;
+      box-sizing: border-box;
+  }
+  
+  .section-15 {
+      display: flex;
+      flex-direction: column-reverse;
+      gap: 1.25rem;
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
+  }
+  
+  .section-15__image-wrapper {
+      width: 100%;
+      flex-shrink: 0;
+  }
+  
+  .section-15__image {
+      margin: auto;
+      border-radius: 16px;
+      display: block;
+      object-fit: cover;
+      width: 100%;
+      max-width: 530px;
+      aspect-ratio: 16 / 9;
+  }
+  
+  .section-15__content {
+      display: flex;
+      flex-direction: column;
+      width: 95%;
+      margin: auto;
+      box-sizing: border-box;
+  }
+  
+  .section-15__title {
+      color: #f3f3f3;
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 40px;
+      margin: 0 0 1rem;
+      text-align: left;
+  }
+  
+  .section-15__desc {
+      color: #f3f3f3;
+      font-size: 14px;
+      line-height: 22px;
+      margin: 0 0 1.5rem;
+      text-align: left;
+  }
+  
+  .section-15__feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      list-style: none;
+      margin: 0;
+      gap: 22px;
+      padding: 0;
+  }
+  
+  .section-15__feature-item {
+      align-items: flex-start;
+      display: flex;
+      flex-direction: row;
+      gap: 0.75rem;
+  }
+  
+  .section-15__feature-item-icon {
+      border-radius: 8px;
+      flex-shrink: 0;
+      height: 44px;
+      object-fit: contain;
+      width: 44px;
+  }
+  
+  .section-15__feature-item-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+  }
+  
+  .section-15__feature-item-title {
+      color: #f5f5f5;
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin: 0;
+  }
+  
+  .section-15__feature-item-text {
+      color: #f5f5f5;
+      font-size: 0.8125rem;
+      line-height: 1.55;
+      margin: 0;
+  }
+  
+  /* ── NOVO: aspect-ratio e desc oculta no mobile ── */
+  @media (max-width: 759px) {
+      .section-15__image {
+          aspect-ratio: 4 / 3;
+      }
+  }
+  
+  @media (min-width: 480px) {
+      .section-15-container {
+          padding: 1.75rem;
+      }
+  
+      .section-15__feature-item-title {
+          font-size: 1.1rem;
+      }
+  }
+  
+  @media (min-width: 768px) {
+      .section-15-container {
+          padding: 2rem;
+      }
+  
+      .section-15 {
+          max-width: 768px;
+      }
+  
+      .section-15__image {
+          border-radius: 20px;
+          aspect-ratio: 16 / 9;
+      }
+  }
+  
+  @media (min-width: 760px) {
+      .section-15 {
+          align-items: center;
+          flex-direction: row;
+          gap: 1.5rem;
+          justify-content: center;
+          max-width: 960px;
+      }
+  
+      .section-15--reverse {
+          flex-direction: row-reverse;
+      }
+  
+      .section-15__image-wrapper {
+          flex: 0 0 48%;
+          max-width: 48%;
+      }
+  
+      .section-15__image {
+          aspect-ratio: 4 / 3;
+          height: 100%;
+          max-height: 420px;
+      }
+  
+      .section-15__content {
+          flex: 1 1 0;
+          min-width: 0;
+      }
+  
+      .section-15__feature-list--icon-right .section-15__feature-item {
+          flex-direction: row-reverse;
+      }
+  
+      .section-15__feature-list--icon-right .section-15__feature-item-body {
+          align-items: flex-end;
+      }
+  
+      .section-15__feature-list--icon-right .section-15__feature-item-title,
+      .section-15__feature-list--icon-right .section-15__feature-item-text {
+          text-align: right;
+      }
+  
+      .section-15__feature-item-icon {
+          height: 48px;
+          width: 48px;
+      }
+  
+      .section-15__feature-item-title {
+          font-size: 1.2rem;
+      }
+  
+      .section-15__feature-item-text {
+          font-size: 0.875rem;
+      }
+  }
+  
+  @media (min-width: 1060px) {
+      .section-15 {
+          max-width: 1060px;
+          gap: 2rem;
+      }
+  
+      .section-15__feature-list {
+          gap: 1.25rem;
+      }
+  }
+  
+  @media (min-width: 1280px) {
+      .section-15 {
+          max-width: 1280px;
+          gap: 2.5rem;
+      }
+  
+      .section-15__image-wrapper {
+          flex: 0 0 50%;
+          max-width: 50%;
+      }
+  
+      .section-15__image {
+          max-height: 460px;
+      }
+  
+      .section-15__feature-item-title {
+          font-size: 1.3rem;
+      }
+  
+      .section-15__feature-item-text {
+          font-size: 0.9rem;
+      }
+  }
+  
+  .is-reverse {
+      flex-direction: row-reverse;
+  }
+  
+  @media (max-width: 760px) {
+      .is-reverse {
+          flex-direction: column-reverse;
+      }
+  }
+  
+  .is-reverse-760 {
+      flex-direction: row-reverse;
+  }
+  
+  @media (max-width: 760px) {
+      .is-reverse-760 {
+          flex-direction: column;
+      }
+  }
+</style>`
+  },
+
+
+/*@@@@Senko - section-27 */
+  /* variantes: app/features/biblioteca/data/variants/section-27.js */
+  {
+    id: 'section-27',
+    name: 'Section-27',
+    tags: ['grid', '21', 'split', 'carrossel', 'animado'],
+    html: `<section class="section-27-container" aria-label="Estilo e detalhes da Havaianas Top Senses Areia/Areia">
+    <article class="section-27" aria-labelledby="section-21-title">
+        <div class="section-27__content">
+            <h2 class="section-27__title" id="section-21-title">
+                Versatilidade que simplifica o visual
+            </h2>
+            <p class="section-27__text">
+                Tom areia, conforto de borracha e visual clássico para usar sem pensar duas vezes.
+            </p>
+        </div>
+        <input class="section-27__control" type="radio" name="section-21-carousel" id="section-21-slide-1"
+            checked="" aria-label="Mostrar primeira imagem">
+        <input class="section-27__control" type="radio" name="section-21-carousel" id="section-21-slide-2"
+            aria-label="Mostrar próxima imagem">
+        <input class="section-27__control" type="radio" name="section-21-carousel" id="section-21-slide-3"
+            aria-label="Mostrar última imagem">
+        <div class="section-27__gallery" aria-label="Espaços para imagens em recorte diagonal">
+            <div class="section-27__viewport">
+                <div class="section-27__track">
+                    <figure class="section-27__panel section-27__panel--first">
+                        <img class="section-27__image"
+                            src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-mao-exibindo-produto-1225195-1225196-1225197-1225198-1225199-05-3.webp"
+                            alt="Imagem ilustrativa das tiras texturizadas da Havaianas Top Senses Areia/Areia" width="420"
+                            height="320" loading="lazy" decoding="async">
+                    </figure>
+                    <figure class="section-27__panel section-27__panel--middle">
+                        <img class="section-27__image"
+                            src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-mao-exibindo-produto-1225195-1225196-1225197-1225198-1225199-05-2.webp"
+                            alt="Imagem ilustrativa do solado macio da Havaianas Top Senses Areia/Areia" width="420" height="320"
+                            loading="lazy" decoding="async">
+                    </figure>
+                    <figure class="section-27__panel section-27__panel--last">
+                        <img class="section-27__image"
+                            src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-modelo-shopping-lifestyle-1225195-1225196-1225197-1225198-1225199-05-1.webp"
+                            alt="Imagem lateral ilustrativa da Havaianas Top Senses Areia/Areia" width="420" height="320"
+                            loading="lazy" decoding="async">
+                    </figure>
+                </div>
+            </div>
+            <nav class="section-27__arrows" aria-label="Controles das imagens em destaque">
+                <label class="section-27__arrow section-27__arrow--right section-27__arrow--next-1"
+                    for="section-21-slide-2" role="button" aria-label="Ver próxima imagem">›</label>
+                <label class="section-27__arrow section-27__arrow--left section-27__arrow--prev-2"
+                    for="section-21-slide-1" role="button" aria-label="Ver imagem anterior">‹</label>
+                <label class="section-27__arrow section-27__arrow--right section-27__arrow--next-2"
+                    for="section-21-slide-3" role="button" aria-label="Ver próxima imagem">›</label>
+                <label class="section-27__arrow section-27__arrow--left section-27__arrow--prev-3"
+                    for="section-21-slide-2" role="button" aria-label="Ver imagem anterior">‹</label>
+                <label class="section-27__arrow section-27__arrow--left section-27__arrow--prev-3-tablet"
+                    for="section-21-slide-1" role="button"
+                    aria-label="Voltar para as primeiras imagens">‹</label>
+            </nav>
+        </div>
+    </article>
+</section>`,
+    css: `<style>
+    .section-27 {
+        width: 100%;
+        min-height: 280px;
+        overflow: hidden;
+        position: relative;
+        display: grid;
+        align-items: stretch;
+        gap: 18px;
+        padding: 42px 18px 30px;
+        background: #ffffff;
+        border-radius: 6px;
+        color: #6e0c2a;
+        font-family: sans-serif;
+        isolation: isolate;
+        box-shadow: 0 12px 34px rgba(62, 7, 23, 0.08);
+        animation: rich-fade-up 0.82s ease both;
+    }
+
+    .section-27::before {
+        content: "";
+        position: absolute;
+        inset: 0 auto auto 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #3e0717 0%, #6e0c2a 62%, #792d41 100%);
+        clip-path: polygon(0 0, 92% 0, 55% 100%, 0 100%);
+        z-index: 0;
+        animation: rich-wine-glow 7s ease-in-out infinite alternate;
+    }
+
+    .section-27::after {
+        content: "";
+        position: absolute;
+        inset: 12px auto auto 18px;
+        width: 46%;
+        height: 1px;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0));
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .section-27--reverse .section-27__content {
+        order: 2;
+    }
+
+    .section-27--reverse .section-27__gallery {
+        order: 1;
+    }
+
+    .section-27__content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 12px;
+        padding: 0;
+        margin: 0 0 8px 26px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .section-27__title {
+        margin: 0;
+        color: #ffffff;
+        font-size: clamp(1.45rem, 6.7vw, 1.85rem);
+        font-weight: 900;
+        line-height: 0.98;
+        text-transform: uppercase;
+        text-shadow: 0 12px 26px rgba(62, 7, 23, 0.26);
+    }
+
+    .section-27__text {
+        margin: 0;
+        color: #ffffff;
+        font-size: 0.95rem;
+        line-height: 1.55;
+    }
+
+    .section-27__control {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .section-27__gallery {
+        position: relative;
+        display: block;
+        min-height: 245px;
+        height: 100%;
+        z-index: 1;
+    }
+
+    .section-27__viewport {
+        position: relative;
+        width: min(82%, 350px);
+        min-height: inherit;
+        height: 100%;
+        margin: 0 40px 0 auto;
+        overflow: hidden;
+    }
+
+    .section-27__track {
+        position: relative;
+        min-height: inherit;
+        height: 100%;
+        transition: transform 0.35s ease;
+    }
+
+    .section-27__panel {
+        min-height: 0;
+        height: auto;
+        margin: 0;
+        overflow: hidden;
+        background: rgba(121, 45, 65, 0.10);
+        border-radius: 5px;
+        border: 1px solid rgba(121, 45, 65, 0.16);
+        box-shadow: 0 16px 36px rgba(62, 7, 23, 0.16);
+    }
+
+    .section-27__panel--first {
+        clip-path: polygon(23% 0, 100% 0, 76% 100%, 0 100%);
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+    }
+
+    .section-27__panel--middle {
+        clip-path: polygon(23% 0, 100% 0, 76% 100%, 0 100%);
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 100%;
+        width: 100%;
+    }
+
+    .section-27__panel--last {
+        clip-path: polygon(23% 0, 100% 0, 76% 100%, 0 100%);
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 200%;
+        width: 100%;
+    }
+
+    #section-21-slide-1:checked~.section-27__gallery .section-27__track {
+        transform: translateX(0);
+    }
+
+    #section-21-slide-2:checked~.section-27__gallery .section-27__track {
+        transform: translateX(-100%);
+    }
+
+    #section-21-slide-3:checked~.section-27__gallery .section-27__track {
+        transform: translateX(-200%);
+    }
+
+    .section-27__image {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        transition: transform 0.8s ease, filter 0.8s ease;
+    }
+
+    .section-27:hover .section-27__image {
+        transform: scale(1.035);
+        filter: saturate(1.04) contrast(1.04);
+    }
+
+    .section-27__image:not([src]) {
+        opacity: 0;
+    }
+
+    .section-27__arrows {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    .section-27__arrow {
+        position: absolute;
+        top: 50%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border: 1px solid #ff9900;
+        border-radius: 50%;
+        background: #ffffff;
+        color: #6e0c2a;
+        cursor: pointer;
+        font-size: 1.4rem;
+        font-weight: 900;
+        line-height: 1;
+        pointer-events: auto;
+        transform: translateY(-50%);
+        transition: transform 0.28s ease, box-shadow 0.28s ease, color 0.28s ease;
+        animation: section-21-arrow-radiate 1.15s ease-in-out infinite;
+    }
+
+    .section-27__arrow::before,
+    .section-27__arrow::after {
+        content: "";
+        position: absolute;
+        inset: -8px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 153, 0, 0.42);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .section-27__arrow::before {
+        animation: section-21-arrow-ring 1.35s ease-out infinite;
+    }
+
+    .section-27__arrow::after {
+        animation: section-21-arrow-ring 1.35s ease-out 0.38s infinite;
+    }
+
+    .section-27__arrow:hover {
+        color: #3e0717;
+        transform: translateY(-50%) scale(1.06);
+        box-shadow: 0 0 0 5px rgba(121, 45, 65, 0.10), 0 14px 24px rgba(62, 7, 23, 0.16);
+    }
+
+    @keyframes section-21-arrow-radiate {
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 rgba(255, 153, 0, 0.40), 0 8px 18px rgba(62, 7, 23, 0.12);
+        }
+
+        50% {
+            box-shadow: 0 0 0 9px rgba(255, 153, 0, 0.16), 0 0 22px rgba(121, 45, 65, 0.24), 0 14px 26px rgba(62, 7, 23, 0.18);
+        }
+    }
+
+    @keyframes section-21-arrow-ring {
+        0% {
+            opacity: 0.70;
+            transform: scale(0.72);
+        }
+
+        100% {
+            opacity: 0;
+            transform: scale(1.65);
+        }
+    }
+
+    .section-27__arrow--left {
+        left: 0;
+    }
+
+    .section-27__arrow--right {
+        right: 0;
+    }
+
+    #section-21-slide-1:checked~.section-27__gallery .section-27__arrow--next-1 {
+        display: flex;
+    }
+
+    #section-21-slide-2:checked~.section-27__gallery .section-27__arrow--prev-2 {
+        display: flex;
+    }
+
+    #section-21-slide-2:checked~.section-27__gallery .section-27__arrow--next-2 {
+        display: flex;
+    }
+
+    #section-21-slide-3:checked~.section-27__gallery .section-27__arrow--prev-3 {
+        display: flex;
+    }
+
+    @media (min-width: 576px) {
+        .section-27 {
+            padding: 24px 20px;
+        }
+
+        .section-27__title {
+            font-size: 1.9rem;
+        }
+
+        .section-27__gallery {
+            min-height: 230px;
+        }
+
+        .section-27__viewport {
+            width: calc(100% - 86px);
+        }
+
+        .section-27__panel--first {
+            left: 0;
+            width: 56%;
+        }
+
+        .section-27__panel--middle {
+            left: 44%;
+            width: 56%;
+        }
+
+        .section-27__panel--last {
+            left: 88%;
+            width: 56%;
+        }
+
+        #section-21-slide-2:checked~.section-27__gallery .section-27__track {
+            transform: translateX(-44%);
+        }
+
+        #section-21-slide-3:checked~.section-27__gallery .section-27__track {
+            transform: translateX(-44%);
+        }
+
+        #section-21-slide-2:checked~.section-27__gallery .section-27__arrow--next-2 {
+            display: none;
+        }
+
+        #section-21-slide-3:checked~.section-27__gallery .section-27__arrow--prev-3 {
+            display: none;
+        }
+
+        #section-21-slide-3:checked~.section-27__gallery .section-27__arrow--prev-3-tablet {
+            display: flex;
+        }
+    }
+
+    @media (min-width: 768px) {
+        .section-27 {
+            grid-template-columns: minmax(0, 0.75fr) minmax(0, 2.25fr);
+            align-items: stretch;
+            gap: 18px;
+            padding: 24px;
+        }
+
+        .section-27::before {
+            inset: 0 auto 0 0;
+            width: 48%;
+            height: 100%;
+            clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);
+        }
+
+        .section-27__content {
+            width: auto;
+            margin: 0;
+            padding: 0 1.75rem;
+        }
+
+        .section-27__text {
+            font-size: 0.86rem;
+        }
+
+        .section-27--reverse {
+            grid-template-columns: minmax(0, 2.25fr) minmax(0, 0.75fr);
+        }
+
+        .section-27__content {
+            gap: 14px;
+        }
+
+        .section-27__gallery {
+            min-height: 250px;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .section-27 {
+            gap: 22px;
+            padding: 26px;
+        }
+
+        .section-27__title {
+            font-size: 2.15rem;
+        }
+
+        .section-27__gallery {
+            min-height: 270px;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .section-27 {
+            gap: 24px;
+            padding: 28px;
+        }
+
+        .section-27__gallery {
+            min-height: 285px;
+        }
+
+        .section-27__viewport {
+            width: 100%;
+            overflow: visible;
+        }
+
+        #section-21-slide-1:checked~.section-27__gallery .section-27__track,
+        #section-21-slide-2:checked~.section-27__gallery .section-27__track,
+        #section-21-slide-3:checked~.section-27__gallery .section-27__track {
+            transform: none;
+        }
+
+        .section-27__panel--first {
+            left: 0%;
+            width: 37%;
+        }
+
+        .section-27__panel--middle {
+            left: 31%;
+            width: 37%;
+        }
+
+        .section-27__panel--last {
+            left: 63%;
+            width: 37%;
+        }
+
+        .section-27__arrows {
+            display: none;
+        }
+    }
+
+    @media (min-width: 1400px) {
+        .section-27 {
+            gap: 28px;
+            padding: 30px;
+        }
+
+        .section-27__title {
+            font-size: 2.35rem;
+        }
+    }
+</style>`
+  },
+
+
+/*@@@@Senko - section-10 */
+  /* variantes: app/features/biblioteca/data/variants/section-10.js */
+  {
+    id: 'section-10',
+    name: 'Section-10',
+    tags: ['grid', '10', 'carrossel', 'animado'],
+    html: `        <section aria-label="Grid de especificações do produto" style="background-color: #6e0c2a08;">
+            <div class="section-10 section-10--carousel-mobile" aria-labelledby="section-10-title">
+                <h2 class="section-10__title" id="section-10-title">
+                    Detalhes que fazem diferença no uso
+                </h2>
+                <input class="section-10__control" type="radio" name="section-10-carousel" id="section-10-slide-1"
+                    checked="">
+                <input class="section-10__control" type="radio" name="section-10-carousel" id="section-10-slide-2">
+                <input class="section-10__control" type="radio" name="section-10-carousel" id="section-10-slide-3">
+                <input class="section-10__control" type="radio" name="section-10-carousel" id="section-10-slide-4">
+                <div class="section-10__viewport">
+                    <ul class="section-10__track">
+                        <li class="section-10__item">
+                            <figure class="section-10__card">
+                                <div class="section-10__media">
+                                    <img class="section-10__image"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-detalhe-tiras-textura-1225195-1225196-1225197-1225198-1225199-03-1.webp"
+                                        alt="Detalhe ilustrativo das tiras texturizadas da Havaianas Top Senses Areia/Areia"
+                                        loading="lazy" decoding="async">
+                                </div>
+                                <figcaption>
+                                    <h3 class="section-10__card-title">
+                                        Tiras texturizadas em PVC
+                                    </h3>
+                                    <p class="section-10__card-text">
+                                        Tiras mais grossas ajudam na estabilidade e mantêm a sensação de frescor.
+                                    </p>
+                                </figcaption>
+                            </figure>
+                        </li>
+                        <li class="section-10__item">
+                            <figure class="section-10__card">
+                                <div class="section-10__media">
+                                    <img class="section-10__image"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-detalhe-solado-inferior-1225195-1225196-1225197-1225198-1225199-03-2.webp"
+                                        alt="Detalhe ilustrativo do solado da Havaianas Top Senses Areia/Areia" loading="lazy"
+                                        decoding="async">
+                                </div>
+                                <figcaption>
+                                    <h3 class="section-10__card-title">
+                                        Solado macio de borracha
+                                    </h3>
+                                    <p class="section-10__card-text">
+                                        Base 100% borracha, flexível e durável para caminhar com conforto.
+                                    </p>
+                                </figcaption>
+                            </figure>
+                        </li>
+                        <li class="section-10__item">
+                            <figure class="section-10__card">
+                                <div class="section-10__media">
+                                    <img class="section-10__image"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-modelo-passarela-madeira-lifestyle-1225195-1225196-1225197-1225198-1225199-03-3.webp"
+                                        alt="Imagem ilustrativa da cor neutra da Havaianas Top Senses Areia/Areia" loading="lazy"
+                                        decoding="async">
+                                </div>
+                                <figcaption>
+                                    <h3 class="section-10__card-title">
+                                        Areia/Areia fácil de combinar
+                                    </h3>
+                                    <p class="section-10__card-text">
+                                        Cor neutra para compor looks casuais sem pesar no visual.
+                                    </p>
+                                </figcaption>
+                            </figure>
+                        </li>
+                        <li class="section-10__item">
+                            <figure class="section-10__card">
+                                <div class="section-10__media">
+                                    <img class="section-10__image"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-detalhe-logotipo-relevo-1225195-1225196-1225197-1225198-1225199-03-4.webp"
+                                        alt="Detalhe ilustrativo da Havaianas Top Senses Areia/Areia fácil de limpar" loading="lazy"
+                                        decoding="async">
+                                </div>
+                                <figcaption>
+                                    <h3 class="section-10__card-title">
+                                        Fácil de lavar
+                                    </h3>
+                                    <p class="section-10__card-text">
+                                        Pode ser lavado à mão com sabão neutro ou na máquina de lavar roupa.
+                                    </p>
+                                </figcaption>
+                            </figure>
+                        </li>
+                    </ul>
+                </div>
+                <nav class="section-10__controls">
+                    <label class="section-10__button section-10__button--1" for="section-10-slide-1">1</label>
+                    <label class="section-10__button section-10__button--2" for="section-10-slide-2">2</label>
+                    <label class="section-10__button section-10__button--3" for="section-10-slide-3">3</label>
+                    <label class="section-10__button section-10__button--4" for="section-10-slide-4">4</label>
+                </nav>
+            </div>
+        </section>`,
+    css: `    <style>
+        .section-10-container {
+            padding-top: 28px;
+            padding-bottom: 36px;
+        }
+
+        .section-10 {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 28px 16px 34px;
+            background: #ffffff;
+            font-family: sans-serif;
+            color: #6e0c2a;
+            animation: rich-fade-up 0.82s ease both;
+        }
+
+        .section-10__title {
+            margin: 0 auto 22px;
+            color: #3e0717;
+            font-size: 1.55rem;
+            font-weight: 800;
+            line-height: 1.15;
+            text-align: center;
+        }
+
+        .section-10__control {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .section-10__viewport {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .section-10__track {
+            display: flex;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            transition: transform 0.35s ease;
+        }
+
+        .section-10__item {
+            flex: 0 0 100%;
+            min-width: 0;
+            padding: 0 10px;
+        }
+
+        #section-10-slide-1:checked~.section-10__viewport .section-10__track {
+            transform: translateX(0);
+        }
+
+        #section-10-slide-2:checked~.section-10__viewport .section-10__track {
+            transform: translateX(-100%);
+        }
+
+        #section-10-slide-3:checked~.section-10__viewport .section-10__track {
+            transform: translateX(-200%);
+        }
+
+        #section-10-slide-4:checked~.section-10__viewport .section-10__track {
+            transform: translateX(-300%);
+        }
+
+        .section-10__card {
+            display: flex;
+            min-height: 100%;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 14px;
+            text-align: center;
+            transition: transform 0.35s ease;
+        }
+
+        .section-10__media {
+            width: 148px;
+            height: 148px;
+            margin: 0 0 18px;
+            overflow: hidden;
+            border: 1px solid #eadbe1;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 12px 28px rgba(62, 7, 23, 0.08);
+            transition: transform 0.45s ease, border-color 0.45s ease, box-shadow 0.45s ease;
+        }
+
+        .section-10__image {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            object-position: center;
+            transition: transform 0.55s ease, filter 0.55s ease;
+        }
+
+        .section-10__card-title {
+            margin: 0 0 10px;
+            color: #6e0c2a;
+            font-size: 1rem;
+            font-weight: 800;
+            line-height: 1.25;
+        }
+
+        .section-10__card-text {
+            margin: 0 auto;
+            color: #6e0c2a;
+            font-size: 0.86rem;
+            line-height: 1.55;
+        }
+
+        .section-10__controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 8px 0 0;
+            padding-bottom: 22px;
+        }
+
+        .section-10__button {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border: 1px solid #eadbe1;
+            border-radius: 999px;
+            background: #ffffff;
+            color: #6e0c2a;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 800;
+            line-height: 1;
+            transition: transform 0.25s ease, background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .section-10__button::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -17px;
+            width: 0;
+            height: 0;
+            border-right: 8px solid transparent;
+            border-bottom: 10px solid #ff9900;
+            border-left: 8px solid transparent;
+            filter: drop-shadow(0 5px 6px rgba(62, 7, 23, 0.22));
+            opacity: 0;
+            transform: translate(-50%, 6px);
+            transition: opacity 0.25s ease;
+            pointer-events: none;
+        }
+
+        .section-10__button:hover {
+            transform: translateY(-2px);
+            border-color: #792d41;
+            box-shadow: 0 10px 20px rgba(62, 7, 23, 0.12);
+        }
+
+        #section-10-slide-1:checked~.section-10__controls .section-10__button--1,
+        #section-10-slide-2:checked~.section-10__controls .section-10__button--2,
+        #section-10-slide-3:checked~.section-10__controls .section-10__button--3,
+        #section-10-slide-4:checked~.section-10__controls .section-10__button--4 {
+            border-color: #792d41;
+            background: #6e0c2a;
+            color: #ffffff;
+        }
+
+        #section-10-slide-1:checked~.section-10__controls .section-10__button--1::after,
+        #section-10-slide-2:checked~.section-10__controls .section-10__button--2::after,
+        #section-10-slide-3:checked~.section-10__controls .section-10__button--3::after,
+        #section-10-slide-4:checked~.section-10__controls .section-10__button--4::after {
+            opacity: 1;
+            animation: section-10-arrow-bounce 0.82s ease-in-out infinite;
+        }
+
+        @keyframes section-10-arrow-bounce {
+            0%,
+            100% {
+                transform: translate(-50%, 6px);
+            }
+
+            50% {
+                transform: translate(-50%, -1px);
+            }
+        }
+
+        @media (min-width: 576px) {
+            .section-10 {
+                padding: 34px 30px 42px;
+            }
+
+            .section-10__title {
+                max-width: 576px;
+                font-size: 1.85rem;
+            }
+
+            .section-10__media {
+                width: 164px;
+                height: 164px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .section-10 {
+                padding: 38px 28px 46px;
+            }
+
+            .section-10__title {
+                max-width: 768px;
+                margin-bottom: 28px;
+            }
+
+            .section-10__item {
+                flex-basis: 50%;
+                padding: 0 12px;
+            }
+
+            #section-10-slide-1:checked~.section-10__viewport .section-10__track {
+                transform: translateX(0);
+            }
+
+            #section-10-slide-2:checked~.section-10__viewport .section-10__track {
+                transform: translateX(-50%);
+            }
+
+            #section-10-slide-3:checked~.section-10__viewport .section-10__track,
+            #section-10-slide-4:checked~.section-10__viewport .section-10__track {
+                transform: translateX(-100%);
+            }
+
+            .section-10__button--4 {
+                display: none;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .section-10 {
+                padding: 42px 105px 52px;
+            }
+
+            .section-10__title {
+                max-width: 992px;
+                font-size: 2.15rem;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .section-10 {
+                padding: 46px 34px 58px;
+            }
+
+            .section-10__viewport {
+                overflow: visible;
+            }
+
+            .section-10__item {
+                flex-basis: 25%;
+                padding: 0 14px;
+            }
+
+            #section-10-slide-1:checked~.section-10__viewport .section-10__track,
+            #section-10-slide-2:checked~.section-10__viewport .section-10__track,
+            #section-10-slide-3:checked~.section-10__viewport .section-10__track,
+            #section-10-slide-4:checked~.section-10__viewport .section-10__track {
+                transform: none;
+            }
+
+            .section-10__controls {
+                display: none;
+            }
+        }
+    </style>`
+  },
+
+
+/*@@@@Senko - section-23 */
+  /* variantes: app/features/biblioteca/data/variants/section-23.js */
+  {
+    id: 'section-23',
+    name: 'Section-23',
+    tags: ['stories', '23', 'section-23', 'responsivo', 'acessivel'],
+    html: `<section class="lp-stories lp-stories--groups-3" aria-label="Stories visuais e representativos do produto">
+      <span class="lp-stories__target" id="lp-story-produto-1" aria-hidden="true"></span>
+      <span class="lp-stories__target" id="lp-story-produto-2" aria-hidden="true"></span>
+      <span class="lp-stories__target" id="lp-story-uso-1" aria-hidden="true"></span>
+      <span class="lp-stories__target" id="lp-story-uso-2" aria-hidden="true"></span>
+      <span class="lp-stories__target" id="lp-story-detalhes-1" aria-hidden="true"></span>
+      <span class="lp-stories__target" id="lp-story-detalhes-2" aria-hidden="true"></span>
+
+      <nav class="lp-stories__options" aria-label="Containers de stories">
+        <a class="lp-stories__option lp-stories__option--produto" href="#lp-story-produto-1" aria-label="Abrir container Pra quem ama o mar, slide 1 de 2">
+          <span class="lp-stories__ring" aria-hidden="true">
+            <img class="lp-stories__thumb" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-estudio-1225024-02.webp" alt="Miniatura de Pra quem ama o mar" width="400" height="400" loading="lazy">
+          </span>
+          <span class="lp-stories__name">Pra quem ama o mar</span>
+        </a>
+        <a class="lp-stories__option lp-stories__option--uso" href="#lp-story-uso-1" aria-label="Abrir container Estilo e Conforto, slide 1 de 2">
+          <span class="lp-stories__ring" aria-hidden="true">
+            <img class="lp-stories__thumb" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-rua-cafe-1225024-04.webp" alt="Miniatura de Estilo e Conforto" width="400" height="400" loading="lazy">
+          </span>
+          <span class="lp-stories__name">Estilo e Conforto</span>
+        </a>
+        <a class="lp-stories__option lp-stories__option--detalhes" href="#lp-story-detalhes-1" aria-label="Abrir container Sempre com voce, slide 1 de 2">
+          <span class="lp-stories__ring" aria-hidden="true">
+            <img class="lp-stories__thumb" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-deck-praia-1225024-06.webp" alt="Miniatura de Sempre com voce" width="400" height="400" loading="lazy">
+          </span>
+          <span class="lp-stories__name">Sempre com voce</span>
+        </a>
+      </nav>
+
+      <div class="lp-stories__panels" aria-live="polite">
+        <article class="lp-stories__panel panel-produto-1 is-default" aria-labelledby="lp-story-produto-1-title" aria-describedby="lp-story-produto-1-caption">
+          <div class="lp-stories__viewer">
+            <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-1" aria-label="Progresso do container Pra quem ama o mar"></div>
+            <header class="lp-stories__topbar" aria-label="Identificação do container Pra quem ama o mar">
+              <img class="lp-stories__avatar" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp" alt="Logo dos stories" width="400" height="400" loading="lazy">
+              <h3 class="lp-stories__title" id="lp-story-produto-1-title">Pra quem ama o mar</h3>
+              <span class="lp-stories__step">1/2</span>
+            </header>
+            <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
+              <div class="lp-stories__media">
+                <picture class="lp-stories__picture">
+                  <source media="(max-width: 499px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-estudio-1225024-02.webp?ims=400x">
+                  <source media="(min-width: 992px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-estudio-1225024-02.webp?ims=960x">
+                  <source media="(min-width: 500px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-estudio-1225024-02.webp?ims=430x">
+                  <img class="lp-stories__image" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-estudio-1225024-02.webp?ims=960x" alt="Havaianas Top Nautical branco e marinho nos pes em estudio com fundo claro" width="1080" height="1920" loading="lazy">
+                </picture>
+              </div>
+              <figcaption class="lp-stories__caption is-top" id="lp-story-produto-1-caption">Listras classicas para quem e do mar.</figcaption>
+            </figure>
+            <nav class="lp-stories__nav" aria-label="Navegar slides do container Pra quem ama o mar">
+              <a class="lp-stories__arrow prev" href="#lp-story-detalhes-2" aria-label="Slide anterior de Pra quem ama o mar"><span aria-hidden="true">&lsaquo;</span></a>
+              <a class="lp-stories__arrow next" href="#lp-story-produto-2" aria-label="Proximo slide de Pra quem ama o mar"><span aria-hidden="true">&rsaquo;</span></a>
+            </nav>
+          </div>
+        </article>
+
+        <article class="lp-stories__panel panel-produto-2" aria-labelledby="lp-story-produto-2-title" aria-describedby="lp-story-produto-2-caption">
+          <div class="lp-stories__viewer">
+            <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-2" aria-label="Progresso do container Pra quem ama o mar"></div>
+            <header class="lp-stories__topbar" aria-label="Identificação do container Pra quem ama o mar">
+              <img class="lp-stories__avatar" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp" alt="Logo dos stories" width="400" height="400" loading="lazy">
+              <h3 class="lp-stories__title" id="lp-story-produto-2-title">Pra quem ama o mar</h3>
+              <span class="lp-stories__step">2/2</span>
+            </header>
+            <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
+              <div class="lp-stories__media">
+                <picture class="lp-stories__picture">
+                  <source media="(max-width: 499px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-estudio-1225024-03.webp?ims=400x">
+                  <source media="(min-width: 992px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-estudio-1225024-03.webp?ims=960x">
+                  <source media="(min-width: 500px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-estudio-1225024-03.webp?ims=430x">
+                  <img class="lp-stories__image" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-estudio-1225024-03.webp?ims=960x" alt="Havaianas Top Nautical marinho e branco nos pes em estudio de moda" width="1080" height="1920" loading="lazy">
+                </picture>
+              </div>
+              <figcaption class="lp-stories__caption is-top" id="lp-story-produto-2-caption">Top Nautical no pe, leveza no dia.</figcaption>
+            </figure>
+            <nav class="lp-stories__nav" aria-label="Navegar slides do container Pra quem ama o mar">
+              <a class="lp-stories__arrow prev" href="#lp-story-produto-1" aria-label="Slide anterior de Pra quem ama o mar"><span aria-hidden="true">&lsaquo;</span></a>
+              <a class="lp-stories__arrow next" href="#lp-story-uso-1" aria-label="Proximo slide de Pra quem ama o mar"><span aria-hidden="true">&rsaquo;</span></a>
+            </nav>
+          </div>
+        </article>
+
+        <article class="lp-stories__panel panel-uso-1" aria-labelledby="lp-story-uso-1-title" aria-describedby="lp-story-uso-1-caption">
+          <div class="lp-stories__viewer">
+            <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-1" aria-label="Progresso do container Estilo e Conforto"></div>
+            <header class="lp-stories__topbar" aria-label="Identificação do container Estilo e Conforto">
+              <img class="lp-stories__avatar" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp" alt="Logo dos stories" width="400" height="400" loading="lazy">
+              <h3 class="lp-stories__title" id="lp-story-uso-1-title">Estilo e Conforto</h3>
+              <span class="lp-stories__step">1/2</span>
+            </header>
+            <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
+              <div class="lp-stories__media">
+                <picture class="lp-stories__picture">
+                  <source media="(max-width: 499px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-rua-cafe-1225024-04.webp?ims=400x">
+                  <source media="(min-width: 992px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-rua-cafe-1225024-04.webp?ims=960x">
+                  <source media="(min-width: 500px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-rua-cafe-1225024-04.webp?ims=430x">
+                  <img class="lp-stories__image" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-rua-cafe-1225024-04.webp?ims=960x" alt="Havaianas Top Nautical branco e marinho nos pes em calcada com cafe ao fundo" width="1080" height="1920" loading="lazy">
+                </picture>
+              </div>
+              <figcaption class="lp-stories__caption is-top" id="lp-story-uso-1-caption">Estilo atemporal para sair leve.</figcaption>
+            </figure>
+            <nav class="lp-stories__nav" aria-label="Navegar slides do container Estilo e Conforto">
+              <a class="lp-stories__arrow prev" href="#lp-story-produto-2" aria-label="Slide anterior de Estilo e Conforto"><span aria-hidden="true">&lsaquo;</span></a>
+              <a class="lp-stories__arrow next" href="#lp-story-uso-2" aria-label="Proximo slide de Estilo e Conforto"><span aria-hidden="true">&rsaquo;</span></a>
+            </nav>
+          </div>
+        </article>
+
+        <article class="lp-stories__panel panel-uso-2" aria-labelledby="lp-story-uso-2-title" aria-describedby="lp-story-uso-2-caption">
+          <div class="lp-stories__viewer">
+            <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-2" aria-label="Progresso do container Estilo e Conforto"></div>
+            <header class="lp-stories__topbar" aria-label="Identificação do container Estilo e Conforto">
+              <img class="lp-stories__avatar" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp" alt="Logo dos stories" width="400" height="400" loading="lazy">
+              <h3 class="lp-stories__title" id="lp-story-uso-2-title">Estilo e Conforto</h3>
+              <span class="lp-stories__step">2/2</span>
+            </header>
+            <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
+              <div class="lp-stories__media">
+                <picture class="lp-stories__picture">
+                  <source media="(max-width: 499px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-piscina-1225024-05.webp?ims=400x">
+                  <source media="(min-width: 992px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-piscina-1225024-05.webp?ims=960x">
+                  <source media="(min-width: 500px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-piscina-1225024-05.webp?ims=430x">
+                  <img class="lp-stories__image" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-piscina-1225024-05.webp?ims=960x" alt="Havaianas Top Nautical marinho e branco nos pes a beira da piscina" width="1080" height="1920" loading="lazy">
+                </picture>
+              </div>
+              <figcaption class="lp-stories__caption is-top" id="lp-story-uso-2-caption">Solado 100% borracha, pronto para dias de piscina.</figcaption>
+            </figure>
+            <nav class="lp-stories__nav" aria-label="Navegar slides do container Estilo e Conforto">
+              <a class="lp-stories__arrow prev" href="#lp-story-uso-1" aria-label="Slide anterior de Estilo e Conforto"><span aria-hidden="true">&lsaquo;</span></a>
+              <a class="lp-stories__arrow next" href="#lp-story-detalhes-1" aria-label="Proximo slide de Estilo e Conforto"><span aria-hidden="true">&rsaquo;</span></a>
+            </nav>
+          </div>
+        </article>
+
+        <article class="lp-stories__panel panel-detalhes-1" aria-labelledby="lp-story-detalhes-1-title" aria-describedby="lp-story-detalhes-1-caption">
+          <div class="lp-stories__viewer">
+            <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-1" aria-label="Progresso do container Sempre com voce"></div>
+            <header class="lp-stories__topbar" aria-label="Identificação do container Sempre com voce">
+              <img class="lp-stories__avatar" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp" alt="Logo dos stories" width="400" height="400" loading="lazy">
+              <h3 class="lp-stories__title" id="lp-story-detalhes-1-title">Sempre com voce</h3>
+              <span class="lp-stories__step">1/2</span>
+            </header>
+            <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
+              <div class="lp-stories__media">
+                <picture class="lp-stories__picture">
+                  <source media="(max-width: 499px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-deck-praia-1225024-06.webp?ims=400x">
+                  <source media="(min-width: 992px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-deck-praia-1225024-06.webp?ims=960x">
+                  <source media="(min-width: 500px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-deck-praia-1225024-06.webp?ims=430x">
+                  <img class="lp-stories__image" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-deck-praia-1225024-06.webp?ims=960x" alt="Havaianas Top Nautical branco e marinho nos pes sobre deck de madeira na praia" width="1080" height="1920" loading="lazy">
+                </picture>
+              </div>
+              <figcaption class="lp-stories__caption is-top" id="lp-story-detalhes-1-caption">Do calcadao ao mar em cada passo.</figcaption>
+            </figure>
+            <nav class="lp-stories__nav" aria-label="Navegar slides do container Sempre com voce">
+              <a class="lp-stories__arrow prev" href="#lp-story-uso-2" aria-label="Slide anterior de Sempre com voce"><span aria-hidden="true">&lsaquo;</span></a>
+              <a class="lp-stories__arrow next" href="#lp-story-detalhes-2" aria-label="Proximo slide de Sempre com voce"><span aria-hidden="true">&rsaquo;</span></a>
+            </nav>
+          </div>
+        </article>
+
+        <article class="lp-stories__panel panel-detalhes-2" aria-labelledby="lp-story-detalhes-2-title" aria-describedby="lp-story-detalhes-2-caption">
+          <div class="lp-stories__viewer">
+            <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-2" aria-label="Progresso do container Sempre com voce"></div>
+            <header class="lp-stories__topbar" aria-label="Identificação do container Sempre com voce">
+              <img class="lp-stories__avatar" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp" alt="Logo dos stories" width="400" height="400" loading="lazy">
+              <h3 class="lp-stories__title" id="lp-story-detalhes-2-title">Sempre com voce</h3>
+              <span class="lp-stories__step">2/2</span>
+            </header>
+            <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
+              <div class="lp-stories__media">
+                <picture class="lp-stories__picture">
+                  <source media="(max-width: 499px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-praia-ondas-1225024-07.webp?ims=400x">
+                  <source media="(min-width: 992px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-praia-ondas-1225024-07.webp?ims=960x">
+                  <source media="(min-width: 500px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-praia-ondas-1225024-07.webp?ims=430x">
+                  <img class="lp-stories__image" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-praia-ondas-1225024-07.webp?ims=960x" alt="Havaianas Top Nautical marinho e branco nos pes na areia com ondas do mar" width="1080" height="1920" loading="lazy">
+                </picture>
+              </div>
+              <figcaption class="lp-stories__caption is-top" id="lp-story-detalhes-2-caption">Na areia, pertinho do mar.</figcaption>
+            </figure>
+            <nav class="lp-stories__nav" aria-label="Navegar slides do container Sempre com voce">
+              <a class="lp-stories__arrow prev" href="#lp-story-detalhes-1" aria-label="Slide anterior de Sempre com voce"><span aria-hidden="true">&lsaquo;</span></a>
+              <a class="lp-stories__arrow next" href="#lp-story-produto-1" aria-label="Proximo slide de Sempre com voce"><span aria-hidden="true">&rsaquo;</span></a>
+            </nav>
+          </div>
+        </article>
+      </div>
+    </section>`,
+    css: `<style>
+  /* Guia rapido de midias:
+     - Slide/story: proporcao 9:16. Recomendado 1080x1920 px. Minimo seguro 860x1530 px.
+     - Poster de video: use a mesma proporcao do slide, preferencialmente 1080x1920 px.
+     - Miniatura da bolinha: proporcao 1:1. Recomendado 400x400 px. Minimo seguro 220x220 px.
+     - Desktop largo: o viewer muda para 16:10 e usa imagem em 960x para ocupar melhor a area.
+     - Use imagens verticais nas maiores dimensoes possiveis. Em desktop largo existe zoom/corte, e arquivos maiores preservam nitidez.
+     - Ajuste o foco da midia por slide para topo, centro ou base conforme a posicao do objeto principal.
+     - Limites do componente: ate 3 containers e ate 4 slides por container.
+     - Imagens horizontais funcionam, mas serao cortadas pelo object-fit: cover.
+     - Formatos comuns: webp, jpg, png para imagem; webm ou mp4 para video.
+  */
+  .lp-stories {
+    --story-max-width: 430px;
+    --story-max-height: 68vh;
+    --story-aspect-ratio: 9 / 16;
+    --story-ring-size: 4.6rem;
+    --story-thumb-size: 4.1rem;
+    --story-ring-bg: conic-gradient(from -20deg, #ff9900, #111827, #ffcc66, #ff9900);
+    width: min(100%, 520px);
+    margin: 0 auto 2.5rem;
+    padding: 0 0.8rem;
+    font-family: sans-serif;
+    color: #111827;
+    position: relative;
+  }
+
+  .lp-stories__target {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    scroll-margin-top: 0;
+  }
+
+  .lp-stories__options {
+    display: grid;
+    grid-template-columns: repeat(var(--story-groups, 3), minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .lp-stories--groups-1 .lp-stories__options {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  .lp-stories--groups-2 .lp-stories__options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lp-stories--groups-3 .lp-stories__options {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .lp-stories__option {
+    min-width: 0;
+    padding: 0;
+    color: #111827;
+    background: transparent;
+    display: grid;
+    justify-items: center;
+    gap: 0.5rem;
+    text-align: center;
+    text-decoration: none;
+    transition: transform 160ms ease;
+  }
+
+  .lp-stories__option:hover {
+    transform: translateY(-2px);
+  }
+
+  .lp-stories__option:focus-visible {
+    outline: none;
+  }
+
+  .lp-stories__option:focus-visible .lp-stories__ring,
+  #lp-story-produto-1:target ~ .lp-stories__options .lp-stories__option--produto .lp-stories__ring,
+  #lp-story-produto-2:target ~ .lp-stories__options .lp-stories__option--produto .lp-stories__ring,
+  #lp-story-produto-3:target ~ .lp-stories__options .lp-stories__option--produto .lp-stories__ring,
+  #lp-story-produto-4:target ~ .lp-stories__options .lp-stories__option--produto .lp-stories__ring,
+  #lp-story-uso-1:target ~ .lp-stories__options .lp-stories__option--uso .lp-stories__ring,
+  #lp-story-uso-2:target ~ .lp-stories__options .lp-stories__option--uso .lp-stories__ring,
+  #lp-story-uso-3:target ~ .lp-stories__options .lp-stories__option--uso .lp-stories__ring,
+  #lp-story-uso-4:target ~ .lp-stories__options .lp-stories__option--uso .lp-stories__ring,
+  #lp-story-detalhes-1:target ~ .lp-stories__options .lp-stories__option--detalhes .lp-stories__ring,
+  #lp-story-detalhes-2:target ~ .lp-stories__options .lp-stories__option--detalhes .lp-stories__ring,
+  #lp-story-detalhes-3:target ~ .lp-stories__options .lp-stories__option--detalhes .lp-stories__ring,
+  #lp-story-detalhes-4:target ~ .lp-stories__options .lp-stories__option--detalhes .lp-stories__ring {
+    outline: 3px solid rgba(255, 153, 0, 0.28);
+    outline-offset: 4px;
+  }
+
+  .lp-stories__ring {
+    width: var(--story-ring-size);
+    height: var(--story-ring-size);
+    padding: 4px;
+    border-radius: 50%;
+    background: var(--story-ring-bg);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+  }
+
+  .lp-stories__thumb {
+    width: var(--story-thumb-size);
+    height: var(--story-thumb-size);
+    border: 4px solid #fff;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #f1f5f9;
+  }
+
+  .lp-stories__name {
+    max-width: 5.2rem;
+    color: #334155;
+    font-size: clamp(0.75rem, 1.2vw, 0.875rem);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .lp-stories__panel {
+    display: none;
+  }
+
+  .lp-stories__panel.is-default {
+    display: block;
+  }
+
+  .lp-stories__target:target ~ .lp-stories__panels .lp-stories__panel.is-default {
+    display: none;
+  }
+
+  #lp-story-produto-1:target ~ .lp-stories__panels .panel-produto-1,
+  #lp-story-produto-2:target ~ .lp-stories__panels .panel-produto-2,
+  #lp-story-produto-3:target ~ .lp-stories__panels .panel-produto-3,
+  #lp-story-produto-4:target ~ .lp-stories__panels .panel-produto-4,
+  #lp-story-uso-1:target ~ .lp-stories__panels .panel-uso-1,
+  #lp-story-uso-2:target ~ .lp-stories__panels .panel-uso-2,
+  #lp-story-uso-3:target ~ .lp-stories__panels .panel-uso-3,
+  #lp-story-uso-4:target ~ .lp-stories__panels .panel-uso-4,
+  #lp-story-detalhes-1:target ~ .lp-stories__panels .panel-detalhes-1,
+  #lp-story-detalhes-2:target ~ .lp-stories__panels .panel-detalhes-2,
+  #lp-story-detalhes-3:target ~ .lp-stories__panels .panel-detalhes-3,
+  #lp-story-detalhes-4:target ~ .lp-stories__panels .panel-detalhes-4 {
+    display: block;
+  }
+
+  .lp-stories__viewer {
+    width: min(100%, var(--story-max-width));
+    max-height: var(--story-max-height);
+    aspect-ratio: var(--story-aspect-ratio);
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #020617;
+    color: #fff;
+    box-shadow: 0 18px 54px rgba(15, 23, 42, 0.22);
+    isolation: isolate;
+  }
+
+  .lp-stories__viewer::before {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 128px;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.68), rgba(0, 0, 0, 0));
+    pointer-events: none;
+  }
+
+  .lp-stories__progress {
+    --slides: 3;
+    --index: 1;
+    --gap: 4px;
+    position: absolute;
+    z-index: 4;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    height: 3px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: repeating-linear-gradient(to right, rgba(255, 255, 255, 0.32) 0 calc((100% / var(--slides)) - var(--gap)), transparent calc((100% / var(--slides)) - var(--gap)) calc(100% / var(--slides)));
+  }
+
+  .lp-stories__progress::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, #fff 0 calc((100% / var(--slides)) * var(--index)), transparent 0);
+    mask: repeating-linear-gradient(to right, #000 0 calc((100% / var(--slides)) - var(--gap)), transparent calc((100% / var(--slides)) - var(--gap)) calc(100% / var(--slides)));
+  }
+
+  .lp-stories__progress--slides-1 {
+    --slides: 1;
+  }
+
+  .lp-stories__progress--slides-2 {
+    --slides: 2;
+  }
+
+  .lp-stories__progress--slides-3 {
+    --slides: 3;
+  }
+
+  .lp-stories__progress--slides-4 {
+    --slides: 4;
+  }
+
+  .lp-stories__progress--index-1 {
+    --index: 1;
+  }
+
+  .lp-stories__progress--index-2 {
+    --index: 2;
+  }
+
+  .lp-stories__progress--index-3 {
+    --index: 3;
+  }
+
+  .lp-stories__progress--index-4 {
+    --index: 4;
+  }
+
+  .lp-stories__topbar {
+    position: absolute;
+    z-index: 5;
+    top: 26px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .lp-stories__avatar {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 auto;
+    border: 2px solid rgba(255, 255, 255, 0.78);
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .lp-stories__title {
+    min-width: 0;
+    flex: 1;
+    margin: 0;
+    color: #fff;
+    font-size: clamp(0.875rem, 1.2vw, 1rem);
+    line-height: 1.2;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.45);
+  }
+
+  .lp-stories__step {
+    font-size: clamp(0.75rem, 1vw, 0.875rem);
+    font-weight: 700;
+    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.45);
+  }
+
+  .lp-stories__figure,
+  .lp-stories__media,
+  .lp-stories__picture {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
+  .lp-stories__figure {
+    position: relative;
+  }
+
+  .lp-stories__image,
+  .lp-stories__video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: center center;
+    background: #020617;
+  }
+
+  .lp-stories__figure--focus-top .lp-stories__image,
+  .lp-stories__figure--focus-top .lp-stories__video {
+    object-position: center top;
+  }
+
+  .lp-stories__figure--focus-center .lp-stories__image,
+  .lp-stories__figure--focus-center .lp-stories__video {
+    object-position: center center;
+  }
+
+  .lp-stories__figure--focus-bottom .lp-stories__image,
+  .lp-stories__figure--focus-bottom .lp-stories__video {
+    object-position: center bottom;
+  }
+
+  .lp-stories__caption {
+    position: absolute;
+    z-index: 3;
+    left: 16px;
+    right: 16px;
+    margin: 0;
+    padding: 16px;
+    border-radius: 8px;
+    color: #fff;
+    font-size: clamp(0.875rem, 1.4vw, 1rem);
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+    background: linear-gradient(90deg, var(--story-caption-bg-start), var(--story-caption-bg-end));
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.38);
+  }
+
+  .lp-stories__caption.is-top {
+    top: 84px;
+  }
+
+  .lp-stories__caption.is-bottom {
+    bottom: 22px;
+  }
+
+  .lp-stories__nav {
+    position: absolute;
+    z-index: 6;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: auto;
+  }
+
+  .lp-stories__arrow {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 8px;
+    color: transparent;
+    background: transparent;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    font-size: 0;
+    line-height: 1;
+    text-decoration: none;
+    pointer-events: auto;
+  }
+
+  .lp-stories__arrow.prev {
+    display: none;
+  }
+
+  @media (min-width: 576px) {
+    .lp-stories {
+      padding-inline: 1rem;
+      --story-max-height: min(680px, 78vh);
+      --story-ring-size: 5.25rem;
+      --story-thumb-size: 4.75rem;
+    }
+
+    .lp-stories__options {
+      gap: 1rem;
+    }
+
+    .lp-stories__name {
+      max-width: 6rem;
+    }
+
+    .lp-stories__caption {
+      border-radius: 12px;
+    }
+
+    .lp-stories__viewer {
+      border-radius: 16px;
+    }
+
+    .lp-stories__nav {
+      pointer-events: none;
+    }
+
+    .lp-stories__arrow.prev {
+      display: grid;
+      border-radius: 0 12px 12px 0;
+    }
+
+    .lp-stories__arrow {
+      position: static;
+      width: 48px;
+      height: 56px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      color: #fff;
+      background: rgba(15, 23, 42, 0.42);
+      font-size: clamp(1.75rem, 3vw, 2rem);
+    }
+
+    .lp-stories__arrow.next {
+      border-radius: 12px 0 0 12px;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .lp-stories {
+      --story-max-width: 960px;
+      --story-max-height: none;
+      --story-aspect-ratio: 16 / 10;
+      width: min(100%, 1040px);
+    }
+
+    .lp-stories__viewer {
+      width: min(100%, var(--story-max-width));
+    }
+
+    .lp-stories__caption {
+      right: auto;
+      max-width: 560px;
+    }
+
+    .lp-stories__caption.is-top {
+      top: 96px;
+    }
+
+    .lp-stories__caption.is-bottom {
+      bottom: 32px;
+    }
+  }
+
+  .lp-stories {
+    --story-ring-bg: conic-gradient(from -20deg, #ff262b, #9e070a, #ff262b);
+    --story-caption-bg-start: rgba(2, 6, 23, 0.72);
+    --story-caption-bg-end: rgba(2, 6, 23, 0.46);
+  }
+</style>`
   },
 
 ]);

@@ -1,3 +1,3 @@
 // @ts-nocheck
-/* Template editavel do HTML Basico. O editor GitHub sobrescreve este arquivo. */
+/* Template editavel do HTML Basico, pertencente somente a Biblioteca. */
 window.SenkoCopyBaseDefaultHtml = window.SenkoCopyBaseDefaultHtml || '';

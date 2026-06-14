@@ -1,8 +1,8 @@
 // @ts-nocheck
 SenkoLib.registerVariant('section-15', [
-/*@@@@Senko - variacao1 */
+/*@@@@Senko - varicao-1 */
   {
-    name: 'variacao1',
+    name: 'varicao-1',
     html: `        <div class="section-15-container">
             <div class="section-15">
                 <div class="section-15__content">

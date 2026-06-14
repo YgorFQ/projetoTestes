@@ -4,26 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SenkoLib</title>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../shared/styles/img-tools.css">
-</head>
-<body>
-  <header class="header">
-    <div class="header__logo">ImgScope<span>.sources</span></div>
-    <div class="header__status">
-      <div class="dot" id="dot"></div>
-      <span id="status-text">aguardando</span>
-    </div>
-  </header>
+  <script>
+    (function () {
+      function storedTheme() {
+        try {
+          return localStorage.getItem('senkolib_theme') || 'light';
+        } catch (error) {
+          return 'light';
+        }
+      }
 
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+      }
+
+      applyTheme(storedTheme());
+      window.addEventListener('storage', function (event) {
+        if (event.key === 'senkolib_theme') applyTheme(storedTheme());
+      });
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../shared/styles/senko-tokens.css">
+  <link rel="stylesheet" href="../../shared/styles/senko-components.css">
+  <link rel="stylesheet" href="styles/sources.css?v=20260613-base-mode-visibility">
+</head>
+<body class="sources-page">
   <main>
     <section class="view is-active" id="view-sources" aria-label="Sources">
       <div class="main-grid">
         <div class="panel panel--left">
-          <div class="panel__head">
-            <div class="panel__label">HTML</div>
-          </div>
-
           <div class="source-options">
             <div class="control-group">
               <label class="field-label" for="source-multiplier">Multiplicador</label>
@@ -45,6 +57,14 @@
             <div class="control-group source-options__wide">
               <label class="field-label" for="source-breakpoints">Breakpoints analisados</label>
               <input class="text-input" id="source-breakpoints" type="text" inputmode="numeric" value="320, 375, 425, 768, 1024, 1440" placeholder="Ex: 320, 375, 425, 768, 1024, 1440">
+            </div>
+
+            <div class="control-group">
+              <span class="field-label">Ultima medida</span>
+              <label class="option-check" for="skip-last-multiplier">
+                <input id="skip-last-multiplier" type="checkbox">
+                <span>nao multiplicar</span>
+              </label>
             </div>
 
             <div class="control-group source-options__wide">
@@ -76,11 +96,11 @@
         </div>
 
         <div class="panel">
-          <div class="panel__head">
-            <div class="panel__label">Output</div>
+          <div class="panel__head panel__head--actions">
+            <button class="copy-btn" id="btn-select-all" type="button" disabled>Selecionar todas</button>
+            <button class="copy-btn" id="btn-build-final" type="button" disabled>preencher automaticamente</button>
+            <button class="copy-btn" id="btn-copy-final" type="button" disabled>copiar</button>
             <div class="panel__label panel__badge" id="out-badge">-</div>
-            <button class="copy-btn" id="btn-build-final" type="button" disabled>gerar conteudo final</button>
-            <button class="copy-btn" id="btn-copy-final" type="button" disabled>copiar final</button>
           </div>
           <div class="output" id="output">
             <div class="empty" id="empty">
@@ -99,8 +119,8 @@
     </section>
   </main>
 
-  <script src="../../shared/scripts/img-tools-utils.js"></script>
-  <script src="scripts/picture.js"></script>
+  <script src="scripts/sources-utils.js"></script>
+  <script src="scripts/picture.js?v=20260527-picture-replace"></script>
   <script src="scripts/sources-app.js"></script>
 </body>
 </html>

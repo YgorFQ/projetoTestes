@@ -1,47 +1,80 @@
 (function () {
+  const api = window.SenkoImagens;
   const SUPPORTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
   // Estado em memoria da aba Compressor. Cada item representa um arquivo carregado.
   let items = [];
+  let isDownloadingEach = false;
 
   function initCompressor() {
-    const input = $('image-input');
-    const dropzone = $('dropzone');
-    const quality = $('quality-range');
+    const input = api.$('image-input');
+    const quality = api.$('quality-range');
+    const pickButton = api.$('btn-pick-images');
+    const view = api.$('view-compressor');
+    const results = api.query('.compressor-results');
 
     // Upload via seletor tradicional.
-    input.addEventListener('change', event => addFiles(Array.from(event.target.files || [])));
+    pickButton.addEventListener('click', () => input.click());
+    input.addEventListener('change', event => {
+      addFiles(Array.from(event.target.files || []));
+      input.value = '';
+    });
     quality.addEventListener('input', () => {
-      $('quality-value').textContent = quality.value + '%';
-      document.querySelectorAll('[data-quality]').forEach(btn => btn.classList.toggle('is-active', btn.dataset.quality === quality.value));
+      api.$('quality-value').textContent = quality.value + '%';
+      api.queryAll('[data-quality]').forEach(btn => btn.classList.toggle('is-active', btn.dataset.quality === quality.value));
     });
 
-    document.querySelectorAll('[data-quality]').forEach(button => {
+    api.queryAll('[data-quality]').forEach(button => {
       button.addEventListener('click', () => {
         quality.value = button.dataset.quality;
         quality.dispatchEvent(new Event('input'));
       });
     });
 
-    // Drag-and-drop visual: previne o navegador de abrir a imagem solta.
+    bindImageDrop(api.getRoot(), results, files => addFiles(files), () => view && view.classList.contains('is-active'));
+    api.$('btn-compress').addEventListener('click', compressAll);
+    api.$('btn-sort-images').addEventListener('click', sortImagesByName);
+    api.$('btn-download-each').addEventListener('click', downloadEach);
+    api.$('btn-download-all').addEventListener('click', downloadAll);
+    api.$('btn-clear-images').addEventListener('click', clearImages);
+  }
+
+  function bindImageDrop(target, highlight, onFiles, isActive) {
+    if (!target || !highlight) return;
+    let dragDepth = 0;
+
     ['dragenter', 'dragover'].forEach(type => {
-      dropzone.addEventListener(type, event => {
+      target.addEventListener(type, event => {
+        if (isActive && !isActive()) return;
+        if (!hasDraggedFiles(event)) return;
         event.preventDefault();
-        dropzone.classList.add('is-dragover');
+        if (type === 'dragenter') dragDepth += 1;
+        if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy';
+        highlight.classList.add('is-dragover');
       });
     });
 
-    ['dragleave', 'drop'].forEach(type => {
-      dropzone.addEventListener(type, event => {
-        event.preventDefault();
-        dropzone.classList.remove('is-dragover');
-      });
+    target.addEventListener('dragleave', event => {
+      if (isActive && !isActive()) return;
+      if (!hasDraggedFiles(event)) return;
+      event.preventDefault();
+      dragDepth = Math.max(0, dragDepth - 1);
+      if (!dragDepth) highlight.classList.remove('is-dragover');
     });
 
-    dropzone.addEventListener('drop', event => addFiles(Array.from(event.dataTransfer.files || [])));
-    $('btn-compress').addEventListener('click', compressAll);
-    $('btn-download-all').addEventListener('click', downloadAll);
-    $('btn-clear-images').addEventListener('click', clearImages);
+    target.addEventListener('drop', event => {
+      if (isActive && !isActive()) return;
+      if (!hasDraggedFiles(event)) return;
+      event.preventDefault();
+      dragDepth = 0;
+      highlight.classList.remove('is-dragover');
+      onFiles(Array.from(event.dataTransfer.files || []));
+    });
+  }
+
+  function hasDraggedFiles(event) {
+    const types = event.dataTransfer && event.dataTransfer.types;
+    return !!types && Array.prototype.indexOf.call(types, 'Files') !== -1;
   }
 
   function addFiles(files) {
@@ -52,7 +85,7 @@
     items = items.concat(accepted.map(file => ({
       id: crypto.randomUUID(),
       file,
-      outputName: compressedName(file.name, file.type),
+      outputName: defaultOutputName(file.name, file.type),
       originalUrl: URL.createObjectURL(file),
       resultBlob: null,
       resultUrl: null,
@@ -60,12 +93,12 @@
     })));
 
     renderList();
-    setStatus('', `${accepted.length} imagem(ns) adicionadas`);
+    api.setStatus('', `${accepted.length} imagem(ns) adicionadas`);
   }
 
   function renderList() {
     // A lista e redesenhada de forma simples sempre que o estado muda.
-    const list = $('image-list');
+    const list = api.$('image-list');
     list.innerHTML = '';
 
     if (!items.length) {
@@ -79,10 +112,12 @@
       items.forEach(item => list.appendChild(buildImageCard(item)));
     }
 
-    $('compressor-badge').textContent = items.length + ' arquivo' + (items.length !== 1 ? 's' : '');
-    $('btn-compress').disabled = !items.length;
-    $('btn-clear-images').disabled = !items.length;
-    $('btn-download-all').disabled = !items.some(item => item.resultBlob);
+    api.$('compressor-badge').textContent = items.length + ' arquivo' + (items.length !== 1 ? 's' : '');
+    api.$('btn-compress').disabled = isDownloadingEach || !items.length;
+    api.$('btn-sort-images').disabled = isDownloadingEach || items.length < 2;
+    api.$('btn-clear-images').disabled = isDownloadingEach || !items.length;
+    api.$('btn-download-each').disabled = isDownloadingEach || !items.length;
+    api.$('btn-download-all').disabled = isDownloadingEach || !items.length;
   }
 
   function buildImageCard(item) {
@@ -92,25 +127,25 @@
 
     const sourceUrl = item.resultUrl || item.originalUrl;
     const resultSize = item.resultBlob ? item.resultBlob.size : 0;
-    const saving = savingPercent(item.file.size, resultSize);
+    const saving = api.savingPercent(item.file.size, resultSize);
 
     card.innerHTML = `
       <div class="image-preview"><img src="${sourceUrl}" alt=""></div>
       <div class="image-info">
-        <div class="image-name" title="${esc(item.file.name)}">${esc(item.file.name)}</div>
+        <div class="image-name" title="${api.esc(item.file.name)}">${api.esc(item.file.name)}</div>
         <span class="tag">${item.file.type.replace('image/', '')}</span>
         <label class="filename-field">
           <span class="stat__label">Nome final</span>
-          <input class="filename-input" type="text" value="${esc(item.outputName)}" data-action="rename">
+          <input class="filename-input" type="text" value="${api.esc(item.outputName)}" data-action="rename">
         </label>
         <div class="image-stats">
           <div class="stat">
             <span class="stat__label">Original</span>
-            <span class="stat__value">${formatBytes(item.file.size)}</span>
+            <span class="stat__value">${api.formatBytes(item.file.size)}</span>
           </div>
           <div class="stat">
             <span class="stat__label">Final</span>
-            <span class="stat__value">${item.resultBlob ? formatBytes(resultSize) : item.status}</span>
+            <span class="stat__value">${item.resultBlob ? api.formatBytes(resultSize) : item.status}</span>
           </div>
         </div>
         <div class="stat">
@@ -118,34 +153,58 @@
           <span class="stat__value ${saving ? 'saving' : ''}">${item.resultBlob ? `${saving}%` : '-'}</span>
         </div>
         <div class="image-card__actions">
-          <button class="btn btn-ghost" type="button" data-action="download" ${item.resultBlob ? '' : 'disabled'}>Baixar</button>
+          <button class="btn btn-ghost" type="button" data-action="download">Baixar</button>
           <button class="btn btn-ghost" type="button" data-action="remove">Remover</button>
         </div>
       </div>
     `;
 
     card.querySelector('[data-action="download"]').addEventListener('click', () => {
-      if (item.resultBlob) downloadBlob(item.resultBlob, normalizedOutputName(item));
+      api.downloadBlob(outputBlobFor(item), normalizedOutputName(item));
     });
-    card.querySelector('[data-action="rename"]').addEventListener('input', event => {
+    const nameInput = card.querySelector('[data-action="rename"]');
+    nameInput.addEventListener('input', event => {
       item.outputName = event.target.value;
+      showInputEnd(event.target);
     });
-    card.querySelector('[data-action="rename"]').addEventListener('blur', event => {
+    nameInput.addEventListener('blur', event => {
       item.outputName = normalizedOutputName(item);
       event.target.value = item.outputName;
+      showInputEnd(event.target);
     });
+    showInputEnd(nameInput);
     card.querySelector('[data-action="remove"]').addEventListener('click', () => removeItem(item.id));
 
     return card;
   }
 
+  function showInputEnd(input) {
+    requestAnimationFrame(() => {
+      input.scrollLeft = input.scrollWidth;
+    });
+  }
+
+  function sortImagesByName() {
+    if (items.length < 2) return;
+
+    items.sort((left, right) => {
+      return String(left.outputName || left.file.name)
+        .localeCompare(String(right.outputName || right.file.name), 'pt-BR', {
+          numeric: true,
+          sensitivity: 'base',
+        });
+    });
+    renderList();
+    api.setStatus('ok', 'ordenado A-Z');
+  }
+
   async function compressAll() {
     if (!items.length) return;
-    const quality = Number($('quality-range').value) / 100;
-    const pngColors = Number($('png-colors').value);
+    const quality = Number(api.$('quality-range').value) / 100;
+    const pngColors = Number(api.$('png-colors').value);
 
-    $('btn-compress').disabled = true;
-    setStatus('busy', 'comprimindo...');
+    api.$('btn-compress').disabled = true;
+    api.setStatus('busy', 'comprimindo...');
 
     // Processa em sequencia para manter a interface previsivel em maquinas mais fracas.
     for (const item of items) {
@@ -166,7 +225,7 @@
     }
 
     renderList();
-    setStatus('ok', 'compressao finalizada');
+    api.setStatus('ok', 'compressao finalizada');
   }
 
   async function compressImage(file, quality, pngColors) {
@@ -187,7 +246,7 @@
       alwaysKeepResolution: true,
       fileType: file.type,
       useWebWorker: true,
-      libURL: new URL('vendor/browser-image-compression.js', window.location.href).href,
+      libURL: api.assetUrl('vendor/browser-image-compression.js'),
     });
   }
 
@@ -228,14 +287,97 @@
 
   async function downloadAll() {
     // O ZIP usa nomes ja normalizados e resolve duplicidades antes de gerar o arquivo.
-    const ready = items.filter(item => item.resultBlob);
+    const ready = items.filter(item => outputBlobFor(item));
     if (!ready.length || !window.JSZip) return;
 
-    const zip = new JSZip();
     const zipNames = uniqueZipNames(ready);
-    ready.forEach(item => zip.file(zipNames.get(item.id), item.resultBlob));
-    const blob = await zip.generateAsync({ type: 'blob' });
-    downloadBlob(blob, 'imagens-comprimidas.zip');
+    const blob = await createZipBlob(ready, zipNames);
+    api.downloadBlob(blob, zipFilename(ready));
+  }
+
+  async function downloadEach() {
+    const ready = items.filter(item => outputBlobFor(item));
+    if (!ready.length || isDownloadingEach) return;
+
+    isDownloadingEach = true;
+    renderList();
+
+    try {
+      const names = uniqueZipNames(ready);
+
+      if (canSaveToDirectory()) {
+        await saveEachToDirectory(ready, names);
+      } else if (window.JSZip) {
+        const blob = await createZipBlob(ready, names);
+        api.downloadBlob(blob, zipFilename(ready));
+        api.setStatus('ok', 'zip unico iniciado');
+      } else {
+        api.setStatus('', 'download em lote indisponivel');
+      }
+    } catch (error) {
+      if (error && error.name === 'AbortError') {
+        api.setStatus('', 'download cancelado');
+      } else {
+        console.error(error);
+        api.setStatus('', 'erro ao baixar');
+      }
+    } finally {
+      isDownloadingEach = false;
+      renderList();
+    }
+  }
+
+  function canSaveToDirectory() {
+    return typeof window.showDirectoryPicker === 'function';
+  }
+
+  async function saveEachToDirectory(ready, names) {
+    const directory = await window.showDirectoryPicker({ mode: 'readwrite' });
+    const usedNames = new Set();
+
+    for (let i = 0; i < ready.length; i += 1) {
+      const item = ready[i];
+      const filename = await availableDirectoryName(directory, names.get(item.id), usedNames);
+      api.setStatus('busy', `salvando ${i + 1}/${ready.length}`);
+
+      const handle = await directory.getFileHandle(filename, { create: true });
+      const writable = await handle.createWritable();
+      await writable.write(outputBlobFor(item));
+      await writable.close();
+      item.outputName = filename;
+    }
+
+    api.setStatus('ok', `${ready.length} arquivo(s) salvos`);
+  }
+
+  async function availableDirectoryName(directory, filename, usedNames) {
+    const parts = splitFilename(filename);
+    let index = 1;
+    let candidate = filename;
+
+    while (usedNames.has(candidate.toLowerCase()) || await directoryFileExists(directory, candidate)) {
+      index += 1;
+      candidate = `${parts.base}-${index}${parts.ext}`;
+    }
+
+    usedNames.add(candidate.toLowerCase());
+    return candidate;
+  }
+
+  async function directoryFileExists(directory, filename) {
+    try {
+      await directory.getFileHandle(filename);
+      return true;
+    } catch (error) {
+      if (error && error.name === 'NotFoundError') return false;
+      throw error;
+    }
+  }
+
+  async function createZipBlob(ready, names) {
+    const zip = new JSZip();
+    ready.forEach(item => zip.file(names.get(item.id), outputBlobFor(item)));
+    return zip.generateAsync({ type: 'blob' });
   }
 
   function removeItem(id) {
@@ -257,19 +399,30 @@
     });
     items = [];
     renderList();
-    setStatus('', 'aguardando');
+    api.setStatus('', 'aguardando');
   }
 
-  function compressedName(filename, mime) {
-    // Sugestao inicial de nome, mantendo a extensao do arquivo original.
+  function defaultOutputName(filename, mime) {
+    // Sugestao inicial de nome, mantendo o nome original sempre que possivel.
     const originalExt = filename.match(/\.[^.]+$/);
-    const ext = originalExt ? originalExt[0] : mime === 'image/jpeg' ? '.jpg' : mime === 'image/png' ? '.png' : '.webp';
-    return `${fileBaseName(filename)}-compressed${ext}`;
+    const ext = originalExt ? originalExt[0] : fallbackExtensionForMime(mime);
+    const safeName = sanitizeFilename(filename || `imagem${ext}`);
+    if (!safeName || safeName === ext) return `imagem${ext}`;
+    return originalExt || hasExtension(safeName, ext) ? safeName : `${safeName}${ext}`;
+  }
+
+  function outputBlobFor(item) {
+    return item.resultBlob || item.file;
+  }
+
+  function zipFilename(readyItems) {
+    const hasCompressed = readyItems.some(item => item.resultBlob);
+    return hasCompressed ? 'imagens-comprimidas.zip' : 'imagens-renomeadas.zip';
   }
 
   function normalizedOutputName(item) {
     // Garante nome seguro e extensao coerente antes de download/ZIP.
-    const fallback = compressedName(item.file.name, item.file.type);
+    const fallback = defaultOutputName(item.file.name, item.file.type);
     const ext = extensionFor(item.file);
     const raw = String(item.outputName || '').trim();
     const safeName = sanitizeFilename(raw || fallback);
@@ -294,8 +447,21 @@
     return '.jpg';
   }
 
+  function fallbackExtensionForMime(mime) {
+    if (mime === 'image/png') return '.png';
+    if (mime === 'image/webp') return '.webp';
+    return '.jpg';
+  }
+
   function hasExtension(filename, ext) {
     return filename.toLowerCase().endsWith(ext);
+  }
+
+  function splitFilename(filename) {
+    const extMatch = filename.match(/\.[^.]+$/);
+    const ext = extMatch ? extMatch[0] : '';
+    const base = ext ? filename.slice(0, -ext.length) : filename;
+    return { base, ext };
   }
 
   function uniqueZipNames(readyItems) {
@@ -334,5 +500,5 @@
     return names;
   }
 
-  window.initCompressor = initCompressor;
+  api.initCompressor = initCompressor;
 })();

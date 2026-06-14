@@ -1,4 +1,10 @@
 // @ts-nocheck
+/*
+ * INDEPENDENCIA DE FEATURE:
+ * Este modulo GitHub pertence somente a Biblioteca. Ele pode depender de
+ * SenkoLib e dos scripts da Biblioteca, mas nenhuma outra feature deve
+ * importar ou chamar estas funcoes globais.
+ */
 /* ═══════════════════════════════════════════════════════════════════════
    senko-github-variants.js — Módulo GitHub para variantes
 
@@ -24,9 +30,9 @@
                              updateVariantsCount, renderGrid,
                              closeNewVariantModal, closeEditVariantModal)
 
-   ORDEM DE CARREGAMENTO no index.html (GitHub Pages only):
-     <script src="app/integrations/github/scripts/senko-github-v2.js"></script>
-     <script src="app/integrations/github/scripts/senko-github-variants.js"></script>
+   ORDEM DE CARREGAMENTO:
+     O register.js da Biblioteca carrega primeiro senko-github-v2.js e depois
+     este módulo. O index.html principal não conhece esta integração.
 ═══════════════════════════════════════════════════════════════════════ */
 
 
@@ -127,6 +133,80 @@ function ghvGetVariantFile(parentId) {
 /* ═══════════════════════════════════════════════════════════════════════
    UTILITÁRIO: Atualiza variante na memória do SenkoLib após edição
 ═══════════════════════════════════════════════════════════════════════ */
+/*
+ * Mantem data/manifest.js sincronizado com os arquivos de variantes.
+ *
+ * Esse manifesto substitui as antigas tags inseridas no index.html. Assim, a
+ * Biblioteca controla seus proprios dados e pode ser removida sem deixar
+ * referencias no shell ou em outra feature.
+ */
+var GH_VARIANT_MANIFEST_PATH = 'app/features/biblioteca/data/manifest.js';
+
+function ghvParseManifest(content) {
+  /*
+   * O catalogo possui somente uma atribuicao JSON a uma variavel da propria
+   * Biblioteca. Extrair o lado direito evita executar codigo vindo da rede.
+   */
+  var assignment = 'window.SenkoBibliotecaManifest';
+  var assignmentIndex = content.indexOf(assignment);
+  var equalsIndex = content.indexOf('=', assignmentIndex);
+  var source = equalsIndex === -1
+    ? ''
+    : content.slice(equalsIndex + 1).trim().replace(/;\s*$/, '');
+
+  if (assignmentIndex === -1 || !source) {
+    throw new Error('Catalogo da Biblioteca possui formato invalido.');
+  }
+  return JSON.parse(source);
+}
+
+function ghvSerializeManifest(manifest) {
+  return (
+    '/* Catalogo privado da Biblioteca. Atualizado pela integracao GitHub. */\n' +
+    'window.SenkoBibliotecaManifest = ' +
+    JSON.stringify(manifest, null, 2) +
+    ';\n'
+  );
+}
+
+function ghvSetManifestEntry(parentId, shouldInclude) {
+  var entry = 'variants/' + parentId.toLowerCase() + '.js';
+
+  return githubGetFile(GH_VARIANT_MANIFEST_PATH).then(function (data) {
+    var manifest;
+    try {
+      manifest = ghvParseManifest(data.content);
+    } catch (error) {
+      throw new Error('Catalogo da Biblioteca possui JavaScript invalido.');
+    }
+
+    if (!Array.isArray(manifest.layouts)) manifest.layouts = [];
+    if (!Array.isArray(manifest.variants)) manifest.variants = [];
+
+    var index = manifest.variants.indexOf(entry);
+    if (shouldInclude && index === -1) manifest.variants.push(entry);
+    if (!shouldInclude && index !== -1) manifest.variants.splice(index, 1);
+    if ((shouldInclude && index !== -1) || (!shouldInclude && index === -1)) {
+      return GH_VARIANT_MANIFEST_PATH;
+    }
+
+    return githubPutFile(
+      GH_VARIANT_MANIFEST_PATH,
+      ghvSerializeManifest(manifest),
+      data.sha,
+      shouldInclude
+        ? '[SenkoLib] register variant file: ' + parentId
+        : '[SenkoLib] unregister variant file: ' + parentId
+    ).then(function () {
+      return GH_VARIANT_MANIFEST_PATH;
+    });
+  });
+}
+
+window.SenkoBibliotecaGithubManifest = {
+  setVariantEntry: ghvSetManifestEntry
+};
+
 function ghvUpdateVariantInMemory(parentId, originalName, newName, html, css) {
   var variants  = SenkoLib.getVariants(parentId);
   var origLower = originalName.toLowerCase();
@@ -247,22 +327,8 @@ function githubCreateVariant(parentId, variantName, objectCode) {
       null,
       '[SenkoLib] create variants file: ' + parentId
     ).then(function () {
-      ghSetStatus('Atualizando index.html…', 'saving');
-
-      return githubGetFile('index.html').then(function (indexData) {
-        var anchor = '  <script src="app/features/biblioteca/scripts/script.js"></script>';
-        if (indexData.content.indexOf('app/features/biblioteca/data/variants/' + parentId + '.js') !== -1) {
-          return; // já existe, seguro
-        }
-        var tag      = '  <script src="app/features/biblioteca/data/variants/' + parentId.toLowerCase() + '.js"></script>\n';
-        var newIndex = indexData.content.replace(anchor, tag + anchor);
-        return githubPutFile(
-          'index.html',
-          newIndex,
-          indexData.sha,
-          '[SenkoLib] register variant script: ' + parentId
-        );
-      });
+      ghSetStatus('Atualizando manifesto da Biblioteca…', 'saving');
+      return ghvSetManifestEntry(parentId, true);
     }).then(function () {
       var html = document.getElementById('newVarHtml') ? document.getElementById('newVarHtml').value : '';
       var css  = document.getElementById('newVarCss')  ? document.getElementById('newVarCss').value  : '';
@@ -423,12 +489,13 @@ function githubDeleteVariant(parentId, variantNome) {
             throw new Error('GitHub DELETE falhou (' + res.status + '): ' + (e.message || fileInfo.path));
           });
         }
-        return true;
+        return ghvSetManifestEntry(parentId, false);
       }).then(function () {
         ghvRemoveVariantFromMemory(parentId, variantNome);
         ghSetStatus('✓ Arquivo de variantes removido: ' + fileInfo.path, 'ok');
-        /* arquivo foi deletado — monitora o index.html como proxy */
-        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch('index.html');
+        if (typeof ghStartDeployWatch === 'function') {
+          ghStartDeployWatch(GH_VARIANT_MANIFEST_PATH);
+        }
         return true;
       });
     }
@@ -778,11 +845,17 @@ function ghvInjectStyles() {
 /* ═══════════════════════════════════════════════════════════════════════
    INICIALIZAÇÃO — só ativa no GitHub Pages
 ═══════════════════════════════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded', function () {
+function initSenkoBibliotecaGithubVariants() {
+  if (initSenkoBibliotecaGithubVariants.initialized) return;
+  initSenkoBibliotecaGithubVariants.initialized = true;
   if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;
 
   ghvInjectStyles();
   ghvCreateDeleteModal();
   ghvInjectNewVariantButton();
   ghvInjectEditVariantButton();
-});
+}
+
+window.SenkoBibliotecaGithubVariants = {
+  init: initSenkoBibliotecaGithubVariants
+};

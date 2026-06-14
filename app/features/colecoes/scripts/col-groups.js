@@ -125,16 +125,18 @@ var ColGroups = (function () {
        remove caracteres especiais, colapsa hífens múltiplos.
     ───────────────────────────────────────────────────────────────── */
     slugify: function (name) {
-      if (typeof senkoSlugifyIdentifier === 'function') {
-        return senkoSlugifyIdentifier(name);
-      }
+      /*
+       * Slug local de Colecoes.
+       * Nao usa helpers da Biblioteca para que grupos continuem funcionando
+       * mesmo quando app/features/biblioteca for removida.
+       */
       return (name || '')
         .toLowerCase()
         .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')  /* remove acentos */
-        .replace(/[^a-z0-9]+/g, '-')      /* especiais/separadores → hífen */
-        .replace(/-+/g, '-')              /* colapsa hífens duplos */
-        .replace(/^-|-$/g, '');           /* remove hífen das bordas */
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
     },
 
   };

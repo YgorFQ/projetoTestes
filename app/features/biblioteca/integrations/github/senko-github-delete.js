@@ -1,4 +1,10 @@
 // @ts-nocheck
+/*
+ * INDEPENDENCIA DE FEATURE:
+ * Este modulo GitHub pertence somente a Biblioteca. Ele pode depender de
+ * SenkoLib e dos scripts da Biblioteca, mas nenhuma outra feature deve
+ * importar ou chamar estas funcoes globais.
+ */
 /* ═══════════════════════════════════════════════════════════════════════
    senko-github-delete.js — Módulo: excluir layout direto no GitHub
    ───────────────────────────────────────────────────────────────────────
@@ -10,9 +16,9 @@
      - Remove o arquivo de variantes inteiro na feature Biblioteca, se existir
      - Remove o layout da memória (SenkoLib) e atualiza o grid
 
-   COMO USAR:
-     Adicione no index.html APÓS o senko-github-v2.js:
-       <script src="senko-github-delete.js"></script>
+   CARREGAMENTO:
+     O register.js da Biblioteca carrega este módulo depois do GitHub base e
+     do módulo de variantes. O index.html principal não conhece esta função.
 
    REQUISITOS:
      - senko-github-v2.js carregado antes (usa ghGetToken, ghEnsureToken,
@@ -205,6 +211,15 @@ function githubDeleteLayout(layoutId, deleteVariants) {
               info.sha,
               '[SenkoLib] delete variants: ' + layoutId
             );
+          }).then(function () {
+            /*
+             * O modulo de variantes e carregado antes deste arquivo e e o
+             * unico responsavel por escrever no manifesto da Biblioteca.
+             */
+            if (window.SenkoBibliotecaGithubManifest) {
+              return window.SenkoBibliotecaGithubManifest.setVariantEntry(layoutId, false);
+            }
+            return true;
           });
         }
         return true;
@@ -213,7 +228,13 @@ function githubDeleteLayout(layoutId, deleteVariants) {
         ghRemoveLayoutFromMemory(layoutId);
         ghSetStatus('✓ Layout excluído: ' + layoutId, 'ok');
         if (typeof ghUnlockSave === 'function') ghUnlockSave();
-        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch('index.html');
+        if (typeof ghStartDeployWatch === 'function') {
+          ghStartDeployWatch(
+            deleteVariants
+              ? 'app/features/biblioteca/data/manifest.js'
+              : target.entry.path
+          );
+        }
         renderGrid();
         return true;
       });
@@ -479,7 +500,9 @@ function ghInjectDeleteStyles() {
 
 var TRASH_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>';
 
-document.addEventListener('DOMContentLoaded', function () {
+function initSenkoBibliotecaGithubDelete() {
+  if (initSenkoBibliotecaGithubDelete.initialized) return;
+  initSenkoBibliotecaGithubDelete.initialized = true;
   if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;
   ghInjectDeleteStyles();
   ghCreateDeleteModal();
@@ -525,4 +548,8 @@ document.addEventListener('DOMContentLoaded', function () {
       ghOpenDeleteModal(layoutId, layoutName, variantCount);
     });
   }
-});
+}
+
+window.SenkoBibliotecaGithubDelete = {
+  init: initSenkoBibliotecaGithubDelete
+};

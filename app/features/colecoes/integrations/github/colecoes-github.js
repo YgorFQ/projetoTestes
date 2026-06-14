@@ -1,41 +1,195 @@
 // @ts-nocheck
-/* ═══════════════════════════════════════════════════════════════════════
-   senko-github-col.js — Módulo GitHub para o sistema de Coleções
+/*
+ * colecoes-github.js - Integracao GitHub exclusiva da feature Colecoes.
+ *
+ * REGRA DE INDEPENDENCIA:
+ * - Este arquivo nao importa nem chama o GitHub da Biblioteca.
+ * - Todas as funcoes compartilhaveis do antigo senko-github-v2.js foram
+ *   duplicadas aqui com prefixo colGithub*.
+ * - Se app/features/biblioteca for removida, criar grupos, colecoes e
+ *   layouts de Colecoes continua usando somente ColLib, ColGroups e este
+ *   arquivo.
+ */
 
-   RESPONSABILIDADE:
-     Toda operação de escrita no GitHub relativa a Coleções:
-       — Flush de grupos pendentes    (colGhFlushGroups)
-       — Criar coleção nova           (colGhCreateCollection)
-       — Editar metadados de coleção  (colGhEditCollection)
-       — Excluir coleção              (colGhDeleteCollection)
-       — Adicionar layout à coleção   (colGhAddLayout)
-       — Editar layout de coleção     (colGhEditLayout)
-       — Excluir layout de coleção    (colGhDeleteLayout)
-     Injeta botões "GitHub" nos modais de coleções (col-modals.js).
+/* =====================================================================
+   CORE GITHUB LOCAL DE COLECOES
+   Mantido dentro da propria feature para nao depender da Biblioteca.
+===================================================================== */
+var COL_GITHUB_CONFIG_KEY = 'senkolib_colecoes_github_config';
+var COL_GITHUB_TOKEN_KEY  = 'senkolib_colecoes_github_token';
+var COL_GITHUB_CONFIG = (function () {
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem(COL_GITHUB_CONFIG_KEY) || 'null'); } catch (error) {}
+  if (saved && saved.owner && saved.repo) {
+    return { OWNER: saved.owner, REPO: saved.repo, BRANCH: saved.branch || 'main', _auto: false };
+  }
 
-   DEPENDÊNCIAS (devem ser carregadas antes):
-     - senko-github-v2.js   (ghGetToken, ghEnsureToken, ghLockSave,
-                             ghUnlockSave, ghSetStatus, githubGetFile,
-                             githubPutFile, ghShowErrorModal, GH_ICON,
-                             GITHUB_CONFIG, ghStartDeployWatch)
-     - col-core.js          (ColLib)
-     - col-groups.js        (ColGroups)
-     - col-script.js        (colRenderGrid, colUpdateStatsBar)
-     - col-modals.js        (colGetCreateFormData, colGetEditFormData,
-                             colGetAddLayoutFormData, colGetEditLayoutFormData,
-                             colCloseCreateModal, colCloseEditModal,
-                             colCloseAddLayoutModal, colCloseEditLayoutModal,
-                             colOpenConfirm, _colCurrentCollection,
-                             _colRenderLayoutsGrid)
+  var host = window.location.hostname || '';
+  var parts = window.location.pathname.split('/').filter(Boolean);
+  if (/^[^.]+\.github\.io$/i.test(host) && parts.length > 0) {
+    return { OWNER: host.split('.')[0], REPO: parts[0], BRANCH: 'main', _auto: true };
+  }
 
-   ATIVAÇÃO:
-     Só executa no GitHub Pages (hostname *.github.io).
-     Em localhost/Live Server, nenhum botão é injetado.
+  return { OWNER: '', REPO: '', BRANCH: 'main', _auto: false };
+})();
 
-   ORDEM DE CARREGAMENTO no index.html:
-     <script src="app/integrations/github/scripts/senko-github-col.js"></script>
-     (após todos os outros scripts)
-═══════════════════════════════════════════════════════════════════════ */
+var COL_GH_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.17c-3.34.73-4.04-1.42-4.04-1.42-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.74.08-.74 1.21.09 1.85 1.24 1.85 1.24 1.07 1.84 2.82 1.31 3.51 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.62-5.49 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 12 .5Z"/></svg>';
+var colGithubSaving = false;
+
+function colGithubPersistConfig() {
+  try {
+    localStorage.setItem(COL_GITHUB_CONFIG_KEY, JSON.stringify({
+      owner: COL_GITHUB_CONFIG.OWNER,
+      repo: COL_GITHUB_CONFIG.REPO,
+      branch: COL_GITHUB_CONFIG.BRANCH || 'main'
+    }));
+  } catch (error) {}
+}
+
+function colGithubGetToken() {
+  try { return localStorage.getItem(COL_GITHUB_TOKEN_KEY) || ''; } catch (error) { return ''; }
+}
+
+function colGithubSetToken(token) {
+  try { localStorage.setItem(COL_GITHUB_TOKEN_KEY, token || ''); } catch (error) {}
+}
+
+function colGithubEnsureToken() {
+  if (!COL_GITHUB_CONFIG.OWNER) {
+    COL_GITHUB_CONFIG.OWNER = (window.prompt('Owner do repositorio GitHub para Colecoes:', '') || '').trim();
+  }
+  if (!COL_GITHUB_CONFIG.REPO) {
+    COL_GITHUB_CONFIG.REPO = (window.prompt('Nome do repositorio GitHub para Colecoes:', '') || '').trim();
+  }
+  if (!COL_GITHUB_CONFIG.BRANCH) COL_GITHUB_CONFIG.BRANCH = 'main';
+  if (!COL_GITHUB_CONFIG.OWNER || !COL_GITHUB_CONFIG.REPO) {
+    colGithubShowErrorModal('Configure owner e repositorio para salvar Colecoes no GitHub.');
+    return false;
+  }
+  colGithubPersistConfig();
+
+  var token = colGithubGetToken();
+  if (!token) {
+    token = (window.prompt('Token GitHub para salvar Colecoes:', '') || '').trim();
+    if (token) colGithubSetToken(token);
+  }
+  if (!token) {
+    colGithubShowErrorModal('Token GitHub nao configurado para Colecoes.');
+    return false;
+  }
+  return true;
+}
+
+function colGithubEscapeTemplateLiteral(value) {
+  return String(value == null ? '' : value)
+    .replace(/\\/g, '\\\\')
+    .replace(/`/g, '\\`')
+    .replace(/\$\{/g, '\\${');
+}
+
+function colGithubEscapeJsString(value) {
+  return String(value == null ? '' : value)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/\r/g, '\\r')
+    .replace(/\n/g, '\\n')
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029');
+}
+
+function colGithubEncodeBase64(content) {
+  return btoa(unescape(encodeURIComponent(content)));
+}
+
+function colGithubDecodeBase64(content) {
+  return decodeURIComponent(escape(atob(String(content || '').replace(/\s/g, ''))));
+}
+
+function colGithubApiUrl(filePath) {
+  return 'https://api.github.com/repos/' + COL_GITHUB_CONFIG.OWNER + '/' + COL_GITHUB_CONFIG.REPO + '/contents/' + filePath;
+}
+
+function colGithubGetFile(filePath) {
+  var url = colGithubApiUrl(filePath) + '?ref=' + encodeURIComponent(COL_GITHUB_CONFIG.BRANCH || 'main');
+  return fetch(url, {
+    headers: {
+      'Authorization': 'token ' + colGithubGetToken(),
+      'Accept': 'application/vnd.github+json'
+    }
+  }).then(function (res) {
+    if (!res.ok) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        throw new Error('GitHub GET falhou (' + res.status + '): ' + (data.message || filePath));
+      });
+    }
+    return res.json();
+  }).then(function (data) {
+    return { sha: data.sha, content: colGithubDecodeBase64(data.content), path: filePath };
+  });
+}
+
+function colGithubPutFile(filePath, content, sha, message) {
+  var body = {
+    message: message,
+    content: colGithubEncodeBase64(content),
+    branch: COL_GITHUB_CONFIG.BRANCH || 'main'
+  };
+  if (sha) body.sha = sha;
+
+  return fetch(colGithubApiUrl(filePath), {
+    method: 'PUT',
+    headers: {
+      'Authorization': 'token ' + colGithubGetToken(),
+      'Accept': 'application/vnd.github+json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  }).then(function (res) {
+    if (!res.ok) {
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        throw new Error('GitHub PUT falhou (' + res.status + '): ' + (data.message || filePath));
+      });
+    }
+    return res.json();
+  });
+}
+
+function colGithubLockSave() {
+  if (colGithubSaving) return false;
+  colGithubSaving = true;
+  return true;
+}
+
+function colGithubUnlockSave() {
+  colGithubSaving = false;
+}
+
+function colGithubSetStatus(message, type) {
+  var label = '[colecoes-github:' + (type || 'info') + '] ' + message;
+  if (type === 'error') console.error(label);
+  else console.log(label);
+}
+
+function colGithubShowErrorModal(message) {
+  if (typeof colOpenConfirm === 'function') {
+    colOpenConfirm({
+      title: 'Erro no GitHub',
+      body: message,
+      labelOk: 'OK',
+      danger: false,
+      onConfirm: function () {}
+    });
+    return;
+  }
+  window.alert(message);
+}
+
+function colGithubStartDeployWatch(filePath) {
+  try {
+    localStorage.setItem('senkolib_colecoes_last_deploy_watch', JSON.stringify({ path: filePath, at: Date.now() }));
+  } catch (error) {}
+}
+
 
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -50,8 +204,8 @@ function colGhFilePath(slug) {
 }
 
 function colGhEscapeJsString(value) {
-  if (typeof escapeJsSingleQuotedString === 'function') {
-    return escapeJsSingleQuotedString(value);
+  if (typeof colGithubEscapeJsString === 'function') {
+    return colGithubEscapeJsString(value);
   }
 
   return String(value == null ? '' : value)
@@ -73,8 +227,8 @@ function colGhBuildFileContent(col) {
     .join(', ');
 
   var layoutsCode = (col.layouts || []).map(function (l) {
-    var safeHtml = escapeTemplateLiteral(l.html);
-    var safeCss  = escapeTemplateLiteral(l.css);
+    var safeHtml = colGithubEscapeTemplateLiteral(l.html);
+    var safeCss  = colGithubEscapeTemplateLiteral(l.css);
     return (
       '\n    /*@@@@Col - ' + l.id + ' */\n' +
       '    {\n' +
@@ -91,7 +245,7 @@ function colGhBuildFileContent(col) {
     '/* ═══════════════════════════════════════════════════════════════════════\n' +
     '   app/features/colecoes/data/' + col.slug + '.js — Coleção: ' + col.name + '\n' +
     '\n' +
-    '   ATENÇÃO: Arquivo gerado pelo módulo GitHub do SenkoLib.\n' +
+    '   ATENÇÃO: Arquivo gerado pelo modulo GitHub de Colecoes.\n' +
     '   NÃO edite manualmente em produção.\n' +
     '═══════════════════════════════════════════════════════════════════════ */\n' +
     'ColLib.register({\n' +
@@ -145,7 +299,7 @@ function colGhBuildGroupsFileContent() {
     '/* ═══════════════════════════════════════════════════════════════════════\n' +
     '   col-groups-data.js — Dados dos grupos de coleções\n' +
     '\n' +
-    '   ATENÇÃO: Arquivo gerado pelo módulo GitHub do SenkoLib.\n' +
+    '   ATENÇÃO: Arquivo gerado pelo modulo GitHub de Colecoes.\n' +
     '   NÃO edite manualmente em produção.\n' +
     '═══════════════════════════════════════════════════════════════════════ */\n' +
     'ColGroups.load([\n' +
@@ -207,8 +361,8 @@ function colGhFindLayoutBounds(content, layoutId) {
   Monta o bloco de código de um layout para inserção/substituição no arquivo.
 */
 function colGhBuildLayoutBlock(layout) {
-  var safeHtml = escapeTemplateLiteral(layout.html);
-  var safeCss  = escapeTemplateLiteral(layout.css);
+  var safeHtml = colGithubEscapeTemplateLiteral(layout.html);
+  var safeCss  = colGithubEscapeTemplateLiteral(layout.css);
   return (
     '    /*@@@@Col - ' + layout.id + ' */\n' +
     '    {\n' +
@@ -226,7 +380,7 @@ function colGhBuildLayoutBlock(layout) {
 */
 function colGhGetFile(slug) {
   var path = colGhFilePath(slug);
-  return githubGetFile(path).then(function (data) {
+  return colGithubGetFile(path).then(function (data) {
     return { exists: true, sha: data.sha, content: data.content, path: path };
   }).catch(function (err) {
     if (err.message && err.message.indexOf('404') !== -1) {
@@ -237,41 +391,100 @@ function colGhGetFile(slug) {
 }
 
 /*
-  Insere a tag <script> da coleção no index.html, antes do marcador de col-script.js.
-  Só insere se ainda não existir.
+  Adiciona ou remove o arquivo no manifesto privado da feature.
 */
-function colGhInjectScriptTag(slug) {
-  var scriptTag = '  <script src="app/features/colecoes/data/' + slug + '.js"></script>';
-  var anchor    = '  <script src="app/features/colecoes/scripts/col-script.js"></script>';
+function colGhSetManifestEntry(slug, shouldInclude, metadata) {
+  /*
+   * O manifesto e o catalogo privado de Colecoes. Nenhuma operacao desta
+   * feature precisa editar o index.html ou arquivos de outra janela.
+   */
+  var manifestPath = 'app/features/colecoes/data/manifest.js';
+  var normalizedSlug = slug.toLowerCase();
+  var fileName = normalizedSlug + '.js';
 
-  return githubGetFile('index.html').then(function (data) {
-    if (data.content.indexOf('app/features/colecoes/data/' + slug + '.js') !== -1) {
-      return; /* já existe — seguro */
+  return colGithubGetFile(manifestPath).then(function (data) {
+    var manifest;
+    try {
+      /*
+       * Le somente o objeto JSON atribuido ao namespace de Colecoes. Nao usa
+       * eval e nao executa o conteudo recebido da API do GitHub.
+       */
+      var assignment = 'window.SenkoColecoesManifest';
+      var assignmentIndex = data.content.indexOf(assignment);
+      var equalsIndex = data.content.indexOf('=', assignmentIndex);
+      var source = equalsIndex === -1
+        ? ''
+        : data.content.slice(equalsIndex + 1).trim().replace(/;\s*$/, '');
+
+      if (assignmentIndex === -1 || !source) {
+        throw new Error('Formato do catalogo nao reconhecido.');
+      }
+      manifest = JSON.parse(source);
+    } catch (error) {
+      throw new Error('Catalogo de Colecoes possui JavaScript invalido.');
     }
-    var newContent = data.content.replace(anchor, scriptTag + '\n' + anchor);
-    return githubPutFile(
-      'index.html',
-      newContent,
+
+    if (!Array.isArray(manifest.collections)) manifest.collections = [];
+
+    var index = -1;
+    for (var i = 0; i < manifest.collections.length; i++) {
+      var current = manifest.collections[i];
+      if (
+        current === fileName ||
+        (current && typeof current === 'object' &&
+          (current.file === fileName || current.slug === normalizedSlug))
+      ) {
+        index = i;
+        break;
+      }
+    }
+
+    if (shouldInclude) {
+      var source = metadata || {};
+      var nextEntry = {
+        file: fileName,
+        slug: normalizedSlug,
+        name: source.name || normalizedSlug,
+        group: source.group || '',
+        tags: Array.isArray(source.tags) ? source.tags : [],
+        layoutCount: Number(source.layoutCount) || 0
+      };
+
+      if (index === -1) manifest.collections.push(nextEntry);
+      else manifest.collections[index] = nextEntry;
+    } else if (index !== -1) {
+      manifest.collections.splice(index, 1);
+    }
+
+    if (!shouldInclude && index === -1) {
+      return manifestPath;
+    }
+
+    return colGithubPutFile(
+      manifestPath,
+      '/* Catalogo privado de Colecoes. Atualizado pela integracao GitHub. */\n' +
+        'window.SenkoColecoesManifest = ' +
+        JSON.stringify(manifest, null, 2) +
+        ';\n',
       data.sha,
-      '[SenkoLib] register collection script: ' + slug
-    );
+      shouldInclude
+        ? '[Colecoes] register collection file: ' + slug
+        : '[Colecoes] unregister collection file: ' + slug
+    ).then(function () {
+      return manifestPath;
+    });
   });
 }
 
-/*
-  Remove a tag <script> da coleção do index.html ao excluir.
-*/
-function colGhRemoveScriptTag(slug) {
-  return githubGetFile('index.html').then(function (data) {
-    var tag        = '  <script src="app/features/colecoes/data/' + slug + '.js"></script>\n';
-    var newContent = data.content.replace(tag, '');
-    if (newContent === data.content) return; /* tag não encontrada — seguro */
-    return githubPutFile(
-      'index.html',
-      newContent,
-      data.sha,
-      '[SenkoLib] unregister collection script: ' + slug
-    );
+function colGhSyncManifestFromMemory(slug) {
+  var col = typeof ColLib !== 'undefined' ? ColLib.getBySlug(slug) : null;
+  if (!col) return Promise.resolve();
+
+  return colGhSetManifestEntry(slug, true, {
+    name: col.name,
+    group: col.group,
+    tags: col.tags || [],
+    layoutCount: (col.layouts || []).length
   });
 }
 
@@ -288,31 +501,31 @@ function colGhFlushGroups() {
   var pending = ColGroups.getPending();
   if (pending.length === 0) return Promise.resolve();
 
-  ghSetStatus('Salvando grupos…', 'saving');
+  colGithubSetStatus('Salvando grupos…', 'saving');
 
   var newContent = colGhBuildGroupsFileContent();
 
-  return githubGetFile('app/features/colecoes/data/col-groups-data.js').then(function (data) {
-    return githubPutFile(
+  return colGithubGetFile('app/features/colecoes/data/col-groups-data.js').then(function (data) {
+    return colGithubPutFile(
       'app/features/colecoes/data/col-groups-data.js',
       newContent,
       data.sha,
-      '[SenkoLib] update groups (' + pending.map(function (g) { return g.slug; }).join(', ') + ')'
+      '[Colecoes] update groups (' + pending.map(function (g) { return g.slug; }).join(', ') + ')'
     );
   }).then(function () {
     ColGroups.clearPending();
-    ghSetStatus('✓ Grupos salvos', 'ok');
+    colGithubSetStatus('✓ Grupos salvos', 'ok');
   }).catch(function (e) {
     /* Arquivo de grupos ainda não existe — cria */
     if (e.message && e.message.indexOf('404') !== -1) {
-      return githubPutFile(
+      return colGithubPutFile(
         'app/features/colecoes/data/col-groups-data.js',
         newContent,
         null,
-        '[SenkoLib] create groups file'
+        '[Colecoes] create groups file'
       ).then(function () {
         ColGroups.clearPending();
-        ghSetStatus('✓ Grupos salvos', 'ok');
+        colGithubSetStatus('✓ Grupos salvos', 'ok');
       });
     }
     throw e;
@@ -325,14 +538,14 @@ function colGhFlushGroups() {
 ═══════════════════════════════════════════════════════════════════════ */
 
 function colGhCreateCollection(colData) {
-  if (!ghLockSave()) return Promise.resolve(false);
-  if (!ghEnsureToken()) {
-    ghUnlockSave();
-    ghSetStatus('Token não configurado', 'error');
+  if (!colGithubLockSave()) return Promise.resolve(false);
+  if (!colGithubEnsureToken()) {
+    colGithubUnlockSave();
+    colGithubSetStatus('Token não configurado', 'error');
     return Promise.resolve(false);
   }
 
-  ghSetStatus('Verificando duplicata…', 'saving');
+  colGithubSetStatus('Verificando duplicata…', 'saving');
 
   var slug = colData.slug;
   var path = colGhFilePath(slug);
@@ -346,13 +559,13 @@ function colGhCreateCollection(colData) {
   })
   .then(function (fileInfo) {
     if (fileInfo.exists) {
-      ghSetStatus('Coleção já existe', 'error');
-      ghUnlockSave();
-      ghShowErrorModal('Já existe uma coleção com esse nome no repositório.\nEscolha outro nome.');
+      colGithubSetStatus('Coleção já existe', 'error');
+      colGithubUnlockSave();
+      colGithubShowErrorModal('Já existe uma coleção com esse nome no repositório.\nEscolha outro nome.');
       return false;
     }
 
-    ghSetStatus('Criando arquivo…', 'saving');
+    colGithubSetStatus('Criando arquivo…', 'saving');
 
     var newObj = {
       slug:    slug,
@@ -365,19 +578,24 @@ function colGhCreateCollection(colData) {
     var content = colGhBuildFileContent(newObj);
 
     /* 3. Cria o arquivo da coleção */
-    return githubPutFile(
+    return colGithubPutFile(
       path,
       content,
       null,
-      '[SenkoLib] create collection: ' + slug
+      '[Colecoes] create collection: ' + slug
     );
   })
 
-  /* 4. Injeta <script> no index.html */
+  /* 4. Registra o arquivo no manifesto de Colecoes */
   .then(function (result) {
     if (result === false) return false;
-    ghSetStatus('Registrando no index.html…', 'saving');
-    return colGhInjectScriptTag(slug).then(function () { return true; });
+    colGithubSetStatus('Atualizando manifesto de Colecoes…', 'saving');
+    return colGhSetManifestEntry(slug, true, {
+      name: colData.name,
+      group: colData.group,
+      tags: colData.tags || [],
+      layoutCount: 0
+    }).then(function () { return true; });
   })
 
   /* 5. Atualiza memória e UI */
@@ -390,18 +608,18 @@ function colGhCreateCollection(colData) {
       tags:    colData.tags || [],
       layouts: [],
     });
-    ghSetStatus('✓ Coleção criada: ' + slug, 'ok');
-    ghUnlockSave();
-    if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(colGhFilePath(slug));
+    colGithubSetStatus('✓ Coleção criada: ' + slug, 'ok');
+    colGithubUnlockSave();
+    if (typeof colGithubStartDeployWatch === 'function') colGithubStartDeployWatch(colGhFilePath(slug));
     if (typeof colRenderGrid === 'function') colRenderGrid();
     return true;
   })
 
   .catch(function (e) {
-    console.error('[senko-github-col] Erro ao criar coleção:', e);
-    ghSetStatus('Erro: ' + e.message, 'error');
-    ghUnlockSave();
-    ghShowErrorModal(e.message);
+    console.error('[colecoes-github] Erro ao criar coleção:', e);
+    colGithubSetStatus('Erro: ' + e.message, 'error');
+    colGithubUnlockSave();
+    colGithubShowErrorModal(e.message);
     return false;
   });
 }
@@ -413,24 +631,24 @@ function colGhCreateCollection(colData) {
 ═══════════════════════════════════════════════════════════════════════ */
 
 function colGhEditCollection(colData) {
-  if (!ghLockSave()) return Promise.resolve(false);
-  if (!ghEnsureToken()) {
-    ghUnlockSave();
-    ghSetStatus('Token não configurado', 'error');
+  if (!colGithubLockSave()) return Promise.resolve(false);
+  if (!colGithubEnsureToken()) {
+    colGithubUnlockSave();
+    colGithubSetStatus('Token não configurado', 'error');
     return Promise.resolve(false);
   }
 
   var slug = colData.slug;
-  ghSetStatus('Lendo coleção…', 'saving');
+  colGithubSetStatus('Lendo coleção…', 'saving');
 
   /* Lê arquivo atual (flush de grupos é feito APÓS salvar a coleção,
      quando a memória já reflete o novo grupo — veja comentário abaixo) */
   return colGhGetFile(slug)
   .then(function (fileInfo) {
     if (!fileInfo.exists) {
-      ghSetStatus('Arquivo não encontrado', 'error');
-      ghUnlockSave();
-      ghShowErrorModal('Arquivo da coleção "' + slug + '" não encontrado no repositório.');
+      colGithubSetStatus('Arquivo não encontrado', 'error');
+      colGithubUnlockSave();
+      colGithubShowErrorModal('Arquivo da coleção "' + slug + '" não encontrado no repositório.');
       return false;
     }
 
@@ -445,13 +663,13 @@ function colGhEditCollection(colData) {
     };
 
     var newContent = colGhBuildFileContent(newObj);
-    ghSetStatus('Salvando no GitHub…', 'saving');
+    colGithubSetStatus('Salvando no GitHub…', 'saving');
 
-    return githubPutFile(
+    return colGithubPutFile(
       fileInfo.path,
       newContent,
       fileInfo.sha,
-      '[SenkoLib] edit collection: ' + slug
+      '[Colecoes] edit collection: ' + slug
     ).then(function () {
       /* Atualiza a memória ANTES do flush de grupos.
          Assim colGhBuildGroupsFileContent já enxerga o grupo novo como
@@ -463,44 +681,46 @@ function colGhEditCollection(colData) {
         tags:  colData.tags,
       });
 
-      /* Flush pós-edição: sempre reescreve col-groups-data.js para limpar
-         grupos que ficaram sem nenhuma coleção apontando para eles. */
-      ghSetStatus('Atualizando grupos…', 'saving');
-      var groupsContent = colGhBuildGroupsFileContent();
+      return colGhSyncManifestFromMemory(slug).then(function () {
+        /* Flush pós-edição: sempre reescreve col-groups-data.js para limpar
+           grupos que ficaram sem nenhuma coleção apontando para eles. */
+        colGithubSetStatus('Atualizando grupos…', 'saving');
+        var groupsContent = colGhBuildGroupsFileContent();
 
-      return githubGetFile('app/features/colecoes/data/col-groups-data.js').then(function (gData) {
-        return githubPutFile(
-          'app/features/colecoes/data/col-groups-data.js',
-          groupsContent,
-          gData.sha,
-          '[SenkoLib] sync groups after edit: ' + slug
-        );
-      }).catch(function (err) {
-        if (err.message && err.message.indexOf('404') !== -1) {
-          return githubPutFile(
+        return colGithubGetFile('app/features/colecoes/data/col-groups-data.js').then(function (gData) {
+          return colGithubPutFile(
             'app/features/colecoes/data/col-groups-data.js',
             groupsContent,
-            null,
-            '[SenkoLib] create groups file'
+            gData.sha,
+            '[Colecoes] sync groups after edit: ' + slug
           );
-        }
-        throw err;
-      }).then(function () {
-        if (typeof ColGroups !== 'undefined') ColGroups.clearPending();
-        ghSetStatus('✓ Metadados salvos', 'ok');
-        ghUnlockSave();
-        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(fileInfo.path);
-        if (typeof colRenderGrid === 'function') colRenderGrid();
-        return true;
+        }).catch(function (err) {
+          if (err.message && err.message.indexOf('404') !== -1) {
+            return colGithubPutFile(
+              'app/features/colecoes/data/col-groups-data.js',
+              groupsContent,
+              null,
+              '[Colecoes] create groups file'
+            );
+          }
+          throw err;
+        }).then(function () {
+          if (typeof ColGroups !== 'undefined') ColGroups.clearPending();
+          colGithubSetStatus('✓ Metadados salvos', 'ok');
+          colGithubUnlockSave();
+          if (typeof colGithubStartDeployWatch === 'function') colGithubStartDeployWatch(fileInfo.path);
+          if (typeof colRenderGrid === 'function') colRenderGrid();
+          return true;
+        });
       });
     });
   })
 
   .catch(function (e) {
-    console.error('[senko-github-col] Erro ao editar coleção:', e);
-    ghSetStatus('Erro: ' + e.message, 'error');
-    ghUnlockSave();
-    ghShowErrorModal(e.message);
+    console.error('[colecoes-github] Erro ao editar coleção:', e);
+    colGithubSetStatus('Erro: ' + e.message, 'error');
+    colGithubUnlockSave();
+    colGithubShowErrorModal(e.message);
     return false;
   });
 }
@@ -508,32 +728,32 @@ function colGhEditCollection(colData) {
 
 /* ═══════════════════════════════════════════════════════════════════════
    EXCLUIR COLEÇÃO
-   Remove o arquivo da coleção e a tag <script> do index.html.
+   Remove o arquivo da coleção e sua entrada no manifesto da feature.
 ═══════════════════════════════════════════════════════════════════════ */
 
 function colGhDeleteCollection(slug) {
-  if (!ghLockSave()) return Promise.resolve(false);
-  if (!ghEnsureToken()) {
-    ghUnlockSave();
-    ghSetStatus('Token não configurado', 'error');
+  if (!colGithubLockSave()) return Promise.resolve(false);
+  if (!colGithubEnsureToken()) {
+    colGithubUnlockSave();
+    colGithubSetStatus('Token não configurado', 'error');
     return Promise.resolve(false);
   }
 
-  ghSetStatus('Excluindo coleção…', 'saving');
+  colGithubSetStatus('Excluindo coleção…', 'saving');
 
   /* 1. Lê o arquivo para obter o SHA */
   return colGhGetFile(slug)
   .then(function (fileInfo) {
     if (!fileInfo.exists) {
-      /* Arquivo já não existe — limpa memória e index.html mesmo assim */
+      /* Arquivo ja nao existe: limpa memoria e manifesto mesmo assim. */
       return null;
     }
-    return githubGetFile(fileInfo.path).then(function (data) {
+    return colGithubGetFile(fileInfo.path).then(function (data) {
       /* Exclui o arquivo via API (conteúdo vazio + sha) */
-      var token = typeof ghGetToken === 'function' ? ghGetToken() : '';
+      var token = typeof colGithubGetToken === 'function' ? colGithubGetToken() : '';
       var url   = 'https://api.github.com/repos/'
-        + GITHUB_CONFIG.OWNER + '/'
-        + GITHUB_CONFIG.REPO  + '/contents/'
+        + COL_GITHUB_CONFIG.OWNER + '/'
+        + COL_GITHUB_CONFIG.REPO  + '/contents/'
         + fileInfo.path;
       return fetch(url, {
         method:  'DELETE',
@@ -543,9 +763,9 @@ function colGhDeleteCollection(slug) {
           'Content-Type':  'application/json',
         },
         body: JSON.stringify({
-          message: '[SenkoLib] delete collection: ' + slug,
+          message: '[Colecoes] delete collection: ' + slug,
           sha:     data.sha,
-          branch:  GITHUB_CONFIG.BRANCH,
+          branch:  COL_GITHUB_CONFIG.BRANCH,
         }),
       }).then(function (res) {
         if (!res.ok) {
@@ -558,26 +778,26 @@ function colGhDeleteCollection(slug) {
     });
   })
 
-  /* 2. Remove <script> do index.html */
+  /* 2. Remove o arquivo do manifesto de Colecoes */
   .then(function () {
-    ghSetStatus('Atualizando index.html…', 'saving');
-    return colGhRemoveScriptTag(slug);
+    colGithubSetStatus('Atualizando manifesto de Colecoes…', 'saving');
+    return colGhSetManifestEntry(slug, false);
   })
 
   /* 3. Atualiza memória e UI */
   .then(function () {
     ColLib.removeCollection(slug);
-    ghSetStatus('✓ Coleção excluída', 'ok');
-    ghUnlockSave();
+    colGithubSetStatus('✓ Coleção excluída', 'ok');
+    colGithubUnlockSave();
     if (typeof colRenderGrid === 'function') colRenderGrid();
     return true;
   })
 
   .catch(function (e) {
-    console.error('[senko-github-col] Erro ao excluir coleção:', e);
-    ghSetStatus('Erro: ' + e.message, 'error');
-    ghUnlockSave();
-    ghShowErrorModal(e.message);
+    console.error('[colecoes-github] Erro ao excluir coleção:', e);
+    colGithubSetStatus('Erro: ' + e.message, 'error');
+    colGithubUnlockSave();
+    colGithubShowErrorModal(e.message);
     return false;
   });
 }
@@ -589,21 +809,21 @@ function colGhDeleteCollection(slug) {
 ═══════════════════════════════════════════════════════════════════════ */
 
 function colGhAddLayout(slug, layoutData) {
-  if (!ghLockSave()) return Promise.resolve(false);
-  if (!ghEnsureToken()) {
-    ghUnlockSave();
-    ghSetStatus('Token não configurado', 'error');
+  if (!colGithubLockSave()) return Promise.resolve(false);
+  if (!colGithubEnsureToken()) {
+    colGithubUnlockSave();
+    colGithubSetStatus('Token não configurado', 'error');
     return Promise.resolve(false);
   }
 
-  ghSetStatus('Lendo coleção…', 'saving');
+  colGithubSetStatus('Lendo coleção…', 'saving');
 
   return colGhGetFile(slug)
   .then(function (fileInfo) {
     if (!fileInfo.exists) {
-      ghSetStatus('Coleção não encontrada', 'error');
-      ghUnlockSave();
-      ghShowErrorModal('Arquivo da coleção "' + slug + '" não encontrado no repositório.');
+      colGithubSetStatus('Coleção não encontrada', 'error');
+      colGithubUnlockSave();
+      colGithubShowErrorModal('Arquivo da coleção "' + slug + '" não encontrado no repositório.');
       return false;
     }
 
@@ -613,18 +833,18 @@ function colGhAddLayout(slug, layoutData) {
     /* Verifica o identificador interno gerado a partir do nome. */
     var idMarker = '/*@@@@Col - ' + layoutData.id + ' */';
     if (content.indexOf(idMarker) !== -1) {
-      ghSetStatus('Nome de layout duplicado', 'error');
-      ghUnlockSave();
-      ghShowErrorModal('Já existe um layout com esse nome nesta coleção.\nEscolha outro nome.');
+      colGithubSetStatus('Nome de layout duplicado', 'error');
+      colGithubUnlockSave();
+      colGithubShowErrorModal('Já existe um layout com esse nome nesta coleção.\nEscolha outro nome.');
       return false;
     }
 
     /* Localiza o fechamento do array de layouts: `  ]` antes do `});` */
     var closePos = content.lastIndexOf('\n  ]');
     if (closePos === -1) {
-      ghSetStatus('Estrutura do arquivo inválida', 'error');
-      ghUnlockSave();
-      ghShowErrorModal('Não foi possível localizar o fechamento do array de layouts em "' + fileInfo.path + '".');
+      colGithubSetStatus('Estrutura do arquivo inválida', 'error');
+      colGithubUnlockSave();
+      colGithubShowErrorModal('Não foi possível localizar o fechamento do array de layouts em "' + fileInfo.path + '".');
       return false;
     }
 
@@ -634,30 +854,33 @@ function colGhAddLayout(slug, layoutData) {
       '\n' + block + '\n' +
       content.slice(closePos);
 
-    ghSetStatus('Salvando no GitHub…', 'saving');
+    colGithubSetStatus('Salvando no GitHub…', 'saving');
 
-    return githubPutFile(
+    return colGithubPutFile(
       fileInfo.path,
       newContent,
       sha,
-      '[SenkoLib] add layout "' + layoutData.id + '" to collection: ' + slug
+      '[Colecoes] add layout "' + layoutData.id + '" to collection: ' + slug
     ).then(function () {
       ColLib.addLayout(slug, layoutData);
-      ghSetStatus('✓ Layout adicionado', 'ok');
-      ghUnlockSave();
-      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(fileInfo.path);
-      /* Re-renderiza o grid de layouts dentro do modal de coleção */
-      var col = typeof ColLib !== 'undefined' ? ColLib.getBySlug(slug) : null;
-      if (col && typeof _colRenderLayoutsGrid === 'function') _colRenderLayoutsGrid(col);
-      return true;
+      return colGhSyncManifestFromMemory(slug).then(function () {
+        colGithubSetStatus('✓ Layout adicionado', 'ok');
+        colGithubUnlockSave();
+        if (typeof colGithubStartDeployWatch === 'function') colGithubStartDeployWatch(fileInfo.path);
+        /* Re-renderiza o grid de layouts dentro do modal de coleção */
+        var col = typeof ColLib !== 'undefined' ? ColLib.getBySlug(slug) : null;
+        if (col && typeof _colRenderLayoutsGrid === 'function') _colRenderLayoutsGrid(col);
+        if (typeof colRenderGrid === 'function') colRenderGrid();
+        return true;
+      });
     });
   })
 
   .catch(function (e) {
-    console.error('[senko-github-col] Erro ao adicionar layout:', e);
-    ghSetStatus('Erro: ' + e.message, 'error');
-    ghUnlockSave();
-    ghShowErrorModal(e.message);
+    console.error('[colecoes-github] Erro ao adicionar layout:', e);
+    colGithubSetStatus('Erro: ' + e.message, 'error');
+    colGithubUnlockSave();
+    colGithubShowErrorModal(e.message);
     return false;
   });
 }
@@ -669,21 +892,21 @@ function colGhAddLayout(slug, layoutData) {
 ═══════════════════════════════════════════════════════════════════════ */
 
 function colGhEditLayout(slug, layoutId, layoutData) {
-  if (!ghLockSave()) return Promise.resolve(false);
-  if (!ghEnsureToken()) {
-    ghUnlockSave();
-    ghSetStatus('Token não configurado', 'error');
+  if (!colGithubLockSave()) return Promise.resolve(false);
+  if (!colGithubEnsureToken()) {
+    colGithubUnlockSave();
+    colGithubSetStatus('Token não configurado', 'error');
     return Promise.resolve(false);
   }
 
-  ghSetStatus('Lendo coleção…', 'saving');
+  colGithubSetStatus('Lendo coleção…', 'saving');
 
   return colGhGetFile(slug)
   .then(function (fileInfo) {
     if (!fileInfo.exists) {
-      ghSetStatus('Coleção não encontrada', 'error');
-      ghUnlockSave();
-      ghShowErrorModal('Arquivo da coleção "' + slug + '" não encontrado.');
+      colGithubSetStatus('Coleção não encontrada', 'error');
+      colGithubUnlockSave();
+      colGithubShowErrorModal('Arquivo da coleção "' + slug + '" não encontrado.');
       return false;
     }
 
@@ -692,9 +915,9 @@ function colGhEditLayout(slug, layoutId, layoutData) {
     var bounds  = colGhFindLayoutBounds(content, layoutId);
 
     if (!bounds) {
-      ghSetStatus('Layout não encontrado', 'error');
-      ghUnlockSave();
-      ghShowErrorModal('Marcador do layout "' + layoutId + '" não encontrado em "' + fileInfo.path + '".');
+      colGithubSetStatus('Layout não encontrado', 'error');
+      colGithubUnlockSave();
+      colGithubShowErrorModal('Marcador do layout "' + layoutId + '" não encontrado em "' + fileInfo.path + '".');
       return false;
     }
 
@@ -704,18 +927,18 @@ function colGhEditLayout(slug, layoutId, layoutData) {
       block + '\n' +
       content.slice(bounds.end);
 
-    ghSetStatus('Salvando no GitHub…', 'saving');
+    colGithubSetStatus('Salvando no GitHub…', 'saving');
 
-    return githubPutFile(
+    return colGithubPutFile(
       fileInfo.path,
       newContent,
       sha,
-      '[SenkoLib] edit layout "' + layoutId + '" in collection: ' + slug
+      '[Colecoes] edit layout "' + layoutId + '" in collection: ' + slug
     ).then(function () {
       ColLib.updateLayout(slug, layoutId, layoutData);
-      ghSetStatus('✓ Layout salvo', 'ok');
-      ghUnlockSave();
-      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(fileInfo.path);
+      colGithubSetStatus('✓ Layout salvo', 'ok');
+      colGithubUnlockSave();
+      if (typeof colGithubStartDeployWatch === 'function') colGithubStartDeployWatch(fileInfo.path);
       var col = typeof ColLib !== 'undefined' ? ColLib.getBySlug(slug) : null;
       if (col && typeof _colRenderLayoutsGrid === 'function') _colRenderLayoutsGrid(col);
       return true;
@@ -723,10 +946,10 @@ function colGhEditLayout(slug, layoutId, layoutData) {
   })
 
   .catch(function (e) {
-    console.error('[senko-github-col] Erro ao editar layout:', e);
-    ghSetStatus('Erro: ' + e.message, 'error');
-    ghUnlockSave();
-    ghShowErrorModal(e.message);
+    console.error('[colecoes-github] Erro ao editar layout:', e);
+    colGithubSetStatus('Erro: ' + e.message, 'error');
+    colGithubUnlockSave();
+    colGithubShowErrorModal(e.message);
     return false;
   });
 }
@@ -738,21 +961,21 @@ function colGhEditLayout(slug, layoutId, layoutData) {
 ═══════════════════════════════════════════════════════════════════════ */
 
 function colGhDeleteLayout(slug, layoutId) {
-  if (!ghLockSave()) return Promise.resolve(false);
-  if (!ghEnsureToken()) {
-    ghUnlockSave();
-    ghSetStatus('Token não configurado', 'error');
+  if (!colGithubLockSave()) return Promise.resolve(false);
+  if (!colGithubEnsureToken()) {
+    colGithubUnlockSave();
+    colGithubSetStatus('Token não configurado', 'error');
     return Promise.resolve(false);
   }
 
-  ghSetStatus('Lendo coleção…', 'saving');
+  colGithubSetStatus('Lendo coleção…', 'saving');
 
   return colGhGetFile(slug)
   .then(function (fileInfo) {
     if (!fileInfo.exists) {
-      ghSetStatus('Coleção não encontrada', 'error');
-      ghUnlockSave();
-      ghShowErrorModal('Arquivo da coleção "' + slug + '" não encontrado.');
+      colGithubSetStatus('Coleção não encontrada', 'error');
+      colGithubUnlockSave();
+      colGithubShowErrorModal('Arquivo da coleção "' + slug + '" não encontrado.');
       return false;
     }
 
@@ -761,9 +984,9 @@ function colGhDeleteLayout(slug, layoutId) {
     var bounds  = colGhFindLayoutBounds(content, layoutId);
 
     if (!bounds) {
-      ghSetStatus('Layout não encontrado', 'error');
-      ghUnlockSave();
-      ghShowErrorModal('Marcador do layout "' + layoutId + '" não encontrado. Verifique o arquivo manualmente.');
+      colGithubSetStatus('Layout não encontrado', 'error');
+      colGithubUnlockSave();
+      colGithubShowErrorModal('Marcador do layout "' + layoutId + '" não encontrado. Verifique o arquivo manualmente.');
       return false;
     }
 
@@ -771,29 +994,32 @@ function colGhDeleteLayout(slug, layoutId) {
       content.slice(0, bounds.start) +
       content.slice(bounds.end);
 
-    ghSetStatus('Salvando no GitHub…', 'saving');
+    colGithubSetStatus('Salvando no GitHub…', 'saving');
 
-    return githubPutFile(
+    return colGithubPutFile(
       fileInfo.path,
       newContent,
       sha,
-      '[SenkoLib] delete layout "' + layoutId + '" from collection: ' + slug
+      '[Colecoes] delete layout "' + layoutId + '" from collection: ' + slug
     ).then(function () {
       ColLib.removeLayout(slug, layoutId);
-      ghSetStatus('✓ Layout excluído', 'ok');
-      ghUnlockSave();
-      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(fileInfo.path);
-      var col = typeof ColLib !== 'undefined' ? ColLib.getBySlug(slug) : null;
-      if (col && typeof _colRenderLayoutsGrid === 'function') _colRenderLayoutsGrid(col);
-      return true;
+      return colGhSyncManifestFromMemory(slug).then(function () {
+        colGithubSetStatus('✓ Layout excluído', 'ok');
+        colGithubUnlockSave();
+        if (typeof colGithubStartDeployWatch === 'function') colGithubStartDeployWatch(fileInfo.path);
+        var col = typeof ColLib !== 'undefined' ? ColLib.getBySlug(slug) : null;
+        if (col && typeof _colRenderLayoutsGrid === 'function') _colRenderLayoutsGrid(col);
+        if (typeof colRenderGrid === 'function') colRenderGrid();
+        return true;
+      });
     });
   })
 
   .catch(function (e) {
-    console.error('[senko-github-col] Erro ao excluir layout:', e);
-    ghSetStatus('Erro: ' + e.message, 'error');
-    ghUnlockSave();
-    ghShowErrorModal(e.message);
+    console.error('[colecoes-github] Erro ao excluir layout:', e);
+    colGithubSetStatus('Erro: ' + e.message, 'error');
+    colGithubUnlockSave();
+    colGithubShowErrorModal(e.message);
     return false;
   });
 }
@@ -812,12 +1038,12 @@ function colGhInjectCreateButton() {
   var btn       = document.createElement('button');
   btn.id        = 'colGhCreateBtn';
   btn.className = 'btn-github';
-  btn.innerHTML = GH_ICON + ' GitHub';
+  btn.innerHTML = COL_GH_ICON + ' GitHub';
   btn.title     = 'Criar coleção direto no repositório GitHub';
   anchor.parentNode.replaceChild(btn, anchor);
 
   btn.addEventListener('click', function () {
-    if (!ghEnsureToken()) return;
+    if (!colGithubEnsureToken()) return;
 
     var data = typeof colGetCreateFormData === 'function' ? colGetCreateFormData() : null;
     if (!data) return;
@@ -827,18 +1053,18 @@ function colGhInjectCreateButton() {
 
     colGhCreateCollection(data).then(function (ok) {
       if (ok) {
-        btn.innerHTML = GH_ICON + ' Criado!';
+        btn.innerHTML = COL_GH_ICON + ' Criado!';
         setTimeout(function () {
           if (typeof colCloseCreateModal === 'function') colCloseCreateModal();
-          btn.innerHTML = GH_ICON + ' GitHub';
+          btn.innerHTML = COL_GH_ICON + ' GitHub';
           btn.disabled  = false;
         }, 1200);
       } else {
-        btn.innerHTML = GH_ICON + ' GitHub';
+        btn.innerHTML = COL_GH_ICON + ' GitHub';
         btn.disabled  = false;
       }
     }).catch(function () {
-      btn.innerHTML = GH_ICON + ' GitHub';
+      btn.innerHTML = COL_GH_ICON + ' GitHub';
       btn.disabled  = false;
     });
   });
@@ -853,12 +1079,12 @@ function colGhInjectEditButton() {
   var btn       = document.createElement('button');
   btn.id        = 'colGhEditBtn';
   btn.className = 'btn-github';
-  btn.innerHTML = GH_ICON + ' GitHub';
+  btn.innerHTML = COL_GH_ICON + ' GitHub';
   btn.title     = 'Salvar metadados no repositório GitHub';
   anchor.parentNode.replaceChild(btn, anchor);
 
   btn.addEventListener('click', function () {
-    if (!ghEnsureToken()) return;
+    if (!colGithubEnsureToken()) return;
 
     var data = typeof colGetEditFormData === 'function' ? colGetEditFormData() : null;
     if (!data) return;
@@ -868,18 +1094,18 @@ function colGhInjectEditButton() {
 
     colGhEditCollection(data).then(function (ok) {
       if (ok) {
-        btn.innerHTML = GH_ICON + ' Salvo!';
+        btn.innerHTML = COL_GH_ICON + ' Salvo!';
         setTimeout(function () {
           if (typeof colCloseEditModal === 'function') colCloseEditModal();
-          btn.innerHTML = GH_ICON + ' GitHub';
+          btn.innerHTML = COL_GH_ICON + ' GitHub';
           btn.disabled  = false;
         }, 1200);
       } else {
-        btn.innerHTML = GH_ICON + ' GitHub';
+        btn.innerHTML = COL_GH_ICON + ' GitHub';
         btn.disabled  = false;
       }
     }).catch(function () {
-      btn.innerHTML = GH_ICON + ' GitHub';
+      btn.innerHTML = COL_GH_ICON + ' GitHub';
       btn.disabled  = false;
     });
   });
@@ -899,7 +1125,7 @@ function colGhInjectDeleteButtons() {
 
   btn.addEventListener('click', function (e) {
     e.stopPropagation();
-    if (!ghEnsureToken()) return;
+    if (!colGithubEnsureToken()) return;
 
     var slug = (document.getElementById('colEditSlug') || {}).value || '';
     if (!slug) return;
@@ -941,12 +1167,12 @@ function colGhInjectAddLayoutButton() {
   var btn       = document.createElement('button');
   btn.id        = 'colGhAddLayoutBtn';
   btn.className = 'btn-github';
-  btn.innerHTML = GH_ICON + ' GitHub';
+  btn.innerHTML = COL_GH_ICON + ' GitHub';
   btn.title     = 'Adicionar layout ao arquivo da coleção no GitHub';
   anchor.parentNode.replaceChild(btn, anchor);
 
   btn.addEventListener('click', function () {
-    if (!ghEnsureToken()) return;
+    if (!colGithubEnsureToken()) return;
 
     var data = typeof colGetAddLayoutFormData === 'function' ? colGetAddLayoutFormData() : null;
     if (!data) return;
@@ -954,7 +1180,7 @@ function colGhInjectAddLayoutButton() {
     /* Precisa saber em qual coleção está — lê do _colCurrentCollection */
     var col = (typeof _colCurrentCollection !== 'undefined') ? _colCurrentCollection : null;
     if (!col) {
-      ghShowErrorModal('Nenhuma coleção selecionada.');
+      colGithubShowErrorModal('Nenhuma coleção selecionada.');
       return;
     }
 
@@ -963,18 +1189,18 @@ function colGhInjectAddLayoutButton() {
 
     colGhAddLayout(col.slug, data).then(function (ok) {
       if (ok) {
-        btn.innerHTML = GH_ICON + ' Salvo!';
+        btn.innerHTML = COL_GH_ICON + ' Salvo!';
         setTimeout(function () {
           if (typeof colCloseAddLayoutModal === 'function') colCloseAddLayoutModal();
-          btn.innerHTML = GH_ICON + ' GitHub';
+          btn.innerHTML = COL_GH_ICON + ' GitHub';
           btn.disabled  = false;
         }, 1200);
       } else {
-        btn.innerHTML = GH_ICON + ' GitHub';
+        btn.innerHTML = COL_GH_ICON + ' GitHub';
         btn.disabled  = false;
       }
     }).catch(function () {
-      btn.innerHTML = GH_ICON + ' GitHub';
+      btn.innerHTML = COL_GH_ICON + ' GitHub';
       btn.disabled  = false;
     });
   });
@@ -989,18 +1215,18 @@ function colGhInjectEditLayoutButton() {
   var btn       = document.createElement('button');
   btn.id        = 'colGhEditLayoutBtn';
   btn.className = 'btn-github';
-  btn.innerHTML = GH_ICON + ' GitHub';
+  btn.innerHTML = COL_GH_ICON + ' GitHub';
   btn.title     = 'Salvar layout editado no repositório GitHub';
   anchor.parentNode.replaceChild(btn, anchor);
 
   btn.addEventListener('click', function () {
-    if (!ghEnsureToken()) return;
+    if (!colGithubEnsureToken()) return;
 
     var data = typeof colGetEditLayoutFormData === 'function' ? colGetEditLayoutFormData() : null;
     if (!data) return;
 
     var col = (typeof _colCurrentCollection !== 'undefined') ? _colCurrentCollection : null;
-    if (!col) { ghShowErrorModal('Nenhuma coleção selecionada.'); return; }
+    if (!col) { colGithubShowErrorModal('Nenhuma coleção selecionada.'); return; }
 
     /* ID do layout vem do campo hidden colEditLayoutId */
     var layoutId = (document.getElementById('colEditLayoutId') || {}).value || data.id;
@@ -1010,18 +1236,18 @@ function colGhInjectEditLayoutButton() {
 
     colGhEditLayout(col.slug, layoutId, data).then(function (ok) {
       if (ok) {
-        btn.innerHTML = GH_ICON + ' Salvo!';
+        btn.innerHTML = COL_GH_ICON + ' Salvo!';
         setTimeout(function () {
           if (typeof colCloseEditLayoutModal === 'function') colCloseEditLayoutModal();
-          btn.innerHTML = GH_ICON + ' GitHub';
+          btn.innerHTML = COL_GH_ICON + ' GitHub';
           btn.disabled  = false;
         }, 1200);
       } else {
-        btn.innerHTML = GH_ICON + ' GitHub';
+        btn.innerHTML = COL_GH_ICON + ' GitHub';
         btn.disabled  = false;
       }
     }).catch(function () {
-      btn.innerHTML = GH_ICON + ' GitHub';
+      btn.innerHTML = COL_GH_ICON + ' GitHub';
       btn.disabled  = false;
     });
   });
@@ -1041,7 +1267,7 @@ function colGhInjectDeleteLayoutButtons() {
 
   btn.addEventListener('click', function (e) {
     e.stopPropagation();
-    if (!ghEnsureToken()) return;
+    if (!colGithubEnsureToken()) return;
 
     var col = (typeof _colCurrentCollection !== 'undefined') ? _colCurrentCollection : null;
     if (!col) return;
@@ -1102,7 +1328,9 @@ function colGhObserveModals() {
    INICIALIZAÇÃO — só ativa no GitHub Pages
 ═══════════════════════════════════════════════════════════════════════ */
 
-document.addEventListener('DOMContentLoaded', function () {
+function initSenkoColecoesGithub() {
+  if (initSenkoColecoesGithub.initialized) return;
+  initSenkoColecoesGithub.initialized = true;
   if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;
 
   colGhObserveModals();
@@ -1115,4 +1343,8 @@ document.addEventListener('DOMContentLoaded', function () {
   colGhInjectEditLayoutButton();
   colGhInjectDeleteButtons();
   colGhInjectDeleteLayoutButtons();
-});
+}
+
+window.SenkoColecoesGithub = {
+  init: initSenkoColecoesGithub
+};

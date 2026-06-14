@@ -1,25 +1,36 @@
 (function () {
+  var api = window.SenkoImagens = window.SenkoImagens || {};
+
   function initTabs() {
-    document.querySelectorAll('.tab').forEach(function (tab) {
+    api.queryAll('.tab').forEach(function (tab) {
       tab.addEventListener('click', function () {
         var target = tab.dataset.tab;
-        document.querySelectorAll('.tab').forEach(function (item) {
+        api.queryAll('.tab').forEach(function (item) {
           item.classList.toggle('is-active', item === tab);
         });
-        document.querySelectorAll('.view').forEach(function (view) {
+        api.queryAll('.view').forEach(function (view) {
           view.classList.toggle('is-active', view.id === 'view-' + target);
         });
-        if (typeof setStatus === 'function') {
-          setStatus('', target === 'resizer' ? 'redimensionador' : 'compressor');
-        }
+        api.setStatus('', target === 'resizer' ? 'redimensionador' : 'compressor');
       });
     });
   }
 
-  document.addEventListener('DOMContentLoaded', function () {
+  api.init = function initImagens(root) {
+    api.setRoot(root);
     initTabs();
-    if (typeof initCompressor === 'function') initCompressor();
-    if (typeof initResizer === 'function') initResizer();
-    if (typeof setStatus === 'function') setStatus('', 'compressor');
+    if (typeof api.initCompressor === 'function') api.initCompressor();
+    if (typeof api.initResizer === 'function') api.initResizer();
+    api.setStatus('', 'compressor');
+  };
+
+  document.addEventListener('DOMContentLoaded', function () {
+    /*
+     * Modo standalone para abrir app/features/imagens/index.html direto.
+     * No SenkoLib principal o register.js chama api.init(shadowRoot).
+     */
+    if (!window.SenkoShell && document.querySelector('.image-tool-app')) {
+      api.init(document);
+    }
   });
 })();

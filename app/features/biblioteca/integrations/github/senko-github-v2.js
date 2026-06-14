@@ -1,4 +1,10 @@
 // @ts-nocheck
+/*
+ * INDEPENDENCIA DE FEATURE:
+ * Este modulo GitHub pertence somente a Biblioteca. Ele pode depender de
+ * SenkoLib e dos scripts da Biblioteca, mas nenhuma outra feature deve
+ * importar ou chamar estas funcoes globais.
+ */
 /* ═══════════════════════════════════════════════════════════════════════
    senko-github-v2.js — Módulo: salvar direto no GitHub (v2 — token seguro)
    ───────────────────────────────────────────────────────────────────────
@@ -7,9 +13,9 @@
      - Token é pedido via prompt e salvo no localStorage do navegador
      - Botão de cadeado no header indica estado do token
 
-   COMO USAR:
-     Adicione no index.html APÓS o script.js:
-       <script src="senko-github-v2.js"></script>
+   CARREGAMENTO:
+     O register.js da Biblioteca carrega este módulo depois da UI. O
+     index.html principal não conhece nem inicializa a integração.
 
    REQUISITOS:
      - Personal Access Token do GitHub com escopo "repo" (classic)
@@ -32,6 +38,7 @@
 ═══════════════════════════════════════════════════════════════════════ */
 
 var GH_CONFIG_KEY = 'senkolib_github_config';
+var GH_LAYOUTS_DIR = 'app/features/biblioteca/data/layouts';
 
 var GITHUB_CONFIG = (function () {
   var hostname = window.location.hostname;
@@ -234,6 +241,11 @@ function githubListDir(path) {
    PARSER — localiza e substitui objetos de layout
 ═══════════════════════════════════════════════════════════════════════ */
 
+/*
+ * Parser textual intencional: os arquivos de layout sao JavaScript com
+ * template literals, nao JSON. Por isso a busca percorre caractere por
+ * caractere e ignora chaves dentro de crases antes de substituir o objeto.
+ */
 function ghFindObjectBounds(content, layoutId) {
   var marker    = '/*@@@@Senko - ' + layoutId.toLowerCase() + ' */';
   var markerPos = content.indexOf(marker);
@@ -279,6 +291,10 @@ function ghFindObjectBounds(content, layoutId) {
   return null;
 }
 
+/*
+ * Mantem apenas o ultimo marcador repetido. Isso protege contra salvamentos
+ * antigos que deixaram comentarios duplicados antes do mesmo objeto.
+ */
 function ghDeduplicateMarkers(content, layoutId) {
   var marker    = '/*@@@@Senko - ' + layoutId.toLowerCase() + ' */';
   var positions = [];
@@ -349,7 +365,7 @@ function githubSaveLayout(layoutId, objectCode) {
 
   ghSetStatus('Buscando arquivo…', 'saving');
 
-  return githubListDir('layouts').then(function (entries) {
+  return githubListDir(GH_LAYOUTS_DIR).then(function (entries) {
     var jsFiles = entries.filter(function (e) {
       return e.type === 'file' && e.name.endsWith('.js');
     });
@@ -457,7 +473,7 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
 
   ghSetStatus('Lendo arquivo…', 'saving');
 
-  return githubGetFile('app/features/biblioteca/data/layouts/' + fileName).then(function (data) {
+  return githubGetFile(GH_LAYOUTS_DIR + '/' + fileName).then(function (data) {
     var content = data.content;
     var sha     = data.sha;
 
@@ -485,7 +501,7 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
     ghSetStatus('Salvando no GitHub…', 'saving');
 
     return githubPutFile(
-      'app/features/biblioteca/data/layouts/' + fileName,
+      GH_LAYOUTS_DIR + '/' + fileName,
       newContent,
       sha,
       '[SenkoLib] add layout: ' + layoutId
@@ -508,9 +524,9 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
         : [];
 
       SenkoLib.register([{ id: layoutId, name: name, tags: tags, html: html, css: css }]);
-      ghSetStatus('✓ Salvo em app/features/biblioteca/data/layouts/' + fileName, 'ok');
+      ghSetStatus('✓ Salvo em ' + GH_LAYOUTS_DIR + '/' + fileName, 'ok');
       ghUnlockSave();
-      ghStartDeployWatch('app/features/biblioteca/data/layouts/' + fileName);
+      ghStartDeployWatch(GH_LAYOUTS_DIR + '/' + fileName);
       renderGrid();
       return fileName;
     });
@@ -937,7 +953,9 @@ function ghShowErrorModal(rawMessage) {
   document.body.style.overflow = 'hidden';
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+function initSenkoBibliotecaGithubV2() {
+  if (initSenkoBibliotecaGithubV2.initialized) return;
+  initSenkoBibliotecaGithubV2.initialized = true;
 
   /* ─── Só executa no GitHub Pages ─────────────────────
      Em qualquer outro ambiente (localhost, Live Server,
@@ -1364,7 +1382,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /* Botões de variante (nova e editar) foram movidos para
-     app/integrations/github/scripts/senko-github-variants.js */
+     app/features/biblioteca/integrations/github/senko-github-variants.js */
 
   /* ─── Modal criação — botão GitHub ────────── */
   var copyGeneratedAnchor = document.getElementById('copyGeneratedBtn');
@@ -1416,4 +1434,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-});
+}
+
+window.SenkoBibliotecaGithubV2 = {
+  init: initSenkoBibliotecaGithubV2
+};

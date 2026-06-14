@@ -3,7 +3,7 @@
    col-script.js — UI da aba de Coleções
 
    RESPONSABILIDADE:
-     - Registra a aba no shell de features do SenkoLib
+     - Inicializa e renderiza a view criada por view.js
      - Renderiza o grid de cards de coleções
      - Gerencia filtros por grupo e pesquisa
      - Ações dos cards (abrir modal, editar, excluir)
@@ -11,38 +11,60 @@
    DEPENDÊNCIAS (devem estar carregadas antes):
      col-groups.js, col-groups-data.js, col-core.js, col-styles.css
 
-   EXPÕE (globais para col-modals.js e senko-github-col.js):
+   EXPÕE (globais para col-modals.js e colecoes-github.js):
      colRenderGrid()       → re-renderiza o grid de coleções
      colUpdateStatsBar()   → atualiza a barra de stats
      colOpenCollection(col) → abre o modal de uma coleção
 ═══════════════════════════════════════════════════════════════════════ */
 
-/* ── Estado da aba de Coleções ─────────────────────────────────────── */
+/* ── Estado da aba de Colecoes ─────────────────────────────────── */
 var colState = {
   activeGroup: null,   /* slug do grupo filtrado, null = todos */
-  search:      '',     /* texto da busca (reutiliza o searchInput global) */
+  search:      '',     /* texto da busca interna da propria feature */
 };
+var colFeatureInitialized = false;
+var colFeatureApi = window.SenkoColecoes = window.SenkoColecoes || {};
 
-/* ── Helpers visuais (reutiliza buildSrcDoc e lazyIframe do script.js) ── */
+/*
+ * Helpers visuais exclusivos de Colecoes.
+ *
+ * REGRA DE INDEPENDENCIA:
+ * Colecoes nao chama buildSrcDoc/lazyIframe/scaleCardIframe da Biblioteca.
+ * A duplicacao aqui e proposital: remover Biblioteca nao pode alterar
+ * preview, escala ou carregamento dos cards de Colecoes.
+ */
 function colBuildSrcDoc(html, css) {
-  /* Reutiliza buildSrcDoc se disponível, senão reimplementa inline */
-  if (typeof buildSrcDoc === 'function') return buildSrcDoc(html, css);
-  return '<!DOCTYPE html><html><head><meta charset="UTF-8">'
-    + '<style>' + (css || '') + '</style></head><body>' + (html || '') + '</body></html>';
+  return '<!DOCTYPE html><html><head><meta charset="UTF-8">' +
+    '<style>html,body{margin:0;padding:0;} ' + (css || '') + '</style>' +
+    '</head><body>' + (html || '') + '</body></html>';
 }
 
 function colLazyIframe(iframe, html, css) {
-  if (typeof lazyIframe === 'function') {
-    lazyIframe(iframe, html, css);
-  } else {
-    iframe.srcdoc = colBuildSrcDoc(html, css);
+  var src = colBuildSrcDoc(html, css);
+  iframe.dataset.srcdoc = src;
+
+  if (!('IntersectionObserver' in window)) {
+    iframe.srcdoc = src;
+    return;
   }
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      if (!iframe.srcdoc) iframe.srcdoc = iframe.dataset.srcdoc || '';
+      observer.unobserve(iframe);
+    });
+  }, { rootMargin: '220px' });
+
+  observer.observe(iframe);
 }
 
 function colScaleIframe(iframe) {
-  if (typeof scaleCardIframe === 'function') {
-    scaleCardIframe(iframe);
-  }
+  var container = iframe.parentElement;
+  if (!container) return;
+  var scale = container.offsetWidth / 1280;
+  iframe.style.transform = 'scale(' + scale + ')';
+  iframe.style.height = (container.offsetHeight / scale) + 'px';
 }
 
 
@@ -67,33 +89,16 @@ function colCreateDashboard() {
   var current = document.getElementById('colDashboard');
   if (current) return current;
 
-  var el = document.createElement('div');
-  el.id        = 'colDashboard';
-  el.className = 'col-dashboard';
-  el.style.display = 'none';
-
-  el.innerHTML =
-    '<div class="col-filter-bar" id="colFilterBar">' +
-      '<span class="col-filter-label">Grupo</span>' +
-    '</div>' +
-    '<div class="col-stats-bar" id="colStatsBar"></div>' +
-    '<div class="col-grid" id="colGrid"></div>';
-
-  /* Insere depois do <main id="dashboard"> */
-  var dashboard = document.getElementById('dashboard');
-  if (dashboard && dashboard.parentNode) {
-    dashboard.parentNode.insertBefore(el, dashboard.nextSibling);
-  } else {
-    document.body.appendChild(el);
-  }
-
-  return el;
+  /*
+   * Fallback para testes isolados. No app principal register.js cria a view
+   * antes de carregar este arquivo.
+   */
+  if (!colFeatureApi.createView) return null;
+  var dashboard = colFeatureApi.createView();
+  (document.getElementById('colecoesFeature') || document.body).appendChild(dashboard);
+  return dashboard;
 }
 
-
-/* ═══════════════════════════════════════════════════════════════════════
-   FILTROS POR GRUPO
-═══════════════════════════════════════════════════════════════════════ */
 
 function colRenderFilterBar() {
   var bar = document.getElementById('colFilterBar');
@@ -232,6 +237,34 @@ function colRenderGrid() {
   colUpdateStatsBar(filtered.length);
 }
 
+function colWithLoadedData(col, card, callback) {
+  var loader = window.SenkoColecoesData;
+  if (!col || !col._senkoLazy || !loader || typeof loader.ensureLoaded !== 'function') {
+    callback(col);
+    return;
+  }
+
+  if (card) {
+    card.classList.add('is-loading');
+    card.setAttribute('aria-busy', 'true');
+  }
+
+  loader.ensureLoaded(col.slug).then(function (loadedCollection) {
+    if (card) {
+      card.classList.remove('is-loading');
+      card.removeAttribute('aria-busy');
+    }
+    callback(loadedCollection);
+  }).catch(function (error) {
+    if (card) {
+      card.classList.remove('is-loading');
+      card.removeAttribute('aria-busy');
+    }
+    console.error('[Colecoes] Falha ao carregar dados de ' + col.slug + ':', error);
+    window.alert('Nao foi possivel carregar esta colecao.');
+  });
+}
+
 function colCreateCard(col, index) {
   var group = (typeof ColGroups !== 'undefined' && col.group)
     ? ColGroups.getBySlug(col.group)
@@ -272,7 +305,9 @@ function colCreateCard(col, index) {
   nameEl.className = 'col-card-name';
   nameEl.textContent = col.name;
 
-  var count = (col.layouts || []).length;
+  var count = col._senkoLazy
+    ? (Number(col.layoutCount) || 0)
+    : (col.layouts || []).length;
   var meta = document.createElement('div');
   meta.className = 'col-card-meta';
   meta.innerHTML = '<strong>' + count + '</strong> ' + (count === 1 ? 'layout' : 'layouts');
@@ -291,7 +326,9 @@ function colCreateCard(col, index) {
   btnEdit.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
   btnEdit.addEventListener('click', function (e) {
     e.stopPropagation();
-    if (typeof colOpenEditModal === 'function') colOpenEditModal(col);
+    colWithLoadedData(col, card, function (loadedCollection) {
+      if (typeof colOpenEditModal === 'function') colOpenEditModal(loadedCollection);
+    });
   });
 
   actions.appendChild(btnEdit);
@@ -302,7 +339,7 @@ function colCreateCard(col, index) {
 
   /* Clique abre o modal de layouts */
   card.addEventListener('click', function () {
-    colOpenCollection(col);
+    colOpenCollection(col, card);
   });
 
   return card;
@@ -314,29 +351,38 @@ function colCreateCard(col, index) {
    (implementação está em col-modals.js)
 ═══════════════════════════════════════════════════════════════════════ */
 
-function colOpenCollection(col) {
-  if (typeof colOpenCollectionModal === 'function') {
-    colOpenCollectionModal(col);
-  }
+function colOpenCollection(col, card) {
+  colWithLoadedData(col, card, function (loadedCollection) {
+    if (typeof colOpenCollectionModal === 'function') {
+      colOpenCollectionModal(loadedCollection);
+    }
+  });
 }
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   INTEGRAÇÃO COM O CAMPO DE BUSCA GLOBAL
-   Quando a aba de Coleções está ativa, a busca filtra coleções.
+   BUSCA E CRIACAO LOCAIS DA FEATURE
+   Colecoes nao usa o campo de busca nem o botao Adicionar da Biblioteca.
 ═══════════════════════════════════════════════════════════════════════ */
 
 function colHookSearch() {
-  var searchInput = document.getElementById('searchInput');
-  if (!searchInput) return;
+  /* Busca e criacao sao controles locais da feature Colecoes. */
+  var searchInput = document.getElementById('colSearchInput');
+  if (searchInput && !searchInput.dataset.colSearchBound) {
+    searchInput.dataset.colSearchBound = '1';
+    searchInput.addEventListener('input', function () {
+      colState.search = this.value.trim();
+      colRenderGrid();
+    });
+  }
 
-  searchInput.addEventListener('input', function () {
-    /* Só age se a aba de Coleções estiver visível */
-    var colDash = document.getElementById('colDashboard');
-    if (!colDash || colDash.style.display === 'none') return;
-    colState.search = this.value.trim();
-    colRenderGrid();
-  });
+  var addButton = document.getElementById('colOpenCreateBtn');
+  if (addButton && !addButton.dataset.colCreateBound) {
+    addButton.dataset.colCreateBound = '1';
+    addButton.addEventListener('click', function () {
+      if (typeof colOpenCreateModal === 'function') colOpenCreateModal();
+    });
+  }
 }
 
 
@@ -350,17 +396,13 @@ function colMountFeature() {
   return document.getElementById('colDashboard');
 }
 
-if (window.SenkoShell) {
-  window.SenkoShell.registerFeature({
-    id: 'colecoes',
-    label: 'Coleções',
-    order: 20,
-    mount: colMountFeature,
-    activate: function () { colRenderGrid(); }
-  });
-} else {
-  document.addEventListener('DOMContentLoaded', function () {
-    colMountFeature();
-    colRenderGrid();
-  });
-}
+colFeatureApi.init = function initColecoes() {
+  if (colFeatureInitialized) return;
+  colFeatureInitialized = true;
+  colMountFeature();
+  colRenderGrid();
+};
+
+colFeatureApi.render = function renderColecoes() {
+  colRenderGrid();
+};

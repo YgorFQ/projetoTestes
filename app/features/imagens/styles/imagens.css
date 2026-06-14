@@ -1,45 +1,16 @@
-:root {
-  --bg: #f8f8f8;
-  --surface: #ffffff;
-  --surface2: #f2f2f2;
-  --surface3: #e8e8e8;
-  --border: #e8e8e8;
-  --border2: #d4d4d4;
-  --accent: #ff6b00;
-  --accent2: #ff8c38;
-  --accent-bg: rgba(255, 107, 0, .08);
-  --green: #1a9e52;
-  --yellow: #c98200;
-  --red: #e03030;
-  --text: #1a1a1a;
-  --text2: #555555;
-  --text3: #aaaaaa;
-  --mono: 'DM Mono', monospace;
-  --sans: 'Nunito', sans-serif;
-}
-
-:root[data-theme="dark"] {
-  --bg: #181a1b;
-  --surface: #1c1e1f;
-  --surface2: #25282a;
-  --surface3: #2d3133;
-  --border: #363b3d;
-  --border2: #4a4f52;
-  --accent: #cc5600;
-  --accent2: #e06a12;
-  --accent-bg: rgba(204, 86, 0, .16);
-  --green: #36a66a;
-  --yellow: #d99a2b;
-  --red: #d44f4f;
-  --text: #d8d4cf;
-  --text2: #b2aca2;
-  --text3: #807970;
-}
-
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+:host {
+  display: block;
+  height: 100%;
+  min-height: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
 }
 
 html,
@@ -49,7 +20,7 @@ body {
   overflow: hidden;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--sans);
+  font-family: var(--font-body);
   line-height: 1.5;
 }
 
@@ -61,17 +32,23 @@ textarea {
 }
 
 .image-tool-app {
-  height: 100vh;
+  height: 100%;
   min-height: 0;
   display: grid;
   grid-template-rows: 54px minmax(0, 1fr);
   background: var(--bg);
 }
 
+body > .image-tool-app {
+  height: 100vh;
+}
+
 .image-tool-nav {
+  position: relative;
   height: 54px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
@@ -116,7 +93,11 @@ textarea {
 }
 
 .header__status {
-  margin-left: auto;
+  position: absolute;
+  top: 50%;
+  right: 1.5rem;
+  transform: translateY(-50%);
+  margin-left: 0;
   display: flex;
   align-items: center;
   gap: .4rem;
@@ -211,6 +192,8 @@ textarea {
 .resizer-results {
   min-width: 0;
   min-height: 0;
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -240,6 +223,50 @@ textarea {
 .panel__badge {
   margin-left: auto;
   color: var(--accent2);
+}
+
+.file-picker {
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+}
+
+.file-picker .btn {
+  width: 100%;
+}
+
+.file-picker__hint {
+  color: var(--text3);
+  font-family: var(--mono);
+  font-size: .62rem;
+  line-height: 1.45;
+}
+
+.compressor-results.is-dragover,
+.resizer-results.is-dragover {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.compressor-results.is-dragover::after,
+.resizer-results.is-dragover::after {
+  content: 'Solte as imagens aqui';
+  position: absolute;
+  inset: 1rem;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--accent);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--accent2);
+  font-family: var(--mono);
+  font-size: .78rem;
+  font-weight: 500;
+  letter-spacing: .04em;
+  pointer-events: none;
+  text-transform: uppercase;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, .16);
 }
 
 .dropzone {
@@ -413,12 +440,18 @@ input[type="range"] {
 }
 
 .image-list {
-  flex: 1;
+  flex: 1 1 0;
+  height: 100%;
   min-height: 0;
-  overflow-y: auto;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-auto-rows: max-content;
   align-content: start;
+  align-items: start;
   gap: 1rem;
   padding: 1rem;
 }
@@ -453,6 +486,7 @@ input[type="range"] {
 
 .image-card {
   min-width: 0;
+  align-self: start;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -494,6 +528,10 @@ input[type="range"] {
   display: flex;
   flex-direction: column;
   gap: .35rem;
+}
+
+.filename-input {
+  text-overflow: clip;
 }
 
 .image-stats {
@@ -549,6 +587,7 @@ input[type="range"] {
   flex: 1;
   min-width: 0;
   min-height: 0;
+  overflow: hidden;
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
   gap: 1rem;
@@ -637,15 +676,21 @@ input[type="range"] {
 
 .resize-file-list {
   min-height: 0;
-  overflow-y: auto;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-auto-rows: max-content;
   align-content: start;
+  align-items: start;
   gap: 1rem;
 }
 
 .resize-file-card {
   min-width: 0;
+  align-self: start;
   overflow: hidden;
   display: grid;
   grid-template-rows: 150px auto;
@@ -822,7 +867,10 @@ input[type="range"] {
   }
 
   .header__status {
+    position: static;
+    transform: none;
     margin-left: 0;
+    align-self: flex-end;
   }
 
   .image-list,
