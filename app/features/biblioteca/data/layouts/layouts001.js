@@ -4162,9 +4162,9 @@ input[type="radio"]:focus + .c32-nav label[for="c32-s2"] {
   /* variantes: app/features/biblioteca/data/variants/testegamered.js */
   {
     id: 'testegamered',
-    name: 'testegamered',
+    name: 'testegameredsdsdsdsdsdsdsdsdsdsdsd',
     tags: ['tsrtwatdwi'],
-    html: `adea/.\\jdhzkg.`,
+    html: `adea/.\\jdhzkg.effdfdfdfdfd`,
     css: `sefsfzezx\\cft `
   },
 
