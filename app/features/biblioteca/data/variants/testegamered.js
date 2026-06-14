@@ -6,9 +6,9 @@ SenkoLib.registerVariant('testegamered', [
     html: `ssfssfdsfdsfsfioklfujfijdhfihdhf hfhfhfhfhfh`,
     css: ``,
   },
-/*@@@@Senko - cavalo */
+/*@@@@Senko - 6323e3432 */
   {
-    name: 'cavalo',
+    name: '6323e3432',
     html: `wdawdwdawd`,
     css: ``,
   },
