@@ -6,4 +6,10 @@ SenkoLib.registerVariant('testegamered', [
     html: `ssfssfdsfdsfsfioklfujfijdhfihdhf hfhfhfhfhfh`,
     css: ``,
   },
+/*@@@@Senko - cavalo */
+  {
+    name: 'cavalo',
+    html: `wdawdwdawd`,
+    css: ``,
+  },
 ]);
