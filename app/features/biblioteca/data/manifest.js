@@ -13,7 +13,6 @@ window.SenkoBibliotecaManifest = {
     "variants/carrossel-com-nav.js",
     "variants/section-21.js",
     "variants/section-27.js",
-    "variants/section-10.js",
-    "variants/testegamered.js"
+    "variants/section-10.js"
   ]
 };
