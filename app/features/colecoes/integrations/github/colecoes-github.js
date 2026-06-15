@@ -378,6 +378,37 @@ function colGhBuildLayoutBlock(layout) {
   Lê o arquivo de uma coleção do GitHub.
   Retorna { exists, sha, content, path } ou { exists: false }.
 */
+function colGhNormalizeName(value) {
+  if (typeof ColLib !== 'undefined' && typeof ColLib.normalizeName === 'function') {
+    return ColLib.normalizeName(value);
+  }
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+    .replace(/\s+/g, ' ');
+}
+
+/*
+ * Confere os nomes do arquivo remoto, alem do estado em memoria. Essa
+ * segunda camada cobre abas antigas que ainda nao receberam uma edicao.
+ */
+function colGhContentHasLayoutName(content, name, exceptLayoutId) {
+  var target = colGhNormalizeName(name);
+  var re = /\/\*@@@@Col - ([^*]+) \*\/[\s\S]*?\bname:\s*'((?:\\.|[^'])*)'/g;
+  var match;
+
+  while ((match = re.exec(content)) !== null) {
+    var layoutId = String(match[1] || '').trim();
+    if (layoutId !== exceptLayoutId && colGhNormalizeName(match[2]) === target) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function colGhGetFile(slug) {
   var path = colGhFilePath(slug);
   return colGithubGetFile(path).then(function (data) {
@@ -538,6 +569,13 @@ function colGhFlushGroups() {
 ═══════════════════════════════════════════════════════════════════════ */
 
 function colGhCreateCollection(colData) {
+  if (typeof ColLib !== 'undefined'
+      && typeof ColLib.hasCollectionName === 'function'
+      && ColLib.hasCollectionName(colData.name, null)) {
+    colGithubShowErrorModal('Ja existe uma colecao com o nome "' + colData.name + '". Escolha outro nome.');
+    return Promise.resolve(false);
+  }
+
   if (!colGithubLockSave()) return Promise.resolve(false);
   if (!colGithubEnsureToken()) {
     colGithubUnlockSave();
@@ -631,6 +669,13 @@ function colGhCreateCollection(colData) {
 ═══════════════════════════════════════════════════════════════════════ */
 
 function colGhEditCollection(colData) {
+  if (typeof ColLib !== 'undefined'
+      && typeof ColLib.hasCollectionName === 'function'
+      && ColLib.hasCollectionName(colData.name, colData.slug)) {
+    colGithubShowErrorModal('Ja existe outra colecao com o nome "' + colData.name + '". Escolha outro nome.');
+    return Promise.resolve(false);
+  }
+
   if (!colGithubLockSave()) return Promise.resolve(false);
   if (!colGithubEnsureToken()) {
     colGithubUnlockSave();
@@ -809,6 +854,13 @@ function colGhDeleteCollection(slug) {
 ═══════════════════════════════════════════════════════════════════════ */
 
 function colGhAddLayout(slug, layoutData) {
+  if (typeof ColLib !== 'undefined'
+      && typeof ColLib.hasLayoutName === 'function'
+      && ColLib.hasLayoutName(slug, layoutData.name, null)) {
+    colGithubShowErrorModal('Ja existe um layout com o nome "' + layoutData.name + '" nesta colecao.');
+    return Promise.resolve(false);
+  }
+
   if (!colGithubLockSave()) return Promise.resolve(false);
   if (!colGithubEnsureToken()) {
     colGithubUnlockSave();
@@ -836,6 +888,12 @@ function colGhAddLayout(slug, layoutData) {
       colGithubSetStatus('Nome de layout duplicado', 'error');
       colGithubUnlockSave();
       colGithubShowErrorModal('Já existe um layout com esse nome nesta coleção.\nEscolha outro nome.');
+      return false;
+    }
+    if (colGhContentHasLayoutName(content, layoutData.name, null)) {
+      colGithubSetStatus('Nome de layout duplicado', 'error');
+      colGithubUnlockSave();
+      colGithubShowErrorModal('Ja existe um layout com o nome "' + layoutData.name + '" nesta colecao.');
       return false;
     }
 
@@ -892,6 +950,13 @@ function colGhAddLayout(slug, layoutData) {
 ═══════════════════════════════════════════════════════════════════════ */
 
 function colGhEditLayout(slug, layoutId, layoutData) {
+  if (typeof ColLib !== 'undefined'
+      && typeof ColLib.hasLayoutName === 'function'
+      && ColLib.hasLayoutName(slug, layoutData.name, layoutId)) {
+    colGithubShowErrorModal('Ja existe outro layout com o nome "' + layoutData.name + '" nesta colecao.');
+    return Promise.resolve(false);
+  }
+
   if (!colGithubLockSave()) return Promise.resolve(false);
   if (!colGithubEnsureToken()) {
     colGithubUnlockSave();
@@ -912,6 +977,12 @@ function colGhEditLayout(slug, layoutId, layoutData) {
 
     var content = fileInfo.content;
     var sha     = fileInfo.sha;
+    if (colGhContentHasLayoutName(content, layoutData.name, layoutId)) {
+      colGithubSetStatus('Nome de layout duplicado', 'error');
+      colGithubUnlockSave();
+      colGithubShowErrorModal('Ja existe outro layout com o nome "' + layoutData.name + '" nesta colecao.');
+      return false;
+    }
     var bounds  = colGhFindLayoutBounds(content, layoutId);
 
     if (!bounds) {

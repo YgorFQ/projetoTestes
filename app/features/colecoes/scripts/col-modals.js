@@ -119,6 +119,29 @@ function _colValidSlug(slug) {
   return /^[a-z0-9-]+$/.test(slug) && slug.length >= 2;
 }
 
+/*
+ * Colecoes valida seus proprios nomes sem depender da Biblioteca. O motor
+ * ColLib repete a regra para proteger chamadas que nao passam pelos modais.
+ */
+function _colCollectionNameExists(name, exceptSlug) {
+  return typeof ColLib !== 'undefined'
+    && typeof ColLib.hasCollectionName === 'function'
+    && ColLib.hasCollectionName(name, exceptSlug || null);
+}
+
+function _colLayoutNameExists(collectionSlug, name, exceptLayoutId) {
+  return typeof ColLib !== 'undefined'
+    && typeof ColLib.hasLayoutName === 'function'
+    && ColLib.hasLayoutName(collectionSlug, name, exceptLayoutId || null);
+}
+
+function _colSetFieldIssue(id, message) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  if (message) el.textContent = '⚠ ' + message;
+  el.style.display = message ? 'block' : 'none';
+}
+
 function _colSyncGeneratedId(nameId, targetId, previewId) {
   var nameEl = document.getElementById(nameId);
   var target = document.getElementById(targetId);
@@ -496,11 +519,18 @@ function _colValidateCreateForm() {
   var nameOk  = name.trim().length >= 3;
   var slugOk  = _colValidSlug(slug.trim());
   var groupOk = !!group;
+  var duplicateName = nameOk && slugOk && _colCollectionNameExists(name, null);
 
-  _colShowFieldError('colCreateNameErr', (!nameOk || !slugOk) && name.length > 0);
+  if (duplicateName) {
+    _colSetFieldIssue('colCreateNameErr', 'Ja existe uma colecao com esse nome');
+  } else if ((!nameOk || !slugOk) && name.length > 0) {
+    _colSetFieldIssue('colCreateNameErr', 'Informe um nome com letras ou numeros (minimo 3 caracteres)');
+  } else {
+    _colSetFieldIssue('colCreateNameErr', '');
+  }
   _colShowFieldError('colCreateGroupErr', false); /* só mostra no submit */
 
-  return nameOk && slugOk && groupOk;
+  return nameOk && slugOk && groupOk && !duplicateName;
 }
 
 function _colShowFieldError(id, show) {
@@ -516,9 +546,19 @@ function colGetCreateFormData() {
   var tags  = _colReadMetadataTags('colCreateTags');
 
   /* Validação final */
-  var ok = name.trim().length >= 3 && _colValidSlug(slug.trim()) && !!group;
+  var duplicateName = _colCollectionNameExists(name, null);
+  var ok = name.trim().length >= 3 && _colValidSlug(slug.trim()) && !!group && !duplicateName;
   if (!ok) {
-    _colShowFieldError('colCreateNameErr', name.trim().length < 3 || !_colValidSlug(slug.trim()));
+    if (duplicateName) {
+      _colSetFieldIssue('colCreateNameErr', 'Ja existe uma colecao com esse nome');
+    } else {
+      _colSetFieldIssue(
+        'colCreateNameErr',
+        name.trim().length < 3 || !_colValidSlug(slug.trim())
+          ? 'Informe um nome com letras ou numeros (minimo 3 caracteres)'
+          : ''
+      );
+    }
     _colShowFieldError('colCreateGroupErr', !group);
   }
   return ok ? { name: name.trim(), slug: slug.trim(), group: group, tags: tags } : null;
@@ -582,7 +622,14 @@ function _colBuildEditModal() {
   _colBindMetadataInput('colEditName', false);
   _colBindMetadataInput('colEditTags', true);
   document.getElementById('colEditName').addEventListener('input', function () {
-    _colShowFieldError('colEditNameErr', this.value.trim().length < 3 && this.value.length > 0);
+    var slug = (document.getElementById('colEditSlug') || {}).value || '';
+    if (_colCollectionNameExists(this.value, slug)) {
+      _colSetFieldIssue('colEditNameErr', 'Ja existe outra colecao com esse nome');
+    } else if (this.value.trim().length < 3 && this.value.length > 0) {
+      _colSetFieldIssue('colEditNameErr', 'Nome obrigatorio (minimo 3 caracteres)');
+    } else {
+      _colSetFieldIssue('colEditNameErr', '');
+    }
   });
 
   document.getElementById('colEditNewGroupBtn').addEventListener('click', function () {
@@ -628,9 +675,15 @@ function colGetEditFormData() {
   var group = (document.getElementById('colEditGroup') || {}).value || '';
   var tags  = _colReadMetadataTags('colEditTags');
 
-  var ok = name.trim().length >= 3 && !!group;
+  var duplicateName = _colCollectionNameExists(name, slug);
+  var ok = name.trim().length >= 3 && !!group && !duplicateName;
   if (!ok) {
-    _colShowFieldError('colEditNameErr',  name.trim().length < 3);
+    _colSetFieldIssue(
+      'colEditNameErr',
+      duplicateName
+        ? 'Ja existe outra colecao com esse nome'
+        : (name.trim().length < 3 ? 'Nome obrigatorio (minimo 3 caracteres)' : '')
+    );
     _colShowFieldError('colEditGroupErr', !group);
   }
   return ok ? { slug: slug, name: name.trim(), group: group, tags: tags } : null;
@@ -837,7 +890,14 @@ function _colBuildAddLayoutModal() {
   _colBindMetadataInput('colAddLayoutName', false);
   document.getElementById('colAddLayoutName').addEventListener('input', function () {
     var id = _colSyncGeneratedId('colAddLayoutName', 'colAddLayoutId');
-    _colShowFieldError('colAddLayoutNameErr', !_colValidSlug(id) && this.value.length > 0);
+    var slug = _colCurrentCollection ? _colCurrentCollection.slug : '';
+    if (_colLayoutNameExists(slug, this.value, null)) {
+      _colSetFieldIssue('colAddLayoutNameErr', 'Ja existe um layout com esse nome nesta colecao');
+    } else if (!_colValidSlug(id) && this.value.length > 0) {
+      _colSetFieldIssue('colAddLayoutNameErr', 'Informe um nome com pelo menos 2 letras ou numeros');
+    } else {
+      _colSetFieldIssue('colAddLayoutNameErr', '');
+    }
   });
 
   document.getElementById('colAddLayoutClose').addEventListener('click', colCloseAddLayoutModal);
@@ -882,9 +942,16 @@ function colGetAddLayoutFormData() {
   var id      = _colSyncGeneratedId('colAddLayoutName', 'colAddLayoutId');
   var content = (document.getElementById('colAddLayoutContent') || {}).value || '';
 
-  var ok = _colValidSlug(id) && name.trim().length >= 1;
+  var slug = _colCurrentCollection ? _colCurrentCollection.slug : '';
+  var duplicateName = _colLayoutNameExists(slug, name, null);
+  var ok = _colValidSlug(id) && name.trim().length >= 1 && !duplicateName;
   if (!ok) {
-    _colShowFieldError('colAddLayoutNameErr', name.trim().length < 1 || !_colValidSlug(id));
+    _colSetFieldIssue(
+      'colAddLayoutNameErr',
+      duplicateName
+        ? 'Ja existe um layout com esse nome nesta colecao'
+        : 'Informe um nome com pelo menos 2 letras ou numeros'
+    );
   }
   return ok ? { id: id, name: name.trim(), html: content, css: '' } : null;
 }
@@ -962,6 +1029,17 @@ function _colBuildEditLayoutModal() {
   });
 
   _colBindMetadataInput('colEditLayoutName', false);
+  document.getElementById('colEditLayoutName').addEventListener('input', function () {
+    var slug = _colCurrentCollection ? _colCurrentCollection.slug : '';
+    var layoutId = (document.getElementById('colEditLayoutId') || {}).value || '';
+    if (_colLayoutNameExists(slug, this.value, layoutId)) {
+      _colSetFieldIssue('colEditLayoutNameErr', 'Ja existe outro layout com esse nome nesta colecao');
+    } else if (!this.value.trim()) {
+      _colSetFieldIssue('colEditLayoutNameErr', 'Nome obrigatorio');
+    } else {
+      _colSetFieldIssue('colEditLayoutNameErr', '');
+    }
+  });
   document.getElementById('colEditLayoutClose').addEventListener('click', colCloseEditLayoutModal);
   document.getElementById('colEditLayoutCancel').addEventListener('click', colCloseEditLayoutModal);
   _colOverlayClick('colEditLayoutOverlay', 'colEditLayoutModal', colCloseEditLayoutModal);
@@ -1005,8 +1083,17 @@ function colGetEditLayoutFormData() {
   var name    = _colReadMetadataInput('colEditLayoutName', false);
   var content = (document.getElementById('colEditLayoutContent') || {}).value || '';
 
-  var ok = name.trim().length >= 1;
-  if (!ok) _colShowFieldError('colEditLayoutNameErr', true);
+  var slug = _colCurrentCollection ? _colCurrentCollection.slug : '';
+  var duplicateName = _colLayoutNameExists(slug, name, id);
+  var ok = name.trim().length >= 1 && !duplicateName;
+  if (!ok) {
+    _colSetFieldIssue(
+      'colEditLayoutNameErr',
+      duplicateName
+        ? 'Ja existe outro layout com esse nome nesta colecao'
+        : 'Nome obrigatorio'
+    );
+  }
   return ok ? { id: id, name: name.trim(), html: content, css: '' } : null;
 }
 

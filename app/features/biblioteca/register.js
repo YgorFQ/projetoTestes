@@ -20,7 +20,10 @@
   var secondaryLoadPromise;
 
   function featureUrl(path) {
-    return new URL(path, featureBaseUrl).href;
+    var absoluteUrl = new URL(path, featureBaseUrl).href;
+    return window.SenkoFreshAssets
+      ? window.SenkoFreshAssets.url(absoluteUrl)
+      : absoluteUrl;
   }
 
   function loadStyle(path) {
@@ -94,7 +97,7 @@
 
           return Promise.all([
             loadScript('prototypes/layout-editor-prototype.js?v=20260613-fast-load'),
-            loadScript('integrations/github/senko-github-v2.js?v=20260613-fast-load')
+            loadScript('integrations/github/senko-github-v2.js?v=20260614-token-feedback')
           ]);
         }).then(function () {
           if (window.SenkoBibliotecaGithubV2) {
@@ -102,8 +105,8 @@
           }
 
           return Promise.all([
-            loadScript('integrations/github/senko-github-variants.js?v=20260613-fast-load'),
-            loadScript('integrations/github/senko-github-delete.js?v=20260613-fast-load')
+            loadScript('integrations/github/senko-github-variants.js?v=20260614-token-feedback'),
+            loadScript('integrations/github/senko-github-delete.js?v=20260614-token-feedback')
           ]);
         }).then(function () {
           if (window.SenkoBibliotecaGithubVariants) {

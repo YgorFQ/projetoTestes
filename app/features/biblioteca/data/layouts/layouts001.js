@@ -4158,6 +4158,16 @@ input[type="radio"]:focus + .c32-nav label[for="c32-s2"] {
   },
 
 
+/*@@@@Senko - testegamered */
+  /* variantes: app/features/biblioteca/data/variants/testegamered.js */
+  {
+    id: 'testegamered',
+    name: 'testegamered',
+    tags: ['tsrtwatdwi'],
+    html: `adea/.\\jdhzkg.`,
+    css: `sefsfzezx\\cft `
+  },
+
 
 /*@@@@Senko - section-15 */
   /* variantes: app/features/biblioteca/data/variants/section-15.js */

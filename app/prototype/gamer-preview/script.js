@@ -4,7 +4,10 @@
   const FEATURE_BASE_URL = currentScript && currentScript.src
     ? new URL('./', currentScript.src).href
     : new URL('app/prototype/gamer-preview/', document.baseURI).href;
-  const BASE_TEMPLATE_URL = new URL('../gamer-base.html', FEATURE_BASE_URL).href;
+  const RAW_BASE_TEMPLATE_URL = new URL('../gamer-base.html', FEATURE_BASE_URL).href;
+  const BASE_TEMPLATE_URL = window.SenkoFreshAssets
+    ? window.SenkoFreshAssets.url(RAW_BASE_TEMPLATE_URL)
+    : RAW_BASE_TEMPLATE_URL;
   const DEFAULT_CONTENT = '<section style="padding: 48px 16px; text-align: center; font-family: Arial, sans-serif;">\n  <h2>Preview GAMER</h2>\n</section>';
   const CONTAINMENT_STYLE_ID = 'senkolib-gamer-containment';
   const CONTAINMENT_CSS = `

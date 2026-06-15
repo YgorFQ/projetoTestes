@@ -54,7 +54,7 @@ SenkoLib/
 |       `-- styles/                      - tokens/componentes visuais compartilhados
 |
 |-- index.html                           - ponto de entrada do SenkoLib
-|-- sw.js                                - legado; nao e mais registrado pelo index
+|-- sw.js                                - desativa cache local em HTTP/HTTPS
 `-- settings.json                        - configuracoes locais do Live Server
 ```
 
@@ -73,3 +73,4 @@ SenkoLib/
 - O painel principal nao busca nem recorta o `index.html` standalone de uma feature.
 - `iframe` fica reservado para preview, sandbox ou medicao interna, nunca para carregar uma janela inteira de feature.
 - Uma feature opcional so cria aba quando o seu script de registro carrega. Remover a pasta da feature impede esse registro.
+- Cada abertura gera uma chave nova para os assets locais; em HTTP/HTTPS, `sw.js` tambem busca tudo com cache desativado.

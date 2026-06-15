@@ -10,6 +10,8 @@
      ColLib.register(obj)                          → registra uma coleção
      ColLib.getAll()                               → todas as coleções
      ColLib.getBySlug(slug)                        → busca por slug
+     ColLib.hasCollectionName(name, exceptSlug)    → consulta unicidade
+     ColLib.hasLayoutName(slug, name, exceptId)    → consulta unicidade
      ColLib.updateCollection(slug, patch)          → atualiza metadados em memória
      ColLib.removeCollection(slug)                 → remove da memória
      ColLib.addLayout(slug, layout)                → adiciona layout à coleção
@@ -47,6 +49,50 @@ var ColLib = (function () {
     return -1;
   }
 
+  /*
+   * A comparacao ignora diferencas apenas visuais. Assim nomes que mudam
+   * somente em caixa, acentos, pontuacao ou espacos continuam sendo iguais.
+   */
+  function _normalizeName(value) {
+    return String(value || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, ' ')
+      .trim()
+      .replace(/\s+/g, ' ');
+  }
+
+  function _hasCollectionName(name, exceptSlug) {
+    var key = _normalizeName(name);
+    if (!key) return false;
+
+    return _collections.some(function (collection) {
+      return collection.slug !== exceptSlug && _normalizeName(collection.name) === key;
+    });
+  }
+
+  function _hasLayoutName(slug, name, exceptLayoutId) {
+    var idx = _findIndex(slug);
+    var key = _normalizeName(name);
+    if (idx === -1 || !key) return false;
+
+    return (_collections[idx].layouts || []).some(function (layout) {
+      return layout.id !== exceptLayoutId && _normalizeName(layout.name) === key;
+    });
+  }
+
+  function _hasDuplicateLayoutNames(layouts) {
+    var names = {};
+    for (var i = 0; i < layouts.length; i++) {
+      var key = _normalizeName(layouts[i] && layouts[i].name);
+      if (!key) continue;
+      if (names[key]) return true;
+      names[key] = true;
+    }
+    return false;
+  }
+
   return {
 
     /* ─────────────────────────────────────────────────────────────────
@@ -66,11 +112,20 @@ var ColLib = (function () {
       if (!Array.isArray(obj.layouts)) obj.layouts = [];
 
       var idx = _findIndex(slug);
+      if (_hasCollectionName(obj.name, slug)) {
+        console.error('[ColLib] Nome de colecao duplicado foi recusado: ' + obj.name);
+        return false;
+      }
+      if (_hasDuplicateLayoutNames(obj.layouts)) {
+        console.error('[ColLib] Colecao recusada porque contem layouts com nomes duplicados: ' + slug);
+        return false;
+      }
       if (idx !== -1) {
         _collections[idx] = obj;  /* substitui — evita duplicata */
       } else {
         _collections.push(obj);
       }
+      return true;
     },
 
     /* ─────────────────────────────────────────────────────────────────
@@ -91,6 +146,12 @@ var ColLib = (function () {
       return idx !== -1 ? _collections[idx] : null;
     },
 
+    normalizeName: _normalizeName,
+
+    hasCollectionName: _hasCollectionName,
+
+    hasLayoutName: _hasLayoutName,
+
     /* ─────────────────────────────────────────────────────────────────
        updateCollection(slug, patch)
        Atualiza metadados (name, group, tags) em memória após save no GitHub.
@@ -98,11 +159,16 @@ var ColLib = (function () {
     ───────────────────────────────────────────────────────────────── */
     updateCollection: function (slug, patch) {
       var idx = _findIndex(slug);
-      if (idx === -1) return;
+      if (idx === -1) return false;
       var col = _collections[idx];
+      if (patch.name !== undefined && _hasCollectionName(patch.name, col.slug)) {
+        console.error('[ColLib] Edicao recusada por nome de colecao duplicado: ' + patch.name);
+        return false;
+      }
       if (patch.name  !== undefined) col.name  = patch.name;
       if (patch.group !== undefined) col.group = patch.group;
       if (patch.tags  !== undefined) col.tags  = patch.tags;
+      return true;
     },
 
     /* ─────────────────────────────────────────────────────────────────
@@ -121,17 +187,21 @@ var ColLib = (function () {
     ───────────────────────────────────────────────────────────────── */
     addLayout: function (slug, layout) {
       var idx = _findIndex(slug);
-      if (idx === -1) return;
+      if (idx === -1) return false;
       var col = _collections[idx];
       if (!Array.isArray(col.layouts)) col.layouts = [];
-      /* Evita duplicata por id */
       for (var i = 0; i < col.layouts.length; i++) {
         if (col.layouts[i].id === layout.id) {
-          col.layouts[i] = layout;
-          return;
+          console.error('[ColLib] ID de layout duplicado foi recusado: ' + layout.id);
+          return false;
         }
       }
+      if (_hasLayoutName(slug, layout.name, null)) {
+        console.error('[ColLib] Nome de layout duplicado foi recusado em "' + slug + '": ' + layout.name);
+        return false;
+      }
       col.layouts.push(layout);
+      return true;
     },
 
     /* ─────────────────────────────────────────────────────────────────
@@ -140,16 +210,21 @@ var ColLib = (function () {
     ───────────────────────────────────────────────────────────────── */
     updateLayout: function (slug, layoutId, patch) {
       var idx = _findIndex(slug);
-      if (idx === -1) return;
+      if (idx === -1) return false;
       var layouts = _collections[idx].layouts || [];
+      if (patch.name !== undefined && _hasLayoutName(slug, patch.name, layoutId)) {
+        console.error('[ColLib] Edicao recusada por nome de layout duplicado: ' + patch.name);
+        return false;
+      }
       for (var i = 0; i < layouts.length; i++) {
         if (layouts[i].id === layoutId) {
           if (patch.name !== undefined) layouts[i].name = patch.name;
           if (patch.html !== undefined) layouts[i].html = patch.html;
           if (patch.css  !== undefined) layouts[i].css  = patch.css;
-          return;
+          return true;
         }
       }
+      return false;
     },
 
     /* ─────────────────────────────────────────────────────────────────

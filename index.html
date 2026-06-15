@@ -19,42 +19,54 @@
   <script>(function(){try{var t=localStorage.getItem('senkolib_theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <script>
     /*
-     * O antigo Service Worker adicionava cache a um projeto que muda muito
-     * durante o desenvolvimento. Alem de atrasar os recursos, uma aba podia
-     * continuar executando registers antigos. Esta limpeza aposenta o worker
-     * e recarrega uma unica vez quando ele ainda controlava a pagina.
+     * Cada abertura recebe uma chave nova. CSS, JavaScript e dados locais
+     * carregados pelo shell ou pelas features recebem essa chave na URL.
      */
-    (function retireLegacyServiceWorker() {
-      if (!('serviceWorker' in navigator)) return;
-      var appBaseUrl = new URL('./', document.baseURI).href;
+    (function initializeFreshAssets() {
+      var token = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 
-      navigator.serviceWorker.getRegistrations().then(function (registrations) {
-        return Promise.all(registrations.filter(function (registration) {
-          return registration.scope === appBaseUrl;
-        }).map(function (registration) {
-          return registration.unregister();
-        }));
-      }).then(function () {
-        if (!navigator.serviceWorker.controller) return;
-        if (sessionStorage.getItem('senkolib_sw_retired')) return;
-        sessionStorage.setItem('senkolib_sw_retired', '1');
-        window.location.reload();
-      });
+      function freshUrl(path) {
+        var url = new URL(path, document.baseURI);
+        var isLocal = url.protocol === 'file:' || url.origin === window.location.origin;
+        if (isLocal) url.searchParams.set('_senko_reload', token);
+        return url.href;
+      }
 
-      if ('caches' in window) {
-        caches.keys().then(function (keys) {
-          keys.filter(function (key) {
-            return key.indexOf('senkolib-') === 0;
-          }).forEach(function (key) {
-            caches.delete(key);
-          });
+      function escapeAttribute(value) {
+        return value.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+      }
+
+      window.SenkoFreshAssets = {
+        token: token,
+        url: freshUrl,
+        writeStyle: function (path) {
+          document.write('<link rel="stylesheet" href="' + escapeAttribute(freshUrl(path)) + '">');
+        },
+        writeScript: function (path) {
+          document.write('<script src="' + escapeAttribute(freshUrl(path)) + '"><\/script>');
+        }
+      };
+
+      /*
+       * HTTP/HTTPS tambem recebe um worker sem armazenamento. file:// nao
+       * aceita Service Worker e continua coberto pelas URLs versionadas.
+       */
+      if ('serviceWorker' in navigator && /^https?:$/.test(window.location.protocol)) {
+        navigator.serviceWorker.register('./sw.js', {
+          updateViaCache: 'none'
+        }).then(function (registration) {
+          return registration.update();
+        }).catch(function (error) {
+          console.warn('[SenkoLib] Nao foi possivel ativar o reload sem cache:', error);
         });
       }
     })();
   </script>
-  <link rel="stylesheet" href="app/shared/styles/senko-tokens.css" />
-  <link rel="stylesheet" href="app/shared/styles/senko-components.css" />
-  <link rel="stylesheet" href="app/shell/styles/styles.css" />
+  <script>
+    SenkoFreshAssets.writeStyle('app/shared/styles/senko-tokens.css');
+    SenkoFreshAssets.writeStyle('app/shared/styles/senko-components.css');
+    SenkoFreshAssets.writeStyle('app/shell/styles/styles.css');
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -86,13 +98,14 @@
   <!-- Raiz neutra das features. Cada feature monta sua propria tela aqui, sem depender da Biblioteca. -->
   <div id="senkoFeatureRoot"></div>
 
-  <script src="app/shell/scripts/senko-shell.js?v=20260613-feature-query"></script>
-  <script src="app/features/biblioteca/register.js?v=20260614-local-file"></script>
-  <script src="app/features/colecoes/register.js?v=20260614-local-file"></script>
-
-  <script src="app/features/imagens/scripts/register.js?v=20260613-direct-view"></script>
-  <script src="app/features/sources/scripts/register.js?v=20260613-base-mode-visibility"></script>
-  <script src="app/prototype/gamer-preview/register.js?v=20260613-direct-view"></script>
+  <script>
+    SenkoFreshAssets.writeScript('app/shell/scripts/senko-shell.js');
+    SenkoFreshAssets.writeScript('app/features/biblioteca/register.js');
+    SenkoFreshAssets.writeScript('app/features/colecoes/register.js');
+    SenkoFreshAssets.writeScript('app/features/imagens/scripts/register.js');
+    SenkoFreshAssets.writeScript('app/features/sources/scripts/register.js');
+    SenkoFreshAssets.writeScript('app/prototype/gamer-preview/register.js');
+  </script>
   <script>
   (function () {
     var KEY = 'senkolib_theme';

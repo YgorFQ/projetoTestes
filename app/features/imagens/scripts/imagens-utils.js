@@ -38,7 +38,10 @@
   };
 
   api.assetUrl = function assetUrl(path) {
-    return new URL(path, featureBaseUrl).href;
+    var absoluteUrl = new URL(path, featureBaseUrl).href;
+    return window.SenkoFreshAssets
+      ? window.SenkoFreshAssets.url(absoluteUrl)
+      : absoluteUrl;
   };
 
   api.esc = function escapeHtml(value) {

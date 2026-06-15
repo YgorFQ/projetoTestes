@@ -80,6 +80,8 @@ function ghApplyConfig(owner, repo, token) {
 ═══════════════════════════════════════════════════════════════════════ */
 
 var GH_TOKEN_KEY = 'senkolib_github_token';
+var ghOpenConfigModalHandler = null;
+var ghUpdateConfigButtonHandler = null;
 
 function ghGetToken() {
   return localStorage.getItem(GH_TOKEN_KEY) || '';
@@ -95,12 +97,25 @@ function ghSetToken(token) {
 
 function ghEnsureToken() {
   var token = ghGetToken();
-  if (token) return token;
-  /* Abre o modal de configuração estilizado em vez do prompt nativo */
+  var hasRepository = Boolean(GITHUB_CONFIG.OWNER && GITHUB_CONFIG.REPO);
+  if (token && hasRepository) return token;
+
+  /*
+   * Este ponto protege todas as operacoes de layouts e variantes. Nenhuma
+   * chamada incompleta deve chegar a API sem explicar o que esta faltando.
+   */
   setTimeout(function () {
-    if (typeof ghOpenConfigModal === 'function') ghOpenConfigModal();
+    ghShowConfigurationRequired(token ? 'repository' : 'token');
   }, 0);
   return '';
+}
+
+/*
+ * Nome legado mantido porque os modulos de variantes e exclusao usam este
+ * contrato. O indicador atual e a engrenagem de configuracao.
+ */
+function ghUpdateLockButton() {
+  if (ghUpdateConfigButtonHandler) ghUpdateConfigButtonHandler();
 }
 
 
@@ -356,6 +371,18 @@ function ghUnlockSave() {
 ═══════════════════════════════════════════════════════════════════════ */
 
 function githubSaveLayout(layoutId, objectCode) {
+  var editName = document.getElementById('editName');
+  var nextName = editName
+    ? (typeof senkoGetMetadataInputValue === 'function'
+      ? senkoGetMetadataInputValue('editName', false).trim()
+      : editName.value.trim())
+    : '';
+  if (typeof senkoLayoutNameExists === 'function'
+      && senkoLayoutNameExists(nextName, layoutId)) {
+    ghShowErrorModal('Já existe outro layout com o nome "' + nextName + '". Escolha outro nome.');
+    return Promise.resolve(false);
+  }
+
   if (!ghLockSave()) return Promise.resolve(false);
   if (!ghEnsureToken()) {
     ghUnlockSave();
@@ -420,28 +447,19 @@ function githubSaveLayout(layoutId, objectCode) {
         target.sha,
         '[SenkoLib] edit layout: ' + layoutId
       ).then(function () {
-        var layouts = SenkoLib.getAll();
-        for (var i = 0; i < layouts.length; i++) {
-          if (layouts[i].id === layoutId) {
-            var editName = document.getElementById('editName');
-            var editTags = document.getElementById('editTags');
-            var editHtml = document.getElementById('editHtml');
-            var editCss  = document.getElementById('editCss');
-            if (editName) {
-              layouts[i].name = typeof senkoGetMetadataInputValue === 'function'
-                ? senkoGetMetadataInputValue('editName', false).trim()
-                : editName.value.trim();
-            }
-            if (editTags) {
-              layouts[i].tags = typeof senkoParseMetadataTags === 'function'
-                ? senkoParseMetadataTags(editTags.value)
-                : editTags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean);
-            }
-            if (editHtml) layouts[i].html = editHtml.value;
-            if (editCss)  layouts[i].css  = editCss.value;
-            break;
-          }
-        }
+        var editTags = document.getElementById('editTags');
+        var editHtml = document.getElementById('editHtml');
+        var editCss  = document.getElementById('editCss');
+        SenkoLib.updateLayout(layoutId, {
+          name: nextName,
+          tags: editTags
+            ? (typeof senkoParseMetadataTags === 'function'
+              ? senkoParseMetadataTags(editTags.value)
+              : editTags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean))
+            : [],
+          html: editHtml ? editHtml.value : '',
+          css: editCss ? editCss.value : ''
+        });
         ghSetStatus('✓ Salvo em ' + target.entry.name, 'ok');
         ghUnlockSave();
         ghStartDeployWatch(target.entry.path);
@@ -464,6 +482,18 @@ function githubSaveLayout(layoutId, objectCode) {
 ═══════════════════════════════════════════════════════════════════════ */
 
 function githubSaveNewLayout(fileName, objectCode, layoutId) {
+  var addName = document.getElementById('addName');
+  var nextName = addName
+    ? (typeof senkoGetMetadataInputValue === 'function'
+      ? senkoGetMetadataInputValue('addName', false).trim()
+      : addName.value.trim())
+    : layoutId;
+  if (typeof senkoLayoutNameExists === 'function'
+      && senkoLayoutNameExists(nextName, null)) {
+    ghShowErrorModal('Já existe um layout com o nome "' + nextName + '". Escolha outro nome.');
+    return Promise.resolve(false);
+  }
+
   if (!ghLockSave()) return Promise.resolve(false);
   if (!ghEnsureToken()) {
     ghUnlockSave();
@@ -860,6 +890,19 @@ function ghEnsureErrorModal() {
     '}',
     '#ghErrorReloadBtn.visible { display: inline-flex; }',
     '#ghErrorReloadBtn:hover { filter: brightness(1.1); }',
+    '#ghErrorConfigBtn {',
+    '  flex: 1;',
+    '  display: none; align-items: center; justify-content: center;',
+    '  padding: .6rem 1rem;',
+    '  background: var(--accent, #ff6b00); color: #fff;',
+    '  border: 1.5px solid var(--accent, #ff6b00);',
+    '  border-radius: var(--radius, 8px);',
+    '  font-family: var(--font-body, sans-serif);',
+    '  font-size: .85rem; font-weight: 700;',
+    '  cursor: pointer;',
+    '}',
+    '#ghErrorConfigBtn.visible { display: inline-flex; }',
+    '#ghErrorConfigBtn:hover { filter: brightness(1.08); }',
     '#ghErrorOkBtn {',
     '  flex: 1;',
     '  padding: .6rem 1rem;',
@@ -898,6 +941,7 @@ function ghEnsureErrorModal() {
     '      </svg>',
     '      Recarregar página',
     '    </button>',
+    '    <button id="ghErrorConfigBtn">Configurar GitHub</button>',
     '    <button id="ghErrorOkBtn">Entendi</button>',
     '  </div>',
     '</div>',
@@ -907,6 +951,10 @@ function ghEnsureErrorModal() {
   document.getElementById('ghErrorOkBtn').addEventListener('click', ghCloseErrorModal);
   document.getElementById('ghErrorReloadBtn').addEventListener('click', function () {
     window.location.reload();
+  });
+  document.getElementById('ghErrorConfigBtn').addEventListener('click', function () {
+    ghCloseErrorModal();
+    if (ghOpenConfigModalHandler) ghOpenConfigModalHandler();
   });
   overlay.addEventListener('click', function (e) {
     if (e.target === overlay) ghCloseErrorModal();
@@ -927,7 +975,10 @@ function ghShowErrorModal(rawMessage) {
   var descEl   = document.getElementById('ghErrorDesc');
   var hintEl   = document.getElementById('ghErrorHint');
   var reloadBtn = document.getElementById('ghErrorReloadBtn');
+  var configBtn = document.getElementById('ghErrorConfigBtn');
   var iconEl   = document.getElementById('ghErrorIcon');
+
+  configBtn.classList.remove('visible');
 
   if (is409) {
     /* Conflito de SHA — outra pessoa salvou antes */
@@ -950,6 +1001,32 @@ function ghShowErrorModal(rawMessage) {
 
   var overlay = document.getElementById('ghErrorOverlay');
   overlay.classList.remove('gh-hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function ghShowConfigurationRequired(missingPart) {
+  ghEnsureErrorModal();
+
+  var titleEl   = document.getElementById('ghErrorTitle');
+  var descEl    = document.getElementById('ghErrorDesc');
+  var hintEl    = document.getElementById('ghErrorHint');
+  var reloadBtn = document.getElementById('ghErrorReloadBtn');
+  var configBtn = document.getElementById('ghErrorConfigBtn');
+  var iconEl    = document.getElementById('ghErrorIcon');
+
+  titleEl.textContent = 'GitHub nao configurado';
+  descEl.textContent = missingPart === 'repository'
+    ? 'Informe o usuario e o repositorio antes de salvar alteracoes da Biblioteca.'
+    : 'Adicione um token do GitHub para criar, editar ou excluir layouts e variantes.';
+  hintEl.textContent =
+    'O token fica salvo somente neste navegador e precisa ter permissao de leitura e escrita no repositorio.';
+  hintEl.classList.add('visible');
+  reloadBtn.classList.remove('visible');
+  configBtn.classList.add('visible');
+  iconEl.style.background = '#fff3e8';
+  iconEl.style.color = 'var(--accent, #ff6b00)';
+
+  document.getElementById('ghErrorOverlay').classList.remove('gh-hidden');
   document.body.style.overflow = 'hidden';
 }
 
@@ -1306,6 +1383,13 @@ function initSenkoBibliotecaGithubV2() {
       : 'Configurar repositório GitHub';
   }
 
+  /*
+   * Os demais modulos da Biblioteca usam ghEnsureToken, mas o modal pertence
+   * somente a esta integracao. Os handlers preservam essa fronteira.
+   */
+  ghOpenConfigModalHandler = ghOpenConfigModal;
+  ghUpdateConfigButtonHandler = ghUpdateConfigButton;
+
   /* ─── Botões no header ─── */
   var searchWrap = document.querySelector('.search-wrap');
   if (searchWrap) {
@@ -1437,5 +1521,11 @@ function initSenkoBibliotecaGithubV2() {
 }
 
 window.SenkoBibliotecaGithubV2 = {
-  init: initSenkoBibliotecaGithubV2
+  init: initSenkoBibliotecaGithubV2,
+  hasCredentials: function () {
+    return Boolean(GITHUB_CONFIG.OWNER && GITHUB_CONFIG.REPO && ghGetToken());
+  },
+  openConfig: function () {
+    if (ghOpenConfigModalHandler) ghOpenConfigModalHandler();
+  }
 };

@@ -141,6 +141,44 @@ function senkoNormalizeVariantName(value) {
     .replace(/^-|-$/g, '');
 }
 
+/*
+ * A regra de unicidade pertence à Biblioteca e usa o motor da própria
+ * feature. Os fallbacks mantêm a validação funcional em testes isolados.
+ */
+function senkoCanonicalName(value) {
+  if (typeof SenkoLib !== 'undefined' && typeof SenkoLib.normalizeName === 'function') {
+    return SenkoLib.normalizeName(value);
+  }
+  return senkoSlugifyIdentifier(value).replace(/-/g, ' ');
+}
+
+function senkoLayoutNameExists(name, exceptId) {
+  if (typeof SenkoLib === 'undefined') return false;
+  if (typeof SenkoLib.hasLayoutName === 'function') {
+    return SenkoLib.hasLayoutName(name, exceptId || null);
+  }
+
+  var key = senkoCanonicalName(name);
+  return SenkoLib.getAll().some(function (layout) {
+    return layout.id !== exceptId && senkoCanonicalName(layout.name) === key;
+  });
+}
+
+function senkoVariantNameExists(parentId, name, exceptVariant) {
+  if (typeof SenkoLib === 'undefined' || !parentId) return false;
+  if (typeof SenkoLib.hasVariantName === 'function') {
+    return SenkoLib.hasVariantName(parentId, name, exceptVariant || null);
+  }
+
+  var key = senkoCanonicalName(name);
+  return SenkoLib.getVariants(parentId).some(function (variant) {
+    return variant !== exceptVariant && senkoCanonicalName(variant.name) === key;
+  });
+}
+
+bibliotecaApi.isLayoutNameTaken = senkoLayoutNameExists;
+bibliotecaApi.isVariantNameTaken = senkoVariantNameExists;
+
 function senkoVariantNameIssue(value) {
   var raw = String(value || '');
   if (!raw.trim()) return 'Preencha o nome da variante primeiro.';
@@ -512,9 +550,12 @@ function updateGeneratedCode() {
   var css     = document.getElementById('addCss').value;
   var tags    = senkoParseMetadataTags(tagsRaw);
 
-  var copyBtn = document.getElementById('copyGeneratedBtn');
-  var allFilled = id.length >= 3 && name.length >= 3 && html.length >= 3;
+  var duplicateName = senkoLayoutNameExists(name, null);
+  var copyBtn = document.getElementById('copyGeneratedBtn')
+    || document.getElementById('ghSaveNewLayoutBtn');
+  var allFilled = id.length >= 3 && name.length >= 3 && html.length >= 3 && !duplicateName;
   if (copyBtn) {
+    copyBtn.disabled = !allFilled;
     if (allFilled) {
       copyBtn.classList.remove('btn-blocked');
     } else {
@@ -524,6 +565,12 @@ function updateGeneratedCode() {
 
   if (!id && !name && !html) {
     document.getElementById('generatedCode').textContent = '// Preencha os campos acima para gerar o objeto…';
+    return;
+  }
+
+  if (duplicateName) {
+    document.getElementById('generatedCode').textContent =
+      '// Já existe um layout com esse nome. Escolha outro nome.';
     return;
   }
 
@@ -742,10 +789,14 @@ function updateNewVarCode() {
   var name      = senkoSyncIdentifierInput('newVarName', false);
   var html      = document.getElementById('newVarHtml').value;
   var css       = document.getElementById('newVarCss').value;
-  var copyBtn   = document.getElementById('newVarCopyBtn');
+  var parentId  = state.currentForVariant ? state.currentForVariant.id : '';
+  var duplicateName = !nameIssue && senkoVariantNameExists(parentId, name, null);
+  var copyBtn   = document.getElementById('newVarCopyBtn')
+    || document.getElementById('ghvSaveVariantBtn');
 
-  var allOk = !nameIssue;
+  var allOk = !nameIssue && !duplicateName;
   if (copyBtn) {
+    copyBtn.disabled = !allOk;
     if (!allOk) {
       copyBtn.classList.add('btn-blocked');
       copyBtn.classList.remove('copied');
@@ -761,6 +812,12 @@ function updateNewVarCode() {
 
   if (nameIssue) {
     document.getElementById('newVarGeneratedCode').textContent = '// ' + nameIssue;
+    return;
+  }
+
+  if (duplicateName) {
+    document.getElementById('newVarGeneratedCode').textContent =
+      '// Já existe uma variante com esse nome neste layout.';
     return;
   }
 
@@ -859,10 +916,15 @@ function updateEditVarCode() {
   var name      = senkoSyncIdentifierInput('editVarName', false);
   var html      = document.getElementById('editVarHtml').value;
   var css       = document.getElementById('editVarCss').value;
+  var parentId  = state.currentForVariant ? state.currentForVariant.id : '';
+  var duplicateName = !nameIssue
+    && senkoVariantNameExists(parentId, name, state.currentEditVariant);
 
-  var copyBtn = document.getElementById('copyEditVarBtn');
-  var ok = !nameIssue && html.length >= 1;
+  var copyBtn = document.getElementById('copyEditVarBtn')
+    || document.getElementById('ghvSaveEditVarBtn');
+  var ok = !nameIssue && !duplicateName && html.length >= 1;
   if (copyBtn) {
+    copyBtn.disabled = !ok;
     if (ok) copyBtn.classList.remove('btn-blocked');
     else    copyBtn.classList.add('btn-blocked');
   }
@@ -873,6 +935,11 @@ function updateEditVarCode() {
   var genCode = document.getElementById('editVarGeneratedCode');
   if (genCode && nameIssue) {
     genCode.textContent = '// ' + nameIssue;
+    return;
+  }
+
+  if (genCode && duplicateName) {
+    genCode.textContent = '// Já existe uma variante com esse nome neste layout.';
     return;
   }
 
@@ -964,16 +1031,25 @@ function updateEditCode() {
   var html    = document.getElementById('editHtml').value;
   var css     = document.getElementById('editCss').value;
   var tags    = senkoParseMetadataTags(tagsRaw);
+  var duplicateName = senkoLayoutNameExists(name, id);
 
-  var copyBtn = document.getElementById('copyEditBtn');
-  var allFilled = id.length >= 3 && name.length >= 3 && html.length >= 3;
+  var copyBtn = document.getElementById('copyEditBtn')
+    || document.getElementById('ghSaveLayoutBtn');
+  var allFilled = id.length >= 3 && name.length >= 3 && html.length >= 3 && !duplicateName;
   if (copyBtn) {
+    copyBtn.disabled = !allFilled;
     if (allFilled) copyBtn.classList.remove('btn-blocked');
     else copyBtn.classList.add('btn-blocked');
   }
 
   if (!id && !name && !html) {
     document.getElementById('editGeneratedCode').textContent = '// Preencha os campos acima para gerar o objeto…';
+    return;
+  }
+
+  if (duplicateName) {
+    document.getElementById('editGeneratedCode').textContent =
+      '// Já existe outro layout com esse nome. Escolha outro nome.';
     return;
   }
 

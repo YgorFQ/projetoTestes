@@ -212,12 +212,20 @@ function ghvUpdateVariantInMemory(parentId, originalName, newName, html, css) {
   var origLower = originalName.toLowerCase();
   for (var i = 0; i < variants.length; i++) {
     if ((variants[i].name || '').toLowerCase() === origLower) {
+      if (typeof SenkoLib.updateVariant === 'function') {
+        return SenkoLib.updateVariant(parentId, variants[i], {
+          name: newName,
+          html: html,
+          css: css
+        });
+      }
       variants[i].name = newName;
       variants[i].html = html;
       variants[i].css  = css;
-      return;
+      return true;
     }
   }
+  return false;
 }
 
 
@@ -241,6 +249,12 @@ function ghvRemoveVariantFromMemory(parentId, variantName) {
    Se o arquivo de variantes da Biblioteca não existir, cria do zero.
 ═══════════════════════════════════════════════════════════════════════ */
 function githubCreateVariant(parentId, variantName, objectCode) {
+  if (typeof senkoVariantNameExists === 'function'
+      && senkoVariantNameExists(parentId, variantName, null)) {
+    alert('Já existe uma variante com o nome "' + variantName + '" neste layout.');
+    return Promise.resolve(false);
+  }
+
   if (!ghLockSave()) return Promise.resolve(false);
   if (!ghEnsureToken()) {
     ghUnlockSave();
@@ -356,10 +370,16 @@ function githubCreateVariant(parentId, variantName, objectCode) {
 /* ═══════════════════════════════════════════════════════════════════════
    CORE: Editar variante existente no GitHub
    ───────────────────────────────────────────────────────────────────────
-   Recebe o nome ORIGINAL da variante para localizar o marcador correto.
-   O objectCode já contém o nome novo dentro de si.
+   Recebe o nome ORIGINAL para localizar o marcador e o nome NOVO para
+   validar duplicidade antes de substituir o objeto.
 ═══════════════════════════════════════════════════════════════════════ */
-function githubSaveVariant(parentId, originalName, objectCode) {
+function githubSaveVariant(parentId, originalName, newName, objectCode) {
+  if (typeof senkoVariantNameExists === 'function'
+      && senkoVariantNameExists(parentId, newName, state.currentEditVariant)) {
+    alert('Já existe uma variante com o nome "' + newName + '" neste layout.');
+    return Promise.resolve(false);
+  }
+
   if (!ghLockSave()) return Promise.resolve(false);
   if (!ghEnsureToken()) {
     ghUnlockSave();
@@ -387,6 +407,20 @@ function githubSaveVariant(parentId, originalName, objectCode) {
       ghSetStatus('Variante duplicada no arquivo', 'error');
       ghUnlockSave();
       alert('A variante "' + originalName + '" aparece mais de uma vez em ' + filePath + '.\nCorrija manualmente antes de editar.');
+      return false;
+    }
+
+    /*
+     * A memória protege a interface atual; esta checagem protege contra uma
+     * aba desatualizada, consultando o arquivo remoto obtido imediatamente
+     * antes do PUT.
+     */
+    var originalMarker = '/*@@@@Senko - ' + originalName.toLowerCase() + ' */';
+    var newMarker = '/*@@@@Senko - ' + newName.toLowerCase() + ' */';
+    if (newMarker !== originalMarker && content.indexOf(newMarker) !== -1) {
+      ghSetStatus('Nome de variante duplicado', 'error');
+      ghUnlockSave();
+      alert('Já existe uma variante com o nome "' + newName + '" em ' + filePath + '.\nEscolha outro nome.');
       return false;
     }
 
@@ -741,7 +775,7 @@ function ghvInjectEditVariantButton() {
     btn.textContent = 'Salvando…';
     btn.disabled    = true;
 
-    githubSaveVariant(parentId, originalName, objectCode).then(function (result) {
+    githubSaveVariant(parentId, originalName, newName, objectCode).then(function (result) {
       if (result) {
         /* Atualiza memória com os valores novos */
         ghvUpdateVariantInMemory(parentId, originalName, newName, html, css);

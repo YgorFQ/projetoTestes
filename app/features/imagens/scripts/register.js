@@ -10,7 +10,10 @@
   var loadPromise;
 
   function featureUrl(path) {
-    return new URL(path, featureBaseUrl).href;
+    var absoluteUrl = new URL(path, featureBaseUrl).href;
+    return window.SenkoFreshAssets
+      ? window.SenkoFreshAssets.url(absoluteUrl)
+      : absoluteUrl;
   }
 
   function loadScript(src) {
