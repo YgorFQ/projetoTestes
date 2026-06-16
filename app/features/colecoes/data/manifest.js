@@ -62,7 +62,7 @@ window.SenkoColecoesManifest = {
         "dawdawd",
         "awdawdwedawad"
       ],
-      "layoutCount": 0
+      "layoutCount": 1
     }
   ]
 };
