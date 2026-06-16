@@ -44,7 +44,7 @@ window.SenkoColecoesManifest = {
       "file": "teste.js",
       "slug": "teste",
       "name": "Teste",
-      "group": "egambling",
+      "group": "selecao-francesa",
       "tags": [
         "ser gamer",
         "ser um jogador",
