@@ -8,7 +8,7 @@
 ColLib.register({
   slug:  'teste2',
   name:  'Teste2',
-  group: 'ygor',
+  group: 'selecao-francesa',
   tags:  ['awdaw', 'dawdawd', 'awdawdwedawad'],
   layouts: [
     /*@@@@Col - teste */
@@ -931,6 +931,5 @@ ColLib.register({
 </div>`,
       css:  ``,
     },
-
   ]
 });
