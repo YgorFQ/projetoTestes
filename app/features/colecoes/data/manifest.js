@@ -1,15 +1,10 @@
-/*
- * Catalogo privado de Colecoes.
- *
- * O arquivo e carregado como script local para funcionar sem servidor.
- * A integracao GitHub de Colecoes e a unica responsavel por modifica-lo.
- */
+/* Catalogo privado de Colecoes. Atualizado pela integracao GitHub. */
 window.SenkoColecoesManifest = {
   "collections": [
     {
       "file": "carneiro-colecoes.js",
       "slug": "carneiro-colecoes",
-      "name": "Ygor Cole\u00e7\u00f5es",
+      "name": "Ygor Coleções",
       "group": "ygor",
       "tags": [
         "Responsivo",
@@ -20,7 +15,7 @@ window.SenkoColecoesManifest = {
     {
       "file": "colecao-joel.js",
       "slug": "colecao-joel",
-      "name": "Cole\u00e7\u00e3o Joel",
+      "name": "Coleção Joel",
       "group": "joel",
       "tags": [
         "Responsivo"
@@ -30,7 +25,7 @@ window.SenkoColecoesManifest = {
     {
       "file": "colecao-pedro.js",
       "slug": "colecao-pedro",
-      "name": "Cole\u00e7\u00e3o Pedro",
+      "name": "Coleção Pedro",
       "group": "pedro",
       "tags": [],
       "layoutCount": 6
@@ -38,12 +33,24 @@ window.SenkoColecoesManifest = {
     {
       "file": "franca.js",
       "slug": "franca",
-      "name": "Fran\u00e7a",
+      "name": "França",
       "group": "selecao-francesa",
       "tags": [
         "catalogo"
       ],
       "layoutCount": 3
+    },
+    {
+      "file": "teste.js",
+      "slug": "teste",
+      "name": "Teste",
+      "group": "egambling",
+      "tags": [
+        "ser gamer",
+        "ser um jogador",
+        "tcs"
+      ],
+      "layoutCount": 0
     }
   ]
 };
