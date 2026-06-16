@@ -932,10 +932,10 @@ ColLib.register({
       css:  ``,
     },
 
-    /*@@@@Col - teste2 */
+        /*@@@@Col - teste2 */
     {
       id:   'teste2',
-      name: 'Teste2',
+      name: 'Teste1',
       html: `<div class="lp-container">
     <meta charset="UTF-8">
     <style>
