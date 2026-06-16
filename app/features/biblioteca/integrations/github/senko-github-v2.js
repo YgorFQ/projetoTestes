@@ -1,41 +1,41 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 /*
  * INDEPENDENCIA DE FEATURE:
  * Este modulo GitHub pertence somente a Biblioteca. Ele pode depender de
  * SenkoLib e dos scripts da Biblioteca, mas nenhuma outra feature deve
  * importar ou chamar estas funcoes globais.
  */
-/* ═══════════════════════════════════════════════════════════════════════
-   senko-github-v2.js — Módulo: salvar direto no GitHub (v2 — token seguro)
-   ───────────────────────────────────────────────────────────────────────
-   DIFERENÇAS DA v1:
-     - Token NÃO fica no código-fonte (evita revogação automática do GitHub)
-     - Token é pedido via prompt e salvo no localStorage do navegador
-     - Botão de cadeado no header indica estado do token
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   senko-github-v2.js â€” MÃ³dulo: salvar direto no GitHub (v2 â€” token seguro)
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   DIFERENÃ‡AS DA v1:
+     - Token NÃƒO fica no cÃ³digo-fonte (evita revogaÃ§Ã£o automÃ¡tica do GitHub)
+     - Token Ã© pedido via prompt e salvo no localStorage do navegador
+     - BotÃ£o de cadeado no header indica estado do token
 
    CARREGAMENTO:
-     O register.js da Biblioteca carrega este módulo depois da UI. O
-     index.html principal não conhece nem inicializa a integração.
+     O register.js da Biblioteca carrega este mÃ³dulo depois da UI. O
+     index.html principal nÃ£o conhece nem inicializa a integraÃ§Ã£o.
 
    REQUISITOS:
      - Personal Access Token do GitHub com escopo "repo" (classic)
-       ou permissão Contents read/write (fine-grained)
+       ou permissÃ£o Contents read/write (fine-grained)
      - Chrome, Edge ou Firefox (qualquer navegador moderno)
-     - Funciona direto do GitHub Pages — sem Live Server necessário
-═══════════════════════════════════════════════════════════════════════ */
+     - Funciona direto do GitHub Pages â€” sem Live Server necessÃ¡rio
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* ═══════════════════════════════════════════════════════════════════════
-   CONFIG — detecção automática pelo GitHub Pages URL
-   ───────────────────────────────────────────────────────────────────────
-   GitHub Pages usa o padrão: [owner].github.io/[repo]
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   CONFIG â€” detecÃ§Ã£o automÃ¡tica pelo GitHub Pages URL
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+   GitHub Pages usa o padrÃ£o: [owner].github.io/[repo]
    Ex: ygorMartins-webm.github.io/SenkoLib
-     → OWNER = 'ygorMartins-webm'
-     → REPO  = 'SenkoLib'
+     â†’ OWNER = 'ygorMartins-webm'
+     â†’ REPO  = 'SenkoLib'
 
    Fallback: localhost / Live Server
-     → lê do localStorage via modal de configuração estilizado
-     → botão de engrenagem ao lado do cadeado no header
-═══════════════════════════════════════════════════════════════════════ */
+     â†’ lÃª do localStorage via modal de configuraÃ§Ã£o estilizado
+     â†’ botÃ£o de engrenagem ao lado do cadeado no header
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 var GH_CONFIG_KEY = 'senkolib_github_config';
 var GH_LAYOUTS_DIR = 'app/features/biblioteca/data/layouts';
@@ -44,7 +44,7 @@ var GITHUB_CONFIG = (function () {
   var hostname = window.location.hostname;
   var pathname = window.location.pathname;
 
-  /* ── GitHub Pages: [owner].github.io ── */
+  /* â”€â”€ GitHub Pages: [owner].github.io â”€â”€ */
   var pagesMatch = hostname.match(/^([^.]+)\.github\.io$/i);
   if (pagesMatch) {
     var owner = pagesMatch[1];
@@ -54,17 +54,17 @@ var GITHUB_CONFIG = (function () {
     }
   }
 
-  /* ── Fallback: lê do localStorage ── */
+  /* â”€â”€ Fallback: lÃª do localStorage â”€â”€ */
   try {
     var saved = JSON.parse(localStorage.getItem(GH_CONFIG_KEY) || 'null');
     if (saved && saved.OWNER && saved.REPO) return saved;
   } catch (e) {}
 
-  /* Retorna vazio — modal de configuração pedirá os dados */
+  /* Retorna vazio â€” modal de configuraÃ§Ã£o pedirÃ¡ os dados */
   return { OWNER: '', REPO: '', BRANCH: 'main', _auto: false };
 })();
 
-/* Atualiza GITHUB_CONFIG em runtime após o usuário salvar pelo modal */
+/* Atualiza GITHUB_CONFIG em runtime apÃ³s o usuÃ¡rio salvar pelo modal */
 function ghApplyConfig(owner, repo, token) {
   GITHUB_CONFIG.OWNER  = owner;
   GITHUB_CONFIG.REPO   = repo;
@@ -72,12 +72,15 @@ function ghApplyConfig(owner, repo, token) {
   var cfg = { OWNER: owner, REPO: repo, BRANCH: 'main' };
   try { localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(cfg)); } catch (e) {}
   if (token) ghSetToken(token);
+  if (window.SenkoShell && typeof window.SenkoShell.refreshGithubButton === 'function') {
+    window.SenkoShell.refreshGithubButton();
+  }
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   TOKEN — gerenciamento via localStorage
-   O token NUNCA fica no código-fonte. Fica salvo no navegador do usuário.
-═══════════════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   TOKEN â€” gerenciamento via localStorage
+   O token NUNCA fica no cÃ³digo-fonte. Fica salvo no navegador do usuÃ¡rio.
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 var GH_TOKEN_KEY = 'senkolib_github_token';
 var ghOpenConfigModalHandler = null;
@@ -92,6 +95,9 @@ function ghSetToken(token) {
     localStorage.setItem(GH_TOKEN_KEY, token.trim());
   } else {
     localStorage.removeItem(GH_TOKEN_KEY);
+  }
+  if (window.SenkoShell && typeof window.SenkoShell.refreshGithubButton === 'function') {
+    window.SenkoShell.refreshGithubButton();
   }
 }
 
@@ -122,9 +128,9 @@ function ghUpdateLockButton() {
 
 
 
-/* ═══════════════════════════════════════════════════════════════════════
-   UTILITÁRIOS DE ENCODING UTF-8 SEGURO
-═══════════════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   UTILITÃRIOS DE ENCODING UTF-8 SEGURO
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 function ghEncodeBase64(str) {
   return btoa(unescape(encodeURIComponent(str)));
@@ -135,9 +141,9 @@ function ghDecodeBase64(b64) {
 }
 
 
-/* ═══════════════════════════════════════════════════════════════════════
-   STATUS — atualiza o span #ghStatus (agora só no console, sem barra)
-═══════════════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   STATUS â€” atualiza o span #ghStatus (agora sÃ³ no console, sem barra)
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 function ghSetStatus(msg, type) {
   var el = document.getElementById('ghStatus');
@@ -150,9 +156,9 @@ function ghSetStatus(msg, type) {
 }
 
 
-/* ═══════════════════════════════════════════════════════════════════════
-   API BASE — GitHub Contents API
-═══════════════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   API BASE â€” GitHub Contents API
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 function githubGetFile(path) {
   var token = ghGetToken();
@@ -170,7 +176,7 @@ function githubGetFile(path) {
     if (res.status === 401) {
       ghSetToken('');
       ghUpdateLockButton();
-      throw new Error('Token inválido ou expirado. Clique no cadeado para inserir um novo.');
+      throw new Error('Token invÃ¡lido ou expirado. Clique no cadeado para inserir um novo.');
     }
     return res.json().then(function (data) {
       if (!res.ok) {
@@ -211,7 +217,7 @@ function githubPutFile(path, content, sha, commitMsg) {
     if (res.status === 401) {
       ghSetToken('');
       ghUpdateLockButton();
-      throw new Error('Token inválido ou expirado. Clique no cadeado para configurar um novo.');
+      throw new Error('Token invÃ¡lido ou expirado. Clique no cadeado para configurar um novo.');
     }
     return res.json().then(function (data) {
       if (!res.ok) {
@@ -238,7 +244,7 @@ function githubListDir(path) {
     if (res.status === 401) {
       ghSetToken('');
       ghUpdateLockButton();
-      throw new Error('Token inválido ou expirado. Clique no cadeado para configurar um novo.');
+      throw new Error('Token invÃ¡lido ou expirado. Clique no cadeado para configurar um novo.');
     }
     return res.json().then(function (data) {
       if (!res.ok) {
@@ -252,9 +258,9 @@ function githubListDir(path) {
 }
 
 
-/* ═══════════════════════════════════════════════════════════════════════
-   PARSER — localiza e substitui objetos de layout
-═══════════════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   PARSER â€” localiza e substitui objetos de layout
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 /*
  * Parser textual intencional: os arquivos de layout sao JavaScript com
@@ -336,22 +342,22 @@ function ghDeduplicateMarkers(content, layoutId) {
 }
 
 
-/* ═══════════════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    RACE CONDITION GUARD
-   Impede que duas operações de escrita no GitHub ocorram simultaneamente.
-   Cada operação verifica e seta _ghSaving antes de prosseguir.
-═══════════════════════════════════════════════════════════════════════ */
+   Impede que duas operaÃ§Ãµes de escrita no GitHub ocorram simultaneamente.
+   Cada operaÃ§Ã£o verifica e seta _ghSaving antes de prosseguir.
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 var _ghSaving = false;
 var _ghSavingTimeout = null;
 
 function ghLockSave() {
   if (_ghSaving) {
-    ghShowErrorModal('Já existe uma operação em andamento. Aguarde terminar antes de salvar novamente.');
+    ghShowErrorModal('JÃ¡ existe uma operaÃ§Ã£o em andamento. Aguarde terminar antes de salvar novamente.');
     return false;
   }
   _ghSaving = true;
   _ghSavingTimeout = setTimeout(function () {
-    console.warn('[senko-github] Lock liberado por timeout de segurança.');
+    console.warn('[senko-github] Lock liberado por timeout de seguranÃ§a.');
     _ghSaving = false;
   }, 30000);
   return true;
@@ -366,9 +372,9 @@ function ghUnlockSave() {
 }
 
 
-/* ═══════════════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    CORE: Salvar layout existente
-═══════════════════════════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 function githubSaveLayout(layoutId, objectCode) {
   var editName = document.getElementById('editName');
@@ -379,18 +385,18 @@ function githubSaveLayout(layoutId, objectCode) {
     : '';
   if (typeof senkoLayoutNameExists === 'function'
       && senkoLayoutNameExists(nextName, layoutId)) {
-    ghShowErrorModal('Já existe outro layout com o nome "' + nextName + '". Escolha outro nome.');
+    ghShowErrorModal('JÃ¡ existe outro layout com o nome "' + nextName + '". Escolha outro nome.');
     return Promise.resolve(false);
   }
 
   if (!ghLockSave()) return Promise.resolve(false);
   if (!ghEnsureToken()) {
     ghUnlockSave();
-    ghSetStatus('Token não configurado', 'error');
+    ghSetStatus('Token nÃ£o configurado', 'error');
     return Promise.resolve(false);
   }
 
-  ghSetStatus('Buscando arquivo…', 'saving');
+  ghSetStatus('Buscando arquivoâ€¦', 'saving');
 
   return githubListDir(GH_LAYOUTS_DIR).then(function (entries) {
     var jsFiles = entries.filter(function (e) {
@@ -412,8 +418,8 @@ function githubSaveLayout(layoutId, objectCode) {
       var candidates = results.filter(Boolean);
 
       if (candidates.length === 0) {
-        ghSetStatus('Marcador não encontrado', 'error');
-        ghShowErrorModal('Marcador não encontrado para "' + layoutId + '".\n\nSe é um layout novo: use o botão "GitHub" no modal de criação.');
+        ghSetStatus('Marcador nÃ£o encontrado', 'error');
+        ghShowErrorModal('Marcador nÃ£o encontrado para "' + layoutId + '".\n\nSe Ã© um layout novo: use o botÃ£o "GitHub" no modal de criaÃ§Ã£o.');
         return false;
       }
 
@@ -429,8 +435,8 @@ function githubSaveLayout(layoutId, objectCode) {
       var bounds  = ghFindObjectBounds(content, layoutId);
 
       if (!bounds || bounds.error) {
-        ghSetStatus('Objeto não localizado', 'error');
-        ghShowErrorModal('Não foi possível localizar o objeto "' + layoutId + '" para substituição. Salve manualmente.');
+        ghSetStatus('Objeto nÃ£o localizado', 'error');
+        ghShowErrorModal('NÃ£o foi possÃ­vel localizar o objeto "' + layoutId + '" para substituiÃ§Ã£o. Salve manualmente.');
         return false;
       }
 
@@ -439,7 +445,7 @@ function githubSaveLayout(layoutId, objectCode) {
         objectCode + '\n' +
         content.slice(bounds.end);
 
-      ghSetStatus('Salvando no GitHub…', 'saving');
+      ghSetStatus('Salvando no GitHubâ€¦', 'saving');
 
       return githubPutFile(
         target.entry.path,
@@ -460,7 +466,7 @@ function githubSaveLayout(layoutId, objectCode) {
           html: editHtml ? editHtml.value : '',
           css: editCss ? editCss.value : ''
         });
-        ghSetStatus('✓ Salvo em ' + target.entry.name, 'ok');
+        ghSetStatus('âœ“ Salvo em ' + target.entry.name, 'ok');
         ghUnlockSave();
         ghStartDeployWatch(target.entry.path);
         renderGrid();
@@ -477,9 +483,9 @@ function githubSaveLayout(layoutId, objectCode) {
 }
 
 
-/* ═══════════════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    CORE: Salvar novo layout em arquivo existente
-═══════════════════════════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 function githubSaveNewLayout(fileName, objectCode, layoutId) {
   var addName = document.getElementById('addName');
@@ -490,18 +496,18 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
     : layoutId;
   if (typeof senkoLayoutNameExists === 'function'
       && senkoLayoutNameExists(nextName, null)) {
-    ghShowErrorModal('Já existe um layout com o nome "' + nextName + '". Escolha outro nome.');
+    ghShowErrorModal('JÃ¡ existe um layout com o nome "' + nextName + '". Escolha outro nome.');
     return Promise.resolve(false);
   }
 
   if (!ghLockSave()) return Promise.resolve(false);
   if (!ghEnsureToken()) {
     ghUnlockSave();
-    ghSetStatus('Token não configurado', 'error');
+    ghSetStatus('Token nÃ£o configurado', 'error');
     return Promise.resolve(false);
   }
 
-  ghSetStatus('Lendo arquivo…', 'saving');
+  ghSetStatus('Lendo arquivoâ€¦', 'saving');
 
   return githubGetFile(GH_LAYOUTS_DIR + '/' + fileName).then(function (data) {
     var content = data.content;
@@ -509,17 +515,17 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
 
     var marker = '/*@@@@Senko - ' + layoutId.toLowerCase() + ' */';
     if (content.indexOf(marker) !== -1) {
-      ghSetStatus('Nome já existe', 'error');
+      ghSetStatus('Nome jÃ¡ existe', 'error');
       ghUnlockSave();
-      ghShowErrorModal('Já existe um layout com esse nome em ' + fileName + '. Use o botão de editar no card para modificar layouts existentes.');
+      ghShowErrorModal('JÃ¡ existe um layout com esse nome em ' + fileName + '. Use o botÃ£o de editar no card para modificar layouts existentes.');
       return false;
     }
 
     var closePos = content.lastIndexOf(']);');
     if (closePos === -1) {
-      ghSetStatus('Estrutura inválida', 'error');
+      ghSetStatus('Estrutura invÃ¡lida', 'error');
       ghUnlockSave();
-      ghShowErrorModal('Não foi possível encontrar o fechamento do array em ' + fileName + '. Verifique se o arquivo segue o padrão SenkoLib.register([...]);');
+      ghShowErrorModal('NÃ£o foi possÃ­vel encontrar o fechamento do array em ' + fileName + '. Verifique se o arquivo segue o padrÃ£o SenkoLib.register([...]);');
       return false;
     }
 
@@ -528,7 +534,7 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
       '\n' + objectCode + '\n\n' +
       content.slice(closePos);
 
-    ghSetStatus('Salvando no GitHub…', 'saving');
+    ghSetStatus('Salvando no GitHubâ€¦', 'saving');
 
     return githubPutFile(
       GH_LAYOUTS_DIR + '/' + fileName,
@@ -554,7 +560,7 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
         : [];
 
       SenkoLib.register([{ id: layoutId, name: name, tags: tags, html: html, css: css }]);
-      ghSetStatus('✓ Salvo em ' + GH_LAYOUTS_DIR + '/' + fileName, 'ok');
+      ghSetStatus('âœ“ Salvo em ' + GH_LAYOUTS_DIR + '/' + fileName, 'ok');
       ghUnlockSave();
       ghStartDeployWatch(GH_LAYOUTS_DIR + '/' + fileName);
       renderGrid();
@@ -570,20 +576,20 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
 }
 
 
-/* ═══════════════════════════════════════════════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    CORE: Salvar variante
-═══════════════════════════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 function githubSaveVariant(parentId, variantNome, objectCode) {
   if (!ghLockSave()) return Promise.resolve(false);
   if (!ghEnsureToken()) {
     ghUnlockSave();
-    ghSetStatus('Token não configurado', 'error');
+    ghSetStatus('Token nÃ£o configurado', 'error');
     return Promise.resolve(false);
   }
 
   var filePath = 'app/features/biblioteca/data/variants/' + parentId + '.js';
-  ghSetStatus('Lendo variantes…', 'saving');
+  ghSetStatus('Lendo variantesâ€¦', 'saving');
 
   return githubGetFile(filePath).then(function (data) {
     var content = data.content;
@@ -593,9 +599,9 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
     var pos    = content.indexOf(marker);
 
     if (pos === -1) {
-      ghSetStatus('Variante não encontrada', 'error');
+      ghSetStatus('Variante nÃ£o encontrada', 'error');
       ghUnlockSave();
-      ghShowErrorModal('Variante "' + variantNome + '" não encontrada em ' + filePath);
+      ghShowErrorModal('Variante "' + variantNome + '" nÃ£o encontrada em ' + filePath);
       return false;
     }
     if (content.indexOf(marker, pos + marker.length) !== -1) {
@@ -607,9 +613,9 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
 
     var objOpen = content.indexOf('{', pos + marker.length);
     if (objOpen === -1) {
-      ghSetStatus('Objeto da variante não encontrado', 'error');
+      ghSetStatus('Objeto da variante nÃ£o encontrado', 'error');
       ghUnlockSave();
-      ghShowErrorModal('Início do objeto da variante não encontrado.');
+      ghShowErrorModal('InÃ­cio do objeto da variante nÃ£o encontrado.');
       return false;
     }
 
@@ -638,9 +644,9 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
     }
 
     if (objEnd === -1) {
-      ghSetStatus('Fim da variante não encontrado', 'error');
+      ghSetStatus('Fim da variante nÃ£o encontrado', 'error');
       ghUnlockSave();
-      ghShowErrorModal('Fim do objeto da variante não encontrado.');
+      ghShowErrorModal('Fim do objeto da variante nÃ£o encontrado.');
       return false;
     }
 
@@ -649,7 +655,7 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
       objectCode + '\n' +
       content.slice(objEnd);
 
-    ghSetStatus('Salvando no GitHub…', 'saving');
+    ghSetStatus('Salvando no GitHubâ€¦', 'saving');
 
     return githubPutFile(
       filePath,
@@ -671,7 +677,7 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
         SenkoLib.registerVariant(parentId, [{ name: variantNome, html: html, css: css }]);
       }
 
-      ghSetStatus('✓ Salvo em ' + filePath, 'ok');
+      ghSetStatus('âœ“ Salvo em ' + filePath, 'ok');
       ghUnlockSave();
       ghStartDeployWatch(filePath);
       renderGrid();
@@ -687,24 +693,30 @@ function githubSaveVariant(parentId, variantNome, objectCode) {
 }
 
 
-/* ═══════════════════════════════════════════════════════════════════════
-   DEPLOY WATCH — bolinha de status no header
-   Aparece quando qualquer save é feito com sucesso.
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   DEPLOY WATCH â€” bolinha de status no header
+   Aparece quando qualquer save Ã© feito com sucesso.
    Desaparece quando o GitHub Pages confirma o deploy como "success".
-═══════════════════════════════════════════════════════════════════════ */
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 var _ghDeployPollTimer = null;
 var GH_DEPLOY_KEY      = 'senkolib_deploy_watching';
 var GH_DEPLOY_INTERVAL = 5000;
-var GH_DEPLOY_TIMEOUT  = 300000; /* 5 minutos máximo */
+var GH_DEPLOY_TIMEOUT  = 300000; /* 5 minutos mÃ¡ximo */
 
 function ghShowDeployDot() {
   var dot = document.getElementById('ghDeployDot');
-  if (dot) dot.style.display = 'flex';
+  if (dot) {
+    dot.hidden = false;
+    dot.style.display = 'flex';
+  }
 }
 
 function ghHideDeployDot() {
   var dot = document.getElementById('ghDeployDot');
-  if (dot) dot.style.display = 'none';
+  if (dot) {
+    dot.hidden = true;
+    dot.style.display = 'none';
+  }
 }
 
 function ghStopDeployWatch() {
@@ -716,7 +728,7 @@ function ghStopDeployWatch() {
   try { localStorage.removeItem(GH_DEPLOY_KEY); } catch(e) {}
 }
 
-/* Busca o arquivo raw no GitHub Pages sem cache e retorna o conteúdo */
+/* Busca o arquivo raw no GitHub Pages sem cache e retorna o conteÃºdo */
 function ghFetchRaw(filePath) {
   var base = window.location.origin + '/' + GITHUB_CONFIG.REPO + '/';
   var url  = base + filePath + '?_=' + Date.now();
@@ -807,17 +819,17 @@ function ghResumeDeployWatchIfNeeded() {
   }, GH_DEPLOY_INTERVAL);
 }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   UI — Botão cadeado + botões GitHub nos modais
-═══════════════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   UI â€” BotÃ£o cadeado + botÃµes GitHub nos modais
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 var GH_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>';
 
 
-/* ═══════════════════════════════════════════════════════════════════════
-   MODAL DE ERRO — substitui window.alert para erros do GitHub
-   Mesmo estilo visual do modal de confirmação de exclusão.
-═══════════════════════════════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   MODAL DE ERRO â€” substitui window.alert para erros do GitHub
+   Mesmo estilo visual do modal de confirmaÃ§Ã£o de exclusÃ£o.
+â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 var _ghErrorModalReady = false;
 
@@ -825,7 +837,7 @@ function ghEnsureErrorModal() {
   if (_ghErrorModalReady) return;
   _ghErrorModalReady = true;
 
-  /* ── Estilos ── */
+  /* â”€â”€ Estilos â”€â”€ */
   var style = document.createElement('style');
   style.textContent = [
     '#ghErrorOverlay {',
@@ -917,7 +929,7 @@ function ghEnsureErrorModal() {
   ].join('\n');
   document.head.appendChild(style);
 
-  /* ── HTML ── */
+  /* â”€â”€ HTML â”€â”€ */
   var overlay = document.createElement('div');
   overlay.id        = 'ghErrorOverlay';
   overlay.className = 'gh-hidden';
@@ -930,7 +942,7 @@ function ghEnsureErrorModal() {
     '      <line x1="12" y1="16" x2="12.01" y2="16"/>',
     '    </svg>',
     '  </div>',
-    '  <h3 id="ghErrorTitle">Não foi possível salvar</h3>',
+    '  <h3 id="ghErrorTitle">NÃ£o foi possÃ­vel salvar</h3>',
     '  <p id="ghErrorDesc"></p>',
     '  <p id="ghErrorHint"></p>',
     '  <div id="ghErrorActions">',
@@ -939,7 +951,7 @@ function ghEnsureErrorModal() {
     '        <polyline points="23 4 23 10 17 10"/>',
     '        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>',
     '      </svg>',
-    '      Recarregar página',
+    '      Recarregar pÃ¡gina',
     '    </button>',
     '    <button id="ghErrorConfigBtn">Configurar GitHub</button>',
     '    <button id="ghErrorOkBtn">Entendi</button>',
@@ -981,16 +993,16 @@ function ghShowErrorModal(rawMessage) {
   configBtn.classList.remove('visible');
 
   if (is409) {
-    /* Conflito de SHA — outra pessoa salvou antes */
-    titleEl.textContent  = 'Conflito de versão (409)';
-    descEl.innerHTML     = 'O arquivo foi modificado por <strong>outra pessoa</strong> desde a última vez que você o carregou.<br>Suas alterações não foram salvas para não sobrescrever o trabalho dela.';
-    hintEl.textContent   = '💡 Recarregue a página para buscar a versão mais recente e tente salvar novamente.';
+    /* Conflito de SHA â€” outra pessoa salvou antes */
+    titleEl.textContent  = 'Conflito de versÃ£o (409)';
+    descEl.innerHTML     = 'O arquivo foi modificado por <strong>outra pessoa</strong> desde a Ãºltima vez que vocÃª o carregou.<br>Suas alteraÃ§Ãµes nÃ£o foram salvas para nÃ£o sobrescrever o trabalho dela.';
+    hintEl.textContent   = 'ðŸ’¡ Recarregue a pÃ¡gina para buscar a versÃ£o mais recente e tente salvar novamente.';
     hintEl.classList.add('visible');
     reloadBtn.classList.add('visible');
     iconEl.style.background = '#fef3c7';
     iconEl.style.color      = '#d97706';
   } else {
-    /* Erro genérico */
+    /* Erro genÃ©rico */
     titleEl.textContent  = 'Erro ao salvar no GitHub';
     descEl.textContent   = rawMessage || 'Ocorreu um erro inesperado.';
     hintEl.classList.remove('visible');
@@ -1034,12 +1046,12 @@ function initSenkoBibliotecaGithubV2() {
   if (initSenkoBibliotecaGithubV2.initialized) return;
   initSenkoBibliotecaGithubV2.initialized = true;
 
-  /* ─── Só executa no GitHub Pages ─────────────────────
+  /* â”€â”€â”€ SÃ³ executa no GitHub Pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
      Em qualquer outro ambiente (localhost, Live Server,
-     servidor externo, file://) este módulo inteiro fica
-     inativo — nenhum botão, engrenagem ou elemento GitHub
-     é criado na interface.
-  ──────────────────────────────────────────────────── */
+     servidor externo, file://) este mÃ³dulo inteiro fica
+     inativo â€” nenhum botÃ£o, engrenagem ou elemento GitHub
+     Ã© criado na interface.
+  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;
 
   var style = document.createElement('style');
@@ -1092,7 +1104,7 @@ function initSenkoBibliotecaGithubV2() {
   ].join('\n');
   document.head.appendChild(style);
 
-  /* ─── Modal de configuração (owner + repo + token) ─── */
+  /* â”€â”€â”€ Modal de configuraÃ§Ã£o (owner + repo + token) â”€â”€â”€ */
   (function () {
     var overlay = document.createElement('div');
     overlay.id        = 'ghConfigOverlay';
@@ -1101,38 +1113,38 @@ function initSenkoBibliotecaGithubV2() {
       '<div id="ghConfigModal">',
       '  <div id="ghConfigHeader">',
       '    <div>',
-      '      <h3 id="ghConfigTitle">Configuração do GitHub</h3>',
-      '      <p id="ghConfigSubtitle">Preencha os dados do repositório onde o SenkoLib está hospedado.</p>',
+      '      <h3 id="ghConfigTitle">ConfiguraÃ§Ã£o do GitHub</h3>',
+      '      <p id="ghConfigSubtitle">Preencha os dados do repositÃ³rio onde o SenkoLib estÃ¡ hospedado.</p>',
       '    </div>',
-      '    <button id="ghConfigCloseBtn" title="Fechar">✕</button>',
+      '    <button id="ghConfigCloseBtn" title="Fechar">âœ•</button>',
       '  </div>',
       '  <div class="gh-config-fields">',
       '    <div class="gh-config-field">',
-      '      <label for="ghConfigOwner">Usuário / Organização <span class="gh-req">*</span></label>',
+      '      <label for="ghConfigOwner">UsuÃ¡rio / OrganizaÃ§Ã£o <span class="gh-req">*</span></label>',
       '      <input type="text" id="ghConfigOwner" placeholder="ex: meu-usuario" autocomplete="off" />',
-      '      <span class="gh-field-desc">Nome da conta GitHub dona do repositório</span>',
+      '      <span class="gh-field-desc">Nome da conta GitHub dona do repositÃ³rio</span>',
       '    </div>',
       '    <div class="gh-config-field">',
-      '      <label for="ghConfigRepo">Repositório <span class="gh-req">*</span></label>',
+      '      <label for="ghConfigRepo">RepositÃ³rio <span class="gh-req">*</span></label>',
       '      <input type="text" id="ghConfigRepo" placeholder="ex: SenkoLib" autocomplete="off" />',
-      '      <span class="gh-field-desc">Nome exato do repositório no GitHub</span>',
+      '      <span class="gh-field-desc">Nome exato do repositÃ³rio no GitHub</span>',
       '    </div>',
       '    <div class="gh-config-field">',
       '      <label for="ghConfigToken">Personal Access Token <span class="gh-req">*</span></label>',
-      '      <input type="password" id="ghConfigToken" placeholder="ghp_…" autocomplete="off" />',
-      '      <span class="gh-field-desc">Token com permissão <code>repo</code> (classic) ou <code>Contents read/write</code> (fine-grained). <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Gerar token ↗</a></span>',
+      '      <input type="password" id="ghConfigToken" placeholder="ghp_â€¦" autocomplete="off" />',
+      '      <span class="gh-field-desc">Token com permissÃ£o <code>repo</code> (classic) ou <code>Contents read/write</code> (fine-grained). <a href="https://github.com/settings/tokens" target="_blank" rel="noopener">Gerar token â†—</a></span>',
       '    </div>',
       '  </div>',
       '  <div id="ghConfigError" class="gh-config-error gh-config-hidden"></div>',
       '  <div id="ghConfigActions">',
-      '    <button id="ghConfigResetBtn" class="gh-config-reset-btn" title="Limpar configuração salva">Redefinir</button>',
+      '    <button id="ghConfigResetBtn" class="gh-config-reset-btn" title="Limpar configuraÃ§Ã£o salva">Redefinir</button>',
       '    <button id="ghConfigSaveBtn" class="gh-config-save-btn">Verificar e salvar</button>',
       '  </div>',
       '</div>',
     ].join('\n');
     document.body.appendChild(overlay);
 
-    /* Estilos do modal de configuração */
+    /* Estilos do modal de configuraÃ§Ã£o */
     var cfgStyle = document.createElement('style');
     cfgStyle.textContent = [
       '#ghConfigOverlay {',
@@ -1252,7 +1264,7 @@ function initSenkoBibliotecaGithubV2() {
       '}',
       '.gh-config-save-btn:hover { background: #30363d; border-color: #8b949e; }',
       '.gh-config-save-btn:disabled { opacity: .6; cursor: not-allowed; }',
-      /* Botão de engrenagem no header */
+      /* BotÃ£o de engrenagem no header */
       '.gh-config-gear-btn {',
       '  display: inline-flex; align-items: center; justify-content: center;',
       '  width: 34px; height: 34px; padding: 0;',
@@ -1288,23 +1300,23 @@ function initSenkoBibliotecaGithubV2() {
       ghHideConfigError();
     });
 
-    /* Salvar com validação */
+    /* Salvar com validaÃ§Ã£o */
     document.getElementById('ghConfigSaveBtn').addEventListener('click', function () {
       var owner = document.getElementById('ghConfigOwner').value.trim();
       var repo  = document.getElementById('ghConfigRepo').value.trim();
       var token = document.getElementById('ghConfigToken').value.trim();
 
       if (!owner || !repo || !token) {
-        ghShowConfigError('Preencha todos os campos obrigatórios.');
+        ghShowConfigError('Preencha todos os campos obrigatÃ³rios.');
         return;
       }
 
       var saveBtn = this;
-      saveBtn.textContent = 'Verificando…';
+      saveBtn.textContent = 'Verificandoâ€¦';
       saveBtn.disabled    = true;
       ghHideConfigError();
 
-      /* Valida owner + repo + token fazendo um GET no repositório */
+      /* Valida owner + repo + token fazendo um GET no repositÃ³rio */
       fetch('https://api.github.com/repos/' + owner + '/' + repo, {
         headers: {
           'Authorization': 'token ' + token,
@@ -1312,20 +1324,20 @@ function initSenkoBibliotecaGithubV2() {
         }
       }).then(function (res) {
         if (res.status === 401) {
-          throw new Error('Token inválido ou sem permissão suficiente. Verifique e tente novamente.');
+          throw new Error('Token invÃ¡lido ou sem permissÃ£o suficiente. Verifique e tente novamente.');
         }
         if (res.status === 404) {
-          throw new Error('Repositório "' + owner + '/' + repo + '" não encontrado. Verifique o usuário e o nome do repositório.');
+          throw new Error('RepositÃ³rio "' + owner + '/' + repo + '" nÃ£o encontrado. Verifique o usuÃ¡rio e o nome do repositÃ³rio.');
         }
         if (!res.ok) {
           throw new Error('Erro ao conectar com o GitHub (status ' + res.status + '). Tente novamente.');
         }
         return res.json();
       }).then(function () {
-        /* Tudo certo — salva */
+        /* Tudo certo â€” salva */
         ghApplyConfig(owner, repo, token);
         ghUpdateConfigButton();
-        saveBtn.textContent = '✓ Salvo!';
+        saveBtn.textContent = 'âœ“ Salvo!';
         setTimeout(function () {
           ghCloseConfigModal();
           saveBtn.textContent = 'Verificar e salvar';
@@ -1374,13 +1386,19 @@ function initSenkoBibliotecaGithubV2() {
   }
 
   function ghUpdateConfigButton() {
-    var btn = document.getElementById('ghConfigGearBtn');
+    if (window.SenkoShell && typeof window.SenkoShell.refreshGithubButton === 'function') {
+      window.SenkoShell.refreshGithubButton();
+      return;
+    }
+
+    var btn = document.getElementById('senkoGithubConfigBtn');
     if (!btn) return;
     var configured = !!(GITHUB_CONFIG.OWNER && GITHUB_CONFIG.REPO && ghGetToken());
     btn.classList.toggle('gh-config-active', configured);
+    btn.hidden = false;
     btn.title = configured
       ? 'GitHub configurado: ' + GITHUB_CONFIG.OWNER + '/' + GITHUB_CONFIG.REPO
-      : 'Configurar repositório GitHub';
+      : 'Configurar repositÃ³rio GitHub';
   }
 
   /*
@@ -1390,48 +1408,37 @@ function initSenkoBibliotecaGithubV2() {
   ghOpenConfigModalHandler = ghOpenConfigModal;
   ghUpdateConfigButtonHandler = ghUpdateConfigButton;
 
-  /* ─── Botões no header ─── */
-  var searchWrap = document.querySelector('.search-wrap');
-  if (searchWrap) {
-    var GEAR_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>';
-
-    /* Botão engrenagem — configuração do repositório */
-    var gearBtn = document.createElement('button');
-    gearBtn.id        = 'ghConfigGearBtn';
-    gearBtn.className = 'gh-config-gear-btn';
-    gearBtn.innerHTML = GEAR_SVG;
-    searchWrap.parentNode.insertBefore(gearBtn, searchWrap);
-    gearBtn.addEventListener('click', ghOpenConfigModal);
+  /* â”€â”€â”€ BotÃµes no header â”€â”€â”€ */
+  /* O botao GitHub pertence ao shell global; esta feature registra callbacks. */
+  if (window.SenkoShell && typeof window.SenkoShell.registerGithubProvider === 'function') {
+    window.SenkoShell.registerGithubProvider('biblioteca', {
+      label: 'Biblioteca',
+      openConfig: ghOpenConfigModal,
+      hasCredentials: function () {
+        return Boolean(GITHUB_CONFIG.OWNER && GITHUB_CONFIG.REPO && ghGetToken());
+      }
+    });
+  } else {
     ghUpdateConfigButton();
-
-    if (GITHUB_CONFIG._auto) {
-      gearBtn.title = 'GitHub Pages detectado: ' + GITHUB_CONFIG.OWNER + '/' + GITHUB_CONFIG.REPO + ' — clique para ver/editar';
-    }
-
-    /* Bolinha de deploy — criada uma única vez, oculta, ANTES da engrenagem */
-    var deployDot = document.createElement('div');
-    deployDot.id    = 'ghDeployDot';
-    deployDot.title = 'Publicando no GitHub Pages…';
-    gearBtn.parentNode.insertBefore(deployDot, gearBtn);
-
-    /* Retoma o polling se havia um deploy em andamento antes do reload */
-    ghResumeDeployWatchIfNeeded();
   }
 
-  /* ─── Span de status oculto (para uso interno) ─── */
+  /* Retoma o polling usando a bolinha global criada pelo shell. */
+  ghResumeDeployWatchIfNeeded();
+
+  /* â”€â”€â”€ Span de status oculto (para uso interno) â”€â”€â”€ */
   var hiddenStatus = document.createElement('span');
   hiddenStatus.id = 'ghStatus';
   hiddenStatus.className = 'gh-status-text';
   document.body.appendChild(hiddenStatus);
 
-  /* ─── Modal edição — botão GitHub ─────────────────── */
+  /* â”€â”€â”€ Modal ediÃ§Ã£o â€” botÃ£o GitHub â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   var saveToFileAnchor = document.getElementById('saveToFileBtn');
   if (saveToFileAnchor && !document.getElementById('ghSaveLayoutBtn')) {
     var ghEditBtn = document.createElement('button');
     ghEditBtn.id        = 'ghSaveLayoutBtn';
     ghEditBtn.className = 'btn-github';
     ghEditBtn.innerHTML = GH_ICON + ' GitHub';
-    ghEditBtn.title     = 'Salvar diretamente no repositório GitHub';
+    ghEditBtn.title     = 'Salvar diretamente no repositÃ³rio GitHub';
     saveToFileAnchor.parentNode.replaceChild(ghEditBtn, saveToFileAnchor);
 
     ghEditBtn.addEventListener('click', function () {
@@ -1443,7 +1450,7 @@ function initSenkoBibliotecaGithubV2() {
         return;
       }
 
-      ghEditBtn.textContent = 'Salvando…';
+      ghEditBtn.textContent = 'Salvandoâ€¦';
       ghEditBtn.disabled    = true;
 
       githubSaveLayout(id, code).then(function (result) {
@@ -1465,10 +1472,10 @@ function initSenkoBibliotecaGithubV2() {
     });
   }
 
-  /* Botões de variante (nova e editar) foram movidos para
+  /* BotÃµes de variante (nova e editar) foram movidos para
      app/features/biblioteca/integrations/github/senko-github-variants.js */
 
-  /* ─── Modal criação — botão GitHub ────────── */
+  /* â”€â”€â”€ Modal criaÃ§Ã£o â€” botÃ£o GitHub â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   var copyGeneratedAnchor = document.getElementById('copyGeneratedBtn');
   if (copyGeneratedAnchor && !document.getElementById('ghNewLayoutGroup')) {
     var ghNewLayoutTargetFile = 'layouts001.js';
@@ -1477,14 +1484,14 @@ function initSenkoBibliotecaGithubV2() {
     ghNewBtn.id        = 'ghSaveNewLayoutBtn';
     ghNewBtn.className = 'btn-github';
     ghNewBtn.innerHTML = GH_ICON + ' GitHub';
-    ghNewBtn.title     = 'Salvar novo layout em layouts001.js no repositório GitHub';
+    ghNewBtn.title     = 'Salvar novo layout em layouts001.js no repositÃ³rio GitHub';
 
     var ghGroup = document.createElement('div');
     ghGroup.id        = 'ghNewLayoutGroup';
     ghGroup.className = 'gh-auto-group';
     ghGroup.appendChild(ghNewBtn);
 
-    /* Substitui o span âncora pelo botão com destino fixo. */
+    /* Substitui o span Ã¢ncora pelo botÃ£o com destino fixo. */
     copyGeneratedAnchor.parentNode.replaceChild(ghGroup, copyGeneratedAnchor);
 
     ghNewBtn.addEventListener('click', function () {
@@ -1496,7 +1503,7 @@ function initSenkoBibliotecaGithubV2() {
         return;
       }
 
-      ghNewBtn.textContent = 'Salvando…';
+      ghNewBtn.textContent = 'Salvandoâ€¦';
       ghNewBtn.disabled    = true;
 
       githubSaveNewLayout(ghNewLayoutTargetFile, code, id).then(function (result) {

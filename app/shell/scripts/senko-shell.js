@@ -11,6 +11,7 @@
    * - Busca, adicionar e acoes extras ficam dentro da propria feature.
    */
   var features = [];
+  var githubProviders = {};
   var isReady = false;
   var activeFeatureId = null;
   var storageKey = 'senkolib_active_tab';
@@ -158,6 +159,83 @@
     });
   }
 
+  function listGithubProviderIds() {
+    return Object.keys(githubProviders).filter(function (id) {
+      return githubProviders[id] && typeof githubProviders[id].openConfig === 'function';
+    });
+  }
+
+  function getGithubProviderForActiveFeature() {
+    /*
+     * O shell nao conhece detalhes de nenhuma feature. Ele so guarda um
+     * callback registrado pela propria feature e tenta usar primeiro o
+     * provedor da aba ativa; se a aba ativa nao tiver GitHub, usa o primeiro
+     * provedor disponivel para manter o botao global consistente.
+     */
+    if (activeFeatureId && githubProviders[activeFeatureId]) {
+      return githubProviders[activeFeatureId];
+    }
+
+    var ids = listGithubProviderIds();
+    return ids.length ? githubProviders[ids[0]] : null;
+  }
+
+  function providerHasCredentials(provider) {
+    if (!provider || typeof provider.hasCredentials !== 'function') return false;
+    try {
+      return Boolean(provider.hasCredentials());
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function refreshGithubButton() {
+    var button = document.getElementById('senkoGithubConfigBtn');
+    if (!button) return;
+
+    var provider = getGithubProviderForActiveFeature();
+    if (!provider) {
+      button.hidden = true;
+      button.classList.remove('gh-config-active');
+      button.disabled = true;
+      return;
+    }
+
+    var configured = providerHasCredentials(provider);
+    var label = provider.label || 'GitHub';
+    button.hidden = false;
+    button.disabled = false;
+    button.classList.toggle('gh-config-active', configured);
+    button.title = configured
+      ? 'GitHub configurado para ' + label
+      : 'Configurar GitHub para ' + label;
+  }
+
+  function bindGithubButton() {
+    var button = document.getElementById('senkoGithubConfigBtn');
+    if (!button || button.dataset.senkoShellBound) return;
+
+    button.dataset.senkoShellBound = '1';
+    button.addEventListener('click', function () {
+      var provider = getGithubProviderForActiveFeature();
+      if (!provider || typeof provider.openConfig !== 'function') return;
+      provider.openConfig();
+    });
+
+    refreshGithubButton();
+  }
+
+  function registerGithubProvider(featureId, provider) {
+    /*
+     * Cada feature entrega somente callbacks pequenos. O shell nao importa
+     * arquivos de GitHub e nao chama funcoes internas de Biblioteca/Colecoes.
+     */
+    if (!featureId || !provider || typeof provider.openConfig !== 'function') return;
+    githubProviders[featureId] = provider;
+    bindGithubButton();
+    refreshGithubButton();
+  }
+
   function switchFeature(id) {
     var feature = findFeature(id);
     if (!feature) return false;
@@ -175,6 +253,7 @@
     }
 
     updateTabs();
+    refreshGithubButton();
     return true;
   }
 
@@ -226,6 +305,7 @@
 
     renderTabs();
     bindLogoHome();
+    bindGithubButton();
 
     var initialFeature = pickInitialFeature();
     if (!initialFeature || !switchFeature(initialFeature)) {
@@ -236,6 +316,8 @@
 
   window.SenkoShell = {
     registerFeature: registerFeature,
+    registerGithubProvider: registerGithubProvider,
+    refreshGithubButton: refreshGithubButton,
     switchFeature: switchFeature,
     getFeatureRoot: getFeatureRoot,
     getActiveFeatureId: function () { return activeFeatureId; }

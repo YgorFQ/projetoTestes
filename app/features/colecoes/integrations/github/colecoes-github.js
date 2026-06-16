@@ -15,14 +15,36 @@
    CORE GITHUB LOCAL DE COLECOES
    Mantido dentro da propria feature para nao depender da Biblioteca.
 ===================================================================== */
-var COL_GITHUB_CONFIG_KEY = 'senkolib_colecoes_github_config';
-var COL_GITHUB_TOKEN_KEY  = 'senkolib_colecoes_github_token';
-var COL_GITHUB_CONFIG = (function () {
+var COL_GITHUB_CONFIG_KEY = 'senkolib_github_config';
+var COL_GITHUB_TOKEN_KEY  = 'senkolib_github_token';
+var COL_GITHUB_LEGACY_CONFIG_KEY = 'senkolib_colecoes_github_config';
+var COL_GITHUB_LEGACY_TOKEN_KEY  = 'senkolib_colecoes_github_token';
+
+/*
+ * A configuracao GitHub e global porque owner/repo/token pertencem ao projeto.
+ * A logica continua local: Colecoes nao importa nem chama a Biblioteca.
+ */
+
+function colGithubReadStoredConfig() {
   var saved = null;
   try { saved = JSON.parse(localStorage.getItem(COL_GITHUB_CONFIG_KEY) || 'null'); } catch (error) {}
-  if (saved && saved.owner && saved.repo) {
-    return { OWNER: saved.owner, REPO: saved.repo, BRANCH: saved.branch || 'main', _auto: false };
+  if (!saved) {
+    try { saved = JSON.parse(localStorage.getItem(COL_GITHUB_LEGACY_CONFIG_KEY) || 'null'); } catch (error) {}
   }
+  if (saved && (saved.owner || saved.OWNER) && (saved.repo || saved.REPO)) {
+    return {
+      OWNER: saved.owner || saved.OWNER,
+      REPO: saved.repo || saved.REPO,
+      BRANCH: saved.branch || saved.BRANCH || 'main',
+      _auto: false
+    };
+  }
+  return null;
+}
+
+var COL_GITHUB_CONFIG = (function () {
+  var saved = colGithubReadStoredConfig();
+  if (saved) return saved;
 
   var host = window.location.hostname || '';
   var parts = window.location.pathname.split('/').filter(Boolean);
@@ -39,22 +61,44 @@ var colGithubSaving = false;
 function colGithubPersistConfig() {
   try {
     localStorage.setItem(COL_GITHUB_CONFIG_KEY, JSON.stringify({
-      owner: COL_GITHUB_CONFIG.OWNER,
-      repo: COL_GITHUB_CONFIG.REPO,
-      branch: COL_GITHUB_CONFIG.BRANCH || 'main'
+      OWNER: COL_GITHUB_CONFIG.OWNER,
+      REPO: COL_GITHUB_CONFIG.REPO,
+      BRANCH: COL_GITHUB_CONFIG.BRANCH || 'main'
     }));
   } catch (error) {}
+  if (window.SenkoShell && typeof window.SenkoShell.refreshGithubButton === 'function') {
+    window.SenkoShell.refreshGithubButton();
+  }
+}
+
+function colGithubSyncStoredConfig() {
+  var saved = colGithubReadStoredConfig();
+  if (!saved) return;
+  COL_GITHUB_CONFIG.OWNER = saved.OWNER;
+  COL_GITHUB_CONFIG.REPO = saved.REPO;
+  COL_GITHUB_CONFIG.BRANCH = saved.BRANCH || 'main';
 }
 
 function colGithubGetToken() {
-  try { return localStorage.getItem(COL_GITHUB_TOKEN_KEY) || ''; } catch (error) { return ''; }
+  try {
+    return localStorage.getItem(COL_GITHUB_TOKEN_KEY) || localStorage.getItem(COL_GITHUB_LEGACY_TOKEN_KEY) || '';
+  } catch (error) {
+    return '';
+  }
 }
 
 function colGithubSetToken(token) {
-  try { localStorage.setItem(COL_GITHUB_TOKEN_KEY, token || ''); } catch (error) {}
+  try {
+    if (token) localStorage.setItem(COL_GITHUB_TOKEN_KEY, token);
+    else localStorage.removeItem(COL_GITHUB_TOKEN_KEY);
+  } catch (error) {}
+  if (window.SenkoShell && typeof window.SenkoShell.refreshGithubButton === 'function') {
+    window.SenkoShell.refreshGithubButton();
+  }
 }
 
 function colGithubEnsureToken() {
+  colGithubSyncStoredConfig();
   if (!COL_GITHUB_CONFIG.OWNER) {
     COL_GITHUB_CONFIG.OWNER = (window.prompt('Owner do repositorio GitHub para Colecoes:', '') || '').trim();
   }
@@ -78,6 +122,56 @@ function colGithubEnsureToken() {
     return false;
   }
   return true;
+}
+
+function colGithubPromptValue(label, currentValue) {
+  var value = window.prompt(label, currentValue || '');
+  return value === null ? null : value.trim();
+}
+
+function colGithubOpenConfig() {
+  /*
+   * Configurador proprio de Colecoes. Ele usa as mesmas chaves globais de
+   * owner/repo/token, mas nao chama modal nem funcao da Biblioteca.
+   */
+  colGithubSyncStoredConfig();
+
+  var owner = colGithubPromptValue('Owner do repositorio GitHub:', COL_GITHUB_CONFIG.OWNER);
+  if (owner === null) return false;
+
+  var repo = colGithubPromptValue('Nome do repositorio GitHub:', COL_GITHUB_CONFIG.REPO);
+  if (repo === null) return false;
+
+  var token = colGithubPromptValue('Token GitHub:', colGithubGetToken());
+  if (token === null) return false;
+
+  COL_GITHUB_CONFIG.OWNER = owner;
+  COL_GITHUB_CONFIG.REPO = repo;
+  COL_GITHUB_CONFIG.BRANCH = COL_GITHUB_CONFIG.BRANCH || 'main';
+  colGithubPersistConfig();
+  colGithubSetToken(token);
+
+  if (!owner || !repo || !token) {
+    colGithubShowErrorModal('Configure owner, repositorio e token para usar o GitHub em Colecoes.');
+    return false;
+  }
+
+  return true;
+}
+
+function colGithubHasCredentials() {
+  colGithubSyncStoredConfig();
+  return Boolean(COL_GITHUB_CONFIG.OWNER && COL_GITHUB_CONFIG.REPO && colGithubGetToken());
+}
+
+function colGithubRegisterShellProvider() {
+  if (!window.SenkoShell || typeof window.SenkoShell.registerGithubProvider !== 'function') return;
+
+  window.SenkoShell.registerGithubProvider('colecoes', {
+    label: 'Colecoes',
+    openConfig: colGithubOpenConfig,
+    hasCredentials: colGithubHasCredentials
+  });
 }
 
 function colGithubEscapeTemplateLiteral(value) {
@@ -263,15 +357,15 @@ function colGhBuildFileContent(col) {
   Monta o conteúdo do arquivo de grupos a partir do estado atual de ColGroups.
   Chamado sempre que grupos confirmados mudam (flush de pendentes).
 
-  REGRA: só serializa grupos que são referenciados por pelo menos uma coleção
-  em memória, OU que estão na lista de pendentes da operação atual.
-  Isso evita que grupos órfãos (cujas coleções mudaram de grupo) fiquem
-  acumulando no arquivo e aparecendo na filter bar como pills fantasma.
+  REGRA: grupos sao catalogo proprio da feature. Mesmo que nenhuma colecao
+  aponte para um grupo hoje, ele continua existindo no arquivo ate existir
+  uma acao explicita para remover grupos.
 */
 function colGhBuildGroupsFileContent() {
   if (typeof ColGroups === 'undefined') return '';
+  /* Grupos sao catalogo persistente: mesmo vazios, continuam no arquivo. */
 
-  /* Mapeia os slugs de grupo que alguma coleção ainda referencia */
+  /* O mapeamento abaixo fica apenas para compatibilidade com fluxos antigos. */
   var usedSlugs = {};
   if (typeof ColLib !== 'undefined') {
     ColLib.getAll().forEach(function (col) {
@@ -279,14 +373,18 @@ function colGhBuildGroupsFileContent() {
     });
   }
 
-  /* Pendentes também são sempre incluídos (ainda não têm coleção apontada,
-     mas acabaram de ser criados e serão usados imediatamente) */
+  /* Pendentes tambem entram no catalogo para serem persistidos no commit atual. */
   ColGroups.getPending().forEach(function (g) {
     usedSlugs[g.slug] = true;
   });
 
   var all = ColGroups.getAll(); /* confirmados + pendentes */
-  var used = all.filter(function (g) { return usedSlugs[g.slug]; });
+  var seen = {};
+  var used = all.filter(function (g) {
+    if (!g || !g.slug || seen[g.slug]) return false;
+    seen[g.slug] = true;
+    return true;
+  });
 
   var lines = used.map(function (g) {
     return (
@@ -716,10 +814,9 @@ function colGhEditCollection(colData) {
       fileInfo.sha,
       '[Colecoes] edit collection: ' + slug
     ).then(function () {
-      /* Atualiza a memória ANTES do flush de grupos.
-         Assim colGhBuildGroupsFileContent já enxerga o grupo novo como
-         "usado" e o grupo antigo como órfão (se nenhuma outra coleção
-         apontar para ele), removendo-o do arquivo. */
+      /* Atualiza a memoria antes de regravar os dados relacionados.
+         colGhBuildGroupsFileContent preserva todos os grupos cadastrados,
+         inclusive os que ficaram sem colecao apontando para eles. */
       ColLib.updateCollection(slug, {
         name:  colData.name,
         group: colData.group,
@@ -727,8 +824,7 @@ function colGhEditCollection(colData) {
       });
 
       return colGhSyncManifestFromMemory(slug).then(function () {
-        /* Flush pós-edição: sempre reescreve col-groups-data.js para limpar
-           grupos que ficaram sem nenhuma coleção apontando para eles. */
+        /* Flush pos-edicao: reescreve col-groups-data.js sem apagar grupos vazios. */
         colGithubSetStatus('Atualizando grupos…', 'saving');
         var groupsContent = colGhBuildGroupsFileContent();
 
@@ -1404,6 +1500,7 @@ function initSenkoColecoesGithub() {
   initSenkoColecoesGithub.initialized = true;
   if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;
 
+  colGithubRegisterShellProvider();
   colGhObserveModals();
 
   /* Injeções iniciais para overlays já existentes no DOM

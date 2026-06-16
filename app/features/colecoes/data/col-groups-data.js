@@ -2,7 +2,7 @@
 /* ═══════════════════════════════════════════════════════════════════════
    col-groups-data.js — Dados dos grupos de coleções
 
-   ATENÇÃO: Arquivo gerado pelo modulo GitHub de Colecoes.
+   ATENÇÃO: Arquivo gerado pelo módulo GitHub do SenkoLib.
    NÃO edite manualmente em produção.
 ═══════════════════════════════════════════════════════════════════════ */
 ColGroups.load([

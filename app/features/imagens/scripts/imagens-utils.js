@@ -80,24 +80,28 @@
      * a chance de o navegador abrir uma imagem unica em vez de baixar.
      */
     var payload = blob && blob.type && blob.type.indexOf('image/') === 0
-      ? new Blob([blob], { type: 'application/octet-stream' })
+      ? blob.slice(0, blob.size, 'application/octet-stream')
       : blob;
     var url = URL.createObjectURL(payload);
     var link = document.createElement('a');
 
     link.href = url;
     link.download = filename || 'download';
-    link.target = '_self';
-    link.rel = 'noopener';
-    link.style.display = 'none';
+    link.style.position = 'fixed';
+    link.style.left = '-9999px';
+    link.style.top = '-9999px';
 
     document.body.appendChild(link);
-    link.click();
-    link.remove();
+    link.dispatchEvent(new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      view: window
+    }));
 
     window.setTimeout(function () {
+      link.remove();
       URL.revokeObjectURL(url);
-    }, 1000);
+    }, 4000);
   };
 
   api.fileBaseName = function fileBaseName(filename) {

@@ -13,7 +13,7 @@ self.addEventListener('activate', function (event) {
   event.waitUntil(
     caches.keys().then(function (keys) {
       return Promise.all(keys.filter(function (key) {
-        return key.indexOf('senkolib-') === 0;
+        return key.indexOf('senkolib-') === 0 || key === 'senkolib';
       }).map(function (key) {
         return caches.delete(key);
       }));
@@ -30,5 +30,9 @@ self.addEventListener('fetch', function (event) {
     return;
   }
 
-  event.respondWith(fetch(event.request, { cache: 'no-store' }));
+  event.respondWith(
+    fetch(new Request(event.request, { cache: 'reload' })).catch(function () {
+      return fetch(event.request, { cache: 'no-store' });
+    })
+  );
 });
