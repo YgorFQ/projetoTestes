@@ -8,11 +8,10 @@
 ColLib.register({
   slug:  'teste',
   name:  'Teste',
-  group: 'egambling',
+  group: 'selecao-francesa',
   tags:  ['ser gamer', 'ser um jogador', 'tcs'],
   layouts: [
-    
-        /*@@@@Col - teste2 */
+    /*@@@@Col - teste2 */
     {
       id:   'teste2',
       name: 'Teste1',
@@ -932,6 +931,5 @@ ColLib.register({
 </div>`,
       css:  ``,
     },
-
   ]
 });
