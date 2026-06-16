@@ -51,6 +51,18 @@ window.SenkoColecoesManifest = {
         "tcs"
       ],
       "layoutCount": 1
+    },
+    {
+      "file": "teste2.js",
+      "slug": "teste2",
+      "name": "Teste2",
+      "group": "ygor",
+      "tags": [
+        "awdaw",
+        "dawdawd",
+        "awdawdwedawad"
+      ],
+      "layoutCount": 0
     }
   ]
 };
