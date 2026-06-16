@@ -56,7 +56,7 @@ window.SenkoColecoesManifest = {
       "file": "teste2.js",
       "slug": "teste2",
       "name": "Teste2",
-      "group": "ygor",
+      "group": "selecao-francesa",
       "tags": [
         "awdaw",
         "dawdawd",
