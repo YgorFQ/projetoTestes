@@ -50,7 +50,7 @@ window.SenkoColecoesManifest = {
         "ser um jogador",
         "tcs"
       ],
-      "layoutCount": 1
+      "layoutCount": 2
     }
   ]
 };
