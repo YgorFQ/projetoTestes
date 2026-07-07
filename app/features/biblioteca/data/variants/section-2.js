@@ -7,10 +7,10 @@ SenkoLib.registerVariant('section-2', [
     <header class="section-2-2__banner">
         <div class="section-2-2__banner-container">
             <video class="section-2-2__banner-video"
-                poster="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/header.jpg"
+                poster="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/header_giovannababy.webp"
                 preload="none" autoplay muted loop playsinline aria-hidden="true">
                 <source
-                    src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/cottonbaby/header-cottonbaby1.mov">
+                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/header_giovannababy.webm">
             </video>
         </div>
 
@@ -21,7 +21,7 @@ SenkoLib.registerVariant('section-2', [
     </header>
 
     <article class="section-2-2__body">
-        <small class="section-2-2__brand">── Marca ──</small>
+        <small class="section-2-2__brand"> Marca </small>
         <h2 class="section-2-2__title">
             TÍTULO DO PRODUTO GAMER <strong>Nome, Modelo e Diferencial</strong>
         </h2>
@@ -98,7 +98,7 @@ SenkoLib.registerVariant('section-2', [
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding: calc(var(--badge-size) / 2 + 1.8rem) 0.3rem 2.5rem;
+        padding: calc(var(--badge-size) / 2 + 1.8rem) 0.3rem 0.7rem;
         text-align: center;
     }
 

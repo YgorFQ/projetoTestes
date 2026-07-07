@@ -184,35 +184,33 @@ SenkoLib.register([
   },
 
   /*@@@@Senko - section-2 */
-  /* variantes: variants/section-2.js */
+  /* variantes: app/features/biblioteca/data/variants/section-2.js */
   {
     id: 'section-2',
     name: 'Section-2 (Header Vídeo)',
     tags: ['Section-2', 'Section 2', '2', 'vídeo', 'header vídeo', 'responsivo', 'acessível'],
-    html: ` <article style="width: 100%;" aria-labelledby="product-main-title"> <!-- fecha esse article lá no final do código, depois de todo conteúdo, e antes do fechamento da div.lp-container -->
-    <section class="video-header" aria-label="Cabeçalho do produto">
-  <header class="video-header__banner">
-    <video class="video-header__banner-video"
-      poster="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/poster-precon-p-alaranjado-ao-fundo-azul-grafitado.jpg"
-      preload="none" autoplay muted loop playsinline width="1200" height="250" aria-hidden="true">
-      <source src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/precon/header-precon.mov">
-    </video>
-    <div class="video-header__badge" role="img" aria-label="Logo da marca precon dentro de um círculo laranja">
-      <img
-        src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/precon/logo-precon.png"
-        alt=""
-        class="video-header__badge-img">
-    </div>
-  </header>
-  <section class="video-header__body" aria-label="Título e descrição do produto">
-    <small class="video-header__brand">precon</small>
-    <h2 class="video-header__title" id="video-main-title">
-      CONJUNTOS DE PARAFUSO AUTOBROCANTES CERAMICO/BRANCO
-    </h2>
-    <p class="video-header__subtitle">
-      Perfuram e fixam em uma única etapa, dispensando pré-furo. Ideais para agilizar sua obra ou reparo com total segurança e firmeza nas aplicações.
-    </p>
-  </section>
+    html: `<section class="video-header" aria-label="Cabeçalho do produto">
+    <header class="video-header__banner">
+        <video class="video-header__banner-video"
+            poster="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/header_precon.webp" preload="none"
+            autoplay muted loop playsinline width="1200" height="250" aria-hidden="true">
+            <source src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/header-precon.webm">
+        </video>
+        <div class="video-header__badge" role="img" aria-label="Logo da marca precon dentro de um círculo laranja">
+            <img src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/precon/logo-precon.png"
+                alt="" class="video-header__badge-img">
+        </div>
+    </header>
+    <section class="video-header__body" aria-label="Título e descrição do produto">
+        <small class="video-header__brand">precon</small>
+        <h2 class="video-header__title" id="video-main-title">
+            CONJUNTOS DE PARAFUSO AUTOBROCANTES CERAMICO/BRANCO
+        </h2>
+        <p class="video-header__subtitle">
+            Perfuram e fixam em uma única etapa, dispensando pré-furo. Ideais para agilizar sua obra ou reparo com
+            total segurança e firmeza nas aplicações.
+        </p>
+    </section>
 </section>`,
     css: `<style>
 * {
@@ -1098,7 +1096,7 @@ SenkoLib.register([
   },
 
   /*@@@@Senko - section-6 */
-  /* variantes: variants/section-6.js */
+  /* variantes: app/features/biblioteca/data/variants/section-6.js */
   {
     id: 'section-6',
     name: 'Section-6',
@@ -1181,7 +1179,7 @@ SenkoLib.register([
                 position: static;
                 transform: none;
                 max-width: 100%;
-                padding: 24px 20px 0 20px;
+                padding: 24px 20px 16px 20px;
                 background: transparent;
                 backdrop-filter: none;
                 text-align: center;
@@ -1715,196 +1713,7 @@ SenkoLib.register([
 </style>`
   },
 
-  /*@@@@Senko - section-8 */
-  /* variantes: variants/section-8.js */
-  {
-    id: 'section-8',
-    name: 'Section-8',
-    tags: ['section 8', '8', 'split'],
-    html: `    <section class="wrapper-section-8" aria-labelledby="section-8-title">
-      <div class="text-col-section-8">
-        <img src="https://cdn-icons-png.flaticon.com/512/894/894565.png" class="brand-icon-section-8"
-          alt="Imagem representativa" width="60" height="60" loading="lazy" />
-        <h2 id="section-8-title" class="title-section-8">
-          A Lenda dos Sete Mares
-        </h2>
-        <p class="desc-section-8">
-          Capitan Cortez não é apenas um rum, é um convite à descoberta. Inspirado
-          nos diários de bordo dos grandes navegadores, nossa receita busca capturar
-          a glória da tradição em cada garrafa. Uma homenagem àqueles que ousam ir
-          além do horizonte.
-        </p>
-      </div>
-      <!-- Imagem Principal-->
-      <div class="image-col-section-8">
-        <img src="C:UsersygorqDownloadscabo-flexivel-corfio-1-5mm-bobina-vermelho-4203788-01.jpg"
-          class="bg-image-section-8" alt="Imagem representativa" width="800" height="600" loading="lazy" />
-      </div>
-    </section>`,
-    css: `  <style>
-    /* ===== Section-8 ===== */
-    .wrapper-section-8 {
-      display: flex;
-      flex-wrap: wrap;
-      width: 100%;
-      background-color: #f8f8f8;
-      min-height: 28rem;
-    }
-
-    .text-col-section-8 {
-      flex: 1 1 18.75rem;
-      padding: 2.5rem 1.25rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      gap: 1.25rem;
-    }
-
-    .image-col-section-8 {
-      flex: 1 1 18.75rem;
-      position: relative;
-    }
-
-    .brand-icon-section-8 {
-      width: 3.75rem;
-      height: auto;
-      opacity: 0.8;
-      display: block;
-    }
-
-    .title-section-8 {
-      font-size: clamp(22px, 3.2vw, 38px);
-      font-weight: 700;
-      line-height: 1.2;
-      text-align: center;
-    }
-
-    .desc-section-8 {
-      font-size: clamp(14px, 1.4vw, 22px);
-      color: #1b1b1b;
-      line-height: 28px;
-    }
-
-
-
-
-
-
-    @media (max-width: 1060px) {
-
-      .title-section-8 h1 {
-        font-size: 3.8vw;
-      }
-
-      .desc-section-8 {
-        font-size: 1.8vw;
-      }
-    }
-
-    @media (max-width: 960px) {
-
-      .title-section-8 h1 {
-        font-size: 4.3vw;
-      }
-
-      .desc-section-8 {
-        font-size: 2vw;
-      }
-
-    }
-
-    @media (max-width: 730px) {
-
-      .title-section-8 h1 {
-        font-size: 5vw;
-      }
-
-      .desc-section-8 {
-        font-size: 2.9vw;
-      }
-    }
-
-    @media (max-width: 500px) {
-      .title-section-8 h1 {
-        font-size: 6vw;
-      }
-
-      .desc-section-8 {
-        font-size: 3.5vw;
-      }
-
-    }
-
-    @media (max-width: 420px) {
-      .title-section-8 h1 {
-        font-size: 7vw;
-      }
-
-      .desc-section-8 {
-        font-size: 4vw;
-      }
-    }
-
-
-
-
-    .arrow-icon-section-8 {
-      font-size: 1rem;
-      line-height: 1;
-      display: inline-block;
-      transition: transform 0.3s;
-    }
-
-    .cta-link-section-8:hover .arrow-icon-section-8 {
-      transform: translateX(4px);
-    }
-
-    .bg-image-section-8 {
-      width: 95%;
-      height: 95%;
-      margin: 0.5rem;
-      border-radius: 15px;
-      object-fit: cover;
-      display: block;
-      min-height: 18.75rem;
-    }
-
-    @media (min-width: 768px) {
-      .text-col-section-8 {
-        padding: 1.5rem 1.25rem 0.7rem;
-      }
-
-      .reverse-desktop-section-8 {
-        flex-direction: row-reverse;
-      }
-    }
-
-    @media (max-width: 720px) {
-      .wrapper-section-8 {
-        flex-direction: column-reverse;
-      }
-
-      .reverse-mobile-section-8 {
-        flex-direction: column;
-      }
-
-      .bg-image-section-8 {
-        width: 90%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        min-height: 18.75rem;
-        max-width: 95%;
-        margin: 0.6rem auto;
-        border-radius: 10px;
-        aspect-ratio: 26 / 17;
-      }
-    }
-  </style>`
-  },
-
+  
   /*@@@@Senko - section-11 */
   /* variantes: variants/section-11.js */
   {
@@ -4158,16 +3967,6 @@ input[type="radio"]:focus + .c32-nav label[for="c32-s2"] {
   },
 
 
-/*@@@@Senko - testegamered */
-  /* variantes: app/features/biblioteca/data/variants/testegamered.js */
-  {
-    id: 'testegamered',
-    name: 'testegamered',
-    tags: ['tsrtwatdwi'],
-    html: `adea/.\\jdhzkg.`,
-    css: `sefsfzezx\\cft `
-  },
-
 
 /*@@@@Senko - section-15 */
   /* variantes: app/features/biblioteca/data/variants/section-15.js */
@@ -5996,6 +5795,815 @@ input[type="radio"]:focus + .c32-nav label[for="c32-s2"] {
     --story-ring-bg: conic-gradient(from -20deg, #ff262b, #9e070a, #ff262b);
     --story-caption-bg-start: rgba(2, 6, 23, 0.72);
     --story-caption-bg-end: rgba(2, 6, 23, 0.46);
+  }
+</style>`
+  },
+
+
+/*@@@@Senko - section-24 */
+  /* variantes: app/features/biblioteca/data/variants/section-24.js */
+  {
+    id: 'section-24',
+    name: 'Section-24',
+    tags: ['split', 'adaptativo', '24'],
+    html: `<section class="section-24" aria-labelledby="section-24-title">
+    <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-1"
+        aria-label="Mostrar imagem de visão geral" checked>
+    <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-2"
+        aria-label="Mostrar imagem de detalhe">
+    <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-3"
+        aria-label="Mostrar imagem de uso">
+
+    <article class="section-24__container">
+        <section class="section-24__content" aria-labelledby="section-24-title">
+            <nav class="section-24__options" aria-label="Escolha a imagem exibida">
+                <label class="section-24__button section-24__button--one" for="section-24-view-1">
+                    <span class="section-24__button-title">26 dentes fixos</span>
+                    <span class="section-24__button-text">Recolhe folhas, grama solta e resíduos leves com mais
+                        praticidade.</span>
+                </label>
+
+                <label class="section-24__button section-24__button--two" for="section-24-view-2">
+                    <span class="section-24__button-title">Plástico resistente</span>
+                    <span class="section-24__button-text">Polipropileno de alta resistência, leve para usar e feito para
+                        durar.</span>
+                </label>
+
+                <label class="section-24__button section-24__button--three" for="section-24-view-3">
+                    <span class="section-24__button-title">Cabo de 120 cm</span>
+                    <span class="section-24__button-text">Madeira renovável com acabamento envernizado e toque mais
+                        liso.</span>
+                </label>
+            </nav>
+        </section>
+
+        <figure class="section-24__visual" aria-label="Imagens alternáveis do produto">
+            <div class="section-24__frame">
+                <!-- IMG 1-->
+                <div class="section-24__panel section-24__panel--one">
+                    <img class="section-24__image"
+                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-uso-gramado-509702-03.webp"
+                        width="1200" height="900" loading="lazy" alt="Imagem de visão geral do produto"
+                        decoding="async">
+                </div>
+                <!-- IMG 2-->
+                <div class="section-24__panel section-24__panel--two">
+                    <img class="section-24__image"
+                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-conjunto-ferramentas-509702-02.webp"
+                        width="1200" height="900" loading="lazy" alt="Imagem aproximada do acabamento do produto"
+                        decoding="async">
+                </div>
+                <!-- IMG 3-->
+                <div class="section-24__panel section-24__panel--three">
+                    <img class="section-24__image"
+                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-lifestyle-509702-01.webp"
+                        width="1200" height="900" loading="lazy" alt="Imagem do produto em contexto de uso"
+                        decoding="async">
+                </div>
+            </div>
+
+            <figcaption class="section-24__caption">
+                <span class="section-24__message section-24__message--one">Mais alcance sobre folhas e resíduos
+                    leves.</span>
+                <span class="section-24__message section-24__message--two">Leveza e resistência para a rotina do
+                    jardim.</span>
+                <span class="section-24__message section-24__message--three">Cabo longo, toque liso e acabamento
+                    envernizado.</span>
+            </figcaption>
+        </figure>
+    </article>
+</section>`,
+    css: `<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .section-24 {
+        --s24-color-brand: #ff9900;
+        --s24-color-ink: #202124;
+        --s24-color-muted: #62666d;
+        --s24-color-soft: #f4f5f2;
+        --s24-color-surface: #ffffff;
+        --s24-color-line: #d9ddd3;
+        --s24-color-brand-soft: #fff2d9;
+        --s24-color-brand-strong: #9c5d00;
+        width: 100%;
+        margin: 0;
+        padding: 2rem 1rem;
+        color: var(--s24-color-ink);
+        background: var(--s24-color-soft);
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .section-24,
+    .section-24__input,
+    .section-24__container,
+    .section-24__content,
+    .section-24__options,
+    .section-24__button,
+    .section-24__visual,
+    .section-24__frame,
+    .section-24__panel,
+    .section-24__image,
+    .section-24__caption,
+    .section-24__message {
+        box-sizing: border-box;
+    }
+
+    .section-24__input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .section-24__container {
+        width: 100%;
+        display: grid;
+        gap: 1.5rem;
+        align-items: start;
+    }
+
+    .section-24__content {
+        width: 100%;
+        display: grid;
+        gap: 1rem;
+        align-items: start;
+    }
+
+    .section-24__button-title,
+    .section-24__button-text,
+    .section-24__message {
+        margin: 0;
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .section-24__options {
+        width: 100%;
+        display: grid;
+        gap: 1rem;
+        align-items: start;
+        margin-top: 0.5rem;
+    }
+
+    .section-24__button {
+        position: relative;
+        width: 100%;
+        display: grid;
+        gap: 0.5rem;
+        align-items: start;
+        padding: 1rem;
+        border: 1px solid var(--s24-color-line);
+        border-radius: 0.5rem;
+        color: var(--s24-color-ink);
+        background: var(--s24-color-surface);
+        cursor: pointer;
+        overflow: hidden;
+        transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease, transform 180ms ease;
+    }
+
+    .section-24__button::before {
+        position: absolute;
+        top: 0.5rem;
+        bottom: 0.5rem;
+        left: 0;
+        width: 0.25rem;
+        border-radius: 0 0.5rem 0.5rem 0;
+        background: var(--s24-color-brand);
+        content: "";
+        opacity: 0;
+        transform: scaleY(0.4);
+        transform-origin: center;
+        transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .section-24__button:hover {
+        border-color: var(--s24-color-brand);
+        box-shadow: 0 0.5rem 1.5rem rgba(32, 33, 36, 0.1);
+        transform: translateY(-0.125rem);
+    }
+
+    .section-24__button:active {
+        transform: scale(0.99);
+    }
+
+    .section-24__button-title {
+        position: relative;
+        z-index: 1;
+        font-size: clamp(1rem, 2.7vw, 1.1875rem);
+        font-weight: 800;
+        line-height: 1.25;
+        transition: color 180ms ease;
+    }
+
+    .section-24__button-text {
+        position: relative;
+        z-index: 1;
+        color: var(--s24-color-muted);
+        font-size: clamp(0.875rem, 2.3vw, 1rem);
+        line-height: 1.45;
+    }
+
+    .section-24__visual {
+        width: 100%;
+        margin: 0;
+        display: grid;
+        gap: 1rem;
+        align-items: start;
+    }
+
+    .section-24__frame {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        border: 1px solid var(--s24-color-line);
+        border-radius: 0.5rem;
+        background: var(--s24-color-surface);
+        box-shadow: 0 1rem 2rem rgba(32, 33, 36, 0.08);
+    }
+
+    .section-24__panel {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(0.5rem);
+        transition: opacity 220ms ease, transform 220ms ease;
+    }
+
+    .section-24__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: saturate(0.92);
+        transform: scale(1.04);
+        transition: filter 420ms ease, transform 420ms ease;
+    }
+
+    .section-24__caption {
+        position: relative;
+        min-height: 4rem;
+        padding: 1rem;
+        border-left: 0.25rem solid var(--s24-color-brand);
+        border-radius: 0.5rem;
+        color: var(--s24-color-ink);
+        background: var(--s24-color-surface);
+        box-shadow: 0 0.5rem 1rem rgba(32, 33, 36, 0.06);
+    }
+
+    .section-24__message {
+        position: absolute;
+        inset: 1rem;
+        color: var(--s24-color-ink);
+        font-size: clamp(0.875rem, 2.2vw, 1rem);
+        font-weight: 700;
+        line-height: 1.4;
+        opacity: 0;
+        transform: translateY(0.5rem);
+        transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    #section-24-view-1:checked~.section-24__container .section-24__panel--one,
+    #section-24-view-2:checked~.section-24__container .section-24__panel--two,
+    #section-24-view-3:checked~.section-24__container .section-24__panel--three {
+        z-index: 2;
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateY(0);
+    }
+
+    #section-24-view-1:checked~.section-24__container .section-24__panel--one .section-24__image,
+    #section-24-view-2:checked~.section-24__container .section-24__panel--two .section-24__image,
+    #section-24-view-3:checked~.section-24__container .section-24__panel--three .section-24__image {
+        filter: saturate(1);
+        transform: scale(1);
+    }
+
+    #section-24-view-1:checked~.section-24__container .section-24__message--one,
+    #section-24-view-2:checked~.section-24__container .section-24__message--two,
+    #section-24-view-3:checked~.section-24__container .section-24__message--three {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    #section-24-view-1:checked~.section-24__container .section-24__button--one,
+    #section-24-view-2:checked~.section-24__container .section-24__button--two,
+    #section-24-view-3:checked~.section-24__container .section-24__button--three {
+        border-color: var(--s24-color-brand);
+        background: var(--s24-color-brand-soft);
+        box-shadow: 0 0.5rem 1.5rem rgba(32, 33, 36, 0.12), inset 0 0 0 2px var(--s24-color-brand);
+        transform: translateY(-0.125rem);
+    }
+
+    #section-24-view-1:checked~.section-24__container .section-24__button--one::before,
+    #section-24-view-2:checked~.section-24__container .section-24__button--two::before,
+    #section-24-view-3:checked~.section-24__container .section-24__button--three::before {
+        opacity: 1;
+        transform: scaleY(1);
+    }
+
+    #section-24-view-1:checked~.section-24__container .section-24__button--one .section-24__button-title,
+    #section-24-view-2:checked~.section-24__container .section-24__button--two .section-24__button-title,
+    #section-24-view-3:checked~.section-24__container .section-24__button--three .section-24__button-title {
+        color: var(--s24-color-brand-strong);
+    }
+
+    #section-24-view-1:focus-visible~.section-24__container .section-24__button--one,
+    #section-24-view-2:focus-visible~.section-24__container .section-24__button--two,
+    #section-24-view-3:focus-visible~.section-24__container .section-24__button--three {
+        outline: 2px solid var(--s24-color-brand);
+        outline-offset: 4px;
+    }
+
+    @media (min-width: 576px) {
+
+        .section-24__container {
+            gap: 2rem;
+        }
+    }
+
+    @media (min-width: 768px) {
+
+        .section-24__container {
+            grid-template-columns: minmax(0, 1fr);
+            gap: .5rem;
+        }
+
+        .section-24__content {
+            order: 2;
+        }
+
+        .section-24__visual {
+            order: 1;
+        }
+
+        .section-24__options {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .section-24__button-title {
+            font-size: clamp(0.875rem, 1.8vw, 1rem);
+        }
+
+        .section-24__button-text {
+            font-size: clamp(0.75rem, 1.6vw, 0.875rem);
+        }
+
+        .section-24__frame {
+            aspect-ratio: 16 / 9;
+        }
+    }
+
+    @media (min-width: 992px) {
+
+        .section-24__container {
+            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+            gap: 3rem;
+        }
+
+        .section-24__content {
+            order: 1;
+            align-self: center;
+        }
+
+        .section-24__visual {
+            order: 2;
+        }
+
+        .section-24--reverse .section-24__content {
+            order: 2;
+        }
+
+        .section-24--reverse .section-24__visual {
+            order: 1;
+        }
+
+        .section-24__options {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .section-24__button {
+            padding: 1.5rem;
+        }
+
+        .section-24__button-title {
+            font-size: clamp(1rem, 2.7vw, 1.1875rem);
+        }
+
+        .section-24__button-text {
+            font-size: clamp(0.875rem, 2.3vw, 1rem);
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .section-24__container {
+            gap: 3rem;
+        }
+
+        .section-24__frame {
+            aspect-ratio: 16 / 9;
+        }
+    }
+</style>`
+  },
+
+
+/*@@@@Senko - section-25 */
+  /* variantes: app/features/biblioteca/data/variants/section-25.js */
+  {
+    id: 'section-25',
+    name: 'Section-25',
+    tags: ['Carrossel', 'grid'],
+    html: `<section class="section-25" aria-label="Abas de conteúdo sobre o produto">
+
+    <input class="section-25__radio" type="radio" name="s25-tabs" id="s25-tab1" checked aria-hidden="true">
+    <input class="section-25__radio" type="radio" name="s25-tabs" id="s25-tab2" aria-hidden="true">
+    <input class="section-25__radio" type="radio" name="s25-tabs" id="s25-tab3" aria-hidden="true">
+    <input class="section-25__radio" type="radio" name="s25-tabs" id="s25-tab4" aria-hidden="true">
+
+    <div class="section-25-container">
+
+        <nav class="section-25__nav" role="tablist" aria-label="Seções do produto">
+            <label class="section-25__tab-label" for="s25-tab1" role="tab">Origem</label>
+            <label class="section-25__tab-label" for="s25-tab2" role="tab">Processo</label>
+            <label class="section-25__tab-label" for="s25-tab3" role="tab">Envelhecimento</label>
+            <label class="section-25__tab-label" for="s25-tab4" role="tab">Perfil Sensorial</label>
+        </nav>
+
+        <div class="section-25__panels">
+
+            <article class="section-25__panel section-25__panel--1" role="tabpanel" aria-label="Origem">
+                <div class="section-25__split">
+                    <figure class="section-25__figure">
+                        <picture>
+                            <source srcset="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" media="(min-width: 768px)">
+                            <img class="section-25__image" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" alt="Barris de carvalho enfileirados em adega escura — local de origem do Domecq" width="800" height="600" loading="lazy">
+                        </picture>
+                    </figure>
+                    <div class="section-25__body">
+                        <h2 class="section-25__title">Tradição brasileira<br>que atravessa gerações</h2>
+                        <p class="section-25__description">Produzido no Brasil pela Pernod Ricard Brasil, em Resende – RJ, o Domecq Coquetel Composto é elaborado com ingredientes selecionados que garantem seu aroma frutado e sabor inigualável. Uma receita clássica, feita para momentos que merecem ser celebrados.</p>
+                        <span class="section-25__location" aria-label="Localização: Resende, RJ, Brasil"></span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="section-25__panel section-25__panel--2" role="tabpanel" aria-label="Processo">
+                <div class="section-25__split section-25__split--reverse">
+                    <figure class="section-25__figure">
+                        <picture>
+                            <source srcset="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=700&q=80" media="(min-width: 768px)">
+                            <img class="section-25__image" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80" alt="Mesa com ingredientes e utensílios do processo artesanal de destilação" width="800" height="600" loading="lazy">
+                        </picture>
+                    </figure>
+                    <div class="section-25__body">
+                        <h2 class="section-25__title">Destilação artesanal<br>com técnica centenária</h2>
+                        <p class="section-25__description">Cada lote é produzido com controle rigoroso de temperatura e tempo de fermentação. O processo combina métodos tradicionais herdados de mestres destiladores com padrões modernos de qualidade que garantem consistência e pureza em cada garrafa.</p>
+                        <span class="section-25__location" aria-label="Processo realizado em Resende, RJ"></span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="section-25__panel section-25__panel--3" role="tabpanel" aria-label="Envelhecimento">
+                <div class="section-25__split">
+                    <figure class="section-25__figure">
+                        <picture>
+                            <source srcset="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=700&q=80" media="(min-width: 768px)">
+                            <img class="section-25__image" src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&q=80" alt="Taça com destilado âmbar iluminado — resultado do envelhecimento em barris de carvalho" width="800" height="600" loading="lazy">
+                        </picture>
+                    </figure>
+                    <div class="section-25__body">
+                        <h2 class="section-25__title">Envelhecido em carvalho<br>para sabor complexo</h2>
+                        <p class="section-25__description">O descanso em barris de carvalho americano confere ao Domecq notas amadeiradas, caramelo e baunilha que equilibram a doçura natural da bebida. O tempo de maturação é cuidadosamente monitorado para atingir o ponto exato de harmonia entre força e suavidade.</p>
+                        <span class="section-25__location" aria-label="Envelhecimento em adega própria em Resende, RJ"></span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="section-25__panel section-25__panel--4" role="tabpanel" aria-label="Perfil Sensorial">
+                <div class="section-25__split section-25__split--reverse">
+                    <figure class="section-25__figure">
+                        <picture>
+                            <source srcset="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=700&q=80" media="(min-width: 768px)">
+                            <img class="section-25__image" src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=400&q=80" alt="Prato gourmet com ingredientes aromáticos que representam o perfil sensorial do produto" width="800" height="600" loading="lazy">
+                        </picture>
+                    </figure>
+                    <div class="section-25__body">
+                        <h2 class="section-25__title">Aroma frutado,<br>sabor inigualável</h2>
+                        <p class="section-25__description">No nariz, notas de frutas tropicais, especiarias suaves e um toque de mel. Na boca, a entrada é redonda e envolvente, com final longo e persistente. Um perfil sensorial equilibrado que agrada tanto apreciadores experientes quanto quem descobre o mundo dos destilados pela primeira vez.</p>
+                        <span class="section-25__location" aria-label="Avaliação sensorial certificada — Resende, RJ"></span>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </div>
+</section>`,
+    css: `<style>
+    .section-25 {
+        --s25-color-brand: #7b1d2e;
+        --s25-color-bg: #faf7f2;
+        --s25-color-tab-bg: #f0ebe3;
+        --s25-color-text: #2c1a12;
+        --s25-color-muted: #6b5044;
+        --s25-color-border: #d9cfc4;
+    }
+
+    .section-25__radio {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .section-25 {
+        background-color: var(--s25-color-bg);
+        padding: 2rem 1rem;
+        font-family: Georgia, serif;
+        position: relative;
+    }
+
+    .section-25-container {
+        width: 100%;
+        margin-inline: auto;
+    }
+
+    .section-25__nav {
+        display: flex;
+        border-bottom: 2px solid var(--s25-color-border);
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .section-25__nav::-webkit-scrollbar {
+        height: 0;
+    }
+
+    .section-25__tab-label {
+        flex: 1 0 auto;
+        min-width: 7rem;
+        padding: 0.75rem 1rem;
+        font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+        font-family: Arial, sans-serif;
+        color: var(--s25-color-muted);
+        background-color: var(--s25-color-tab-bg);
+        border: 1px solid var(--s25-color-border);
+        border-bottom: none;
+        cursor: pointer;
+        text-align: center;
+        white-space: nowrap;
+        transition: background-color 0.2s, color 0.2s;
+        user-select: none;
+    }
+
+    .section-25__panels {
+        border: 1px solid var(--s25-color-border);
+        border-top: none;
+        background-color: #ffffff;
+    }
+
+    .section-25__panel {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        opacity: 0;
+        pointer-events: none;
+        scroll-margin-top: 0;
+    }
+
+    .section-25__split {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
+
+    .section-25__figure {
+        width: 100%;
+        margin: 0;
+        aspect-ratio: 4/3;
+        overflow: hidden;
+    }
+
+    .section-25__image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .section-25__body {
+        padding: 1.5rem 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: start;
+    }
+
+    .section-25__title {
+        font-size: clamp(1.25rem, 3vw, 1.75rem);
+        color: var(--s25-color-brand);
+        line-height: 1.3;
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .section-25__description {
+        font-size: clamp(0.875rem, 1.5vw, 1rem);
+        color: var(--s25-color-text);
+        line-height: 1.7;
+        margin: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .section-25__location {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: clamp(0.8rem, 1.2vw, 0.875rem);
+        color: var(--s25-color-brand);
+        font-family: Arial, sans-serif;
+    }
+
+    #s25-tab1:checked~.section-25-container .section-25__tab-label[for="s25-tab1"],
+    #s25-tab2:checked~.section-25-container .section-25__tab-label[for="s25-tab2"],
+    #s25-tab3:checked~.section-25-container .section-25__tab-label[for="s25-tab3"],
+    #s25-tab4:checked~.section-25-container .section-25__tab-label[for="s25-tab4"] {
+        background-color: var(--s25-color-brand);
+        color: #ffffff;
+        border-color: var(--s25-color-brand);
+    }
+
+    #s25-tab1:checked~.section-25-container .section-25__panel--1,
+    #s25-tab2:checked~.section-25-container .section-25__panel--2,
+    #s25-tab3:checked~.section-25-container .section-25__panel--3,
+    #s25-tab4:checked~.section-25-container .section-25__panel--4 {
+        position: static;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    @media (min-width: 768px) {
+        .section-25-container {
+            max-width: 768px;
+        }
+
+        .section-25__split {
+            flex-direction: row;
+        }
+
+        .section-25__figure {
+            flex: 0 0 45%;
+            aspect-ratio: 4/3;
+        }
+
+        .section-25__body {
+            flex: 1;
+            padding: 2rem 1.5rem;
+            justify-content: center;
+        }
+
+        .section-25__split--reverse {
+            flex-direction: row-reverse;
+        }
+    }
+
+    @media (min-width: 992px) {
+        .section-25-container {
+            max-width: 992px;
+        }
+
+        .section-25__figure {
+            flex: 0 0 42%;
+        }
+
+        .section-25__body {
+            padding: 2rem;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .section-25-container {
+            max-width: 1200px;
+        }
+    }
+
+    @media (min-width: 1400px) {
+        .section-25-container {
+            max-width: 1400px;
+        }
+    }
+</style>`
+  },
+
+
+/*@@@@Senko - section-33 */
+  /* variantes: app/features/biblioteca/data/variants/section-33.js */
+  {
+    id: 'section-33',
+    name: 'Section-33',
+    tags: ['Video', 'full width', '33'],
+    html: `<section class="section-33__container" aria-label="Seção de vídeo do produto">
+  <div class="section-33__video-section">
+    <div class="section-33__video-wrapper">
+
+      <!--
+      =====================================================================
+      OPÇÃO 1 — IFRAME DIRETO
+      Copie e cole o iframe gerado pelo próprio YouTube:
+        1. Abra o vídeo no YouTube
+        2. Clique em "Compartilhar" → "Incorporar"
+        3. Copie o <iframe> e cole aqui substituindo o abaixo
+
+      Exemplo pronto:
+      =====================================================================
+      -->
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/F_uv8PM0tYc?si=KSkt2pbhIguSII_K"
+        title="YouTube video player" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+      <!--
+      =====================================================================
+      OPÇÃO 2 — SÓ O LINK DO YOUTUBE (sem iframe)
+      Se preferir usar apenas o link do vídeo, siga o padrão abaixo:
+
+      Link normal:   https://www.youtube.com/watch?v=ID_DO_VIDEO
+      Vire embed:    https://www.youtube.com/embed/ID_DO_VIDEO
+
+      Basta pegar o valor após "?v=" e colar no src assim:
+        src="https://www.youtube.com/embed/ID_DO_VIDEO"
+
+      Parâmetros opcionais no link embed:
+        ?autoplay=1          → inicia automaticamente (exige mute=1 no Chrome)
+        ?mute=1              → sem som
+        ?controls=0          → esconde os controles
+        ?loop=1&playlist=ID  → repete o vídeo
+        ?start=30            → começa no segundo 30
+
+      Exemplo com parâmetros:
+        src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&loop=1&playlist=dQw4w9WgXcQ"
+      =====================================================================
+      -->
+
+    </div>
+  </div>
+</section>`,
+    css: `<style>
+  .section-33__container {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  .section-33__video-section {
+    position: relative;
+    width: 100%;
+    max-height: 865px;
+    overflow: hidden;
+    /* background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 70%, #e94560 100%); */
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 0;
+  }
+
+  .section-33__video-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 1280px;
+    max-height: 865px;
+
+    /*
+     * PROPORÇÃO DO VÍDEO
+     * 16:9 = padding-bottom: 56.25%
+     * 4:3  = padding-bottom: 75%
+     * 1:1  = padding-bottom: 100%
+     */
+    padding-bottom: 56.25%;
+
+    margin: 0 auto;
+  }
+
+  .section-33__video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 18px;
   }
 </style>`
   },

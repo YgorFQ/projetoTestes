@@ -2,6 +2,14 @@
   /*
    * SenkoShell e o nucleo neutro do aplicativo.
    *
+   * REGRA DE MANUTENCAO DO GUIA:
+   * - Toda alteracao relevante no projeto deve atualizar o guia interno em
+   *   app/prototype/senko-guide.
+   * - Se uma IA ou outra pessoa mexer no shell, em features, GitHub, estilos,
+   *   dados ou erros conhecidos, ela tambem precisa revisar o guia.
+   * - O guia e prioridade maxima: codigo atualizado com guia desatualizado
+   *   ainda e trabalho incompleto.
+   *
    * REGRAS DE ARQUITETURA:
    * - O shell nao conhece Biblioteca, Colecoes, Imagens ou qualquer feature.
    * - Cada feature se registra chamando SenkoShell.registerFeature().

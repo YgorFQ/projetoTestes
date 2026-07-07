@@ -2299,5 +2299,21 @@ ColLib.register({
 </style>`,
     },
 
+    /*@@@@Col - test */
+    {
+      id:   'test',
+      name: 'test',
+      html: `teste`,
+      css:  ``,
+    },
+
+    /*@@@@Col - teste2 */
+    {
+      id:   'teste2',
+      name: 'teste2',
+      html: `teste2`,
+      css:  ``,
+    },
+
   ]
 });

@@ -17,7 +17,7 @@ SenkoLib.registerVariant('section-1', [
     </div>
   </header>
   <article class="product-header__body-2">
-    <small class="product-header__brand-2">── Marca ──</small>
+    <small class="product-header__brand-2"> Marca </small>
     <h2 class="product-header__title-2">
       <span>TÍTULO DO PRODUTO GAMER</span>
       <strong>Nome, Modelo e Diferencial</strong>

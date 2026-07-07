@@ -17838,5 +17838,11748 @@ ColLib.register({
       css:  ``,
     },
 
+    /*@@@@Col - variacao-16 */
+    {
+      id:   'variacao-16',
+      name: 'Variação 16',
+      html: `<div class="lp-container">
+    <meta charset="UTF-8">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .pdp {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            font-family: Roboto, sans-serif;
+        }
+
+        .pdp * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap"
+        rel="stylesheet">
+    <title>PDP - Vassoura Jardim Tramontina 18 Dentes</title>
+    <!-- ---------------------------------------- ÁREA PARA COLOCAR STYLES ----------------------------------------------------------- -->
+
+    <style>
+        /*inicio-area-de-faq*/
+        #faq-section {
+            width: 100%;
+            padding: 2rem 16px;
+            box-sizing: border-box;
+            margin: 0 auto 25px;
+            padding-top: 0;
+            font-family: sans-serif;
+        }
+
+        #faq-section__header {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        #faq-section__title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 12px;
+            line-height: 98%;
+        }
+
+        #faq-section__subtitle {
+            font-size: 1rem;
+            color: #666;
+            margin: 0;
+        }
+
+        #faq-section__list {
+            list-style: none;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 60rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #faq-section__item {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        #faq-section__item summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        #faq-section__item summary::-webkit-details-marker {
+            display: none;
+        }
+
+        #faq-section__item summary:hover {
+            background: #f9f9f9;
+        }
+
+        #faq-section__q-text {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            flex: 1;
+        }
+
+        #faq-section__q-text:hover {
+            color: #ea5b0c;
+        }
+
+        #faq-section__icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        #faq-section__icon::before,
+        #faq-section__icon::after {
+            content: '';
+            position: absolute;
+            background: #888;
+            border-radius: 2px;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        #faq-section__icon::before {
+            width: 12px;
+            height: 1.5px;
+            top: 9px;
+            left: 4px;
+        }
+
+        #faq-section__icon::after {
+            width: 1.5px;
+            height: 12px;
+            top: 4px;
+            left: 9px;
+        }
+
+        #faq-section__item[open] #faq-section__icon::after {
+            transform: rotate(90deg);
+            opacity: 0;
+        }
+
+        #faq-section__a-inner {
+            padding: 14px 20px 16px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        #faq-section__a-text {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 480px) {
+            #faq-section__q-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        /*final-area-de-faq*/
+    </style>
+
+    <style>
+        .product-header-2 {
+            --ph2-color-brand: #ff9900;
+            --ph2-color-ink: #203025;
+            --ph2-color-muted: #5f6b61;
+            --ph2-color-soft: #f4f8f0;
+            --ph2-color-line: #dde8d8;
+            --badge-size: 8rem;
+            --banner-height: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            font-family: sans-serif;
+            border-bottom: 1px solid var(--ph2-color-line);
+            container-type: inline-size;
+        }
+
+        .product-header__banner-2 {
+            width: 100%;
+            height: var(--banner-height);
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .product-header__banner-img-2 {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .product-header__badge-2 {
+            position: absolute;
+            bottom: calc(var(--badge-size) / -2);
+            width: var(--badge-size);
+            height: var(--badge-size);
+            background-color: var(--ph2-color-brand);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 10;
+            box-shadow: 0 1rem 2rem rgba(32, 48, 37, 0.16);
+        }
+
+        .product-header__badge-img-2 {
+            max-width: 90px;
+            max-height: 90px;
+            object-fit: contain;
+        }
+
+        .product-header__body-2 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: calc(var(--badge-size) / 2 + 1.8rem) 0.3rem 2.5rem;
+            text-align: center;
+            background: #ffffff;
+        }
+
+        .product-header__brand-2 {
+            color: var(--ph2-color-brand);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-header__title-2 {
+            font-size: clamp(1.4rem, 4vw, 2.4rem);
+            line-height: clamp(1.6rem, 4vw, 3.1rem);
+            font-weight: 300;
+            max-width: 50rem;
+            text-wrap: pretty;
+            color: var(--ph2-color-ink);
+        }
+
+        .product-header__title-emphasis-2 {
+            font-weight: 700;
+            display: block;
+        }
+
+        .product-header__subtitle-2 {
+            color: var(--ph2-color-muted);
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            line-height: 1.65;
+            margin-top: 1.25rem;
+            max-width: 48rem;
+            text-wrap: pretty;
+        }
+
+        .pdp__image-note {
+            color: #64705f;
+            font-family: sans-serif;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            padding: 2rem 0;
+            text-align: center;
+            text-wrap: pretty;
+            background: #f8faf6;
+            border-top: 1px solid var(--ph2-color-line);
+            border-bottom: 1px solid var(--ph2-color-line);
+        }
+
+        @media (min-width: 768px) {
+            .product-header-2 {
+                --banner-height: 250px;
+            }
+        }
+    </style>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .section-24 {
+            --s24-color-brand: #ff9900;
+            --s24-color-ink: #202124;
+            --s24-color-muted: #62666d;
+            --s24-color-soft: #f4f5f2;
+            --s24-color-surface: #ffffff;
+            --s24-color-line: #d9ddd3;
+            --s24-color-brand-soft: #fff2d9;
+            --s24-color-brand-strong: #9c5d00;
+            width: 100%;
+            margin: 0;
+            padding: 2rem 1rem;
+            color: var(--s24-color-ink);
+            background: var(--s24-color-soft);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .section-24,
+        .section-24__input,
+        .section-24__container,
+        .section-24__content,
+        .section-24__options,
+        .section-24__button,
+        .section-24__visual,
+        .section-24__frame,
+        .section-24__panel,
+        .section-24__image,
+        .section-24__caption,
+        .section-24__message {
+            box-sizing: border-box;
+        }
+
+        .section-24__input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .section-24__container {
+            width: 100%;
+            display: grid;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .section-24__content {
+            width: 100%;
+            display: grid;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .section-24__button-title,
+        .section-24__button-text,
+        .section-24__message {
+            margin: 0;
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .section-24__options {
+            width: 100%;
+            display: grid;
+            gap: 1rem;
+            align-items: start;
+            margin-top: 0.5rem;
+        }
+
+        .section-24__button {
+            position: relative;
+            width: 100%;
+            display: grid;
+            gap: 0.5rem;
+            align-items: start;
+            padding: 1rem;
+            border: 1px solid var(--s24-color-line);
+            border-radius: 0.5rem;
+            color: var(--s24-color-ink);
+            background: var(--s24-color-surface);
+            cursor: pointer;
+            overflow: hidden;
+            transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease, transform 180ms ease;
+        }
+
+        .section-24__button::before {
+            position: absolute;
+            top: 0.5rem;
+            bottom: 0.5rem;
+            left: 0;
+            width: 0.25rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+            background: var(--s24-color-brand);
+            content: "";
+            opacity: 0;
+            transform: scaleY(0.4);
+            transform-origin: center;
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        .section-24__button:hover {
+            border-color: var(--s24-color-brand);
+            box-shadow: 0 0.5rem 1.5rem rgba(32, 33, 36, 0.1);
+            transform: translateY(-0.125rem);
+        }
+
+        .section-24__button:active {
+            transform: scale(0.99);
+        }
+
+        .section-24__button-title {
+            position: relative;
+            z-index: 1;
+            font-size: clamp(1rem, 2.7vw, 1.1875rem);
+            font-weight: 800;
+            line-height: 1.25;
+            transition: color 180ms ease;
+        }
+
+        .section-24__button-text {
+            position: relative;
+            z-index: 1;
+            color: var(--s24-color-muted);
+            font-size: clamp(0.875rem, 2.3vw, 1rem);
+            line-height: 1.45;
+        }
+
+        .section-24__visual {
+            width: 100%;
+            margin: 0;
+            display: grid;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .section-24__frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            border: 1px solid var(--s24-color-line);
+            border-radius: 0.5rem;
+            background: var(--s24-color-surface);
+            box-shadow: 0 1rem 2rem rgba(32, 33, 36, 0.08);
+        }
+
+        .section-24__panel {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(0.5rem);
+            transition: opacity 220ms ease, transform 220ms ease;
+        }
+
+        .section-24__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: saturate(0.92);
+            transform: scale(1.04);
+            transition: filter 420ms ease, transform 420ms ease;
+        }
+
+        .section-24__caption {
+            position: relative;
+            min-height: 4rem;
+            padding: 1rem;
+            border-left: 0.25rem solid var(--s24-color-brand);
+            border-radius: 0.5rem;
+            color: var(--s24-color-ink);
+            background: var(--s24-color-surface);
+            box-shadow: 0 0.5rem 1rem rgba(32, 33, 36, 0.06);
+        }
+
+        .section-24__message {
+            position: absolute;
+            inset: 1rem;
+            color: var(--s24-color-ink);
+            font-size: clamp(0.875rem, 2.2vw, 1rem);
+            font-weight: 700;
+            line-height: 1.4;
+            opacity: 0;
+            transform: translateY(0.5rem);
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__panel--one,
+        #section-24-view-2:checked~.section-24__container .section-24__panel--two,
+        #section-24-view-3:checked~.section-24__container .section-24__panel--three {
+            z-index: 2;
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__panel--one .section-24__image,
+        #section-24-view-2:checked~.section-24__container .section-24__panel--two .section-24__image,
+        #section-24-view-3:checked~.section-24__container .section-24__panel--three .section-24__image {
+            filter: saturate(1);
+            transform: scale(1);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__message--one,
+        #section-24-view-2:checked~.section-24__container .section-24__message--two,
+        #section-24-view-3:checked~.section-24__container .section-24__message--three {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three {
+            border-color: var(--s24-color-brand);
+            background: var(--s24-color-brand-soft);
+            box-shadow: 0 0.5rem 1.5rem rgba(32, 33, 36, 0.12), inset 0 0 0 2px var(--s24-color-brand);
+            transform: translateY(-0.125rem);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one::before,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two::before,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three::before {
+            opacity: 1;
+            transform: scaleY(1);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one .section-24__button-title,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two .section-24__button-title,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three .section-24__button-title {
+            color: var(--s24-color-brand-strong);
+        }
+
+        #section-24-view-1:focus-visible~.section-24__container .section-24__button--one,
+        #section-24-view-2:focus-visible~.section-24__container .section-24__button--two,
+        #section-24-view-3:focus-visible~.section-24__container .section-24__button--three {
+            outline: 2px solid var(--s24-color-brand);
+            outline-offset: 4px;
+        }
+
+        @media (min-width: 576px) {
+
+            .section-24__container {
+                gap: 2rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+
+            .section-24__container {
+                grid-template-columns: minmax(0, 1fr);
+                gap: .5rem;
+            }
+
+            .section-24__content {
+                order: 2;
+            }
+
+            .section-24__visual {
+                order: 1;
+            }
+
+            .section-24__options {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .section-24__button-title {
+                font-size: clamp(0.875rem, 1.8vw, 1rem);
+            }
+
+            .section-24__button-text {
+                font-size: clamp(0.75rem, 1.6vw, 0.875rem);
+            }
+
+            .section-24__frame {
+                aspect-ratio: 16 / 9;
+            }
+        }
+
+        @media (min-width: 992px) {
+
+            .section-24__container {
+                grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+                gap: 3rem;
+            }
+
+            .section-24__content {
+                order: 1;
+                align-self: center;
+            }
+
+            .section-24__visual {
+                order: 2;
+            }
+
+            .section-24--reverse .section-24__content {
+                order: 2;
+            }
+
+            .section-24--reverse .section-24__visual {
+                order: 1;
+            }
+
+            .section-24__options {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .section-24__button {
+                padding: 1.5rem;
+            }
+
+            .section-24__button-title {
+                font-size: clamp(1rem, 2.7vw, 1.1875rem);
+            }
+
+            .section-24__button-text {
+                font-size: clamp(0.875rem, 2.3vw, 1rem);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .section-24__container {
+                gap: 3rem;
+            }
+
+            .section-24__frame {
+                aspect-ratio: 16 / 9;
+            }
+        }
+    </style>
+
+    <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
+    <article class="pdp" id="pdp" aria-labelledby="product-main-title"> <!-- HTML fica dentro dessa div PDP -->
+
+        <section class="product-header-2" aria-label="Cabeçalho do produto">
+            <figure class="product-header__banner-2">
+                <picture>
+                    <source media="(max-width: 320px)"
+                        srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/509702-00.webp?ims=288x">
+                    <source media="(max-width: 375px)"
+                        srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/509702-00.webp?ims=343x">
+                    <source media="(max-width: 425px)"
+                        srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/509702-00.webp?ims=393x">
+                    <source media="(max-width: 768px)"
+                        srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/509702-00.webp?ims=736x">
+                    <source media="(max-width: 1024px)"
+                        srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/509702-00.webp?ims=992x">
+                    <source media="(max-width: 1440px)"
+                        srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/509702-00.webp?ims=1248x">
+                    <img class="product-header__banner-img-2"
+                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/509702-00.webp"
+                        alt="Vassoura de jardim Tramontina para limpeza de gramado" loading="eager" decoding="async">
+                </picture>
+                <div class="product-header__badge-2" role="img" aria-label="Logo da marca">
+                    <img src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/tramontina/tramontina-logo.png"
+                        alt="Logo Tramontina" class="product-header__badge-img-2" loading="lazy">
+                </div>
+            </figure>
+            <article class="product-header__body-2">
+                <small class="product-header__brand-2">── tramontina ──</small>
+                <h2 class="product-header__title-2" id="product-main-title">
+                    <span>Vassoura de jardim Tramontina</span>
+                    <strong class="product-header__title-emphasis-2">18 dentes e cabo de madeira 120 cm</strong>
+                </h2>
+                <p class="product-header__subtitle-2">
+                    Recolha folhas secas, sobras de grama e resíduos leves com uma vassoura prática para áreas
+                    externas. A estrutura em polipropileno resistente e o cabo envernizado ajudam a manter o jardim
+                    limpo com leveza no uso diário.
+                </p>
+            </article>
+        </section>
+
+        <section class="section-24" aria-labelledby="section-24-title">
+            <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-1"
+                aria-label="Mostrar imagem de visão geral" checked="">
+            <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-2"
+                aria-label="Mostrar imagem de detalhe">
+            <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-3"
+                aria-label="Mostrar imagem de uso">
+
+            <article class="section-24__container">
+                <section class="section-24__content" aria-labelledby="section-24-title">
+                    <nav class="section-24__options" aria-label="Escolha a imagem exibida">
+                        <label class="section-24__button section-24__button--one" for="section-24-view-1">
+                            <span class="section-24__button-title">18 dentes fixos</span>
+                            <span class="section-24__button-text">Recolhe folhas, grama solta e resíduos leves com mais
+                                praticidade.</span>
+                        </label>
+
+                        <label class="section-24__button section-24__button--two" for="section-24-view-2">
+                            <span class="section-24__button-title">Plástico resistente</span>
+                            <span class="section-24__button-text">Polipropileno de alta resistência, leve para usar e
+                                feito para
+                                durar.</span>
+                        </label>
+
+                        <label class="section-24__button section-24__button--three" for="section-24-view-3">
+                            <span class="section-24__button-title">Cabo de 120 cm</span>
+                            <span class="section-24__button-text">Madeira renovável com acabamento envernizado e toque
+                                mais
+                                liso.</span>
+                        </label>
+                    </nav>
+                </section>
+
+                <figure class="section-24__visual" aria-label="Imagens alternáveis do produto">
+                    <div class="section-24__frame">
+                        <!-- IMG 1-->
+                        <div class="section-24__panel section-24__panel--one">
+                            <picture>
+                                <source media="(max-width: 320px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-uso-gramado-509702-03.webp?ims=254x">
+                                <source media="(max-width: 375px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-uso-gramado-509702-03.webp?ims=309x">
+                                <source media="(max-width: 425px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-uso-gramado-509702-03.webp?ims=359x">
+                                <source media="(max-width: 768px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-uso-gramado-509702-03.webp?ims=702x">
+                                <source media="(max-width: 1024px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-uso-gramado-509702-03.webp?ims=386x">
+                                <source media="(max-width: 1440px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-uso-gramado-509702-03.webp?ims=495x">
+                                <img class="section-24__image"
+                                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-uso-gramado-509702-03.webp"
+                                    alt="Imagem de visão geral do produto" width="1200" height="900" loading="lazy"
+                                    decoding="async">
+                            </picture>
+                        </div>
+                        <!-- IMG 2-->
+                        <div class="section-24__panel section-24__panel--two">
+                            <picture>
+                                <source media="(max-width: 320px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-conjunto-ferramentas-509702-02.webp?ims=265x">
+                                <source media="(max-width: 375px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-conjunto-ferramentas-509702-02.webp?ims=322x">
+                                <source media="(max-width: 425px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-conjunto-ferramentas-509702-02.webp?ims=374x">
+                                <source media="(max-width: 768px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-conjunto-ferramentas-509702-02.webp?ims=731x">
+                                <source media="(max-width: 1024px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-conjunto-ferramentas-509702-02.webp?ims=402x">
+                                <source media="(max-width: 1440px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-conjunto-ferramentas-509702-02.webp?ims=515x">
+                                <img class="section-24__image"
+                                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-conjunto-ferramentas-509702-02.webp"
+                                    alt="Imagem aproximada do acabamento do produto" width="1200" height="900"
+                                    loading="lazy" decoding="async">
+                            </picture>
+                        </div>
+                        <!-- IMG 3-->
+                        <div class="section-24__panel section-24__panel--three">
+                            <picture>
+                                <source media="(max-width: 320px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-lifestyle-509702-01.webp?ims=265x">
+                                <source media="(max-width: 375px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-lifestyle-509702-01.webp?ims=322x">
+                                <source media="(max-width: 425px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-lifestyle-509702-01.webp?ims=374x">
+                                <source media="(max-width: 768px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-lifestyle-509702-01.webp?ims=731x">
+                                <source media="(max-width: 1024px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-lifestyle-509702-01.webp?ims=402x">
+                                <source media="(max-width: 1440px)"
+                                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-lifestyle-509702-01.webp?ims=515x">
+                                <img class="section-24__image"
+                                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-lifestyle-509702-01.webp"
+                                    alt="Imagem do produto em contexto de uso" width="1200" height="900" loading="lazy"
+                                    decoding="async">
+                            </picture>
+                        </div>
+                    </div>
+
+                    <figcaption class="section-24__caption">
+                        <span class="section-24__message section-24__message--one">Mais alcance sobre folhas e resíduos
+                            leves.</span>
+                        <span class="section-24__message section-24__message--two">Leveza e resistência para a rotina do
+                            jardim.</span>
+                        <span class="section-24__message section-24__message--three">Cabo longo, toque liso e acabamento
+                            envernizado.</span>
+                    </figcaption>
+                </figure>
+            </article>
+        </section>
+
+        <p class="pdp__image-note">
+            IMAGENS MERAMENTE ILUSTRATIVAS
+        </p>
+
+        <!-- Área de FAQ -->
+        <section id="faq-section" aria-labelledby="faq-section__title">
+            <div id="faq-section__header">
+                <h2 id="faq-section__title">Dúvidas Frequentes</h2>
+            </div>
+            <ul id="faq-section__list" role="list">
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> A vassoura de jardim Tramontina 18 dentes serve para qual tipo
+                                de limpeza? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> A vassoura de jardim Tramontina 18 dentes é indicada para
+                                recolher folhas secas, sobras de grama cortada e outros detritos presentes no gramado.
+                                Ela ajuda a manter o jardim limpo com mais praticidade no dia a dia. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> A vassoura plástica Tramontina pode ser usada em gramado?
+                            </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Sim. Ela é ideal para limpeza de gramados, principalmente para
+                                remover folhas caídas e resíduos leves sem dificultar o manuseio. Isso facilita a
+                                conservação de áreas externas. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> O cabo da vassoura de jardim Tramontina é resistente? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Sim. O cabo tem 120 cm, é produzido em madeira de origem
+                                renovável e possui acabamento envernizado. Esse acabamento melhora a apresentação,
+                                realça a tonalidade da madeira e deixa o toque mais liso. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> A vassoura Tramontina 77850/681 é leve para usar no jardim?
+                            </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Sim. A vassoura é descrita como leve e prática, sendo uma boa
+                                opção para recolher grama cortada, folhas levadas pelo vento e outros detritos no
+                                gramado sem tornar a limpeza pesada. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Qual é o material da vassoura de jardim Tramontina laranja?
+                            </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> A parte plástica é fabricada em polipropileno de alta
+                                resistência, material que contribui para maior durabilidade e bom acabamento. Isso torna
+                                o produto adequado para uso em áreas externas. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Quantos dentes tem a vassoura plástica Tramontina? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> A vassoura possui 18 dentes fixos, estrutura indicada para
+                                juntar folhas, grama cortada e resíduos espalhados pelo gramado. Esse formato ajuda a
+                                tornar a limpeza mais eficiente. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> A vassoura de jardim Tramontina acompanha cabo? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Sim. Ela acompanha cabo de madeira de 120 cm, com acabamento
+                                envernizado. O produto já vem pronto para auxiliar na limpeza e manutenção do jardim.
+                            </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Qual é a garantia da vassoura jardim Tramontina 18 dentes?
+                            </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> A vassoura possui 90 dias de garantia legal contra vícios ou
+                                defeitos de fabricação. Isso oferece mais segurança na compra e no uso do produto. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Como descartar a vassoura Tramontina e sua embalagem? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> O descarte do produto e da embalagem deve seguir as orientações
+                                de reciclagem vigentes. Assim, você contribui para um descarte mais adequado após o uso.
+                            </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+            </ul>
+        </section>
+
+    </article>
+</div>`,
+      css:  ``,
+    },
+
+    /*@@@@Col - variacao-17 */
+    {
+      id:   'variacao-17',
+      name: 'Variação 17',
+      html: `<div class="lp-container">
+    <meta charset="UTF-8">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .pdp {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            font-family: Roboto, sans-serif;
+        }
+
+        .pdp * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        .pdp__image-note {
+            color: #6f747b;
+            font-family: sans-serif;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            padding: 2rem 0;
+            text-align: center;
+            text-wrap: pretty;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap"
+        rel="stylesheet">
+    <title>PDP - eFácil</title>
+    <!-- ---------------------------------------- ÁREA PARA COLOCAR STYLES ----------------------------------------------------------- -->
+
+    <style>
+        /*inicio-area-de-faq*/
+        #faq-section {
+            width: 100%;
+            padding: 2rem 16px;
+            box-sizing: border-box;
+            margin: 0 auto 25px;
+            padding-top: 0;
+            font-family: sans-serif;
+            background: #f6f7f8;
+        }
+
+        #faq-section__header {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        #faq-section-title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: bold;
+            color: #17212b;
+            margin: 0 0 12px;
+            line-height: 98%;
+        }
+
+        #faq-section__subtitle {
+            font-size: 1rem;
+            color: #58616d;
+            margin: 0;
+        }
+
+        #faq-section__list {
+            list-style: none;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 60rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .faq-section__item {
+            background: #fff;
+            border: 1px solid #dfe4e8;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0.5rem 1.5rem rgba(23, 33, 43, 0.06);
+            transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+        }
+
+        .faq-section__item summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .faq-section__item summary::-webkit-details-marker {
+            color: transparent;
+            font-size: 0;
+        }
+
+        .faq-section__item summary:hover {
+            background: #eef2f5;
+        }
+
+        .faq-section__item:hover {
+            border-color: #c8d1d8;
+            box-shadow: 0 0.75rem 2rem rgba(23, 33, 43, 0.09);
+            transform: translateY(-0.125rem);
+        }
+
+        .faq-section__q-text {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #17212b;
+            flex: 1;
+        }
+
+        .faq-section__q-text:hover {
+            color: #ff9900;
+        }
+
+        .faq-section__icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .faq-section__icon::before,
+        .faq-section__icon::after {
+            content: '';
+            position: absolute;
+            background: #6f747b;
+            border-radius: 2px;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        .faq-section__icon::before {
+            width: 12px;
+            height: 1.5px;
+            top: 9px;
+            left: 4px;
+        }
+
+        .faq-section__icon::after {
+            width: 1.5px;
+            height: 12px;
+            top: 4px;
+            left: 9px;
+        }
+
+        .faq-section__item[open] .faq-section__icon::after {
+            transform: rotate(90deg);
+            opacity: 0;
+        }
+
+        .faq-section__a-inner {
+            padding: 14px 20px 16px;
+            border-top: 1px solid #dfe4e8;
+        }
+
+        .faq-section__a-text {
+            font-size: 0.9rem;
+            color: #3d4650;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 480px) {
+            .faq-section__q-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        /*final-area-de-faq*/
+    </style>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .product-header-2 {
+            --badge-size: 8rem;
+            --banner-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            font-family: sans-serif;
+            container-type: inline-size;
+            background: #f6f7f8;
+        }
+
+        .product-header__banner-2 {
+            width: 100%;
+            height: var(--banner-height);
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .product-header__banner-2 figure {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        .product-header__banner-img-2 {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: saturate(0.88) contrast(1.05);
+        }
+
+        .product-header__badge-2 {
+            position: absolute;
+            bottom: calc(var(--badge-size) / -2);
+            width: var(--badge-size);
+            height: var(--badge-size);
+            background-color: #ff9900;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .product-header__badge-img-2 {
+            max-width: 90px;
+            max-height: 90px;
+            object-fit: contain;
+        }
+
+        .product-header__body-2 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: calc(var(--badge-size) / 2 + 1.8rem) 0.3rem 2.5rem;
+            text-align: center;
+            width: 100%;
+            background: #ffffff;
+        }
+
+        .product-header__brand-2 {
+            color: #ff9900;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-header__title-2 {
+            font-size: clamp(1.4rem, 4vw, 2.4rem);
+            line-height: clamp(1.6rem, 4vw, 3.1rem);
+            font-weight: 300;
+            max-width: 50rem;
+            text-wrap: pretty;
+            color: #17212b;
+        }
+
+        .product-header__title-2 strong {
+            font-weight: 700;
+            display: block;
+        }
+
+        .product-header__subtitle-2 {
+            color: #58616d;
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            line-height: 1.65;
+            margin-top: 1.25rem;
+            max-width: 48rem;
+            text-wrap: pretty;
+        }
+
+        @media (max-width: 768px) {
+            .product-header-2 {
+                --banner-height: 180px;
+            }
+        }
+
+        @media (max-width: 470px) {
+            .product-header__subtitle-2 {
+                text-align: justify;
+                font-size: clamp(0.9rem, 2vw, 1.1rem);
+            }
+        }
+    </style>
+
+    <style>
+        /* ===== HERO SECTION — VARIÁVEIS ===== */
+        .section-6 {
+            --pos-y: 50%;
+            --pos-x: 7%;
+            --color-title: #ffe178;
+            --bg-box: rgba(23, 33, 43, 0.84);
+
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ===== IMAGEM ===== */
+        .section-6__image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* ===== CONTEÚDO SOBREPOSTO ===== */
+        .section-6__content {
+            position: absolute;
+            top: var(--pos-y);
+            left: clamp(1%, var(--pos-x), 100%);
+            transform: translateY(-50%);
+            max-width: min(40%, 480px);
+            z-index: 10;
+            background-color: var(--bg-box);
+            padding: clamp(12px, 2vw, 20px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            box-shadow: 0 1.5rem 3rem rgba(0, 0, 0, 0.18);
+            transition: transform 220ms ease, box-shadow 220ms ease;
+        }
+
+        .section-6:hover .section-6__content {
+            transform: translateY(-50%) translateX(0.25rem);
+            box-shadow: 0 2rem 3rem rgba(0, 0, 0, 0.24);
+        }
+
+        .section-6__title {
+            font-size: clamp(1.4rem, 3.5vw, 2.6rem);
+            color: var(--color-title);
+            margin: 0 0 10px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+            font-weight: 800;
+        }
+
+        .section-6__description {
+            font-size: clamp(0.95rem, 2vw, 1.4rem);
+            color: #fff;
+            margin: 0 0 24px;
+            line-height: 1.5;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.35);
+        }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 760px) {
+            .section-6__ {
+                border-radius: 0;
+            }
+
+            .section-6__content {
+                position: static;
+                transform: none;
+                max-width: 100%;
+                padding: 24px 20px 0 20px;
+                background: transparent;
+                border: 0;
+                box-shadow: none;
+                text-align: center;
+            }
+
+            .section-6:hover .section-6__content {
+                transform: none;
+                box-shadow: none;
+            }
+
+            .section-6__title {
+                font-size: 1.8rem;
+                color: #17212b;
+                text-shadow: none;
+            }
+
+            .section-6__description {
+                margin-bottom: 0;
+                font-size: 1.1rem;
+                color: #3d4650;
+                text-shadow: none;
+            }
+
+            .section-6__image {
+                width: 95%;
+                margin: auto;
+                height: auto;
+                display: block;
+                border-radius: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-6__title {
+                font-size: 1.5rem;
+            }
+
+            .section-6__description {
+                font-size: 1rem;
+            }
+        }
+    </style>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .section-24 {
+            --s24-color-brand: #ff9900;
+            --s24-color-ink: #17212b;
+            --s24-color-muted: #58616d;
+            --s24-color-soft: #f6f7f8;
+            --s24-color-surface: #ffffff;
+            --s24-color-line: #dfe4e8;
+            --s24-color-brand-soft: #fff2d9;
+            --s24-color-brand-strong: #7a4a00;
+            width: 100%;
+            margin: 0;
+            padding: 2rem 1rem;
+            color: var(--s24-color-ink);
+            background: var(--s24-color-soft);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .section-24,
+        .section-24__input,
+        .section-24__container,
+        .section-24__content,
+        .section-24__options,
+        .section-24__button,
+        .section-24__visual,
+        .section-24__frame,
+        .section-24__panel,
+        .section-24__image,
+        .section-24__caption,
+        .section-24__message {
+            box-sizing: border-box;
+        }
+
+        .section-24__input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .section-24__container {
+            width: 100%;
+            display: grid;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .section-24__content {
+            width: 100%;
+            display: grid;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .section-24__button-title,
+        .section-24__button-text,
+        .section-24__message {
+            margin: 0;
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .section-24__options {
+            width: 100%;
+            display: grid;
+            gap: 1rem;
+            align-items: start;
+            margin-top: 0.5rem;
+        }
+
+        .section-24__button {
+            position: relative;
+            width: 100%;
+            display: grid;
+            gap: 0.5rem;
+            align-items: start;
+            padding: 1rem;
+            border: 1px solid var(--s24-color-line);
+            border-radius: 0.5rem;
+            color: var(--s24-color-ink);
+            background: var(--s24-color-surface);
+            cursor: pointer;
+            overflow: hidden;
+            transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease, transform 180ms ease;
+        }
+
+        .section-24__button::before {
+            position: absolute;
+            top: 0.5rem;
+            bottom: 0.5rem;
+            left: 0;
+            width: 0.25rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+            background: var(--s24-color-brand);
+            content: "";
+            opacity: 0;
+            transform: scaleY(0.4);
+            transform-origin: center;
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        .section-24__button:hover {
+            border-color: var(--s24-color-brand);
+            box-shadow: 0 1rem 2rem rgba(23, 33, 43, 0.12);
+            transform: translateY(-0.125rem);
+        }
+
+        .section-24__button:active {
+            transform: scale(0.99);
+        }
+
+        .section-24__button-title {
+            position: relative;
+            z-index: 1;
+            font-size: clamp(1rem, 2.7vw, 1.1875rem);
+            font-weight: 800;
+            line-height: 1.25;
+            transition: color 180ms ease;
+        }
+
+        .section-24__button-text {
+            position: relative;
+            z-index: 1;
+            color: var(--s24-color-muted);
+            font-size: clamp(0.875rem, 2.3vw, 1rem);
+            line-height: 1.45;
+        }
+
+        .section-24__visual {
+            width: 100%;
+            margin: 0;
+            display: grid;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .section-24__frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            border: 1px solid var(--s24-color-line);
+            border-radius: 0.5rem;
+            background: var(--s24-color-surface);
+            box-shadow: 0 1.5rem 3rem rgba(23, 33, 43, 0.1);
+        }
+
+        .section-24__panel {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(0.5rem);
+            transition: opacity 220ms ease, transform 220ms ease;
+        }
+
+        .section-24__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: saturate(0.92);
+            transform: scale(1.04);
+            transition: filter 420ms ease, transform 420ms ease;
+        }
+
+        .section-24__frame:hover .section-24__image {
+            transform: scale(1.07);
+        }
+
+        .section-24__caption {
+            position: relative;
+            min-height: 4rem;
+            padding: 1rem;
+            border-left: 0.25rem solid var(--s24-color-brand);
+            border-radius: 0.5rem;
+            color: var(--s24-color-ink);
+            background: var(--s24-color-surface);
+            box-shadow: 0 0.75rem 1.5rem rgba(23, 33, 43, 0.08);
+        }
+
+        .section-24__message {
+            position: absolute;
+            inset: 1rem;
+            color: var(--s24-color-ink);
+            font-size: clamp(0.875rem, 2.2vw, 1rem);
+            font-weight: 700;
+            line-height: 1.4;
+            opacity: 0;
+            transform: translateY(0.5rem);
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__panel--one,
+        #section-24-view-2:checked~.section-24__container .section-24__panel--two,
+        #section-24-view-3:checked~.section-24__container .section-24__panel--three {
+            z-index: 2;
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__panel--one .section-24__image,
+        #section-24-view-2:checked~.section-24__container .section-24__panel--two .section-24__image,
+        #section-24-view-3:checked~.section-24__container .section-24__panel--three .section-24__image {
+            filter: saturate(1);
+            transform: scale(1);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__message--one,
+        #section-24-view-2:checked~.section-24__container .section-24__message--two,
+        #section-24-view-3:checked~.section-24__container .section-24__message--three {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three {
+            border-color: var(--s24-color-brand);
+            background: var(--s24-color-brand-soft);
+            box-shadow: 0 1rem 2rem rgba(23, 33, 43, 0.14), inset 0 0 0 2px var(--s24-color-brand);
+            transform: translateY(-0.125rem);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one::before,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two::before,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three::before {
+            opacity: 1;
+            transform: scaleY(1);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one .section-24__button-title,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two .section-24__button-title,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three .section-24__button-title {
+            color: var(--s24-color-brand-strong);
+        }
+
+        #section-24-view-1:focus-visible~.section-24__container .section-24__button--one,
+        #section-24-view-2:focus-visible~.section-24__container .section-24__button--two,
+        #section-24-view-3:focus-visible~.section-24__container .section-24__button--three {
+            outline: 2px solid var(--s24-color-brand);
+            outline-offset: 4px;
+        }
+
+        @media (min-width: 576px) {
+
+            .section-24__container {
+                gap: 2rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+
+            .section-24__container {
+                grid-template-columns: minmax(0, 1fr);
+                gap: .5rem;
+            }
+
+            .section-24__content {
+                order: 2;
+            }
+
+            .section-24__visual {
+                order: 1;
+            }
+
+            .section-24__options {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .section-24__button-title {
+                font-size: clamp(0.875rem, 1.8vw, 1rem);
+            }
+
+            .section-24__button-text {
+                font-size: clamp(0.75rem, 1.6vw, 0.875rem);
+            }
+
+            .section-24__frame {
+                aspect-ratio: 16 / 9;
+            }
+        }
+
+        @media (min-width: 992px) {
+
+            .section-24__container {
+                grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+                gap: 3rem;
+            }
+
+            .section-24__content {
+                order: 1;
+                align-self: center;
+            }
+
+            .section-24__visual {
+                order: 2;
+            }
+
+            .section-24--reverse .section-24__content {
+                order: 2;
+            }
+
+            .section-24--reverse .section-24__visual {
+                order: 1;
+            }
+
+            .section-24__options {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .section-24__button {
+                padding: 1.5rem;
+            }
+
+            .section-24__button-title {
+                font-size: clamp(1rem, 2.7vw, 1.1875rem);
+            }
+
+            .section-24__button-text {
+                font-size: clamp(0.875rem, 2.3vw, 1rem);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .section-24__container {
+                gap: 3rem;
+            }
+
+            .section-24__frame {
+                aspect-ratio: 16 / 9;
+            }
+        }
+    </style>
+
+    <style>
+        .section-11 {
+            --s11-color-brand: #ff9900;
+            --s11-color-ink: #17212b;
+            --s11-color-muted: #58616d;
+            --s11-color-soft: #f1f4f6;
+            --s11-color-surface: #ffffff;
+            --s11-color-line: #dfe4e8;
+            width: 100%;
+            background: var(--s11-color-soft);
+            color: var(--s11-color-ink);
+        }
+
+        .section-11-container {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        @media (min-width: 576px) {
+            .section-11-container {
+                max-width: 576px;
+                margin-inline: auto;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .section-11-container {
+                max-width: 768px;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .section-11-container {
+                max-width: 992px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .section-11-container {
+                max-width: 1200px;
+            }
+        }
+
+        @media (min-width: 1400px) {
+            .section-11-container {
+                max-width: 1400px;
+            }
+        }
+
+        .section-11__header {
+            text-align: center;
+            margin-bottom: 2rem;
+            display: grid;
+            gap: 0.75rem;
+            align-items: start;
+        }
+
+        .section-11__title {
+            font-size: clamp(1.5rem, 3vw, 2.25rem);
+            font-weight: 900;
+            color: var(--s11-color-ink);
+            margin: 0;
+            line-height: 1.25;
+            text-wrap: balance;
+            overflow-wrap: anywhere;
+        }
+
+        .section-11__subtitle {
+            max-width: 46rem;
+            margin: 0 auto;
+            color: var(--s11-color-muted);
+            font-size: clamp(0.9375rem, 2vw, 1.0625rem);
+            line-height: 1.55;
+            text-wrap: pretty;
+            overflow-wrap: anywhere;
+        }
+
+        .section-11__grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        @media (min-width: 768px) {
+            .section-11__grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (min-width: 992px) {
+            .section-11__grid {
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+            }
+        }
+
+        .section-11__item {
+            position: relative;
+            min-width: 0;
+            background: var(--s11-color-surface);
+            border: 1px solid var(--s11-color-line);
+            border-radius: 0.5rem;
+            padding: 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 1rem;
+            overflow: hidden;
+            box-shadow: 0 1rem 2rem rgba(23, 33, 43, 0.07);
+            transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+            animation: section-11-rise 520ms ease both;
+        }
+
+        .section-11__item::before {
+            position: absolute;
+            inset: 0 0 auto;
+            height: 0.25rem;
+            background: var(--s11-color-brand);
+            content: "";
+            transform: scaleX(0.18);
+            transform-origin: left;
+            transition: transform 180ms ease;
+        }
+
+        .section-11__item:hover {
+            border-color: rgba(255, 153, 0, 0.55);
+            box-shadow: 0 1.5rem 3rem rgba(23, 33, 43, 0.12);
+            transform: translateY(-0.25rem);
+        }
+
+        .section-11__item:hover::before {
+            transform: scaleX(1);
+        }
+
+        .section-11__figure {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 5rem;
+            height: 5rem;
+            border-radius: 50%;
+            background: #fff5e6;
+            border: 1px solid rgba(255, 153, 0, 0.3);
+        }
+
+        .section-11__image {
+            width: 3.5rem;
+            height: auto;
+            display: block;
+            filter: saturate(0.92) contrast(1.05);
+            transition: transform 180ms ease;
+        }
+
+        .section-11__item:hover .section-11__image {
+            transform: scale(1.08);
+        }
+
+        .section-11__name {
+            font-size: clamp(1rem, 2vw, 1.125rem);
+            font-weight: 800;
+            color: var(--s11-color-ink);
+            margin: 0;
+            line-height: 1.3;
+            overflow-wrap: anywhere;
+        }
+
+        .section-11__value {
+            font-size: clamp(0.875rem, 1.8vw, 0.9375rem);
+            color: var(--s11-color-muted);
+            margin: 0;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+            text-wrap: pretty;
+        }
+
+        .section-11__item:nth-child(2) {
+            animation-delay: 80ms;
+        }
+
+        .section-11__item:nth-child(3) {
+            animation-delay: 160ms;
+        }
+
+        .section-11__item:nth-child(4) {
+            animation-delay: 240ms;
+        }
+
+        .section-11__item:nth-child(5) {
+            animation-delay: 320ms;
+        }
+
+        @keyframes section-11-rise {
+            from {
+                opacity: 0;
+                transform: translateY(0.75rem);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+
+    <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
+    <article class="pdp" id="pdp" aria-labelledby="product-main-title"> <!-- HTML fica dentro dessa div PDP -->
+
+        <section class="product-header-2" aria-label="Cabeçalho do produto">
+            <div class="product-header__banner-2">
+                <figure>
+                    <picture>
+                        <source media="(max-width: 320px)"
+                            srcset=" 	https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/cenario-fundo-abstrato-azul-escuro-efeito-fumaca-luz-bosch-508651-00.webp?ims=288x">
+                        <source media="(max-width: 375px)"
+                            srcset=" 	https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/cenario-fundo-abstrato-azul-escuro-efeito-fumaca-luz-bosch-508651-00.webp?ims=343x">
+                        <source media="(max-width: 425px)"
+                            srcset=" 	https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/cenario-fundo-abstrato-azul-escuro-efeito-fumaca-luz-bosch-508651-00.webp?ims=393x">
+                        <source media="(max-width: 768px)"
+                            srcset=" 	https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/cenario-fundo-abstrato-azul-escuro-efeito-fumaca-luz-bosch-508651-00.webp?ims=736x">
+                        <source media="(max-width: 1024px)"
+                            srcset=" 	https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/cenario-fundo-abstrato-azul-escuro-efeito-fumaca-luz-bosch-508651-00.webp?ims=992x">
+                        <source media="(max-width: 1440px)"
+                            srcset=" 	https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/cenario-fundo-abstrato-azul-escuro-efeito-fumaca-luz-bosch-508651-00.webp?ims=1248x">
+                        <img class="product-header__banner-img-2"
+                            src=" 	https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/cenario-fundo-abstrato-azul-escuro-efeito-fumaca-luz-bosch-508651-00.webp"
+                            alt="Banner da Parafusadeira e Furadeira de Impacto Bosch GSB 185-LI" width="1200"
+                            height="250" loading="eager" decoding="async">
+                    </picture>
+                </figure>
+                <div class="product-header__badge-2" role="img" aria-label="Logo da marca">
+                    <img src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/bosch/bosch-logo.png"
+                        alt="Logo Bosch" class="product-header__badge-img-2" width="90" height="90" loading="lazy">
+                </div>
+            </div>
+            <article class="product-header__body-2">
+                <small class="product-header__brand-2">── bosch ──</small>
+                <h2 class="product-header__title-2">
+                    <span>Parafusadeira e Furadeira de Impacto</span>
+                    <strong>Bosch GSB 185-LI 18V</strong>
+                </h2>
+                <p class="product-header__subtitle-2">
+                    Potência de 18V em corpo compacto, com motor brushless, mandril metálico e LED na base para
+                    trabalhar com mais controle em furos e parafusamentos.
+                </p>
+            </article>
+        </section>
+
+        <section class="section-6" aria-label="Destaque do produto com texto">
+            <picture>
+                <source media="(max-width: 760px)"
+                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/furadeira-impacto-parafusadeira-bosch-professional-gsb-183-li-bateria-18v-detalhe-508715-01-2.webp">
+                <img class="section-6__image"
+                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/furadeira-impacto-parafusadeira-bosch-professional-gsb-183-li-bateria-18v-508715-01-1.webp"
+                    alt="Parafusadeira e furadeira de impacto Bosch GSB 185-LI em destaque" width="1600" height="650"
+                    fetchpriority="high" loading="lazy" decoding="async">
+            </picture>
+            <div class="section-6__content">
+                <h2 class="section-6__title">18V no tamanho certo</h2>
+                <p class="section-6__description">Corpo de 177 mm para alcançar áreas apertadas sem abrir mão de força.
+                </p>
+            </div>
+        </section>
+
+        <section class="section-24" aria-labelledby="section-24-title">
+            <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-1"
+                aria-label="Mostrar imagem de visão geral" checked="">
+            <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-2"
+                aria-label="Mostrar imagem de detalhe">
+            <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-3"
+                aria-label="Mostrar imagem de uso">
+
+            <article class="section-24__container">
+                <section class="section-24__content" aria-labelledby="section-24-title">
+                    <nav class="section-24__options" aria-label="Escolha a imagem exibida">
+                        <label class="section-24__button section-24__button--one" for="section-24-view-1">
+                            <span class="section-24__button-title">Motor brushless 18V</span>
+                            <span class="section-24__button-text">Entrega força de ferramenta a cabo em um corpo mais
+                                compacto e eficiente.</span>
+                        </label>
+
+                        <label class="section-24__button section-24__button--two" for="section-24-view-2">
+                            <span class="section-24__button-title">Mandril metálico robusto</span>
+                            <span class="section-24__button-text">Trava melhor o acessório e ajuda a aumentar a
+                                durabilidade no uso intenso.</span>
+                        </label>
+
+                        <label class="section-24__button section-24__button--three" for="section-24-view-3">
+                            <span class="section-24__button-title">LED no ponto certo</span>
+                            <span class="section-24__button-text">Iluminação na base para enxergar melhor onde o furo ou
+                                parafusamento será feito.</span>
+                        </label>
+                    </nav>
+                </section>
+
+                <figure class="section-24__visual" aria-label="Imagens alternáveis do produto">
+                    <div class="section-24__frame">
+                        <!-- IMG 1-->
+                        <div class="section-24__panel section-24__panel--one">
+                            <img class="section-24__image"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/furadeira-impacto-parafusadeira-bosch-gsb-183-li-furando-metal-oficina-lifestyle-508715-02-1.webp"
+                                alt="Visão geral da Bosch GSB 185-LI 18V" width="1200" height="900" loading="lazy"
+                                decoding="async">
+                        </div>
+                        <!-- IMG 2-->
+                        <div class="section-24__panel section-24__panel--two">
+                            <img class="section-24__image"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/furadeira-impacto-parafusadeira-bosch-gsb-183-li-instalacao-parede-lifestyle-508715-02-2.webp"
+                                alt="Detalhe da parafusadeira e furadeira Bosch GSB 185-LI" width="1200" height="900"
+                                loading="lazy" decoding="async">
+                        </div>
+                        <!-- IMG 3-->
+                        <div class="section-24__panel section-24__panel--three">
+                            <img class="section-24__image"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/furadeira-impacto-parafusadeira-bosch-gsb-183-li-painel-eletrico-lifestyle-508715-02-3.webp"
+                                alt="Bosch GSB 185-LI em contexto de uso" width="1200" height="900" loading="lazy"
+                                decoding="async">
+                        </div>
+                    </div>
+
+                    <figcaption class="section-24__caption">
+                        <span class="section-24__message section-24__message--one">Motor brushless para mais tempo de
+                            execução por carga e maior vida útil.</span>
+                        <span class="section-24__message section-24__message--two">Mandril metálico para fixação firme
+                            do
+                            acessório e sensação de ferramenta robusta.</span>
+                        <span class="section-24__message section-24__message--three">LED na base ajuda a iluminar o
+                            ponto
+                            exato de trabalho.</span>
+                    </figcaption>
+                </figure>
+            </article>
+        </section>
+
+        <section class="section-11" aria-labelledby="section-11-title">
+            <div class="section-11-container">
+                <div class="section-11__header">
+                    <h2 class="section-11__title">Detalhes que aceleram o trabalho</h2>
+                    <p class="section-11__subtitle">Recursos pensados para furar, parafusar e manter controle em tarefas
+                        de instalação, montagem e manutenção.</p>
+                </div>
+                <ul class="section-11__grid" role="list">
+                    <li class="section-11__item">
+                        <figure class="section-11__figure">
+                            <img class="section-11__image"
+                                src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/corfio/4203786_03-1.png"
+                                alt="Ícone de motor brushless 18V" width="74" height="74" loading="lazy">
+                        </figure>
+                        <h3 class="section-11__name">Força de 18V</h3>
+                        <p class="section-11__value">Motor brushless entrega potência em tamanho compacto e ajuda a
+                            aumentar o tempo de execução por carga.</p>
+                    </li>
+                    <li class="section-11__item">
+                        <figure class="section-11__figure">
+                            <img class="section-11__image"
+                                src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/corfio/4203786_03-1.png"
+                                alt="Ícone de mandril metálico" width="74" height="74" loading="lazy">
+                        </figure>
+                        <h3 class="section-11__name">Mandril metálico</h3>
+                        <p class="section-11__value">Trava melhor o acessório e oferece mais robustez para a rotina de
+                            furos e parafusamentos.</p>
+                    </li>
+                    <li class="section-11__item">
+                        <figure class="section-11__figure">
+                            <img class="section-11__image"
+                                src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/corfio/4203786_03-1.png"
+                                alt="Ícone de ferramenta compacta" width="74" height="74" loading="lazy">
+                        </figure>
+                        <h3 class="section-11__name">Compacta de verdade</h3>
+                        <p class="section-11__value">Com apenas 177 mm, o corpo facilita o trabalho em cantos, móveis e
+                            pontos com pouco espaço.</p>
+                    </li>
+                    <li class="section-11__item">
+                        <figure class="section-11__figure">
+                            <img class="section-11__image"
+                                src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/corfio/4203786_03-1.png"
+                                alt="Ícone de luz LED na base" width="74" height="74" loading="lazy">
+                        </figure>
+                        <h3 class="section-11__name">LED na base</h3>
+                        <p class="section-11__value">Ilumina melhor o ponto onde o furo ou parafusamento será feito,
+                            ajudando na precisão.</p>
+                    </li>
+                    <li class="section-11__item">
+                        <figure class="section-11__figure">
+                            <img class="section-11__image"
+                                src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/corfio/4203786_03-1.png"
+                                alt="Ícone de proteção eletrônica da bateria" width="74" height="74" loading="lazy">
+                        </figure>
+                        <h3 class="section-11__name">Proteção ECP</h3>
+                        <p class="section-11__value">A proteção eletrônica ajuda a preservar a bateria contra
+                            aquecimento e sobrecarga.</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <p class="pdp__image-note">
+            IMAGENS MERAMENTE ILUSTRATIVAS
+        </p>
+
+        <!-- Área de FAQ -->
+        <section id="faq-section" aria-labelledby="faq-section-title">
+            <div id="faq-section__header">
+                <h2 id="faq-section-title">Dúvidas Frequentes</h2>
+                <p id="faq-section__subtitle">Respostas rápidas sobre a Bosch GSB 185-LI</p>
+            </div>
+            <ul id="faq-section__list">
+                <li class="faq-section__item">
+                    <details class="faq-section__item">
+                        <summary>
+                            <h3 class="faq-section__q-text">A Parafusadeira/Furadeira de Impacto Bosch GSB 185-LI é
+                                indicada para quais usos?</h3>
+                            <span class="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-section__a-inner">
+                            <p class="faq-section__a-text">A Bosch GSB 185-LI é indicada para furação e parafusamento,
+                                com função de impacto para aplicações que exigem mais força. O formato compacto ajuda no
+                                uso em espaços menores sem abrir mão da potência de 18V.</p>
+                        </div>
+                    </details>
+                </li>
+                <li class="faq-section__item">
+                    <details class="faq-section__item">
+                        <summary>
+                            <h3 class="faq-section__q-text">A Bosch GSB 185-LI é uma ferramenta compacta?</h3>
+                            <span class="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-section__a-inner">
+                            <p class="faq-section__a-text">Sim. Ela possui apenas 177 mm de comprimento, sendo mais
+                                compacta que a GSB 120-LI, que possui 187 mm. Isso facilita o manuseio em locais
+                                apertados e melhora o controle durante o trabalho.</p>
+                        </div>
+                    </details>
+                </li>
+                <li class="faq-section__item">
+                    <details class="faq-section__item">
+                        <summary>
+                            <h3 class="faq-section__q-text">Qual é a vantagem do motor Brushless na GSB 185-LI?</h3>
+                            <span class="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-section__a-inner">
+                            <p class="faq-section__a-text">O motor Brushless 18V entrega força de ferramenta a cabo em
+                                um
+                                tamanho super compacto. Além disso, contribui para maior tempo de execução por carga e
+                                aumenta a vida útil da ferramenta.</p>
+                        </div>
+                    </details>
+                </li>
+                <li class="faq-section__item">
+                    <details class="faq-section__item">
+                        <summary>
+                            <h3 class="faq-section__q-text">O mandril metálico da Bosch GSB 185-LI faz diferença?</h3>
+                            <span class="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-section__a-inner">
+                            <p class="faq-section__a-text">Sim. O mandril metálico trava melhor o acessório, oferecendo
+                                mais robustez e durabilidade no uso. Isso ajuda a manter a broca ou ponta mais firme
+                                durante a aplicação.</p>
+                        </div>
+                    </details>
+                </li>
+                <li class="faq-section__item">
+                    <details class="faq-section__item">
+                        <summary>
+                            <h3 class="faq-section__q-text">A Bosch GSB 185-LI possui iluminação LED?</h3>
+                            <span class="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-section__a-inner">
+                            <p class="faq-section__a-text">Sim. A luz LED fica posicionada na base da ferramenta e
+                                ilumina diretamente o ponto onde o furo ou parafusamento será feito. Isso melhora a
+                                visibilidade em áreas com pouca luz.</p>
+                        </div>
+                    </details>
+                </li>
+                <li class="faq-section__item">
+                    <details class="faq-section__item">
+                        <summary>
+                            <h3 class="faq-section__q-text">A Parafusadeira/Furadeira de Impacto GSB 185-LI tem proteção
+                                para bateria?</h3>
+                            <span class="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-section__a-inner">
+                            <p class="faq-section__a-text">Sim. Ela conta com Bosch Electronic Cell Protection, o
+                                sistema
+                                ECP, que protege eletronicamente a bateria contra aquecimento e sobrecarga. Isso ajuda a
+                                preservar a vida útil da bateria.</p>
+                        </div>
+                    </details>
+                </li>
+                <li class="faq-section__item">
+                    <details class="faq-section__item">
+                        <summary>
+                            <h3 class="faq-section__q-text">A GSB 185-LI entrega força mesmo sendo compacta?</h3>
+                            <span class="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-section__a-inner">
+                            <p class="faq-section__a-text">Sim. Ela combina motor Brushless 18V com corpo compacto,
+                                entregando força elevada em uma estrutura menor. É uma boa escolha para quem precisa de
+                                potência com mais praticidade no manuseio.</p>
+                        </div>
+                    </details>
+                </li>
+                <li class="faq-section__item">
+                    <details class="faq-section__item">
+                        <summary>
+                            <h3 class="faq-section__q-text">O que torna a Bosch GSB 185-LI mais prática no uso diário?
+                            </h3>
+                            <span class="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="faq-section__a-inner">
+                            <p class="faq-section__a-text">O conjunto de corpo compacto, luz LED na base, mandril
+                                metálico e motor Brushless torna o uso mais prático. A ferramenta oferece melhor
+                                controle, boa iluminação da área de trabalho e mais segurança na fixação dos acessórios.
+                            </p>
+                        </div>
+                    </details>
+                </li>
+            </ul>
+        </section>
+
+    </article>
+</div>`,
+      css:  ``,
+    },
+
+        /*@@@@Col - variacao-18 */
+    {
+      id:   'variacao-18',
+      name: 'Variação 18',
+      html: `<div class="lp-container">
+    <meta charset="UTF-8">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .pdp {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            font-family: Roboto, sans-serif;
+        }
+
+        .pdp * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap"
+        rel="stylesheet">
+    <title>PDP - eFácil</title>
+    <!-- ---------------------------------------- ÁREA PARA COLOCAR STYLES ----------------------------------------------------------- -->
+
+    <style>
+        /*inicio-area-de-faq*/
+        #faq-section {
+            width: 100%;
+            padding: 2rem 16px;
+            box-sizing: border-box;
+            margin: 0 auto 25px;
+            padding-top: 0;
+            font-family: sans-serif;
+        }
+
+        #faq-section__header {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        #faq-section__title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 12px;
+            line-height: 98%;
+        }
+
+        #faq-section__subtitle {
+            font-size: 1rem;
+            color: #666;
+            margin: 0;
+        }
+
+        #faq-section__list {
+            list-style: none;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 60rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #faq-section__item {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        #faq-section__item summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        #faq-section__item summary::-webkit-details-marker {
+            display: none;
+        }
+
+        #faq-section__item summary:hover {
+            background: #f9f9f9;
+        }
+
+        #faq-section__q-text {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            flex: 1;
+        }
+
+        #faq-section__q-text:hover {
+            color: #ea5b0c;
+        }
+
+        #faq-section__icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        #faq-section__icon::before,
+        #faq-section__icon::after {
+            content: '';
+            position: absolute;
+            background: #888;
+            border-radius: 2px;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        #faq-section__icon::before {
+            width: 12px;
+            height: 1.5px;
+            top: 9px;
+            left: 4px;
+        }
+
+        #faq-section__icon::after {
+            width: 1.5px;
+            height: 12px;
+            top: 4px;
+            left: 9px;
+        }
+
+        #faq-section__item[open] #faq-section__icon::after {
+            transform: rotate(90deg);
+            opacity: 0;
+        }
+
+        #faq-section__a-inner {
+            padding: 14px 20px 16px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        #faq-section__a-text {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 480px) {
+            #faq-section__q-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        /*final-area-de-faq*/
+    </style>
+
+    <style>
+        .ll-carousel {
+            --ll-carousel-brand: #ff9900;
+            --ll-carousel-ink: #17253f;
+            --ll-carousel-muted: #61708a;
+            --ll-carousel-soft: #f3f6fb;
+            --ll-carousel-panel: #ffffff;
+            --ll-carousel-line: #d7dfec;
+            --ll-carousel-dot-hover: #edf2f9;
+            --ll-carousel-dot-active: #e0e8f5;
+            --ll-carousel-dot-active-border: #b8c7df;
+            --ll-carousel-shadow: 0 1.5rem 3rem rgba(13, 35, 51, 0.12);
+            background: var(--ll-carousel-soft);
+            color: var(--ll-carousel-ink);
+            font-family: Arial, Helvetica, sans-serif;
+            overflow: hidden;
+        }
+
+        .ll-carousel__container {
+            box-sizing: border-box;
+            container-name: ll-carousel-container;
+            container-type: inline-size;
+            margin-inline: auto;
+            padding: 2rem 1rem;
+            width: 100%;
+        }
+
+        .ll-carousel__control {
+            display: none;
+        }
+
+        .ll-carousel__intro {
+            display: grid;
+            gap: 1rem;
+            justify-items: center;
+            margin-block-end: 1.5rem;
+            text-align: center;
+        }
+
+        .ll-carousel--hide-intro .ll-carousel__intro {
+            display: none;
+        }
+
+        .ll-carousel__dot-number,
+        .ll-carousel__dot-text,
+        .ll-carousel__layout-eyebrow,
+        .ll-carousel__layout-title,
+        .ll-carousel__layout-text {
+            letter-spacing: 0;
+            overflow-wrap: anywhere;
+        }
+
+
+        .ll-carousel__viewport {
+            aspect-ratio: 16 / 10;
+            border: 1px solid var(--ll-carousel-line);
+            border-radius: 1rem;
+            box-shadow: var(--ll-carousel-shadow);
+            box-sizing: border-box;
+            isolation: isolate;
+            margin-inline: auto;
+            max-width: 100%;
+            overflow: hidden;
+            width: min(100%, 1280px);
+        }
+
+        .ll-carousel__track {
+            display: grid;
+            height: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .ll-carousel__panel {
+            background: var(--ll-carousel-panel);
+            box-sizing: border-box;
+            grid-area: 1 / 1;
+            height: 100%;
+            inset: 0;
+            max-width: 100%;
+            min-width: 0;
+            opacity: 0;
+            overflow: hidden;
+            pointer-events: none;
+            position: absolute;
+            transform: translateX(100%);
+            transition: transform 0.8s ease, opacity 0.4s ease;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .ll-carousel__layout {
+            box-sizing: border-box;
+            height: 100%;
+            max-height: 100%;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .ll-carousel__layout--impact {
+            --ll-carousel-impact-bg: #173b74;
+            --ll-carousel-impact-text: #fff7ef;
+            --ll-carousel-impact-muted: rgba(255, 247, 239, 0.84);
+            align-content: center;
+            align-items: center;
+            background: var(--ll-carousel-impact-bg);
+            color: var(--ll-carousel-impact-text);
+            display: grid;
+            gap: clamp(1.5rem, 3vw, 3.5rem);
+            grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+            grid-template-rows: minmax(0, 1fr);
+            min-height: 0;
+            padding: clamp(1.5rem, 3.4vw, 3.5rem);
+        }
+
+        .ll-carousel__layout--impact>* {
+            min-height: 0;
+            min-width: 0;
+        }
+
+        .ll-carousel__layout-copy {
+            align-self: center;
+            display: grid;
+            gap: clamp(0.7rem, 1vw, 1.05rem);
+            justify-self: start;
+            max-height: 100%;
+            max-width: min(43ch, 100%);
+            min-width: 0;
+        }
+
+        .ll-carousel__layout-eyebrow {
+            font-size: clamp(0.75rem, 0.7rem + 0.25vw, 0.95rem);
+            font-weight: 800;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .ll-carousel__layout-title {
+            font-size: clamp(2rem, 3.25vw, 4rem);
+            font-weight: 800;
+            line-height: 1.02;
+            margin: 0;
+            max-width: 100%;
+            text-wrap: balance;
+        }
+
+        .ll-carousel__layout-text {
+            color: var(--ll-carousel-impact-muted);
+            font-size: clamp(0.95rem, 1vw, 1.12rem);
+            line-height: 1.45;
+            margin: 0;
+            max-width: 100%;
+        }
+
+        .ll-carousel__media-card {
+            aspect-ratio: 4 / 3;
+            border-radius: 1.25rem;
+            box-shadow: 0 1.5rem 3rem rgba(20, 32, 43, 0.22);
+            margin-block: auto;
+            max-height: 76%;
+            max-width: min(100%, 38rem);
+            overflow: hidden;
+            place-self: center end;
+            width: 100%;
+        }
+
+        .ll-carousel__layout--impact-reverse {
+            grid-template-columns: minmax(0, 1.14fr) minmax(0, 0.86fr);
+        }
+
+        .ll-carousel__layout--impact-reverse .ll-carousel__layout-copy {
+            grid-column: 2;
+            grid-row: 1;
+            justify-self: end;
+            z-index: 10;
+        }
+
+        .ll-carousel__layout--impact-reverse .ll-carousel__media-card {
+            grid-column: 1;
+            grid-row: 1;
+            place-self: center start;
+        }
+
+        .ll-carousel__image,
+        .ll-carousel__picture,
+        .ll-carousel__video {
+            display: block;
+            height: 100%;
+            width: 100%;
+        }
+
+        .ll-carousel__image,
+        .ll-carousel__video {
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .ll-carousel__layout--media {
+            background: var(--ll-carousel-media-bg, #101217);
+            padding: 0;
+        }
+
+        .ll-carousel__figure {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .ll-carousel__figure .ll-carousel__image,
+        .ll-carousel__figure .ll-carousel__video {
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .ll-carousel__caption {
+            align-items: flex-start;
+            background: rgba(0, 0, 0, 0.48);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 1.25rem;
+            box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.28);
+            color: #fff;
+            display: grid;
+            gap: 0.65rem;
+            left: clamp(1.25rem, 5vw, 4.75rem);
+            max-width: min(42%, 34rem);
+            padding: clamp(1rem, 2.5vw, 2rem);
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .ll-carousel__caption h3 {
+            font-size: clamp(1.35rem, 2.4vw, 3rem);
+            line-height: 1.05;
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .ll-carousel__caption p {
+            font-size: clamp(0.85rem, 1.15vw, 1.15rem);
+            line-height: 1.45;
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .ll-carousel__nav {
+            display: grid;
+            gap: 0.5rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            margin: 1rem auto 0;
+            max-width: 1280px;
+            width: min(100%, 1280px);
+        }
+
+        .ll-carousel__dot {
+            align-items: center;
+            background: var(--ll-carousel-panel);
+            border: 1px solid var(--ll-carousel-line);
+            border-radius: 0.5rem;
+            box-sizing: border-box;
+            color: var(--ll-carousel-ink);
+            cursor: pointer;
+            display: grid;
+            gap: 0.5rem;
+            min-height: 4rem;
+            padding: 1rem;
+            transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease, transform 0.4s ease;
+        }
+
+        .ll-carousel__dot:hover {
+            background: var(--ll-carousel-dot-hover);
+            border-color: var(--ll-carousel-dot-active-border);
+            transform: translateY(-0.25rem);
+        }
+
+        .ll-carousel__dot-number {
+            color: var(--ll-carousel-brand);
+            font-size: clamp(0.75rem, 0.72rem + 0.16vw, 0.875rem);
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .ll-carousel__dot-text {
+            font-size: clamp(0.875rem, 0.84rem + 0.16vw, 1rem);
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .ll-carousel__control--1:checked~.ll-carousel__viewport .ll-carousel__panel--1,
+        .ll-carousel__control--2:checked~.ll-carousel__viewport .ll-carousel__panel--2,
+        .ll-carousel__control--3:checked~.ll-carousel__viewport .ll-carousel__panel--3,
+        .ll-carousel__control--4:checked~.ll-carousel__viewport .ll-carousel__panel--4 {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
+            z-index: 2;
+        }
+
+        .ll-carousel__control--2:checked~.ll-carousel__viewport .ll-carousel__panel--1,
+        .ll-carousel__control--3:checked~.ll-carousel__viewport .ll-carousel__panel--1,
+        .ll-carousel__control--3:checked~.ll-carousel__viewport .ll-carousel__panel--2,
+        .ll-carousel__control--4:checked~.ll-carousel__viewport .ll-carousel__panel--1,
+        .ll-carousel__control--4:checked~.ll-carousel__viewport .ll-carousel__panel--2,
+        .ll-carousel__control--4:checked~.ll-carousel__viewport .ll-carousel__panel--3 {
+            transform: translateX(-100%);
+        }
+
+        .ll-carousel__control--1:checked~.ll-carousel__nav .ll-carousel__dot--1,
+        .ll-carousel__control--2:checked~.ll-carousel__nav .ll-carousel__dot--2,
+        .ll-carousel__control--3:checked~.ll-carousel__nav .ll-carousel__dot--3,
+        .ll-carousel__control--4:checked~.ll-carousel__nav .ll-carousel__dot--4 {
+            background: var(--ll-carousel-dot-active);
+            border-color: var(--ll-carousel-dot-active-border);
+            color: var(--ll-carousel-ink);
+        }
+
+        @media (max-width: 760px) {
+            .ll-carousel__container {
+                padding: 1rem 0.75rem;
+            }
+
+            .ll-carousel__intro {
+                gap: 0.65rem;
+                margin-block-end: 1rem;
+            }
+
+            .ll-carousel__viewport {
+                aspect-ratio: 4 / 5;
+                border-radius: 0.95rem;
+            }
+
+            .ll-carousel__layout--impact {
+                align-content: center;
+                gap: 0.9rem;
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: auto minmax(0, 1fr);
+                padding: 1rem;
+            }
+
+            .ll-carousel__layout--impact .ll-carousel__layout-copy {
+                grid-column: 1;
+                grid-row: 1;
+                justify-self: stretch;
+                max-width: none;
+            }
+
+            .ll-carousel__layout--impact .ll-carousel__media-card {
+                grid-column: 1;
+                grid-row: 2;
+                place-self: center;
+            }
+
+            .ll-carousel__layout--impact-reverse .ll-carousel__layout-copy {
+                grid-row: 2;
+            }
+
+            .ll-carousel__layout--impact-reverse .ll-carousel__media-card {
+                grid-row: 1;
+            }
+
+            .ll-carousel__layout-title {
+                font-size: clamp(1.3rem, 6vw, 1.85rem);
+                line-height: 1.04;
+            }
+
+            .ll-carousel__layout-text {
+                font-size: 0.8rem;
+                line-height: 1.32;
+            }
+
+            .ll-carousel__media-card {
+                border-radius: 0.8rem;
+                max-height: 100%;
+                max-width: 100%;
+            }
+
+            .ll-carousel__layout--media {
+                background: #173b74;
+                padding: 0.65rem;
+            }
+
+            .ll-carousel__figure {
+                display: block;
+                height: 100%;
+            }
+
+            .ll-carousel__figure .ll-carousel__picture,
+            .ll-carousel__figure>.ll-carousel__video {
+                background: #102b58;
+                border-radius: 0.75rem;
+                display: block;
+                height: 100%;
+                min-height: 0;
+                overflow: hidden;
+            }
+
+            .ll-carousel__figure .ll-carousel__image,
+            .ll-carousel__figure .ll-carousel__video {
+                aspect-ratio: auto;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+                width: 100%;
+            }
+
+            .ll-carousel__caption {
+                background: rgba(0, 0, 0, 0.62);
+                border-radius: 0.85rem;
+                bottom: 0.72rem;
+                left: 0.72rem;
+                max-width: none;
+                padding: 0.72rem;
+                position: absolute;
+                right: 0.72rem;
+                top: auto;
+                transform: none;
+            }
+
+            .ll-carousel__caption h3 {
+                font-size: clamp(1.05rem, 5vw, 1.45rem);
+            }
+
+            .ll-carousel__caption p {
+                font-size: 0.76rem;
+                line-height: 1.3;
+            }
+
+            .ll-carousel__nav {
+                gap: 0.35rem;
+                margin-block-start: 0.65rem;
+            }
+
+            .ll-carousel__dot {
+                border-radius: 0.55rem;
+                gap: 0;
+                justify-items: center;
+                min-height: 3rem;
+                padding: 0.55rem 0.42rem;
+                text-align: center;
+            }
+
+            .ll-carousel__dot:hover {
+                transform: none;
+            }
+
+            .ll-carousel__dot-number {
+                display: none;
+            }
+
+            .ll-carousel__dot-text {
+                font-size: 0.78rem;
+                line-height: 1.05;
+            }
+        }
+
+        @container ll-carousel-container (max-width: 620px) {
+            .ll-carousel__viewport {
+                aspect-ratio: 4 / 5;
+                border-radius: 0.95rem;
+            }
+
+            .ll-carousel__layout--impact {
+                align-content: center;
+                gap: 0.9rem;
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: auto minmax(0, 1fr);
+                padding: 1rem;
+            }
+
+            .ll-carousel__layout--impact .ll-carousel__layout-copy {
+                grid-column: 1;
+                grid-row: 1;
+                justify-self: stretch;
+                max-width: none;
+            }
+
+            .ll-carousel__layout--impact .ll-carousel__media-card {
+                grid-column: 1;
+                grid-row: 2;
+                place-self: center;
+            }
+
+            .ll-carousel__layout--impact-reverse .ll-carousel__layout-copy {
+                grid-row: 2;
+            }
+
+            .ll-carousel__layout--impact-reverse .ll-carousel__media-card {
+                grid-row: 1;
+            }
+
+            .ll-carousel__layout-title {
+                font-size: clamp(1.3rem, 7.5cqw, 1.85rem);
+            }
+
+            .ll-carousel__layout-text {
+                font-size: 0.8rem;
+                line-height: 1.32;
+            }
+
+            .ll-carousel__layout--media {
+                background: #173b74;
+                padding: 0.65rem;
+            }
+
+            .ll-carousel__figure {
+                display: block;
+                height: 100%;
+            }
+
+            .ll-carousel__figure .ll-carousel__picture,
+            .ll-carousel__figure>.ll-carousel__video {
+                background: #102b58;
+                border-radius: 0.75rem;
+                display: block;
+                height: 100%;
+                min-height: 0;
+                overflow: hidden;
+            }
+
+            .ll-carousel__figure .ll-carousel__image,
+            .ll-carousel__figure .ll-carousel__video {
+                aspect-ratio: auto;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+                width: 100%;
+            }
+
+            .ll-carousel__caption {
+                background: rgba(0, 0, 0, 0.62);
+                border-radius: 0.85rem;
+                bottom: 0.72rem;
+                left: 0.72rem;
+                max-width: none;
+                padding: 0.72rem;
+                position: absolute;
+                right: 0.72rem;
+                top: auto;
+                transform: none;
+            }
+
+            .ll-carousel__caption h3 {
+                font-size: clamp(1.05rem, 5.5cqw, 1.45rem);
+            }
+
+            .ll-carousel__caption p {
+                font-size: 0.76rem;
+                line-height: 1.3;
+            }
+
+            .ll-carousel__nav {
+                gap: 0.35rem;
+                margin-block-start: 0.65rem;
+            }
+
+            .ll-carousel__dot {
+                border-radius: 0.55rem;
+                gap: 0;
+                justify-items: center;
+                min-height: 3rem;
+                padding: 0.55rem 0.42rem;
+                text-align: center;
+            }
+
+            .ll-carousel__dot:hover {
+                transform: none;
+            }
+
+            .ll-carousel__dot-number {
+                display: none;
+            }
+
+            .ll-carousel__dot-text {
+                font-size: 0.78rem;
+                line-height: 1.05;
+            }
+        }
+
+        .ll-carousel {
+            --ll-carousel-brand: #1d4f91;
+            --ll-carousel-soft: #f3f6fb;
+            --ll-carousel-dot-hover: #edf2f9;
+            --ll-carousel-dot-active: #e0e8f5;
+            --ll-carousel-dot-active-border: #b8c7df;
+        }
+
+        @media (min-width: 760px) {
+            #move-llcosseawd {
+                left: 2%;
+                top: 53%;
+            }
+        }
+
+        @media (min-width: 760px) {
+            #move-llcosseawd2 {
+                left: 47%;
+                top: 53%;
+            }
+        }
+    </style>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .section-2-2 {
+            --badge-size: 8rem;
+            --banner-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            font-family: sans-serif;
+            container-type: inline-size;
+        }
+
+        .section-2-2__banner {
+            width: 100%;
+            height: var(--banner-height);
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Container do vídeo ocupando todo o banner */
+        .section-2-2__banner-container {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            position: relative;
+        }
+
+        .section-2-2__banner-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .section-2-2__badge {
+            position: absolute;
+            bottom: calc(var(--badge-size) / -2);
+            width: var(--badge-size);
+            height: var(--badge-size);
+            background-color: #ff9900;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .section-2-2__badge-img {
+            max-width: 90px;
+            max-height: 90px;
+            object-fit: contain;
+        }
+
+        .section-2-2__body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: calc(var(--badge-size) / 2 + 1.8rem) 0.3rem 12px;
+            text-align: center;
+        }
+
+        .section-2-2__brand {
+            color: #ff9900;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-2-2__title {
+            font-size: clamp(1.4rem, 4vw, 2.4rem);
+            line-height: clamp(1.6rem, 4vw, 3.1rem);
+            font-weight: 300;
+            max-width: 50rem;
+            text-wrap: pretty;
+            color: #1a1a1a;
+        }
+
+        .section-2-2__title strong {
+            font-weight: 700;
+            display: block;
+        }
+
+        .section-2-2__subtitle {
+            color: #8a8a8a;
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            line-height: 1.65;
+            margin-top: 1.25rem;
+            max-width: 48rem;
+            text-wrap: pretty;
+        }
+
+        @media (max-width: 768px) {
+            .section-2-2 {
+                --banner-height: 180px;
+            }
+        }
+
+        @media (max-width: 470px) {
+            .section-2-2__subtitle {
+                text-align: justify;
+                font-size: clamp(0.9rem, 2vw, 1.1rem);
+            }
+        }
+    </style>
+
+    <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
+    <article class="pdp" id="pdp" aria-labelledby="product-main-title"> <!-- HTML fica dentro dessa div PDP -->
+
+        <section class="section-2-2" aria-label="Cabeçalho do produto">
+            <header class="section-2-2__banner">
+                <div class="section-2-2__banner-container">
+                    <video class="section-2-2__banner-video"
+                        poster="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/header-nivea.webp"
+                        preload="none" autoplay="" muted="" loop="" playsinline="" aria-hidden="true">
+                        <source src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/header-nivea.webm">
+                    </video>
+                </div>
+
+                <div class="section-2-2__badge" role="img" aria-label="Logo da NIVEA">
+                    <img src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/nivea/nivea-logo.png"
+                        alt="Logo da NIVEA" class="section-2-2__badge-img">
+                </div>
+            </header>
+
+            <article class="section-2-2__body">
+                <small class="section-2-2__brand">── nivea ──</small>
+                <h2 class="section-2-2__title">
+                    Desodorante Derma Control Defende <strong>Proteção intensa com cuidado para as axilas</strong>
+                </h2>
+                <p class="section-2-2__subtitle">
+                    Antitranspirante stick feminino com proteção de até 72 horas, ácido hialurônico puro e pró-vitamina
+                    B5. Fórmula sem álcool etílico, desenvolvida para proporcionar conforto até após a depilação.
+                </p>
+            </article>
+        </section>
+
+        <section class="ll-carousel" aria-label="Diferenciais do NIVEA Derma Control Defende"
+            style="background-image: linear-gradient(180deg, #ffffff, #edf3fb);">
+            <div class="ll-carousel__container">
+                <div class="ll-carousel__intro">
+                </div>
+
+                <input class="ll-carousel__control ll-carousel__control--1" type="radio" name="ll-carousel-active"
+                    id="ll-carousel-slide-1" checked="">
+                <input class="ll-carousel__control ll-carousel__control--2" type="radio" name="ll-carousel-active"
+                    id="ll-carousel-slide-2">
+                <input class="ll-carousel__control ll-carousel__control--3" type="radio" name="ll-carousel-active"
+                    id="ll-carousel-slide-3">
+                <input class="ll-carousel__control ll-carousel__control--4" type="radio" name="ll-carousel-active"
+                    id="ll-carousel-slide-4">
+
+                <div class="ll-carousel__viewport">
+                    <div class="ll-carousel__track">
+                        <article class="ll-carousel__panel ll-carousel__panel--1" id="ll-carousel-panel-1"
+                            aria-label="Slide 1: Impacto">
+                            <section class="ll-carousel__layout ll-carousel__layout--impact"
+                                style="--ll-carousel-impact-bg: #173f7a; --ll-carousel-impact-text: #fffdf8; --ll-carousel-impact-muted: rgba(255, 253, 248, 0.84);"
+                                aria-label="Proteção antitranspirante">
+                                <div class="ll-carousel__layout-copy">
+                                    <p class="ll-carousel__layout-eyebrow">Proteção prolongada</p>
+                                    <h3 class="ll-carousel__layout-title">Até 72 horas contra suor e mau odor</h3>
+                                    <p class="ll-carousel__layout-text">Proteção antitranspirante intensa para enfrentar
+                                        a rotina com sensação de conforto e segurança.</p>
+                                </div>
+                                <figure class="ll-carousel__media-card">
+                                    <img class="ll-carousel__image"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/desodorante-nivea-derma-control-defende-stick-54g-mao-ceu-208131-01.webp"
+                                        alt="Desodorante Stick NIVEA Derma Control Defende 54g" width="1800"
+                                        height="1600" style="object-position: 50% 50%;" loading="lazy" decoding="async">
+                                </figure>
+                            </section>
+                        </article>
+
+                        <article class="ll-carousel__panel ll-carousel__panel--2" id="ll-carousel-panel-2"
+                            aria-label="Slide 2: Decisão">
+                            <section class="ll-carousel__layout ll-carousel__layout--media"
+                                style="--ll-carousel-media-bg: #17457f; background-color: #547eb6;"
+                                aria-label="Cuidado da pele">
+                                <figure class="ll-carousel__figure">
+                                    <img class="ll-carousel__image"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/desodorante-nivea-derma-control-defende-stick-54g-agua-produto-208131-02.webp"
+                                        alt="Detalhe do NIVEA Derma Control Defende com ativos de cuidado" width="1800"
+                                        height="1600" style="object-position: 4% 50%;" loading="lazy" decoding="async">
+                                    <figcaption class="ll-carousel__caption" id="move-llcosseawd2">
+                                        <h3>Cuidado com ácido <br> hialurônico e B5</h3>
+                                        <p>A fórmula combina ácido hialurônico puro e pró-vitamina B5 para ajudar no
+                                            conforto e cuidado da pele das axilas.</p>
+                                    </figcaption>
+                                </figure>
+                            </section>
+                        </article>
+
+                        <article class="ll-carousel__panel ll-carousel__panel--3" id="ll-carousel-panel-3"
+                            aria-label="Slide 3: Invertido">
+                            <section
+                                class="ll-carousel__layout ll-carousel__layout--impact ll-carousel__layout--impact-reverse"
+                                style="--ll-carousel-impact-bg: #426a9f; --ll-carousel-impact-text: #fffdf8; --ll-carousel-impact-muted: rgba(255, 253, 248, 0.84);"
+                                aria-label="Pele sensível">
+                                <div class="ll-carousel__layout-copy">
+                                    <p class="ll-carousel__layout-eyebrow">Conforto pós-depilação</p>
+                                    <h3 class="ll-carousel__layout-title">Suavidade para axilas sensíveis</h3>
+                                    <p class="ll-carousel__layout-text">Sem álcool etílico e dermatologicamente testada,
+                                        a fórmula ajuda a evitar irritação e coceira, inclusive após a depilação.
+                                    </p>
+                                </div>
+                                <figure class="ll-carousel__media-card">
+                                    <img class="ll-carousel__image"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/desodorante-nivea-derma-control-defende-stick-54g-axila-lifestyle-208131-03.webp"
+                                        alt="NIVEA Derma Control Defende para cuidado das axilas sensíveis" width="1800"
+                                        height="1600" style="object-position: 50% 50%;" loading="lazy" decoding="async">
+                                </figure>
+                            </section>
+                        </article>
+
+                        <article class="ll-carousel__panel ll-carousel__panel--4" id="ll-carousel-panel-4"
+                            aria-label="Slide 4: Decisão">
+                            <section class="ll-carousel__layout ll-carousel__layout--media"
+                                style="--ll-carousel-media-bg: #244e86; background-color: #7194c2;"
+                                aria-label="Aplicação">
+                                <figure class="ll-carousel__figure">
+                                    <img class="ll-carousel__image"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/desodorante-nivea-derma-control-defende-stick-54g-aplicacao-axila-208131-04.webp"
+                                        alt="Desodorante NIVEA em formato stick para aplicação nas axilas" width="1800"
+                                        height="1600" style="object-position: 50% 50%;" loading="lazy" decoding="async">
+                                    <figcaption class="ll-carousel__caption" id="move-llcosseawd">
+                                        <h3>Stick prático para a rotina</h3>
+                                        <p>Aplique diretamente nas axilas e espere secar antes de se vestir. Não use
+                                            sobre a pele irritada ou lesionada.</p>
+                                    </figcaption>
+                                </figure>
+                            </section>
+                        </article>
+                    </div>
+                </div>
+
+                <nav class="ll-carousel__nav" style="grid-template-columns: repeat(4, minmax(0, 1fr));"
+                    aria-label="Selecionar slide do carrossel">
+                    <label class="ll-carousel__dot ll-carousel__dot--1" for="ll-carousel-slide-1" role="button"
+                        aria-controls="ll-carousel-panel-1">
+                        <span class="ll-carousel__dot-number">01</span>
+                        <span class="ll-carousel__dot-text">72h</span>
+                    </label>
+                    <label class="ll-carousel__dot ll-carousel__dot--2" for="ll-carousel-slide-2" role="button"
+                        aria-controls="ll-carousel-panel-2">
+                        <span class="ll-carousel__dot-number">02</span>
+                        <span class="ll-carousel__dot-text">Ativos</span>
+                    </label>
+                    <label class="ll-carousel__dot ll-carousel__dot--3" for="ll-carousel-slide-3" role="button"
+                        aria-controls="ll-carousel-panel-3">
+                        <span class="ll-carousel__dot-number">03</span>
+                        <span class="ll-carousel__dot-text">Suavidade</span>
+                    </label>
+                    <label class="ll-carousel__dot ll-carousel__dot--4" for="ll-carousel-slide-4" role="button"
+                        aria-controls="ll-carousel-panel-4">
+                        <span class="ll-carousel__dot-number">04</span>
+                        <span class="ll-carousel__dot-text">Aplicação</span>
+                    </label>
+                </nav>
+            </div>
+        </section>
+
+        <!-- ESSES CODIGOS ABAIXO VOCE NAO PRECISA MEXER!!! APENAS O HTML ACIMA-->
+
+        <p style="color: #8a8a8a; font-family: sans-serif; font-size: clamp(1rem, 2vw, 1.2rem); text-wrap: pretty;
+            text-align: center; padding: 30px 0; background-color: #edf3fb;">
+            IMAGENS MERAMENTE ILUSTRATIVAS
+        </p>
+
+        <!-- Área de FAQ -->
+        <section id="faq-section" aria-labelledby="faq-section__title">
+            <div id="faq-section__header">
+                <h2 id="faq-section__title">Dúvidas Frequentes</h2>
+            </div>
+            <ul id="faq-section__list" role="list">
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Por quanto tempo o NIVEA Derma Control Defende protege? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> O antitranspirante oferece proteção de até 72 horas contra o
+                                suor e o mau odor. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Quais ativos de cuidado estão presentes na fórmula? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> A fórmula contém ácido hialurônico puro e pró-vitamina B5,
+                                ativos associados ao cuidado, conforto e maciez da pele das axilas. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Pode ser usado após a depilação? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> A fórmula foi desenvolvida para pele sensível pós-depilação e
+                                ajuda a evitar irritações e coceira. Não aplique se a pele estiver irritada ou
+                                lesionada.
+                            </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> O produto contém álcool etílico? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Não. O NIVEA Derma Control Defende possui fórmula sem álcool
+                                etílico e é dermatologicamente testado. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Como aplicar o desodorante stick? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Aplique diretamente nas axilas e espere o produto secar antes
+                                de se vestir. Caso ocorra irritação ou coceira, suspenda o uso e procure orientação
+                                médica. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+            </ul>
+        </section>
+
+    </article>
+</div>`,
+      css:  ``,
+    },
+
+        /*@@@@Col - variacao-19 */
+    {
+      id:   'variacao-19',
+      name: 'Variação 19',
+      html: `<div class="lp-container">
+    <meta charset="utf-8">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .pdp {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            font-family: Roboto, sans-serif;
+        }
+
+        .pdp * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap"
+        rel="stylesheet">
+    <title>PDP - eFácil</title>
+    <!-- ---------------------------------------- ÁREA PARA COLOCAR STYLES ----------------------------------------------------------- -->
+    <style>
+        /*inicio-area-de-faq*/
+        #faq-section {
+            width: 100%;
+            padding: 2rem 16px;
+            box-sizing: border-box;
+            margin: 0 auto 25px;
+            padding-top: 0;
+            font-family: sans-serif;
+        }
+
+        #faq-section__header {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        #faq-section__title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 12px;
+            line-height: 98%;
+        }
+
+        #faq-section__subtitle {
+            font-size: 1rem;
+            color: #666;
+            margin: 0;
+        }
+
+        #faq-section__list {
+            list-style: none;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 60rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #faq-section__item {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        #faq-section__item summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        #faq-section__item summary::-webkit-details-marker {
+            display: none;
+        }
+
+        #faq-section__item summary:hover {
+            background: #f9f9f9;
+        }
+
+        #faq-section__q-text {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            flex: 1;
+        }
+
+        #faq-section__q-text:hover {
+            color: #ea5b0c;
+        }
+
+        #faq-section__icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        #faq-section__icon::before,
+        #faq-section__icon::after {
+            content: '';
+            position: absolute;
+            background: #888;
+            border-radius: 2px;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        #faq-section__icon::before {
+            width: 12px;
+            height: 1.5px;
+            top: 9px;
+            left: 4px;
+        }
+
+        #faq-section__icon::after {
+            width: 1.5px;
+            height: 12px;
+            top: 4px;
+            left: 9px;
+        }
+
+        #faq-section__item[open] #faq-section__icon::after {
+            transform: rotate(90deg);
+            opacity: 0;
+        }
+
+        #faq-section__a-inner {
+            padding: 14px 20px 16px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        #faq-section__a-text {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 480px) {
+            #faq-section__q-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        /*final-area-de-faq*/
+    </style>
+    <style>
+        .ll-carousel {
+            --ll-carousel-brand: #ff9900;
+            --ll-carousel-ink: #17253f;
+            --ll-carousel-muted: #61708a;
+            --ll-carousel-soft: #f3f6fb;
+            --ll-carousel-panel: #ffffff;
+            --ll-carousel-line: #d7dfec;
+            --ll-carousel-dot-hover: #edf2f9;
+            --ll-carousel-dot-active: #e0e8f5;
+            --ll-carousel-dot-active-border: #b8c7df;
+            --ll-carousel-shadow: 0 1.5rem 3rem rgba(13, 35, 51, 0.12);
+            background: var(--ll-carousel-soft);
+            color: var(--ll-carousel-ink);
+            font-family: Arial, Helvetica, sans-serif;
+            overflow: hidden;
+        }
+
+        .ll-carousel__container {
+            box-sizing: border-box;
+            container-name: ll-carousel-container;
+            container-type: inline-size;
+            margin-inline: auto;
+            padding: 0 1rem;
+            width: 100%;
+        }
+
+        .ll-carousel__control {
+            display: none;
+        }
+
+        .ll-carousel__intro {
+            display: grid;
+            gap: 1rem;
+            justify-items: center;
+            margin-block-end: 1.5rem;
+            text-align: center;
+        }
+
+        .ll-carousel--hide-intro .ll-carousel__intro {
+            display: none;
+        }
+
+        .ll-carousel__dot-number,
+        .ll-carousel__dot-text,
+        .ll-carousel__layout-eyebrow,
+        .ll-carousel__layout-title,
+        .ll-carousel__layout-text {
+            letter-spacing: 0;
+            overflow-wrap: anywhere;
+        }
+
+
+        .ll-carousel__viewport {
+            aspect-ratio: 16 / 10;
+            border: 1px solid var(--ll-carousel-line);
+            border-radius: 1rem;
+            box-shadow: var(--ll-carousel-shadow);
+            box-sizing: border-box;
+            isolation: isolate;
+            margin-inline: auto;
+            max-width: 100%;
+            overflow: hidden;
+            width: min(100%, 1280px);
+        }
+
+        .ll-carousel__track {
+            display: grid;
+            height: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .ll-carousel__panel {
+            background: var(--ll-carousel-panel);
+            box-sizing: border-box;
+            grid-area: 1 / 1;
+            height: 100%;
+            inset: 0;
+            max-width: 100%;
+            min-width: 0;
+            opacity: 0;
+            overflow: hidden;
+            pointer-events: none;
+            position: absolute;
+            transform: translateX(100%);
+            transition: transform 0.8s ease, opacity 0.4s ease;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .ll-carousel__layout {
+            box-sizing: border-box;
+            height: 100%;
+            max-height: 100%;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .ll-carousel__layout--impact {
+            --ll-carousel-impact-bg: #173b74;
+            --ll-carousel-impact-text: #fff7ef;
+            --ll-carousel-impact-muted: rgba(255, 247, 239, 0.84);
+            align-content: center;
+            align-items: center;
+            background: var(--ll-carousel-impact-bg);
+            color: var(--ll-carousel-impact-text);
+            display: grid;
+            gap: clamp(1.5rem, 3vw, 3.5rem);
+            grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+            grid-template-rows: minmax(0, 1fr);
+            min-height: 0;
+            padding: clamp(1.5rem, 3.4vw, 3.5rem);
+        }
+
+        .ll-carousel__layout--impact>* {
+            min-height: 0;
+            min-width: 0;
+        }
+
+        .ll-carousel__layout-copy {
+            align-self: center;
+            display: grid;
+            gap: clamp(0.7rem, 1vw, 1.05rem);
+            justify-self: start;
+            max-height: 100%;
+            max-width: min(43ch, 100%);
+            min-width: 0;
+        }
+
+        .ll-carousel__layout-eyebrow {
+            font-size: clamp(0.75rem, 0.7rem + 0.25vw, 0.95rem);
+            font-weight: 800;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .ll-carousel__layout-title {
+            font-size: clamp(2rem, 3.25vw, 4rem);
+            font-weight: 800;
+            line-height: 1.02;
+            margin: 0;
+            max-width: 100%;
+            text-wrap: balance;
+        }
+
+        .ll-carousel__layout-text {
+            color: var(--ll-carousel-impact-muted);
+            font-size: clamp(0.95rem, 1vw, 1.12rem);
+            line-height: 1.45;
+            margin: 0;
+            max-width: 100%;
+        }
+
+        .ll-carousel__media-card {
+            aspect-ratio: 4 / 3;
+            border-radius: 1.25rem;
+            box-shadow: 0 1.5rem 3rem rgba(20, 32, 43, 0.22);
+            margin-block: auto;
+            max-height: 76%;
+            max-width: min(100%, 38rem);
+            overflow: hidden;
+            place-self: center end;
+            width: 100%;
+        }
+
+        .ll-carousel__layout--impact-reverse {
+            grid-template-columns: minmax(0, 1.14fr) minmax(0, 0.86fr);
+        }
+
+        .ll-carousel__layout--impact-reverse .ll-carousel__layout-copy {
+            grid-column: 2;
+            grid-row: 1;
+            justify-self: end;
+            z-index: 10;
+        }
+
+        .ll-carousel__layout--impact-reverse .ll-carousel__media-card {
+            grid-column: 1;
+            grid-row: 1;
+            place-self: center start;
+        }
+
+        .ll-carousel__image,
+        .ll-carousel__picture,
+        .ll-carousel__video {
+            display: block;
+            height: 100%;
+            width: 100%;
+        }
+
+        .ll-carousel__image,
+        .ll-carousel__video {
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .ll-carousel__layout--media {
+            background: var(--ll-carousel-media-bg, #101217);
+            padding: 0;
+        }
+
+        .ll-carousel__figure {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .ll-carousel__figure .ll-carousel__image,
+        .ll-carousel__figure .ll-carousel__video {
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .ll-carousel__caption {
+            align-items: flex-start;
+            background: rgba(0, 0, 0, 0.48);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 1.25rem;
+            box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.28);
+            color: #fff;
+            display: grid;
+            gap: 0.65rem;
+            left: clamp(1.25rem, 5vw, 4.75rem);
+            max-width: min(42%, 34rem);
+            padding: clamp(1rem, 2.5vw, 2rem);
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .ll-carousel__caption h3 {
+            font-size: clamp(1.35rem, 2.4vw, 3rem);
+            line-height: 1.05;
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .ll-carousel__caption p {
+            font-size: clamp(0.85rem, 1.15vw, 1.15rem);
+            line-height: 1.45;
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .ll-carousel__nav {
+            display: grid;
+            gap: 0.5rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            margin: 1rem auto 0;
+            max-width: 1280px;
+            width: min(100%, 1280px);
+        }
+
+        .ll-carousel__dot {
+            align-items: center;
+            background: var(--ll-carousel-panel);
+            border: 1px solid var(--ll-carousel-line);
+            border-radius: 0.5rem;
+            box-sizing: border-box;
+            color: var(--ll-carousel-ink);
+            cursor: pointer;
+            display: grid;
+            gap: 0.5rem;
+            min-height: 4rem;
+            padding: 1rem;
+            transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease, transform 0.4s ease;
+            transition: .2s;
+        }
+
+        .ll-carousel__dot:hover {
+            background: var(--ll-carousel-dot-hover);
+            border-color: var(--ll-carousel-dot-active-border);
+            transform: translateY(-0.25rem);
+            transition: .7s;
+        }
+
+        .ll-carousel__dot-number {
+            color: var(--ll-carousel-brand);
+            font-size: clamp(0.75rem, 0.72rem + 0.16vw, 0.875rem);
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .ll-carousel__dot-text {
+            font-size: clamp(0.875rem, 0.84rem + 0.16vw, 1rem);
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .ll-carousel__control--1:checked~.ll-carousel__viewport .ll-carousel__panel--1,
+        .ll-carousel__control--2:checked~.ll-carousel__viewport .ll-carousel__panel--2,
+        .ll-carousel__control--3:checked~.ll-carousel__viewport .ll-carousel__panel--3,
+        .ll-carousel__control--4:checked~.ll-carousel__viewport .ll-carousel__panel--4 {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
+            z-index: 2;
+        }
+
+        .ll-carousel__control--2:checked~.ll-carousel__viewport .ll-carousel__panel--1,
+        .ll-carousel__control--3:checked~.ll-carousel__viewport .ll-carousel__panel--1,
+        .ll-carousel__control--3:checked~.ll-carousel__viewport .ll-carousel__panel--2,
+        .ll-carousel__control--4:checked~.ll-carousel__viewport .ll-carousel__panel--1,
+        .ll-carousel__control--4:checked~.ll-carousel__viewport .ll-carousel__panel--2,
+        .ll-carousel__control--4:checked~.ll-carousel__viewport .ll-carousel__panel--3 {
+            transform: translateX(-100%);
+        }
+
+        .ll-carousel__control--1:checked~.ll-carousel__nav .ll-carousel__dot--1,
+        .ll-carousel__control--2:checked~.ll-carousel__nav .ll-carousel__dot--2,
+        .ll-carousel__control--3:checked~.ll-carousel__nav .ll-carousel__dot--3,
+        .ll-carousel__control--4:checked~.ll-carousel__nav .ll-carousel__dot--4 {
+            background: var(--ll-carousel-dot-active);
+            border-color: var(--ll-carousel-dot-active-border);
+            color: var(--ll-carousel-ink);
+        }
+
+        @media (max-width: 760px) {
+            .ll-carousel__container {
+                padding: 0 .75rem;
+            }
+
+            .ll-carousel__intro {
+                gap: 0.65rem;
+                margin-block-end: 1rem;
+            }
+
+            .ll-carousel__viewport {
+                aspect-ratio: 4 / 5;
+                border-radius: 0.95rem;
+            }
+
+            .ll-carousel__layout--impact {
+                align-content: center;
+                gap: 0.9rem;
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: auto minmax(0, 1fr);
+                padding: 1rem;
+            }
+
+            .ll-carousel__layout--impact .ll-carousel__layout-copy {
+                grid-column: 1;
+                grid-row: 1;
+                justify-self: stretch;
+                max-width: none;
+            }
+
+            .ll-carousel__layout--impact .ll-carousel__media-card {
+                grid-column: 1;
+                grid-row: 2;
+                place-self: center;
+            }
+
+            .ll-carousel__layout--impact-reverse .ll-carousel__layout-copy {
+                grid-row: 2;
+            }
+
+            .ll-carousel__layout--impact-reverse .ll-carousel__media-card {
+                grid-row: 1;
+            }
+
+            .ll-carousel__layout-title {
+                font-size: clamp(1.3rem, 6vw, 1.85rem);
+                line-height: 1.04;
+            }
+
+            .ll-carousel__layout-text {
+                font-size: 0.8rem;
+                line-height: 1.32;
+            }
+
+            .ll-carousel__media-card {
+                border-radius: 0.8rem;
+                max-height: 100%;
+                max-width: 100%;
+            }
+
+            .ll-carousel__layout--media {
+                background: #173b74;
+                padding: 0.65rem;
+            }
+
+            .ll-carousel__figure {
+                display: block;
+                height: 100%;
+            }
+
+            .ll-carousel__figure .ll-carousel__picture,
+            .ll-carousel__figure>.ll-carousel__video {
+                background: #102b58;
+                border-radius: 0.75rem;
+                display: block;
+                height: 100%;
+                min-height: 0;
+                overflow: hidden;
+            }
+
+            .ll-carousel__figure .ll-carousel__image,
+            .ll-carousel__figure .ll-carousel__video {
+                aspect-ratio: auto;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+                width: 100%;
+            }
+
+            .ll-carousel__caption {
+                background: rgba(0, 0, 0, 0.62);
+                border-radius: 0.85rem;
+                bottom: 0.72rem;
+                left: 0.72rem;
+                max-width: none;
+                padding: 0.72rem;
+                position: absolute;
+                right: 0.72rem;
+                top: auto;
+                transform: none;
+            }
+
+            .ll-carousel__caption h3 {
+                font-size: clamp(1.05rem, 5vw, 1.45rem);
+            }
+
+            .ll-carousel__caption p {
+                font-size: 0.76rem;
+                line-height: 1.3;
+            }
+
+            .ll-carousel__nav {
+                gap: 0.35rem;
+                margin-block-start: 0.65rem;
+            }
+
+            .ll-carousel__dot {
+                border-radius: 0.55rem;
+                gap: 0;
+                justify-items: center;
+                min-height: 3rem;
+                padding: 0.55rem 0.42rem;
+                text-align: center;
+                transition: .2s;
+            }
+
+            .ll-carousel__dot:hover {
+                transform: none;
+                transition: .7s;
+            }
+
+            .ll-carousel__dot-number {
+                display: none;
+            }
+
+            .ll-carousel__dot-text {
+                font-size: 0.78rem;
+                line-height: 1.05;
+            }
+        }
+
+        @container ll-carousel-container (max-width: 620px) {
+            .ll-carousel__viewport {
+                aspect-ratio: 4 / 5;
+                border-radius: 0.95rem;
+            }
+
+            .ll-carousel__layout--impact {
+                align-content: center;
+                gap: 0.9rem;
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: auto minmax(0, 1fr);
+                padding: 1rem;
+            }
+
+            .ll-carousel__layout--impact .ll-carousel__layout-copy {
+                grid-column: 1;
+                grid-row: 1;
+                justify-self: stretch;
+                max-width: none;
+            }
+
+            .ll-carousel__layout--impact .ll-carousel__media-card {
+                grid-column: 1;
+                grid-row: 2;
+                place-self: center;
+            }
+
+            .ll-carousel__layout--impact-reverse .ll-carousel__layout-copy {
+                grid-row: 2;
+            }
+
+            .ll-carousel__layout--impact-reverse .ll-carousel__media-card {
+                grid-row: 1;
+            }
+
+            .ll-carousel__layout-title {
+                font-size: clamp(1.3rem, 7.5cqw, 1.85rem);
+            }
+
+            .ll-carousel__layout-text {
+                font-size: 0.8rem;
+                line-height: 1.32;
+            }
+
+            .ll-carousel__layout--media {
+                background: #173b74;
+                padding: 0.65rem;
+            }
+
+            .ll-carousel__figure {
+                display: block;
+                height: 100%;
+            }
+
+            .ll-carousel__figure .ll-carousel__picture,
+            .ll-carousel__figure>.ll-carousel__video {
+                background: #102b58;
+                border-radius: 0.75rem;
+                display: block;
+                height: 100%;
+                min-height: 0;
+                overflow: hidden;
+            }
+
+            .ll-carousel__figure .ll-carousel__image,
+            .ll-carousel__figure .ll-carousel__video {
+                aspect-ratio: auto;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+                width: 100%;
+            }
+
+            .ll-carousel__caption {
+                background: rgba(0, 0, 0, 0.62);
+                border-radius: 0.85rem;
+                bottom: 0.72rem;
+                left: 0.72rem;
+                max-width: none;
+                padding: 0.72rem;
+                position: absolute;
+                right: 0.72rem;
+                top: auto;
+                transform: none;
+            }
+
+            .ll-carousel__caption h3 {
+                font-size: clamp(1.05rem, 5.5cqw, 1.45rem);
+            }
+
+            .ll-carousel__caption p {
+                font-size: 0.76rem;
+                line-height: 1.3;
+            }
+
+            .ll-carousel__nav {
+                gap: 0.35rem;
+                margin-block-start: 0.65rem;
+            }
+
+            .ll-carousel__dot {
+                border-radius: 0.55rem;
+                gap: 0;
+                justify-items: center;
+                min-height: 3rem;
+                padding: 0.55rem 0.42rem;
+                text-align: center;
+            }
+
+            .ll-carousel__dot:hover {
+                transform: none;
+                transition: .7s;
+            }
+
+            .ll-carousel__dot-number {
+                display: none;
+            }
+
+            .ll-carousel__dot-text {
+                font-size: 0.78rem;
+                line-height: 1.05;
+            }
+        }
+
+        .ll-carousel {
+            --ll-carousel-brand: #1d4f91;
+            --ll-carousel-soft: #f3f6fb;
+            --ll-carousel-dot-hover: #edf2f9;
+            --ll-carousel-dot-active: #e0e8f5;
+            --ll-carousel-dot-active-border: #b8c7df;
+        }
+
+        /* ===== MELHORIAS ADICIONADAS ===== */
+
+        /* 1. Fundo degradê do carrossel */
+
+        /* 2. Imagem sem ratio fixo no media-card (slide 1 e 3) */
+        .ll-carousel__media-card {
+            aspect-ratio: unset !important;
+            height: 100%;
+            max-height: 82%;
+        }
+
+        .ll-carousel__media-card .ll-carousel__image {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* 3. Nav sem background unificado — cada botão é individual */
+        .ll-carousel__nav {
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            gap: 0.5rem !important;
+            margin-top: 0.75rem !important;
+        }
+
+        /* Cada botão: card branco individual */
+        .ll-carousel__dot {
+            border-radius: 0.75rem !important;
+            border: 1.5px solid #e8e4dc !important;
+            background: #fff !important;
+            padding: 0.75rem 1rem !important;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 0.5rem !important;
+            min-height: unset !important;
+            transition: background 0.25s, border-color 0.25s !important;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06) !important;
+        }
+
+        .ll-carousel__dot:hover {
+            background: #fff9f2 !important;
+            border-color: #f5c280 !important;
+            transition: .7s;
+        }
+
+        .ll-carousel__dot-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+            min-width: 0;
+        }
+
+        .ll-carousel__dot-number {
+            color: #aaa !important;
+            font-size: 0.7rem !important;
+            font-weight: 700 !important;
+            line-height: 1 !important;
+        }
+
+        .ll-carousel__dot-text {
+            font-size: 0.875rem !important;
+            font-weight: 700 !important;
+            color: #17253f !important;
+            line-height: 1.2 !important;
+        }
+
+        .ll-carousel__dot-icon {
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #f0ede8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #17253f;
+            transition: background 0.25s, color 0.25s;
+        }
+
+        /* Active state laranja */
+        .ll-carousel__control--1:checked~.ll-carousel__nav .ll-carousel__dot--1,
+        .ll-carousel__control--2:checked~.ll-carousel__nav .ll-carousel__dot--2,
+        .ll-carousel__control--3:checked~.ll-carousel__nav .ll-carousel__dot--3,
+        .ll-carousel__control--4:checked~.ll-carousel__nav .ll-carousel__dot--4 {
+            background: #fff4e0 !important;
+            border-color: #ee6911 !important;
+        }
+
+        .ll-carousel__control--1:checked~.ll-carousel__nav .ll-carousel__dot--1 .ll-carousel__dot-number,
+        .ll-carousel__control--2:checked~.ll-carousel__nav .ll-carousel__dot--2 .ll-carousel__dot-number,
+        .ll-carousel__control--3:checked~.ll-carousel__nav .ll-carousel__dot--3 .ll-carousel__dot-number,
+        .ll-carousel__control--4:checked~.ll-carousel__nav .ll-carousel__dot--4 .ll-carousel__dot-number {
+            color: #ee6911 !important;
+        }
+
+        .ll-carousel__control--1:checked~.ll-carousel__nav .ll-carousel__dot--1 .ll-carousel__dot-text,
+        .ll-carousel__control--2:checked~.ll-carousel__nav .ll-carousel__dot--2 .ll-carousel__dot-text,
+        .ll-carousel__control--3:checked~.ll-carousel__nav .ll-carousel__dot--3 .ll-carousel__dot-text,
+        .ll-carousel__control--4:checked~.ll-carousel__nav .ll-carousel__dot--4 .ll-carousel__dot-text {
+            color: #ee6911 !important;
+        }
+
+        .ll-carousel__control--1:checked~.ll-carousel__nav .ll-carousel__dot--1 .ll-carousel__dot-icon,
+        .ll-carousel__control--2:checked~.ll-carousel__nav .ll-carousel__dot--2 .ll-carousel__dot-icon,
+        .ll-carousel__control--3:checked~.ll-carousel__nav .ll-carousel__dot--3 .ll-carousel__dot-icon,
+        .ll-carousel__control--4:checked~.ll-carousel__nav .ll-carousel__dot--4 .ll-carousel__dot-icon {
+            background: #ee6911 !important;
+            color: #fff !important;
+        }
+
+        /* Mobile: 2 colunas × 2 linhas */
+        @media (max-width: 760px) {
+            .ll-carousel__nav {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+
+            .ll-carousel__dot-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .ll-carousel__dot-icon svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
+
+        @container ll-carousel-container (max-width: 620px) {
+            .ll-carousel__nav {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+        }
+
+        /* 4. Bolinhas indicadoras dentro do viewport */
+        .ll-carousel__viewport {
+            position: relative;
+        }
+
+        .ll-carousel__track::after {
+            content: '';
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* Bolinhas via pseudo-elements nos panels */
+        .ll-carousel__indicators {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 7px;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .ll-carousel__indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transition: background 0.3s, width 0.3s;
+            display: block;
+        }
+
+        .ll-carousel__control--1:checked~.ll-carousel__viewport .ll-carousel__indicator--1,
+        .ll-carousel__control--2:checked~.ll-carousel__viewport .ll-carousel__indicator--2,
+        .ll-carousel__control--3:checked~.ll-carousel__viewport .ll-carousel__indicator--3,
+        .ll-carousel__control--4:checked~.ll-carousel__viewport .ll-carousel__indicator--4 {
+            background: #fff;
+            width: 20px;
+            border-radius: 4px;
+        }
+
+        @media (min-width: 760px) {
+            #move-llcosseawd {
+                left: 2%;
+                top: 53%;
+            }
+        }
+
+        @media (min-width: 760px) {
+            #move-llcosseawd2 {
+                left: 11%;
+                top: 43%;
+            }
+        }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .section-2-2 {
+            --badge-size: 8rem;
+            --banner-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            font-family: sans-serif;
+            container-type: inline-size;
+        }
+
+        .section-2-2__banner {
+            width: 100%;
+            height: var(--banner-height);
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Container do vídeo ocupando todo o banner */
+        .section-2-2__banner-container {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            position: relative;
+        }
+
+        .section-2-2__banner-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .section-2-2__badge {
+            position: absolute;
+            bottom: calc(var(--badge-size) / -2);
+            width: var(--badge-size);
+            height: var(--badge-size);
+            background-color: #ff9900;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .section-2-2__badge-img {
+            max-width: 90px;
+            max-height: 90px;
+            object-fit: contain;
+        }
+
+        .section-2-2__body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: calc(var(--badge-size) / 2 + 1.8rem) 0.3rem 12px;
+            text-align: center;
+        }
+
+        .section-2-2__brand {
+            color: #ff9900;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-2-2__title {
+            font-size: clamp(1.4rem, 4vw, 2.4rem);
+            line-height: clamp(1.6rem, 4vw, 3.1rem);
+            font-weight: 300;
+            max-width: 50rem;
+            text-wrap: pretty;
+            color: #1a1a1a;
+        }
+
+        .section-2-2__title strong {
+            font-weight: 700;
+            display: block;
+        }
+
+        .section-2-2__subtitle {
+            color: #8a8a8a;
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            line-height: 1.65;
+            margin-top: 1.25rem;
+            max-width: 48rem;
+            text-wrap: pretty;
+        }
+
+        @media (max-width: 768px) {
+            .section-2-2 {
+                --banner-height: 180px;
+            }
+        }
+
+        @media (max-width: 470px) {
+            .section-2-2__subtitle {
+                text-align: justify;
+                font-size: clamp(0.9rem, 2vw, 1.1rem);
+            }
+        }
+    </style>
+    <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
+    <article aria-labelledby="product-main-title" class="pdp" id="pdp"> <!-- HTML fica dentro dessa div PDP -->
+        <section aria-label="Cabeçalho do produto" class="section-2-2">
+            <header class="section-2-2__banner">
+                <div class="section-2-2__banner-container">
+                    <video aria-hidden="true" autoplay="" class="section-2-2__banner-video" loop="" muted=""
+                        playsinline=""
+                        poster="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/header-coala.webp"
+                        preload="none">
+                        <source src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/header-coala.webm">
+                    </video>
+                </div>
+                <div aria-label="Logo da Coala" class="section-2-2__badge" role="img">
+                    <img alt="Logo da Coala" class="section-2-2__badge-img"
+                        src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/coala/logo-coala.png">
+                </div>
+            </header>
+            <article class="section-2-2__body">
+                <small class="section-2-2__brand">── coala ──</small>
+                <h2 class="section-2-2__title">Amaciante Coala Sol do Brasil 1L <strong>Maciez intensa e perfume
+                        marcante</strong></h2>
+                <p class="section-2-2__subtitle">Amaciante de roupas concentrado com fórmula premium. Amacia
+                    profundamente os tecidos, deixa fragrância intensa e rende até 50 lavagens.
+                </p>
+            </article>
+        </section>
+        <section aria-label="Diferenciais do Amaciante Coala Concentrado Sol do Brasil 12x1L" class="ll-carousel"
+            style="background-image: linear-gradient(180deg, #ffffff, #fff4e0);">
+            <div class="ll-carousel__container">
+                <div class="ll-carousel__intro">
+                </div>
+                <input checked="" class="ll-carousel__control ll-carousel__control--1" id="ll-carousel-slide-1"
+                    name="ll-carousel-active" type="radio">
+                <input class="ll-carousel__control ll-carousel__control--2" id="ll-carousel-slide-2"
+                    name="ll-carousel-active" type="radio">
+                <input class="ll-carousel__control ll-carousel__control--3" id="ll-carousel-slide-3"
+                    name="ll-carousel-active" type="radio">
+                <input class="ll-carousel__control ll-carousel__control--4" id="ll-carousel-slide-4"
+                    name="ll-carousel-active" type="radio">
+                <div class="ll-carousel__viewport">
+                    <div class="ll-carousel__indicators">
+                        <span class="ll-carousel__indicator ll-carousel__indicator--1"></span>
+                        <span class="ll-carousel__indicator ll-carousel__indicator--2"></span>
+                        <span class="ll-carousel__indicator ll-carousel__indicator--3"></span>
+                        <span class="ll-carousel__indicator ll-carousel__indicator--4"></span>
+                    </div>
+                    <div class="ll-carousel__track">
+                        <article aria-label="Slide 1: Impacto" class="ll-carousel__panel ll-carousel__panel--1"
+                            id="ll-carousel-panel-1">
+                            <section aria-label="Maciez e perfume para as roupas"
+                                class="ll-carousel__layout ll-carousel__layout--impact"
+                                style="--ll-carousel-impact-bg: #ee6911e1; --ll-carousel-impact-text: #fffdf8; --ll-carousel-impact-muted: rgba(255, 253, 248, 0.84); background-image: linear-gradient(323deg, #495330, #607037);">
+                                <div class="ll-carousel__layout-copy">
+                                    <p class="ll-carousel__layout-eyebrow">Perfume</p>
+                                    <h3 class="ll-carousel__layout-title">Maciez intensa e perfume por mais tempo</h3>
+                                    <p class="ll-carousel__layout-text">Fórmula concentrada que amacia profundamente os
+                                        tecidos e envolve as roupas com fragrância vibrante, fresca e marcante.
+                                    </p>
+                                </div>
+                                <figure class="ll-carousel__media-card">
+                                    <img class="ll-carousel__image"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/amaciante-concentrado-coala-sol-do-brasil-roupas-varal-lifestyle-1704661-01.webp"
+                                        alt="Amaciante Coala Concentrado Sol do Brasil 12x1L" width="1800" height="1600"
+                                        style="object-position: 50% 50%;" loading="lazy" decoding="async">
+                                </figure>
+                            </section>
+                        </article>
+                        <article aria-label="Slide 2: Decisão" class="ll-carousel__panel ll-carousel__panel--2"
+                            id="ll-carousel-panel-2">
+                            <section aria-label="Rendimento concentrado"
+                                class="ll-carousel__layout ll-carousel__layout--media"
+                                style="--ll-carousel-media-bg: #ee6911e1; background-color: #ee6911e1; ">
+                                <figure class="ll-carousel__figure">
+                                    <img class="ll-carousel__image"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/amaciante-concentrado-coala-sol-do-brasil-embalagem-paisagem-rio-de-janeiro-1704661-02.webp"
+                                        alt="Detalhe do Amaciante Coala Concentrado Sol do Brasil" width="1800"
+                                        height="1600" style="object-position: 86% 50%;" loading="lazy" decoding="async">
+                                    <figcaption class="ll-carousel__caption" id="move-llcosseawd2">
+                                        <h3>Rende até <br>50 lavagens</h3>
+                                        <p>Com rendimento inteligente, 1 litro equivale a 4 litros. Use meia tampa por
+                                            lavagem, na máquina ou no último enxágue.</p>
+                                    </figcaption>
+                                </figure>
+                            </section>
+                        </article>
+                        <article aria-label="Slide 3: Invertido" class="ll-carousel__panel ll-carousel__panel--3"
+                            id="ll-carousel-panel-3">
+                            <section aria-label="Ativos de fontes renováveis"
+                                class="ll-carousel__layout ll-carousel__layout--impact ll-carousel__layout--impact-reverse"
+                                style="--ll-carousel-impact-bg: #ee6911e1; --ll-carousel-impact-text: #fffdf8; --ll-carousel-impact-muted: rgba(255, 253, 248, 0.84); background-image: linear-gradient(323deg, #607037, #495330);">
+                                <div class="ll-carousel__layout-copy">
+                                    <p class="ll-carousel__layout-eyebrow">Cuidado premium</p>
+                                    <h3 class="ll-carousel__layout-title">Ativos de fontes renováveis</h3>
+                                    <p class="ll-carousel__layout-text">Produzido com ativos de fontes renováveis,
+                                        fórmula biodegradável e não irritante, para mais bem-estar no cuidado das
+                                        roupas.</p>
+                                </div>
+                                <figure class="ll-carousel__media-card">
+                                    <img class="ll-carousel__image"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/amaciante-concentrado-coala-sol-do-brasil-maquina-lavar-movimento-1704661-03.webp"
+                                        alt="Amaciante Coala Sol do Brasil em roupas no varal" width="1800"
+                                        height="1600" style="object-position: 50% 50%;" loading="lazy" decoding="async">
+                                </figure>
+                            </section>
+                        </article>
+                        <article aria-label="Slide 4: Decisão" class="ll-carousel__panel ll-carousel__panel--4"
+                            id="ll-carousel-panel-4">
+                            <section aria-label="Modo de uso e conservação"
+                                class="ll-carousel__layout ll-carousel__layout--media"
+                                style="--ll-carousel-media-bg: #ee6911e1; background-color: #ee6911e1;">
+                                <figure class="ll-carousel__figure">
+                                    <img class="ll-carousel__image"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/amaciante-concentrado-coala-sol-do-brasil-embalagem-lavanderia-ambiente-1704661-04.webp"
+                                        alt="Amaciante Coala Sol do Brasil em lavanderia" width="1800" height="1600"
+                                        style="object-position: 50% 50%;" loading="lazy" decoding="async">
+                                    <figcaption class="ll-carousel__caption" id="move-llcosseawd">
+                                        <h3>Modo de uso <br>recomendado</h3>
+                                        <p>Na máquina, aplique meia tampa no compartimento ou no último enxágue. No
+                                            tanque, dilua em água limpa e deixe agir por 5 minutos.</p>
+                                    </figcaption>
+                                </figure>
+                            </section>
+                        </article>
+                    </div>
+                </div>
+                <nav aria-label="Selecionar slide do carrossel" class="ll-carousel__nav"
+                    style="grid-template-columns: repeat(4, minmax(0, 1fr));">
+                    <label aria-controls="ll-carousel-panel-1" class="ll-carousel__dot ll-carousel__dot--1"
+                        for="ll-carousel-slide-1" role="button">
+                        <span class="ll-carousel__dot-copy">
+                            <span class="ll-carousel__dot-number">01</span>
+                            <span class="ll-carousel__dot-text">Maciez</span>
+                        </span>
+                        <span class="ll-carousel__dot-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="22"
+                                height="22" aria-hidden="true">
+                                <path
+                                    d="M20.393 5.879A5.5 5.5 0 0 0 12 4.376a5.5 5.5 0 0 0-8.393 1.503C2.195 7.823 2.5 10.5 4.5 12.5L12 20l7.5-7.5c2-2 2.305-4.677.893-6.621z">
+                                </path>
+                            </svg>
+                        </span>
+                    </label>
+                    <label aria-controls="ll-carousel-panel-2" class="ll-carousel__dot ll-carousel__dot--2"
+                        for="ll-carousel-slide-2" role="button">
+                        <span class="ll-carousel__dot-copy">
+                            <span class="ll-carousel__dot-number">02</span>
+                            <span class="ll-carousel__dot-text">Rendimento</span>
+                        </span>
+                        <span class="ll-carousel__dot-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                                width="22" height="22" aria-hidden="true">
+                                <path d="M9 2h6l1 4H8z"></path>
+                                <path d="M8 6c0 8 8 8 8 14a4 4 0 0 1-8 0c0-6 8-6 8-14"></path>
+                                <line x1="12" y1="10" x2="12" y2="14"></line>
+                            </svg>
+                        </span>
+                    </label>
+                    <label aria-controls="ll-carousel-panel-3" class="ll-carousel__dot ll-carousel__dot--3"
+                        for="ll-carousel-slide-3" role="button">
+                        <span class="ll-carousel__dot-copy">
+                            <span class="ll-carousel__dot-number">03</span>
+                            <span class="ll-carousel__dot-text">Perfume</span>
+                        </span>
+                        <span class="ll-carousel__dot-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                                width="22" height="22" aria-hidden="true">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path
+                                    d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42">
+                                </path>
+                            </svg>
+                        </span>
+                    </label>
+                    <label aria-controls="ll-carousel-panel-4" class="ll-carousel__dot ll-carousel__dot--4"
+                        for="ll-carousel-slide-4" role="button">
+                        <span class="ll-carousel__dot-copy">
+                            <span class="ll-carousel__dot-number">04</span>
+                            <span class="ll-carousel__dot-text">Modo de uso</span>
+                        </span>
+                        <span class="ll-carousel__dot-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                                width="22" height="22" aria-hidden="true">
+                                <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M2 9h3M19 9h3M2 15h3M19 15h3"></path>
+                            </svg>
+                        </span>
+                    </label>
+                </nav>
+            </div>
+        </section>
+        <!-- ESSES CODIGOS ABAIXO VOCE NAO PRECISA MEXER!!! APENAS O HTML ACIMA-->
+        <p style="color: #8a8a8a; font-family: sans-serif; font-size: clamp(1rem, 2vw, 1.2rem); text-wrap: pretty;
+            text-align: center; padding: 30px 0; background-color: #fff4e0;">
+            IMAGENS MERAMENTE ILUSTRATIVAS
+        </p>
+        <!-- Área de FAQ -->
+        <section aria-labelledby="faq-section__title" id="faq-section">
+            <div id="faq-section__header">
+                <h2 id="faq-section__title">Dúvidas Frequentes</h2>
+            </div>
+            <ul id="faq-section__list" role="list">
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Para que serve o Amaciante Coala Concentrado Sol do Brasil
+                                12x1L? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> O Amaciante Coala Concentrado Sol do Brasil 12x1L é indicado
+                                para amaciar roupas, perfumar os tecidos e deixar a rotina de lavagem mais sofisticada,
+                                com fragrância intensa e toque macio. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Quais são os principais benefícios do Amaciante Coala Sol do
+                                Brasil? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Ele oferece extrema maciez, perfume por mais tempo, fórmula
+                                concentrada com rendimento de até 50 lavagens e ativos de fontes renováveis. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Qual é o rendimento do Amaciante Coala Concentrado? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> A embalagem de 1L equivale a 4L de amaciante comum e rende até
+                                50 lavagens, usando meia tampa por lavagem conforme a recomendação. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Como usar o Amaciante Coala Sol do Brasil na máquina ou no
+                                tanque? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Na máquina, aplique meia tampa no compartimento indicado ou
+                                dilua na água do último enxágue. No tanque, dilua meia tampa em água limpa e deixe as
+                                roupas agirem por 5 minutos. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Quais cuidados devo ter ao usar o Amaciante Coala Concentrado?
+                            </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Mantenha fora do alcance de crianças e animais domésticos.
+                                Evite contato com olhos e pele, não ingira, não reutilize a embalagem e armazene em
+                                local fresco, seco, ventilado e protegido da luz e do calor. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+            </ul>
+        </section>
+    </article>
+</div>`,
+      css:  ``,
+    },
+
+    /*@@@@Col - variacao-20 */
+    {
+      id:   'variacao-20',
+      name: 'Variação 20',
+      html: `<div class="lp-container">
+    <meta charset="UTF-8">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .pdp {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            font-family: Roboto, sans-serif;
+        }
+
+        .pdp * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <title>PDP - eFácil</title>
+    <!-- ---------------------------------------- ÁREA PARA COLOCAR STYLES ----------------------------------------------------------- -->
+
+    <style>
+        /*inicio-area-de-faq*/
+        #faq-section {
+            width: 100%;
+            padding: 2rem 16px;
+            box-sizing: border-box;
+            margin: 0 auto 25px;
+            padding-top: 0;
+            font-family: sans-serif;
+        }
+
+        #faq-section__header {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        #faq-section__title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 12px;
+            line-height: 98%;
+        }
+
+        #faq-section__subtitle {
+            font-size: 1rem;
+            color: #666;
+            margin: 0;
+        }
+
+        #faq-section__list {
+            list-style: none;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 60rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #faq-section__item {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        #faq-section__item summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        #faq-section__item summary::-webkit-details-marker {
+            display: none;
+        }
+
+        #faq-section__item summary:hover {
+            background: #f9f9f9;
+        }
+
+        #faq-section__q-text {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            flex: 1;
+        }
+
+        #faq-section__q-text:hover {
+            color: #ea5b0c;
+        }
+
+        #faq-section__icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        #faq-section__icon::before,
+        #faq-section__icon::after {
+            content: '';
+            position: absolute;
+            background: #888;
+            border-radius: 2px;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        #faq-section__icon::before {
+            width: 12px;
+            height: 1.5px;
+            top: 9px;
+            left: 4px;
+        }
+
+        #faq-section__icon::after {
+            width: 1.5px;
+            height: 12px;
+            top: 4px;
+            left: 9px;
+        }
+
+        #faq-section__item[open] #faq-section__icon::after {
+            transform: rotate(90deg);
+            opacity: 0;
+        }
+
+        #faq-section__a-inner {
+            padding: 14px 20px 16px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        #faq-section__a-text {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 480px) {
+            #faq-section__q-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        /*final-area-de-faq*/
+    </style>
+
+    <style>
+        /* ===== HERO SECTION — VARIÁVEIS ===== */
+        .section-6 {
+            --pos-y: 50%;
+            --pos-x: 10%;
+            --color-title: #ffe178;
+            --bg-box: rgba(0, 0, 0, 0.33);
+
+            width: 100%;
+            position: relative;
+
+            overflow: hidden;
+            background-color: #fff6ed;
+        }
+
+        /* ===== IMAGEM ===== */
+        .section-6__image {
+            width: 100%;
+            height: auto;
+            display: block;
+
+        }
+
+        /* ===== CONTEÚDO SOBREPOSTO ===== */
+        .section-6__content {
+            position: absolute;
+            top: var(--pos-y);
+            left: clamp(1%, var(--pos-x), 100%);
+            transform: translateY(-50%);
+            max-width: min(40%, 480px);
+            z-index: 10;
+            background-color: var(--bg-box);
+            padding: clamp(12px, 2vw, 20px);
+            border-radius: 15px;
+            backdrop-filter: blur(4px);
+        }
+
+        .section-6__title {
+            font-size: clamp(1.4rem, 3.5vw, 2.6rem);
+            color: var(--color-title);
+            margin: 0 0 10px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+            font-weight: 800;
+        }
+
+        .section-6__description {
+            font-size: clamp(0.95rem, 2vw, 1.4rem);
+            color: #fff;
+            margin: 0 0 24px;
+            line-height: 1.5;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.35);
+        }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 760px) {
+            .section-6__ {
+                border-radius: 0;
+            }
+
+            .section-6__content {
+                position: static;
+                transform: none;
+                max-width: 100%;
+                padding: 12px 20px 12px 20px;
+                background: transparent;
+                backdrop-filter: none;
+                text-align: center;
+            }
+
+            .section-6__title {
+                font-size: 1.8rem;
+                color: #333;
+                text-shadow: none;
+            }
+
+            .section-6__description {
+                margin-bottom: 0;
+                font-size: 1.1rem;
+                color: #555;
+                text-shadow: none;
+            }
+
+            .section-6__image {
+                width: 95%;
+                margin: 1rem auto;
+                height: auto;
+                display: block;
+                border-radius: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-6__title {
+                font-size: 1.5rem;
+            }
+
+            .section-6__description {
+                font-size: 1rem;
+            }
+        }
+    </style>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .product-header-2 {
+            --badge-size: 8rem;
+            --banner-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            font-family: sans-serif;
+            container-type: inline-size;
+        }
+
+        .product-header__banner-2 {
+            width: 100%;
+            height: var(--banner-height);
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .product-header__banner-2 figure {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        .product-header__banner-img-2 {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .product-header__badge-2 {
+            position: absolute;
+            bottom: calc(var(--badge-size) / -2);
+            width: var(--badge-size);
+            height: var(--badge-size);
+            background-color: #ff9900;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .product-header__badge-img-2 {
+            max-width: 90px;
+            max-height: 90px;
+            object-fit: contain;
+        }
+
+        .product-header__body-2 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: calc(var(--badge-size) / 2 + 1.8rem) 0.3rem 2.5rem;
+            text-align: center;
+        }
+
+        .product-header__brand-2 {
+            color: #ff9900;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-header__title-2 {
+            font-size: clamp(1.4rem, 4vw, 2.4rem);
+            line-height: clamp(1.6rem, 4vw, 3.1rem);
+            font-weight: 300;
+            max-width: 50rem;
+            text-wrap: pretty;
+            color: #1a1a1a;
+        }
+
+        .product-header__title-2 strong {
+            font-weight: 700;
+            display: block;
+        }
+
+        .product-header__subtitle-2 {
+            color: #8a8a8a;
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            line-height: 1.65;
+            margin-top: 1.25rem;
+            max-width: 48rem;
+            text-wrap: pretty;
+        }
+
+        @media (max-width: 768px) {
+            .product-header-2 {
+                --banner-height: 180px;
+            }
+        }
+
+        @media (max-width: 470px) {
+            .product-header__subtitle-2 {
+                text-align: justify;
+                font-size: clamp(0.9rem, 2vw, 1.1rem);
+            }
+        }
+    </style>
+
+    <style>
+        :root {
+            --s2-color-bg: #5C1A22;
+            --s2-color-text: #F5EFE6;
+            --s2-color-accent: #C8A96E;
+        }
+
+        .section-2 {
+            background-color: var(--s2-color-bg);
+            padding: 2rem 1rem;
+        }
+
+        .section-2__container {
+            width: 100%;
+        }
+
+        .section-2__content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .section-2__image-block {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .section-2__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .section-2__text-block {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .section-2__title {
+            font-family: Georgia, serif;
+            font-size: clamp(1.5rem, 4vw, 2.25rem);
+            color: var(--s2-color-text);
+            margin: 0;
+        }
+
+        .section-2__divider {
+            width: 3rem;
+            height: 2px;
+            background-color: var(--s2-color-accent);
+            border: none;
+            margin: 0;
+        }
+
+        .section-2__paragraph {
+            font-size: clamp(0.875rem, 2vw, 1rem);
+            color: var(--s2-color-text);
+            line-height: 1.7;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        @media (min-width: 768px) {
+            .section-2__container {
+                max-width: 768px;
+                margin: 0 auto;
+            }
+
+            .section-2__content {
+                flex-direction: row;
+                align-items: center;
+                gap: 2.5rem;
+            }
+
+            .section-2__image-block {
+                flex: 0 0 42%;
+                aspect-ratio: 4/3;
+            }
+
+            .section-2__text-block {
+                flex: 1;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .section-2 {
+                padding: 3rem 1.5rem;
+            }
+
+            .section-2__container {
+                max-width: 992px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .section-2__container {
+                max-width: 1200px;
+            }
+        }
+
+        @media (min-width: 1400px) {
+            .section-2__container {
+                max-width: 1400px;
+            }
+        }
+    </style>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .section-24 {
+            --s24-color-brand: #ff9900;
+            --s24-color-ink: #202124;
+            --s24-color-muted: #62666d;
+            --s24-color-soft: #f4f5f2;
+            --s24-color-surface: #ffffff;
+            --s24-color-line: #d9ddd3;
+            --s24-color-brand-soft: #fff2d9;
+            --s24-color-brand-strong: #9c5d00;
+            width: 100%;
+            margin: 0;
+            padding: 2rem 1rem;
+            color: var(--s24-color-ink);
+            background: var(--s24-color-soft);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .section-24,
+        .section-24__input,
+        .section-24__container,
+        .section-24__content,
+        .section-24__options,
+        .section-24__button,
+        .section-24__visual,
+        .section-24__frame,
+        .section-24__panel,
+        .section-24__image,
+        .section-24__caption,
+        .section-24__message {
+            box-sizing: border-box;
+        }
+
+        .section-24__input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .section-24__container {
+            width: 100%;
+            display: grid;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .section-24__content {
+            width: 100%;
+            display: grid;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .section-24__button-title,
+        .section-24__button-text,
+        .section-24__message {
+            margin: 0;
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .section-24__options {
+            width: 100%;
+            display: grid;
+            gap: 1rem;
+            align-items: start;
+            margin-top: 0.5rem;
+        }
+
+        .section-24__button {
+            position: relative;
+            width: 100%;
+            display: grid;
+            gap: 0.5rem;
+            align-items: start;
+            padding: 1rem;
+            border: 1px solid var(--s24-color-line);
+            border-radius: 0.5rem;
+            color: var(--s24-color-ink);
+            background: var(--s24-color-surface);
+            cursor: pointer;
+            overflow: hidden;
+            transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease, transform 180ms ease;
+        }
+
+        .section-24__button::before {
+            position: absolute;
+            top: 0.5rem;
+            bottom: 0.5rem;
+            left: 0;
+            width: 0.25rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+            background: var(--s24-color-brand);
+            content: "";
+            opacity: 0;
+            transform: scaleY(0.4);
+            transform-origin: center;
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        .section-24__button:hover {
+            border-color: var(--s24-color-brand);
+            box-shadow: 0 0.5rem 1.5rem rgba(32, 33, 36, 0.1);
+            transform: translateY(-0.125rem);
+        }
+
+        .section-24__button:active {
+            transform: scale(0.99);
+        }
+
+        .section-24__button-title {
+            position: relative;
+            z-index: 1;
+            font-size: clamp(1rem, 2.7vw, 1.1875rem);
+            font-weight: 800;
+            line-height: 1.25;
+            transition: color 180ms ease;
+        }
+
+        .section-24__button-text {
+            position: relative;
+            z-index: 1;
+            color: var(--s24-color-muted);
+            font-size: clamp(0.875rem, 2.3vw, 1rem);
+            line-height: 1.45;
+        }
+
+        .section-24__visual {
+            width: 100%;
+            margin: 0;
+            display: grid;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .section-24__frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            border: 1px solid var(--s24-color-line);
+            border-radius: 0.5rem;
+            background: var(--s24-color-surface);
+            box-shadow: 0 1rem 2rem rgba(32, 33, 36, 0.08);
+        }
+
+        .section-24__panel {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(0.5rem);
+            transition: opacity 220ms ease, transform 220ms ease;
+        }
+
+        .section-24__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: saturate(0.92);
+            transform: scale(1.04);
+            transition: filter 420ms ease, transform 420ms ease;
+        }
+
+        .section-24__caption {
+            position: relative;
+            min-height: 4rem;
+            padding: 1rem;
+            border-left: 0.25rem solid var(--s24-color-brand);
+            border-radius: 0.5rem;
+            color: var(--s24-color-ink);
+            background: var(--s24-color-surface);
+            box-shadow: 0 0.5rem 1rem rgba(32, 33, 36, 0.06);
+        }
+
+        .section-24__message {
+            position: absolute;
+            inset: 1rem;
+            color: var(--s24-color-ink);
+            font-size: clamp(0.875rem, 2.2vw, 1rem);
+            font-weight: 700;
+            line-height: 1.4;
+            opacity: 0;
+            transform: translateY(0.5rem);
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__panel--one,
+        #section-24-view-2:checked~.section-24__container .section-24__panel--two,
+        #section-24-view-3:checked~.section-24__container .section-24__panel--three {
+            z-index: 2;
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__panel--one .section-24__image,
+        #section-24-view-2:checked~.section-24__container .section-24__panel--two .section-24__image,
+        #section-24-view-3:checked~.section-24__container .section-24__panel--three .section-24__image {
+            filter: saturate(1);
+            transform: scale(1);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__message--one,
+        #section-24-view-2:checked~.section-24__container .section-24__message--two,
+        #section-24-view-3:checked~.section-24__container .section-24__message--three {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three {
+            border-color: var(--s24-color-brand);
+            background: var(--s24-color-brand-soft);
+            box-shadow: 0 0.5rem 1.5rem rgba(32, 33, 36, 0.12), inset 0 0 0 2px var(--s24-color-brand);
+            transform: translateY(-0.125rem);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one::before,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two::before,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three::before {
+            opacity: 1;
+            transform: scaleY(1);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one .section-24__button-title,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two .section-24__button-title,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three .section-24__button-title {
+            color: var(--s24-color-brand-strong);
+        }
+
+        #section-24-view-1:focus-visible~.section-24__container .section-24__button--one,
+        #section-24-view-2:focus-visible~.section-24__container .section-24__button--two,
+        #section-24-view-3:focus-visible~.section-24__container .section-24__button--three {
+            outline: 2px solid var(--s24-color-brand);
+            outline-offset: 4px;
+        }
+
+        @media (min-width: 576px) {
+
+            .section-24__container {
+                gap: 2rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+
+            .section-24__container {
+                grid-template-columns: minmax(0, 1fr);
+                gap: .5rem;
+            }
+
+            .section-24__content {
+                order: 2;
+            }
+
+            .section-24__visual {
+                order: 1;
+            }
+
+            .section-24__options {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .section-24__button-title {
+                font-size: clamp(0.875rem, 1.8vw, 1rem);
+            }
+
+            .section-24__button-text {
+                font-size: clamp(0.75rem, 1.6vw, 0.875rem);
+            }
+
+            .section-24__frame {
+                aspect-ratio: 16 / 9;
+            }
+        }
+
+        @media (min-width: 992px) {
+
+            .section-24__container {
+                grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+                gap: 3rem;
+            }
+
+            .section-24__content {
+                order: 1;
+                align-self: center;
+            }
+
+            .section-24__visual {
+                order: 2;
+            }
+
+            .section-24--reverse .section-24__content {
+                order: 2;
+            }
+
+            .section-24--reverse .section-24__visual {
+                order: 1;
+            }
+
+            .section-24__options {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .section-24__button {
+                padding: 1.5rem;
+            }
+
+            .section-24__button-title {
+                font-size: clamp(1rem, 2.7vw, 1.1875rem);
+            }
+
+            .section-24__button-text {
+                font-size: clamp(0.875rem, 2.3vw, 1rem);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .section-24__container {
+                gap: 3rem;
+            }
+
+            .section-24__frame {
+                aspect-ratio: 16 / 9;
+            }
+        }
+    </style>
+
+    <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
+    <article class="pdp" id="pdp" aria-labelledby="product-main-title"> <!-- HTML fica dentro dessa div PDP -->
+
+        <section class="product-header-2" aria-label="Cabeçalho do produto">
+            <header class="product-header__banner-2">
+                <figure style="width:100%;height:100%;margin:0;">
+                    <img src=" https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/coquetel-composto-domecq-garrafas-bar-fundo-desfocado-lifestyle-917580-00.webp"
+                        alt="Garrafas e luzes desfocadas em segundo plano de balcão de bar iluminado"
+                        class="product-header__banner-img-2" loading="eager">
+                </figure>
+                <div class="product-header__badge-2" role="img" aria-label="Logo da marca">
+                    <img src=" https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-pernod-ricard-marca-fabricante-fornecedor-logo-pernod.webp"
+                        alt="Ícone da marca" class="product-header__badge-img-2">
+                </div>
+            </header>
+            <article class="product-header__body-2">
+                <small class="product-header__brand-2">── pernod ──</small>
+                <h2 class="product-header__title-2">
+                    <span>Conhaque Domecq 1L</span>
+                </h2>
+                <p class="product-header__subtitle-2">
+                    Domecq combina aroma frutado, sabor intenso e presença marcante em uma bebida feita para ser
+                    apreciada com calma, pura ou com gelo
+                </p>
+            </article>
+        </section>
+
+        <section class="section-6" aria-label="Destaque do produto com texto">
+            <picture>
+                <source media="(max-width: 760px)"
+                    srcset=" https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/coquetel-composto-domecq-pernod-ricard-1l-garrafa-copo-dosador-ambiente-917580-01-2.webp"
+                    width="780" height="400">
+                <img class="section-6__image"
+                    src=" https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/coquetel-composto-domecq-pernod-ricard-1l-garrafa-balcao-bar-lifestyle-917580-01-1.webp"
+                    alt="Garrafa Domecq 1L sobre balcão de bar com dosador, copo com gelo e azeitonas" width="1600"
+                    height="650" loading="lazy" fetchpriority="high" decoding="async">
+            </picture>
+            <div class="section-6__content">
+                <h2 class="section-6__title">Sabor intenso, aroma frutado</h2>
+                <p class="section-6__description">Elaborado com destilado vínico e amadurecido em carvalho</p>
+            </div>
+        </section>
+
+        <section class="section-2" aria-label="Origem e tradição do Domecq Coquetel Composto">
+            <div class="section-2__container">
+                <div class="section-2__content">
+                    <div class="section-2__image-block">
+                        <figure>
+                            <img class="section-2__image"
+                                src=" https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/coquetel-composto-domecq-pernod-ricard-1l-garrafa-copo-bebida-917580-02.webp"
+                                alt="Garrafa de coquetel composto Domecq 1L ao lado de copo baixo com a bebida pura e gelo"
+                                width="800" height="600" loading="lazy">
+                        </figure>
+                    </div>
+                    <div class="section-2__text-block">
+                        <h2 class="section-2__title">Origem brasileira e tradição</h2>
+                        <hr class="section-2__divider" aria-hidden="true">
+                        <p class="section-2__paragraph">
+                            Domecq traz uma composição cuidadosamente elaborada para destacar aroma frutado, sabor
+                            intenso e presença marcante
+                        </p>
+                        <p class="section-2__paragraph">
+                            Uma bebida de 38% de graduação alcoólica, ideal para momentos de apreciação
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-24" aria-labelledby="section-24-title" style="background-color: #fff6ed;">
+            <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-1"
+                aria-label="Mostrar imagem de visão geral" checked>
+            <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-2"
+                aria-label="Mostrar imagem de detalhe">
+            <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-3"
+                aria-label="Mostrar imagem de uso">
+
+            <article class="section-24__container">
+                <section class="section-24__content" aria-labelledby="section-24-title">
+                    <nav class="section-24__options" aria-label="Escolha a imagem exibida">
+                        <label class="section-24__button section-24__button--one" for="section-24-view-1">
+                            <span class="section-24__button-title">Sabor para apreciar</span>
+                            <span class="section-24__button-text">Uma bebida intensa, perfeita para degustar com
+                                calma</span>
+                        </label>
+
+                        <label class="section-24__button section-24__button--two" for="section-24-view-2">
+                            <span class="section-24__button-title">Toque de carvalho</span>
+                            <span class="section-24__button-text">Elaborado com destilado vínico, carvalho e extrato de
+                                amêndoas</span>
+                        </label>
+
+                        <label class="section-24__button section-24__button--three" for="section-24-view-3">
+                            <span class="section-24__button-title">Aroma envolvente</span>
+                            <span class="section-24__button-text">Notas frutadas que valorizam o momento de
+                                consumo</span>
+                        </label>
+                    </nav>
+                </section>
+
+                <figure class="section-24__visual" aria-label="Imagens alternáveis do produto">
+                    <div class="section-24__frame">
+                        <!-- IMG 1-->
+                        <div class="section-24__panel section-24__panel--one">
+                            <img class="section-24__image"
+                                src=" https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/coquetel-composto-domecq-copo-bebida-tabua-frios-petiscos-lifestyle-917580-03-1.webp"
+                                width="1200" height="900" loading="lazy"
+                                alt="Copo de Domecq ao lado de tábua com presunto cru, queijos, uvas e nozes em ambiente rústico"
+                                decoding="async">
+                        </div>
+                        <!-- IMG 2-->
+                        <div class="section-24__panel section-24__panel--two">
+                            <img class="section-24__image"
+                                src=" https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/coquetel-composto-domecq-envelhecimento-barricas-barris-carvalho-917580-03-2.webp"
+                                width="1200" height="900" loading="lazy"
+                                alt="Fileira de barris de carvalho usados no envelhecimento e maturação da bebida Domecq"
+                                decoding="async">
+                        </div>
+                        <!-- IMG 3-->
+                        <div class="section-24__panel section-24__panel--three">
+                            <img class="section-24__image"
+                                src=" https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/coquetel-composto-domecq-copo-baixo-bebida-gelo-destaque-917580-03-3.webp"
+                                width="1200" height="900" loading="lazy"
+                                alt="Copo baixo com pedras de gelo e coquetel composto Domecq servido sobre balcão de madeira"
+                                decoding="async">
+                        </div>
+                    </div>
+
+                    <figcaption class="section-24__caption">
+                        <span class="section-24__message section-24__message--one">Ideal para apreciar com calma, puro
+                            ou com gelo</span>
+                        <span class="section-24__message section-24__message--two">Composição com destilado vínico,
+                            carvalho e extrato de amêndoas</span>
+                        <span class="section-24__message section-24__message--three">Aroma marcante e frutado para
+                            momentos de degustação</span>
+                    </figcaption>
+                </figure>
+            </article>
+        </section>
+
+        <p style="color: #8a8a8a; font-family: sans-serif; font-size: clamp(1rem, 2vw, 1.2rem); text-wrap: pretty;
+            text-align: center; padding: 30px 0;">
+            IMAGENS MERAMENTE ILUSTRATIVAS
+        </p>
+
+        <!-- Área de FAQ -->
+        <section id="faq-section" aria-labelledby="faq-section__title">
+            <div id="faq-section__header">
+                <h2 id="faq-section__title">Dúvidas Frequentes</h2>
+            </div>
+            <ul id="faq-section__list" role="list">
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Domecq é indicado para consumir de que forma? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Domecq é indicado para ser apreciado puro ou com gelo. Essa
+                                forma de consumo valoriza o sabor inigualável, o aroma marcante e frutado e as
+                                características obtidas pelo envelhecimento em barricas de carvalho. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> O Domecq pode ser tomado com gelo? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Sim. Domecq pode ser consumido com gelo, mantendo uma
+                                experiência de degustação simples e direta. É uma boa escolha para quem prefere uma
+                                bebida mais refrescante sem esconder suas características principais. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Qual é o sabor do Domecq? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Domecq tem sabor inigualável, formado pela combinação de
+                                destilado vínico, álcool neutro, extrato de carvalho e extrato de amêndoas. Essa
+                                composição ajuda a entregar uma bebida intensa e própria para apreciar com calma. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> O aroma do Domecq é mais suave ou marcante? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> O aroma do Domecq é marcante e frutado. Essa característica vem
+                                do uso de destilados vínicos e do envelhecimento em barricas de carvalho antes do
+                                engarrafamento. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Do que o Domecq é feito? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Domecq é composto por álcool neutro, destilado vínico, extrato
+                                de carvalho e extrato de amêndoas. A presença do destilado proveniente do vinho é
+                                essencial para formar seu sabor característico. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> O Domecq passa por envelhecimento? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Sim. Domecq amadurece em barricas de carvalho antes do
+                                engarrafamento. Esse processo contribui para suas características únicas, especialmente
+                                no aroma marcante e no perfil de sabor. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+            </ul>
+        </section>
+
+    </article>
+</div>`,
+      css:  ``,
+    },
+
+    /*@@@@Col - variacao-21 */
+    {
+      id:   'variacao-21',
+      name: 'Variação 21',
+      html: `<div class="lp-container">
+    <meta charset="UTF-8">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .pdp {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            font-family: Roboto, sans-serif;
+        }
+
+        .pdp * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+    </style>
+    <title>PDP - eFácil</title>
+    <!-- ---------------------------------------- ÁREA PARA COLOCAR STYLES ----------------------------------------------------------- -->
+
+    <style>
+        /*inicio-area-de-faq*/
+        #faq-section {
+            width: 100%;
+            padding: 2rem 16px;
+            box-sizing: border-box;
+            margin: 0 auto 25px;
+            padding-top: 0;
+            font-family: sans-serif;
+        }
+
+        #faq-section__header {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        #faq-section__title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 12px;
+            line-height: 98%;
+        }
+
+        #faq-section__subtitle {
+            font-size: 1rem;
+            color: #666;
+            margin: 0;
+        }
+
+        #faq-section__list {
+            list-style: none;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 60rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #faq-section__item {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        #faq-section__item summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        #faq-section__item summary::-webkit-details-marker {
+            display: none;
+        }
+
+        #faq-section__item summary:hover {
+            background: #f9f9f9;
+        }
+
+        #faq-section__q-text {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            flex: 1;
+        }
+
+        #faq-section__q-text:hover {
+            color: #d4af37;
+        }
+
+        #faq-section__icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        #faq-section__icon::before,
+        #faq-section__icon::after {
+            content: '';
+            position: absolute;
+            background: #888;
+            border-radius: 2px;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        #faq-section__icon::before {
+            width: 12px;
+            height: 1.5px;
+            top: 9px;
+            left: 4px;
+        }
+
+        #faq-section__icon::after {
+            width: 1.5px;
+            height: 12px;
+            top: 4px;
+            left: 9px;
+        }
+
+        #faq-section__item[open] #faq-section__icon::after {
+            transform: rotate(90deg);
+            opacity: 0;
+        }
+
+        #faq-section__a-inner {
+            padding: 14px 20px 16px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        #faq-section__a-text {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 480px) {
+            #faq-section__q-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        /*final-area-de-faq*/
+    </style>
+
+    <style>
+        /* ===== HERO SECTION — VARIÁVEIS ===== */
+        .section-6 {
+            --pos-y: 50%;
+            --pos-x: 10%;
+            --color-title: #f2cf57;
+            --bg-box: rgba(0, 0, 0, 0.33);
+
+            width: 100%;
+            position: relative;
+
+            overflow: hidden;
+            background-color: #eef4fb;
+        }
+
+        /* ===== IMAGEM ===== */
+        .section-6__image {
+            width: 100%;
+            height: auto;
+            display: block;
+
+        }
+
+        /* ===== CONTEÚDO SOBREPOSTO ===== */
+        .section-6__content {
+            position: absolute;
+            top: var(--pos-y);
+            left: clamp(1%, var(--pos-x), 100%);
+            transform: translateY(-50%);
+            max-width: min(40%, 480px);
+            z-index: 10;
+            background-color: var(--bg-box);
+            padding: clamp(12px, 2vw, 20px);
+            border-radius: 15px;
+            backdrop-filter: blur(4px);
+        }
+
+        .section-6__title {
+            font-size: clamp(1.4rem, 3.5vw, 2.6rem);
+            color: var(--color-title);
+            margin: 0 0 10px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+            font-weight: 800;
+        }
+
+        .section-6__description {
+            font-size: clamp(0.95rem, 2vw, 1.4rem);
+            color: #fff;
+            margin: 0 0 24px;
+            line-height: 1.5;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.35);
+        }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 760px) {
+            .section-6__ {
+                border-radius: 0;
+            }
+
+            .section-6__content {
+                position: static;
+                transform: none;
+                max-width: 100%;
+                padding: 12px 20px 12px 20px;
+                background: transparent;
+                backdrop-filter: none;
+                text-align: center;
+            }
+
+            .section-6__title {
+                font-size: 1.8rem;
+                color: #333;
+                text-shadow: none;
+            }
+
+            .section-6__description {
+                margin-bottom: 0;
+                font-size: 1.1rem;
+                color: #555;
+                text-shadow: none;
+            }
+
+            .section-6__image {
+                width: 95%;
+                margin: 1rem auto;
+                height: auto;
+                display: block;
+                border-radius: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-6__title {
+                font-size: 1.5rem;
+            }
+
+            .section-6__description {
+                font-size: 1rem;
+            }
+        }
+    </style>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .product-header-2 {
+            --badge-size: 8rem;
+            --banner-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            font-family: sans-serif;
+            container-type: inline-size;
+        }
+
+        .product-header__banner-2 {
+            width: 100%;
+            height: var(--banner-height);
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .product-header__banner-2 figure {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        .product-header__banner-img-2 {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .product-header__badge-2 {
+            position: absolute;
+            bottom: calc(var(--badge-size) / -2);
+            width: var(--badge-size);
+            height: var(--badge-size);
+            background-color: #ff9900;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .product-header__badge-img-2 {
+            max-width: 90px;
+            max-height: 90px;
+            object-fit: contain;
+        }
+
+        .product-header__body-2 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: calc(var(--badge-size) / 2 + 1rem) 1rem 1rem !important;
+            text-align: center;
+        }
+
+        .product-header__brand-2 {
+            color: #ff9900;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-header__title-2 {
+            font-size: clamp(1.4rem, 4vw, 2.4rem);
+            line-height: clamp(1.6rem, 4vw, 3.1rem);
+            font-weight: 300;
+            max-width: 50rem;
+            text-wrap: pretty;
+            color: #1a1a1a;
+        }
+
+        .product-header__title-2 strong {
+            font-weight: 700;
+            display: block;
+        }
+
+        .product-header__subtitle-2 {
+            color: #8a8a8a;
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            line-height: 1.65;
+            margin-top: 1.25rem;
+            max-width: 48rem;
+            text-wrap: pretty;
+        }
+
+        @media (max-width: 768px) {
+            .product-header-2 {
+                --banner-height: 180px;
+            }
+        }
+
+        @media (max-width: 470px) {
+            .product-header__subtitle-2 {
+                text-align: justify;
+                font-size: clamp(0.9rem, 2vw, 1.1rem);
+            }
+        }
+    </style>
+
+    <style>
+        :root {
+            --s2-color-bg: #163a70;
+            --s2-color-text: #F5EFE6;
+            --s2-color-accent: #d4af37;
+        }
+
+        .section-2 {
+            background-color: var(--s2-color-bg);
+            padding: 2rem 1rem;
+        }
+
+        .section-2__container {
+            width: 100%;
+        }
+
+        .section-2__content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .section-2__image-block {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .section-2__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .section-2__text-block {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .section-2__title {
+            font-size: clamp(1.5rem, 4vw, 2.25rem);
+            color: var(--s2-color-text);
+            margin: 0;
+        }
+
+        .section-2__divider {
+            width: 3rem;
+            height: 2px;
+            background-color: var(--s2-color-accent);
+            border: none;
+            margin: 0;
+        }
+
+        .section-2__paragraph {
+            font-size: clamp(0.875rem, 2vw, 1rem);
+            color: var(--s2-color-text);
+            line-height: 1.7;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        @media (min-width: 768px) {
+            .section-2__container {
+                max-width: 768px;
+                margin: 0 auto;
+            }
+
+            .section-2__content {
+                flex-direction: row;
+                align-items: center;
+                gap: 2.5rem;
+            }
+
+            .section-2__image-block {
+                flex: 0 0 42%;
+                aspect-ratio: 4/3;
+            }
+
+            .section-2__text-block {
+                flex: 1;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .section-2 {
+                padding: 3rem 1.5rem;
+            }
+
+            .section-2__container {
+                max-width: 992px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .section-2__container {
+                max-width: 1200px;
+            }
+        }
+
+        @media (min-width: 1400px) {
+            .section-2__container {
+                max-width: 1400px;
+            }
+        }
+    </style>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .section-24 {
+            --s24-color-brand: #d4af37;
+            --s24-color-ink: #202124;
+            --s24-color-muted: #667c96;
+            --s24-color-soft: #f3f8ff;
+            --s24-color-surface: #ffffff;
+            --s24-color-line: #d7e3f3;
+            --s24-color-brand-soft: #ecf3fb;
+            --s24-color-brand-strong: #b38a2e;
+            width: 100%;
+            margin: 0;
+            padding: 2rem 1rem;
+            color: var(--s24-color-ink);
+            background: var(--s24-color-soft);
+        }
+
+        .section-24,
+        .section-24__input,
+        .section-24__container,
+        .section-24__content,
+        .section-24__options,
+        .section-24__button,
+        .section-24__visual,
+        .section-24__frame,
+        .section-24__panel,
+        .section-24__image,
+        .section-24__caption,
+        .section-24__message {
+            box-sizing: border-box;
+        }
+
+        .section-24__input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .section-24__container {
+            width: 100%;
+            display: grid;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .section-24__content {
+            width: 100%;
+            display: grid;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .section-24__button-title,
+        .section-24__button-text,
+        .section-24__message {
+            margin: 0;
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .section-24__options {
+            width: 100%;
+            display: grid;
+            gap: 1rem;
+            align-items: start;
+            margin-top: 0.5rem;
+        }
+
+        .section-24__button {
+            position: relative;
+            width: 100%;
+            display: grid;
+            gap: 0.5rem;
+            align-items: start;
+            padding: 1rem;
+            border: 1px solid var(--s24-color-line);
+            border-radius: 0.5rem;
+            color: var(--s24-color-ink);
+            background: var(--s24-color-surface);
+            cursor: pointer;
+            overflow: hidden;
+            transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease, transform 180ms ease;
+        }
+
+        .section-24__button::before {
+            position: absolute;
+            top: 0.5rem;
+            bottom: 0.5rem;
+            left: 0;
+            width: 0.25rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+            background: var(--s24-color-brand);
+            content: "";
+            opacity: 0;
+            transform: scaleY(0.4);
+            transform-origin: center;
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        .section-24__button:hover {
+            border-color: var(--s24-color-brand);
+            box-shadow: 0 0.5rem 1.5rem rgba(32, 33, 36, 0.1);
+            transform: translateY(-0.125rem);
+        }
+
+        .section-24__button:active {
+            transform: scale(0.99);
+        }
+
+        .section-24__button-title {
+            position: relative;
+            z-index: 1;
+            font-size: clamp(1rem, 2.7vw, 1.1875rem);
+            font-weight: 800;
+            line-height: 1.25;
+            transition: color 180ms ease;
+        }
+
+        .section-24__button-text {
+            position: relative;
+            z-index: 1;
+            color: var(--s24-color-muted);
+            font-size: clamp(0.875rem, 2.3vw, 1rem);
+            line-height: 1.45;
+        }
+
+        .section-24__visual {
+            width: 100%;
+            margin: 0;
+            display: grid;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .section-24__frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            border: 1px solid var(--s24-color-line);
+            border-radius: 0.5rem;
+            background: var(--s24-color-surface);
+            box-shadow: 0 1rem 2rem rgba(32, 33, 36, 0.08);
+        }
+
+        .section-24__panel {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(0.5rem);
+            transition: opacity 220ms ease, transform 220ms ease;
+        }
+
+        .section-24__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: saturate(0.92);
+            transform: scale(1.04);
+            transition: filter 420ms ease, transform 420ms ease;
+        }
+
+        .section-24__caption {
+            position: relative;
+            min-height: 4rem;
+            padding: 1rem;
+            border-left: 0.25rem solid var(--s24-color-brand);
+            border-radius: 0.5rem;
+            color: var(--s24-color-ink);
+            background: var(--s24-color-surface);
+            box-shadow: 0 0.5rem 1rem rgba(32, 33, 36, 0.06);
+        }
+
+        .section-24__message {
+            position: absolute;
+            inset: 1rem;
+            color: var(--s24-color-ink);
+            font-size: clamp(0.875rem, 2.2vw, 1rem);
+            font-weight: 700;
+            line-height: 1.4;
+            opacity: 0;
+            transform: translateY(0.5rem);
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__panel--one,
+        #section-24-view-2:checked~.section-24__container .section-24__panel--two,
+        #section-24-view-3:checked~.section-24__container .section-24__panel--three {
+            z-index: 2;
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__panel--one .section-24__image,
+        #section-24-view-2:checked~.section-24__container .section-24__panel--two .section-24__image,
+        #section-24-view-3:checked~.section-24__container .section-24__panel--three .section-24__image {
+            filter: saturate(1);
+            transform: scale(1);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__message--one,
+        #section-24-view-2:checked~.section-24__container .section-24__message--two,
+        #section-24-view-3:checked~.section-24__container .section-24__message--three {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three {
+            border-color: var(--s24-color-brand);
+            background: var(--s24-color-brand-soft);
+            box-shadow: 0 0.5rem 1.5rem rgba(32, 33, 36, 0.12), inset 0 0 0 2px var(--s24-color-brand);
+            transform: translateY(-0.125rem);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one::before,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two::before,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three::before {
+            opacity: 1;
+            transform: scaleY(1);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one .section-24__button-title,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two .section-24__button-title,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three .section-24__button-title {
+            color: var(--s24-color-brand-strong);
+        }
+
+        #section-24-view-1:focus-visible~.section-24__container .section-24__button--one,
+        #section-24-view-2:focus-visible~.section-24__container .section-24__button--two,
+        #section-24-view-3:focus-visible~.section-24__container .section-24__button--three {
+            outline: 2px solid var(--s24-color-brand);
+            outline-offset: 4px;
+        }
+
+        @media (min-width: 576px) {
+
+            .section-24__container {
+                gap: 2rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+
+            .section-24__container {
+                grid-template-columns: minmax(0, 1fr);
+                gap: .5rem;
+            }
+
+            .section-24__content {
+                order: 2;
+            }
+
+            .section-24__visual {
+                order: 1;
+            }
+
+            .section-24__options {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .section-24__button-title {
+                font-size: clamp(0.875rem, 1.8vw, 1rem);
+            }
+
+            .section-24__button-text {
+                font-size: clamp(0.75rem, 1.6vw, 0.875rem);
+            }
+
+            .section-24__frame {
+                aspect-ratio: 16 / 9;
+            }
+        }
+
+        @media (min-width: 992px) {
+
+            .section-24__container {
+                grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+                gap: 3rem;
+            }
+
+            .section-24__content {
+                order: 1;
+                align-self: center;
+            }
+
+            .section-24__visual {
+                order: 2;
+            }
+
+            .section-24--reverse .section-24__content {
+                order: 2;
+            }
+
+            .section-24--reverse .section-24__visual {
+                order: 1;
+            }
+
+            .section-24__options {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .section-24__button {
+                padding: 1.5rem;
+            }
+
+            .section-24__button-title {
+                font-size: clamp(1rem, 2.7vw, 1.1875rem);
+            }
+
+            .section-24__button-text {
+                font-size: clamp(0.875rem, 2.3vw, 1rem);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .section-24__container {
+                gap: 3rem;
+            }
+
+            .section-24__frame {
+                aspect-ratio: 16 / 9;
+            }
+        }
+    </style>
+
+
+    <style>
+        /* ===== MELHORIAS VISUAIS — DOMECQ / CONTEÚDO RICO ===== */
+        .pdp {
+            --dcq-burgundy: #163a70;
+            --dcq-burgundy-dark: #102b58;
+            --dcq-burgundy-soft: #245ea8;
+            --dcq-gold: #d4af37;
+            --dcq-gold-strong: #d4af37;
+            --dcq-cream: #eef4fb;
+            --dcq-cream-2: #e6eef8;
+            --dcq-ink: #112f54;
+            --dcq-muted: #627b99;
+            --dcq-line: rgba(92, 26, 34, 0.14);
+            background: linear-gradient(180deg, #f7fbff 0%, #eef4fb 45%, #fff 100%);
+            color: var(--dcq-ink);
+            overflow: hidden;
+        }
+
+        .product-header-2 {
+            background: #f7fbff;
+        }
+
+        .product-header__banner-2::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(17, 7, 5, 0.12), rgba(17, 7, 5, 0.38));
+            pointer-events: none;
+        }
+
+        .product-header__banner-img-2 {
+            filter: saturate(1.06) contrast(1.05);
+            transform: scale(1.02);
+        }
+
+        .product-header__body-2 {
+            width: 100%;
+            padding: calc(var(--badge-size) / 2 + 2rem) 1rem 3.25rem;
+            background:
+                radial-gradient(circle at 50% 0%, rgba(200, 169, 110, 0.16), transparent 34%),
+                linear-gradient(180deg, #fffdf8 0%, #edf4fc 100%);
+        }
+
+        .product-header__brand-2 {
+            color: var(--dcq-gold-strong);
+            font-size: 0.72rem;
+            letter-spacing: 0.22em;
+        }
+
+        .product-header__title-2 {
+            color: var(--dcq-ink);
+            font-weight: 500;
+            letter-spacing: -0.035em;
+        }
+
+        .product-header__subtitle-2 {
+            color: var(--dcq-muted);
+            max-width: 44rem;
+            line-height: 1.7;
+        }
+
+        .section-6 {
+            padding: 0 clamp(1rem, 2.5vw, 2rem) clamp(1.5rem, 3vw, 2.5rem);
+            background:
+                linear-gradient(180deg, #edf4fc 0%, #eef4fb 55%, #163a70 55%, #163a70 100%);
+        }
+
+        .section-6 picture {
+            display: block;
+            max-width: 1400px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: clamp(18px, 2.4vw, 30px);
+            box-shadow: 0 26px 70px rgba(52, 16, 22, 0.28);
+            border: 1px solid rgba(255, 255, 255, 0.36);
+        }
+
+        .section-6__image {
+            height: clamp(360px, 43vw, 650px);
+            object-fit: cover;
+            object-position: center;
+            filter: saturate(1.06) contrast(1.03);
+        }
+
+        .section-6__content {
+            left: max(calc((100% - 1400px) / 2 + 7rem), 52%);
+            max-width: min(36rem, 38%);
+            padding: clamp(1.25rem, 3vw, 3rem);
+            border: 1px solid rgba(200, 169, 110, 0.58);
+            border-radius: clamp(16px, 2vw, 24px);
+            box-shadow: 0 22px 48px rgba(25, 8, 11, 0.36);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-6__content::before {
+            content: "";
+            display: block;
+            width: 3rem;
+            height: 3rem;
+            margin-bottom: 1.1rem;
+            border: 1px solid rgba(255, 225, 120, 0.62);
+            border-radius: 999px;
+            background:
+                radial-gradient(circle at 50% 25%, rgba(255, 225, 120, 0.95) 0 4px, transparent 4.5px),
+                radial-gradient(circle at 35% 45%, rgba(255, 225, 120, 0.85) 0 4px, transparent 4.5px),
+                radial-gradient(circle at 65% 45%, rgba(255, 225, 120, 0.85) 0 4px, transparent 4.5px),
+                radial-gradient(circle at 50% 65%, rgba(255, 225, 120, 0.85) 0 4px, transparent 4.5px);
+        }
+
+        .section-6__title {
+            font-size: clamp(1.8rem, 3.35vw, 3.25rem);
+            color: #f5d56a;
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            text-shadow: 0 2px 16px rgba(0, 0, 0, 0.32);
+        }
+
+        .section-6__description {
+            font-size: clamp(1rem, 1.35vw, 1.18rem);
+            line-height: 1.6;
+            margin-top: 1rem;
+            margin-bottom: 0;
+            color: rgba(255, 255, 255, 0.94);
+        }
+
+        .section-2 {
+            padding: clamp(1.5rem, 3vw, 3.5rem) clamp(1rem, 2.5vw, 2rem);
+            background: linear-gradient(180deg, #163a70 0%, #1d4f91 100%);
+        }
+
+        .section-2__container {
+            max-width: 1400px !important;
+        }
+
+        .section-2__content {
+            gap: clamp(1.5rem, 4vw, 4rem);
+            padding: clamp(1rem, 2.3vw, 2rem);
+            border-radius: clamp(18px, 2.2vw, 28px);
+            background: radial-gradient(circle at 100% 20%, rgba(200, 169, 110, 0.15), transparent 32%), linear-gradient(135deg, #8B5E1F, #cca34e);
+            border: 1px solid rgba(200, 169, 110, 0.18);
+            box-shadow: 0 24px 60px rgba(25, 8, 11, 0.2);
+        }
+
+        .section-2__image-block {
+            border-radius: clamp(14px, 1.8vw, 22px);
+            box-shadow: 0 18px 40px rgba(18, 7, 5, 0.28);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .section-2__image {
+            filter: saturate(1.05) contrast(1.04);
+            transform: scale(1.01);
+        }
+
+        .section-2__title {
+            color: #f5d56a;
+            font-weight: 700;
+            line-height: 1.08;
+            letter-spacing: -0.035em;
+        }
+
+        .section-2__divider {
+            width: 4.5rem;
+            height: 3px;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--dcq-gold), rgba(200, 169, 110, 0));
+        }
+
+        .section-2__paragraph {
+            max-width: 42rem;
+            color: rgba(255, 246, 237, 0.92);
+        }
+
+        .section-24 {
+            padding: clamp(2rem, 4vw, 4rem) clamp(1rem, 2.5vw, 2rem) !important;
+            background:
+                radial-gradient(circle at 20% 0%, rgba(200, 169, 110, 0.22), transparent 28%),
+                linear-gradient(180deg, #eef4fb 0%, #e6eef8 100%) !important;
+        }
+
+        .section-24__container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: clamp(1rem, 2vw, 2rem);
+            border-radius: clamp(18px, 2.2vw, 28px);
+            background: rgba(255, 255, 255, 0.76);
+            border: 1px solid rgba(92, 26, 34, 0.10);
+            box-shadow: 0 24px 70px rgba(92, 26, 34, 0.12);
+            backdrop-filter: blur(6px);
+        }
+
+        .section-24__options {
+            gap: 0.85rem;
+        }
+
+        .section-24__button {
+            grid-template-columns: 3.25rem minmax(0, 1fr);
+            grid-template-areas:
+                "icon title"
+                "icon text";
+            column-gap: 0.9rem;
+            row-gap: 0.2rem;
+            align-items: center;
+            min-height: 5.35rem;
+            padding: 1rem 1.1rem;
+            border-radius: 15px;
+            border-color: rgba(92, 26, 34, 0.12);
+            background: linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
+            box-shadow: 0 10px 24px rgba(52, 16, 22, 0.06);
+        }
+
+        .section-24__button::before {
+            top: 0.75rem;
+            bottom: 0.75rem;
+            width: 0.3rem;
+            background: linear-gradient(180deg, #d4af37, #d4af37);
+        }
+
+        .section-24__button::after {
+            content: "";
+            grid-area: icon;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 14px;
+            border: 1px solid rgba(200, 169, 110, 0.32);
+            background:
+                radial-gradient(circle at 50% 50%, rgba(217, 149, 28, 0.45) 0 4px, transparent 4.5px),
+                linear-gradient(145deg, #edf4fc, #e6eef8);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.72);
+        }
+
+        .section-24__button:hover {
+            border-color: rgba(217, 149, 28, 0.65);
+            box-shadow: 0 16px 34px rgba(92, 26, 34, 0.13);
+        }
+
+        .section-24__button-title {
+            grid-area: title;
+            color: #16345e;
+            font-weight: 800;
+            letter-spacing: -0.015em;
+        }
+
+        .section-24__button-text {
+            grid-area: text;
+            color: #5d7390;
+            line-height: 1.5;
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three {
+            border-color: #d4af37;
+            background: linear-gradient(180deg, #f2f7fd 0%, #ffffff 100%);
+            box-shadow: 0 16px 36px rgba(92, 26, 34, 0.16), inset 0 0 0 1px rgba(255, 153, 0, 0.55);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one::after,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two::after,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three::after {
+            background:
+                radial-gradient(circle at 50% 50%, #fff 0 4px, transparent 4.5px),
+                linear-gradient(145deg, #d4af37, #d4af37);
+            border-color: rgba(255, 153, 0, 0.8);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one .section-24__button-title,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two .section-24__button-title,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three .section-24__button-title {
+            color: #b38a2e;
+        }
+
+        .section-24__visual {
+            gap: 1rem;
+        }
+
+        .section-24__frame {
+            height: clamp(300px, 38vw, 520px);
+            aspect-ratio: auto !important;
+            border-radius: 20px;
+            border-color: rgba(92, 26, 34, 0.12);
+            box-shadow: 0 22px 50px rgba(52, 16, 22, 0.14);
+        }
+
+        .section-24__image {
+            object-fit: cover;
+            transform: scale(1.02);
+            filter: saturate(1.04) contrast(1.03);
+        }
+
+        .section-24__caption {
+            min-height: 4.6rem;
+            padding: 1.1rem 1.25rem 1.1rem 4rem;
+            border-left: 0;
+            border-radius: 14px;
+            background: linear-gradient(180deg, #ffffff 0%, #f5f9ff 100%);
+            border: 1px solid rgba(92, 26, 34, 0.10);
+            box-shadow: 0 12px 26px rgba(52, 16, 22, 0.07);
+        }
+
+        .section-24__caption::before {
+            content: "";
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            width: 2.1rem;
+            height: 2.1rem;
+            border-radius: 10px;
+            transform: translateY(-50%);
+            background:
+                radial-gradient(circle at 50% 50%, #fff 0 3px, transparent 3.5px),
+                linear-gradient(145deg, #d4af37, #d4af37);
+            box-shadow: 0 8px 18px rgba(217, 149, 28, 0.22);
+        }
+
+        .section-24__message {
+            inset: 1.1rem 1.25rem 1.1rem 4rem;
+            display: flex;
+            align-items: center;
+            color: #1b447a;
+            font-weight: 800;
+        }
+
+        .section-24__visual::after {
+            --dot-1: var(--dcq-gold-strong);
+            --dot-2: #ffffff;
+            --dot-3: #ffffff;
+            content: "";
+            justify-self: center;
+            width: 5.5rem;
+            height: 1.25rem;
+            margin-top: 0.2rem;
+            border-radius: 999px;
+            background:
+                radial-gradient(circle at 0.75rem 50%, var(--dot-1) 0 0.33rem, transparent 0.36rem),
+                radial-gradient(circle at 2.75rem 50%, var(--dot-2) 0 0.33rem, transparent 0.36rem),
+                radial-gradient(circle at 4.75rem 50%, var(--dot-3) 0 0.33rem, transparent 0.36rem);
+            filter: drop-shadow(0 2px 6px rgba(52, 16, 22, 0.16));
+        }
+
+        #section-24-view-2:checked~.section-24__container .section-24__visual::after {
+            --dot-1: #ffffff;
+            --dot-2: var(--dcq-gold-strong);
+            --dot-3: #ffffff;
+        }
+
+        #section-24-view-3:checked~.section-24__container .section-24__visual::after {
+            --dot-1: #ffffff;
+            --dot-2: #ffffff;
+            --dot-3: var(--dcq-gold-strong);
+        }
+
+        .section-24+p {
+            margin: 0 !important;
+            padding: 0 1rem 1rem !important;
+            background: linear-gradient(180deg, #e6eef8 0%, #f7fbff 100%);
+            color: #7f94ad !important;
+            font-size: clamp(0.82rem, 1.4vw, 0.98rem) !important;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        #faq-section {
+            padding: 1rem 16px 3rem;
+            margin: 0 auto 0;
+            background:
+                radial-gradient(circle at 50% 0%, rgba(200, 169, 110, 0.15), transparent 32%),
+                linear-gradient(180deg, #f7fbff 0%, #ffffff 100%);
+        }
+
+        #faq-section__header {
+            margin: 0 auto 1.5rem;
+        }
+
+        #faq-section__header::before {
+            display: block;
+            z-index: 1000;
+            margin-bottom: 0.45rem;
+            color: var(--dcq-gold-strong);
+            font-size: 0.78rem;
+            font-weight: 800;
+            overflow: visible;
+            letter-spacing: 0.18em;
+        }
+
+        #faq-section__header::after {
+            content: "";
+            display: block;
+            width: 4.5rem;
+            height: 2px;
+            margin: 0.75rem auto 0;
+            border-radius: 999px;
+            background: linear-gradient(90deg, transparent, var(--dcq-gold), transparent);
+        }
+
+        #faq-section__title {
+            color: #17365f;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+        }
+
+        #faq-section__list {
+            max-width: 960px;
+            gap: 10px;
+        }
+
+        #faq-section__item {
+            border: 1px solid rgba(92, 26, 34, 0.10);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.88);
+            box-shadow: 0 8px 24px rgba(52, 16, 22, 0.05);
+            transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+        }
+
+        #faq-section__item:hover {
+            border-color: rgba(217, 149, 28, 0.45);
+            box-shadow: 0 14px 30px rgba(52, 16, 22, 0.08);
+            transform: translateY(-1px);
+        }
+
+        #faq-section__item summary {
+            padding: 17px 20px;
+        }
+
+        #faq-section__item summary:hover {
+            background: #f5f9ff;
+        }
+
+        #faq-section__q-text {
+            color: #183c6d;
+            font-size: clamp(0.9rem, 1.5vw, 1rem);
+        }
+
+        #faq-section__q-text:hover {
+            color: #b38a2e;
+        }
+
+        #faq-section__icon {
+            width: 24px;
+            height: 24px;
+            border: 1px solid rgba(217, 149, 28, 0.62);
+            border-radius: 999px;
+            background: #f5f9ff;
+        }
+
+        #faq-section__icon::before,
+        #faq-section__icon::after {
+            background: #b38a2e;
+        }
+
+        #faq-section__icon::before {
+            top: 10.5px;
+            left: 5.5px;
+        }
+
+        #faq-section__icon::after {
+            top: 5.5px;
+            left: 10.5px;
+        }
+
+        #faq-section__a-inner {
+            border-top-color: rgba(92, 26, 34, 0.10);
+            background: #f5f9ff;
+        }
+
+        #faq-section__a-text {
+            color: #516882;
+        }
+
+        @media (min-width: 992px) {
+            .section-24__container {
+                grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr);
+            }
+        }
+
+        @media (max-width: 760px) {
+            .product-header-2 {
+                --badge-size: 6rem;
+            }
+
+            .section-6 {
+                padding: 1rem;
+                background: #16396d;
+
+            }
+
+            .section-6 picture {
+                border-radius: 18px;
+            }
+
+            .section-6__image {
+                width: 100%;
+                height: clamp(260px, 62vw, 390px);
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .section-6__content {
+                position: relative;
+                left: auto;
+                top: auto;
+                transform: none;
+                max-width: 100%;
+                margin: 1rem 0rem 0;
+                text-align: left;
+                background: radial-gradient(circle at 100% 20%, rgba(200, 169, 110, 0.15), transparent 32%), linear-gradient(135deg, #8B5E1F, #cca34e);
+            }
+
+            .section-6__title {
+                color: #f5d56a;
+                text-shadow: none;
+            }
+
+            .section-6__description {
+                color: rgba(255, 255, 255, 0.92);
+            }
+
+            .section-2__content {
+                padding: 1rem;
+            }
+
+            .section-24__button {
+                grid-template-columns: 2.8rem minmax(0, 1fr);
+                min-height: auto;
+            }
+
+            .section-24__button::after {
+                width: 2.55rem;
+                height: 2.55rem;
+            }
+        }
+    </style>
+
+    <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
+    <article class="pdp" id="pdp" aria-labelledby="product-main-title"> <!-- HTML fica dentro dessa div PDP -->
+
+        <section class="product-header-2" aria-label="Cabeçalho do produto">
+            <header class="product-header__banner-2">
+                <figure style="width:100%;height:100%;margin:0;">
+                    <img src=" https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/coquetel-composto-domecq-garrafas-bar-fundo-desfocado-lifestyle-917580-00.webp"
+                        alt="Banner ilustrativo do Whisky Chivas Regal 18 Anos 750ml"
+                        class="product-header__banner-img-2" loading="eager">
+                </figure>
+                <div class="product-header__badge-2" role="img" aria-label="Logo da marca">
+                    <img src=" https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-pernod-ricard-marca-fabricante-fornecedor-logo-pernod.webp"
+                        alt="Ícone da marca" class="product-header__badge-img-2">
+                </div>
+            </header>
+            <article class="product-header__body-2">
+                <small class="product-header__brand-2">chivas regal</small>
+                <h2 class="product-header__title-2"><span>Whisky Chivas Regal 18 Anos 750ml</span></h2>
+                <p class="product-header__subtitle-2">Whisky escocês super premium com 85 notas de sabores únicos, blend
+                    harmônico envelhecido por no mínimo 18 anos e graduação alcoólica de 40%.</p>
+            </article>
+        </section>
+
+        <section class="section-6" aria-label="Destaque do produto com texto">
+            <picture>
+                <source media="(max-width: 760px)"
+                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-chivas-regal-18-anos-garrafa-copo-gelo-ambiente-4500077-01-2.webp"
+                    width="780" height="400">
+                <img class="section-6__image"
+                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-chivas-regal-18-anos-garrafa-copo-gelo-detalhe-4500077-01-1.webp"
+                    alt="Whisky Chivas Regal 18 Anos 750ml em composição de destaque" width="1600" height="650"
+                    loading="lazy" fetchpriority="high" decoding="async">
+            </picture>
+            <div class="section-6__content">
+                <h2 class="section-6__title">Super Premium Scotch Whisky mais vendido no mundo</h2>
+                <p class="section-6__description">Blend escocês excepcionalmente rico, envelhecido por no mínimo 18 anos
+                </p>
+            </div>
+        </section>
+
+        <section class="section-2" aria-label="Origem e tradição do Whisky Chivas Regal 18 Anos">
+            <div class="section-2__container">
+                <div class="section-2__content">
+                    <div class="section-2__image-block">
+                        <figure>
+                            <img class="section-2__image"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-chivas-regal-18-anos-barris-envelhecimento-madeira-4500077-02.webp"
+                                alt="Whisky Chivas Regal 18 Anos 750ml em composição com copo" width="800" height="600"
+                                loading="lazy">
+                        </figure>
+                    </div>
+                    <div class="section-2__text-block">
+                        <h2 class="section-2__title">Blend harmônico e sofisticado</h2>
+                        <hr class="section-2__divider" aria-hidden="true">
+                        <p class="section-2__paragraph">Composto por whiskies escolhidos a dedo e envelhecidos por no
+                            mínimo 18 anos, Chivas Regal 18 entrega uma experiência rica, suave e de múltiplas camadas.
+                        </p>
+                        <p class="section-2__paragraph">Produzido na Escócia e com 40% de graduação alcoólica, apresenta
+                            aroma indulgente e paladar aveludado, intenso e elegante.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-24" aria-labelledby="section-24-title" style="background-color: #eef4fb;">
+            <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-1"
+                aria-label="Mostrar imagem de visão geral" checked>
+            <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-2"
+                aria-label="Mostrar imagem de detalhe">
+            <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-3"
+                aria-label="Mostrar imagem de uso">
+
+            <article class="section-24__container">
+                <section class="section-24__content" aria-labelledby="section-24-title">
+                    <nav class="section-24__options" aria-label="Escolha a imagem exibida">
+                        <label class="section-24__button section-24__button--one" for="section-24-view-1">
+                            <span class="section-24__button-title">85 notas de sabor</span>
+                            <span class="section-24__button-text">Uma bebida intensa, perfeita para degustar com
+                                calma</span>
+                        </label>
+
+                        <label class="section-24__button section-24__button--two" for="section-24-view-2">
+                            <span class="section-24__button-title">18 anos de envelhecimento</span>
+                            <span class="section-24__button-text">Elaborado com destilado vínico, carvalho e extrato de
+                                amêndoas</span>
+                        </label>
+
+                        <label class="section-24__button section-24__button--three" for="section-24-view-3">
+                            <span class="section-24__button-title">Aroma e paladar</span>
+                            <span class="section-24__button-text">Notas frutadas que valorizam o momento de
+                                consumo</span>
+                        </label>
+                    </nav>
+                </section>
+
+                <figure class="section-24__visual" aria-label="Imagens alternáveis do produto">
+                    <div class="section-24__frame">
+                        <!-- IMG 1-->
+                        <div class="section-24__panel section-24__panel--one">
+                            <img class="section-24__image"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-chivas-regal-18-anos-garrafa-frutas-ingredientes-4500077-03-1.webp"
+                                width="1200" height="900" loading="lazy"
+                                alt="Composição ilustrativa para experiência de degustação do Chivas Regal 18 Anos"
+                                decoding="async">
+                        </div>
+                        <!-- IMG 2-->
+                        <div class="section-24__panel section-24__panel--two">
+                            <img class="section-24__image"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-chivas-regal-18-anos-copo-tabua-frios-petiscos-4500077-03-2.webp"
+                                width="1200" height="900" loading="lazy"
+                                alt="Barris de carvalho representando o envelhecimento do Chivas Regal 18 Anos"
+                                decoding="async">
+                        </div>
+                        <!-- IMG 3-->
+                        <div class="section-24__panel section-24__panel--three">
+                            <img class="section-24__image"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-chivas-regal-18-anos-garrafa-frasco-perfume-aroma-4500077-03-3.webp"
+                                width="1200" height="900" loading="lazy"
+                                alt="Copo de whisky em composição ilustrativa do Chivas Regal 18 Anos" decoding="async">
+                        </div>
+                    </div>
+
+                    <figcaption class="section-24__caption">
+                        <span class="section-24__message section-24__message--one">85 notas únicas fazem de cada gole
+                            uma nova descoberta</span>
+                        <span class="section-24__message section-24__message--two">Seleção especial de whiskies
+                            envelhecidos por no mínimo 18 anos</span>
+                        <span class="section-24__message section-24__message--three">Aroma rico e multifacetado com
+                            paladar aveludado e toque defumado</span>
+                    </figcaption>
+                </figure>
+            </article>
+        </section>
+
+        <p style="color: #8a8a8a; font-family: sans-serif; font-size: clamp(1rem, 2vw, 1.2rem); text-wrap: pretty;
+            text-align: center; padding: 30px 0; background-color: #eef4fb;">
+            IMAGENS MERAMENTE ILUSTRATIVAS
+        </p>
+
+        <!-- Área de FAQ -->
+        <section id="faq-section" aria-labelledby="faq-section__title">
+            <div id="faq-section__header">
+                <h2 id="faq-section__title">Dúvidas Frequentes</h2>
+            </div>
+            <ul id="faq-section__list" role="list">
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Como é o sabor do Chivas Regal 18 Anos? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> O Chivas Regal 18 Anos tem paladar aveludado, com notas de
+                                chocolate amargo, notas florais e um toque defumado. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Qual é o aroma do Chivas Regal 18 Anos? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Seu aroma é rico, indulgente e multifacetado, com notas de
+                                frutas secas, bala de caramelo e chocolate amargo. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Qual é a graduação alcoólica do Chivas Regal 18 Anos 750ml?
+                            </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> A versão de 750ml possui 40% de graduação alcoólica. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> O que significa o envelhecimento de 18 anos? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Significa que o blend é composto por uma seleção de whiskies
+                                envelhecidos por no mínimo 18 anos, o que contribui para um perfil mais suave, rico e
+                                complexo. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Onde o Chivas Regal 18 Anos é produzido? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> O produto é de origem escocesa e é produzido pela Chivas
+                                Brothers LTD Distillers, em Keith, Scotland. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Quais são os ingredientes do Chivas Regal 18 Anos? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Seus ingredientes são água, grãos e malte. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+            </ul>
+        </section>
+
+    </article>
+</div>`,
+      css:  ``,
+    },
+
+            /*@@@@Col - variacao-22 */
+    {
+      id:   'variacao-22',
+      name: 'Variação 22',
+      html: `<div class="lp-container">
+    <meta charset="utf-8" />
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .pdp {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            font-family: Roboto, sans-serif;
+        }
+
+        .pdp * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap"
+        rel="stylesheet" />
+    <title>PDP - eFácil</title>
+    <!-- ---------------------------------------- ÁREA PARA COLOCAR STYLES ----------------------------------------------------------- -->
+    <style>
+        /*inicio-area-de-faq*/
+        #faq-section {
+            width: 100%;
+            padding: 2rem 16px;
+            box-sizing: border-box;
+            margin: 0 auto 25px;
+            padding-top: 0;
+            font-family: sans-serif;
+        }
+
+        #faq-section__header {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        #faq-section__title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: bold;
+            color: #10251F;
+            margin: 0 0 12px;
+            line-height: 98%;
+        }
+
+        #faq-section__subtitle {
+            font-size: 1rem;
+            color: #4F5B3A;
+            margin: 0;
+        }
+
+        #faq-section__list {
+            list-style: none;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 60rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #faq-section__item {
+            background: #FFFFFF;
+            border: 1px solid #D8C99E;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        #faq-section__item summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        #faq-section__item summary::-webkit-details-marker {
+            width: 0;
+            height: 0;
+            color: transparent;
+            font-size: 0;
+        }
+
+        #faq-section__item summary:hover {
+            background: #F7EED3;
+        }
+
+        #faq-section__q-text {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #10251F;
+            flex: 1;
+        }
+
+        #faq-section__q-text:hover {
+            color: #8A1F1F;
+        }
+
+        #faq-section__icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        #faq-section__icon::before,
+        #faq-section__icon::after {
+            content: '';
+            position: absolute;
+            background: #8A1F1F;
+            border-radius: 2px;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        #faq-section__icon::before {
+            width: 12px;
+            height: 1.5px;
+            top: 9px;
+            left: 4px;
+        }
+
+        #faq-section__icon::after {
+            width: 1.5px;
+            height: 12px;
+            top: 4px;
+            left: 9px;
+        }
+
+        #faq-section__item[open] #faq-section__icon::after {
+            transform: rotate(90deg);
+            opacity: 0;
+        }
+
+        #faq-section__a-inner {
+            padding: 14px 20px 16px;
+            border-top: 1px solid #D8C99E;
+        }
+
+        #faq-section__a-text {
+            font-size: 0.9rem;
+            color: #354735;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 480px) {
+            #faq-section__q-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        /*final-area-de-faq*/
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .product-header-2 {
+            --badge-size: 8rem;
+            --banner-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            font-family: sans-serif;
+            container-type: inline-size;
+        }
+
+        .product-header__banner-2 {
+            width: 100%;
+            height: var(--banner-height);
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .product-header__figure-2 {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        .product-header__banner-2 figure {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        .product-header__banner-img-2 {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .product-header__badge-2 {
+            position: absolute;
+            bottom: calc(var(--badge-size) / -2);
+            width: var(--badge-size);
+            height: var(--badge-size);
+            background-color: #8A1F1F;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .product-header__badge-img-2 {
+            max-width: 90px;
+            max-height: 90px;
+            object-fit: contain;
+        }
+
+        .product-header__body-2 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: calc(var(--badge-size) / 2 + 1rem) 0.3rem 0.5rem;
+            text-align: center;
+        }
+
+        .product-header__brand-2 {
+            color: #8A1F1F;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-header__title-2 {
+            font-size: clamp(1.4rem, 4vw, 2.4rem);
+            line-height: clamp(1.6rem, 4vw, 3.1rem);
+            font-weight: 300;
+            max-width: 50rem;
+            text-wrap: pretty;
+            color: #10251F;
+        }
+
+        .product-header__title-2 strong {
+            font-weight: 700;
+            display: block;
+        }
+
+        .product-header__subtitle-2 {
+            color: #4F5B3A;
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            line-height: 1.65;
+            margin-top: 1.25rem;
+            max-width: 48rem;
+            text-wrap: pretty;
+        }
+
+        @media (max-width: 768px) {
+            .product-header-2 {
+                --banner-height: 180px;
+            }
+        }
+
+        @media (max-width: 470px) {
+            .product-header__subtitle-2 {
+                text-align: justify;
+                font-size: clamp(0.9rem, 2vw, 1.1rem);
+            }
+        }
+    </style>
+    <style>
+        /* ===== HERO SECTION — VARIÁVEIS ===== */
+        .section-6 {
+            --pos-y: 46%;
+            --pos-x: 11%;
+            --color-title: #F0C75E;
+            --bg-box: rgba(1, 59, 42, 0.72);
+            width: 100%;
+            position: relative;
+            padding: 1rem 0;
+            overflow: hidden;
+            background-color: #013B2A;
+        }
+
+        /* ===== IMAGEM ===== */
+        .section-6__image {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 20px;
+        }
+
+        /* ===== CONTEÚDO SOBREPOSTO ===== */
+        .section-6__content {
+            position: absolute;
+            top: var(--pos-y);
+            left: clamp(1%, var(--pos-x), 100%);
+            transform: translateY(-50%);
+            max-width: min(40%, 480px);
+            z-index: 10;
+            background-color: var(--bg-box);
+            padding: clamp(12px, 2vw, 20px);
+            border-radius: 15px;
+        }
+
+        .section-6__title {
+            font-size: clamp(1.4rem, 3.5vw, 2.6rem);
+            color: var(--color-title);
+            margin: 0 0 10px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+            font-weight: 800;
+        }
+
+        .section-6__description {
+            font-size: clamp(0.95rem, 2vw, 1.4rem);
+            color: #FFFFFF;
+            margin: 0 0 24px;
+            line-height: 1.5;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.35);
+        }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 760px) {
+            .section-6__ {
+                border-radius: 0;
+            }
+
+            .section-6__content {
+                position: static;
+                transform: none;
+                max-width: 100%;
+                padding: 24px 20px 0 20px;
+                background: transparent;
+                text-align: center;
+            }
+
+            .section-6__title {
+                font-size: 1.8rem;
+                color: #f3f3f3;
+                text-shadow: none;
+            }
+
+            .section-6__description {
+                margin-bottom: 0;
+                font-size: 1.1rem;
+                color: #f3f3f3;
+                text-shadow: none;
+            }
+
+            .section-6__image {
+                width: 95%;
+                margin: auto;
+                height: auto;
+                display: block;
+                border-radius: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-6__title {
+                font-size: 1.5rem;
+            }
+
+            .section-6__description {
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <style>
+        :root {
+            --s2-color-bg: #013B2A;
+            --s2-color-text: #F7EED3;
+            --s2-color-accent: #C89B3C;
+        }
+
+        .section-2 {
+            background-color: var(--s2-color-bg);
+            padding: 2rem 1rem;
+        }
+
+        .section-2__container {
+            width: 100%;
+        }
+
+        .section-2__content {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .section-2__image-block {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .section-2__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .section-2__text-block {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .section-2__title {
+            font-size: clamp(1.5rem, 4vw, 2.25rem);
+            color: var(--s2-color-text);
+            margin: 0;
+        }
+
+        .section-2__divider {
+            width: 3rem;
+            height: 2px;
+            background-color: var(--s2-color-accent);
+            border: none;
+            margin: 0;
+        }
+
+        .section-2__paragraph {
+            font-size: clamp(0.875rem, 2vw, 1rem);
+            color: var(--s2-color-text);
+            line-height: 1.7;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        @media (min-width: 768px) {
+            .section-2__container {
+                max-width: 768px;
+                margin: 0 auto;
+            }
+
+            .section-2__content {
+                flex-direction: row;
+                align-items: center;
+                gap: 2.5rem;
+            }
+
+            .section-2__image-block {
+                flex: 0 0 50%;
+                aspect-ratio: 4/3;
+            }
+
+            .section-2__text-block {
+                flex: 1;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .section-2 {
+                padding: 3rem 1.5rem;
+            }
+
+            .section-2__container {
+                max-width: 992px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .section-2__container {
+                max-width: 1200px;
+            }
+        }
+
+        @media (min-width: 1400px) {
+            .section-2__container {
+                max-width: 1400px;
+            }
+        }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .section-24 {
+            --s24-color-brand: #4F5B3Ae05;
+            --s24-color-ink: #10251F;
+            --s24-color-muted: #4F5B3A;
+            --s24-color-soft: #F7EED3;
+            --s24-color-surface: #FFFFFFfff;
+            --s24-color-line: #D8C99E;
+            --s24-color-brand-soft: #F3E7C4;
+            --s24-color-brand-strong: #006B46;
+            width: 100%;
+            margin: 0;
+            padding: 2rem 1rem;
+            color: var(--s24-color-ink);
+            background: var(--s24-color-soft);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .section-24,
+        .section-24__input,
+        .section-24__container,
+        .section-24__content,
+        .section-24__options,
+        .section-24__button,
+        .section-24__visual,
+        .section-24__frame,
+        .section-24__panel,
+        .section-24__image,
+        .section-24__caption,
+        .section-24__message {
+            box-sizing: border-box;
+        }
+
+        .section-24__input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .section-24__container {
+            width: 100%;
+            display: grid;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .section-24__content {
+            width: 100%;
+            display: grid;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .section-24__button-title,
+        .section-24__button-text,
+        .section-24__message {
+            margin: 0;
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .section-24__options {
+            width: 100%;
+            display: grid;
+            gap: 1rem;
+            align-items: start;
+            margin-top: 0.5rem;
+        }
+
+        .section-24__button {
+            position: relative;
+            width: 100%;
+            display: grid;
+            gap: 0.5rem;
+            align-items: start;
+            padding: 1rem;
+            border: 1px solid var(--s24-color-line);
+            border-radius: 0.5rem;
+            color: var(--s24-color-ink);
+            background: var(--s24-color-surface);
+            cursor: pointer;
+            overflow: hidden;
+            transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease, transform 180ms ease;
+        }
+
+        .section-24__button::before {
+            position: absolute;
+            top: 0.5rem;
+            bottom: 0.5rem;
+            left: 0;
+            width: 0.25rem;
+            border-radius: 0 0.5rem 0.5rem 0;
+            background: var(--s24-color-brand);
+            content: "";
+            opacity: 0;
+            transform: scaleY(0.4);
+            transform-origin: center;
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        .section-24__button:hover {
+            border-color: var(--s24-color-brand);
+            box-shadow: 0 0.5rem 1.5rem rgba(32, 33, 36, 0.1);
+            transform: translateY(-0.125rem);
+        }
+
+        .section-24__button:active {
+            transform: scale(0.99);
+        }
+
+        .section-24__button-title {
+            position: relative;
+            z-index: 1;
+            font-size: clamp(1rem, 2.7vw, 1.1875rem);
+            font-weight: 800;
+            line-height: 1.25;
+            transition: color 180ms ease;
+        }
+
+        .section-24__button-text {
+            position: relative;
+            z-index: 1;
+            color: var(--s24-color-muted);
+            font-size: clamp(0.875rem, 2.3vw, 1rem);
+            line-height: 1.45;
+        }
+
+        .section-24__visual {
+            width: 100%;
+            margin: 0;
+            display: grid;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .section-24__frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            border: 1px solid var(--s24-color-line);
+            border-radius: 0.5rem;
+            background: var(--s24-color-surface);
+            box-shadow: 0 1rem 2rem rgba(32, 33, 36, 0.08);
+        }
+
+        .section-24__panel {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(0.5rem);
+            transition: opacity 220ms ease, transform 220ms ease;
+        }
+
+        .section-24__image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: saturate(0.92);
+            transform: scale(1.04);
+            transition: filter 420ms ease, transform 420ms ease;
+        }
+
+        .section-24__caption {
+            position: relative;
+            min-height: 4rem;
+            padding: 1rem;
+            border-left: 0.25rem solid var(--s24-color-brand);
+            border-radius: 0.5rem;
+            color: var(--s24-color-ink);
+            background: var(--s24-color-surface);
+            box-shadow: 0 0.5rem 1rem rgba(32, 33, 36, 0.06);
+        }
+
+        .section-24__message {
+            position: absolute;
+            inset: 1rem;
+            color: var(--s24-color-ink);
+            font-size: clamp(0.875rem, 2.2vw, 1rem);
+            font-weight: 700;
+            line-height: 1.4;
+            opacity: 0;
+            transform: translateY(0.5rem);
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__panel--one,
+        #section-24-view-2:checked~.section-24__container .section-24__panel--two,
+        #section-24-view-3:checked~.section-24__container .section-24__panel--three {
+            z-index: 2;
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__panel--one .section-24__image,
+        #section-24-view-2:checked~.section-24__container .section-24__panel--two .section-24__image,
+        #section-24-view-3:checked~.section-24__container .section-24__panel--three .section-24__image {
+            filter: saturate(1);
+            transform: scale(1);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__message--one,
+        #section-24-view-2:checked~.section-24__container .section-24__message--two,
+        #section-24-view-3:checked~.section-24__container .section-24__message--three {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three {
+            border-color: var(--s24-color-brand);
+            background: var(--s24-color-brand-soft);
+            box-shadow: 0 0.5rem 1.5rem rgba(32, 33, 36, 0.12), inset 0 0 0 2px var(--s24-color-brand);
+            transform: translateY(-0.125rem);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one::before,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two::before,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three::before {
+            opacity: 1;
+            transform: scaleY(1);
+        }
+
+        #section-24-view-1:checked~.section-24__container .section-24__button--one .section-24__button-title,
+        #section-24-view-2:checked~.section-24__container .section-24__button--two .section-24__button-title,
+        #section-24-view-3:checked~.section-24__container .section-24__button--three .section-24__button-title {
+            color: var(--s24-color-brand-strong);
+        }
+
+        #section-24-view-1:focus-visible~.section-24__container .section-24__button--one,
+        #section-24-view-2:focus-visible~.section-24__container .section-24__button--two,
+        #section-24-view-3:focus-visible~.section-24__container .section-24__button--three {
+            outline: 2px solid var(--s24-color-brand);
+            outline-offset: 4px;
+        }
+
+        @media (min-width: 576px) {
+
+            .section-24__container {
+                gap: 2rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+
+            .section-24__container {
+                grid-template-columns: minmax(0, 1fr);
+                gap: .5rem;
+            }
+
+            .section-24__content {
+                order: 2;
+            }
+
+            .section-24__visual {
+                order: 1;
+            }
+
+            .section-24__options {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .section-24__button-title {
+                font-size: clamp(0.875rem, 1.8vw, 1rem);
+            }
+
+            .section-24__button-text {
+                font-size: clamp(0.75rem, 1.6vw, 0.875rem);
+            }
+
+            .section-24__frame {
+                aspect-ratio: 16 / 9;
+            }
+        }
+
+        @media (min-width: 992px) {
+
+            .section-24__container {
+                grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+                gap: 3rem;
+            }
+
+            .section-24__content {
+                order: 1;
+                align-self: center;
+            }
+
+            .section-24__visual {
+                order: 2;
+            }
+
+            .section-24--reverse .section-24__content {
+                order: 2;
+            }
+
+            .section-24--reverse .section-24__visual {
+                order: 1;
+            }
+
+            .section-24__options {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .section-24__button {
+                padding: 1.5rem;
+            }
+
+            .section-24__button-title {
+                font-size: clamp(1rem, 2.7vw, 1.1875rem);
+            }
+
+            .section-24__button-text {
+                font-size: clamp(0.875rem, 2.3vw, 1rem);
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .section-24__container {
+                gap: 3rem;
+            }
+
+            .section-24__frame {
+                aspect-ratio: 16 / 9;
+            }
+        }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .section-composicao {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            padding: 12px 16px 14px;
+            background: #F7EED3;
+            font-family: sans-serif;
+        }
+
+        .section-composicao__title {
+            margin: 0 auto 8px;
+            color: #10251F;
+            font-family: Georgia, serif;
+            font-size: 1.55rem;
+            font-weight: 700;
+            line-height: 1.15;
+            text-align: center;
+        }
+
+        .section-composicao__divider {
+            width: 48px;
+            height: 2px;
+            background-color: #C89B3C;
+            margin: 0 auto 14px;
+            border-radius: 2px;
+        }
+
+        .section-composicao__subtitle {
+            margin: 0 auto 14px;
+            color: #4F5B3A;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            text-align: center;
+            max-width: 360px;
+        }
+
+        /* ── RADIO CONTROLS ── */
+
+        .section-composicao__control {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* ── VIEWPORT + TRACK ── */
+
+        .section-composicao__viewport {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .section-composicao__track {
+            display: flex;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            transition: transform 0.4s ease;
+        }
+
+        /* ── ITEM: mobile = 1 card por vez ── */
+
+        .section-composicao__item {
+            flex: 0 0 100%;
+            min-width: 0;
+            padding: 0 8px;
+        }
+
+        /* ── TRANSFORMS mobile (1 por vez) ── */
+
+        #sc-slide-1:checked~.section-composicao__viewport .section-composicao__track {
+            transform: translateX(0%);
+        }
+
+        #sc-slide-2:checked~.section-composicao__viewport .section-composicao__track {
+            transform: translateX(-100%);
+        }
+
+        #sc-slide-3:checked~.section-composicao__viewport .section-composicao__track {
+            transform: translateX(-200%);
+        }
+
+        #sc-slide-4:checked~.section-composicao__viewport .section-composicao__track {
+            transform: translateX(-300%);
+        }
+
+        /* ── CARD ── */
+
+        .section-composicao__card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 28px 20px 24px;
+            text-align: center;
+            background: #FFFFFFff;
+            border-radius: 16px;
+            border: 1px solid rgba(196, 154, 60, 0.22);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .section-composicao__card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #F3E7C4, #C89B3C, #F3E7C4);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .section-composicao__card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 28px rgba(196, 154, 60, 0.18);
+            border-color: rgba(196, 154, 60, 0.55);
+        }
+
+        .section-composicao__card:hover::after {
+            opacity: 1;
+        }
+
+        .section-composicao__media {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #F3E7C4;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: transform 0.35s ease;
+        }
+
+        .section-composicao__card:hover .section-composicao__media {
+            transform: scale(1.08) rotate(-4deg);
+        }
+
+        .section-composicao__image {
+            display: block;
+            width: 56px;
+            height: 56px;
+            object-fit: contain;
+            filter: sepia(1) saturate(3.5) hue-rotate(4deg) brightness(0.68);
+            transition: transform 0.35s ease;
+            margin: auto;
+        }
+
+        .section-composicao__card-title {
+            margin: 0 0 8px;
+            color: #10251F;
+            font-family: Georgia, serif;
+            font-size: 1rem;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+
+        .section-composicao__card-text {
+            margin: 0;
+            color: #4F5B3A;
+            font-size: 0.84rem;
+            line-height: 1.6;
+        }
+
+        /* ── BOTÕES (labels) ── */
+
+        .section-composicao__controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .section-composicao__btn {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border: 2px solid #C89B3C;
+            border-radius: 999px;
+            background: transparent;
+            color: #C89B3C;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+            line-height: 1;
+            transition: transform 0.22s ease, background-color 0.22s ease, color 0.22s ease, box-shadow 0.22s ease;
+            animation: sc-pulse 3s ease-in-out infinite;
+        }
+
+        .section-composicao__btn:hover {
+            transform: scale(1.1);
+            background-color: #C89B3C;
+            color: #F7EED3;
+            box-shadow: 0 0 0 6px rgba(196, 154, 60, 0.2);
+            animation: none;
+        }
+
+        @keyframes sc-pulse {
+            0% {
+                box-shadow: 0 0 0 0px rgba(196, 154, 60, 0.45);
+            }
+
+            60% {
+                box-shadow: 0 0 0 9px rgba(196, 154, 60, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0px rgba(196, 154, 60, 0);
+            }
+        }
+
+        /* botão ativo quando o radio correspondente está checked */
+
+        #sc-slide-1:checked~.section-composicao__controls .section-composicao__btn--1,
+        #sc-slide-2:checked~.section-composicao__controls .section-composicao__btn--2,
+        #sc-slide-3:checked~.section-composicao__controls .section-composicao__btn--3,
+        #sc-slide-4:checked~.section-composicao__controls .section-composicao__btn--4 {
+            background-color: #C89B3C;
+            color: #F7EED3;
+            border-color: #C89B3C;
+            animation: none;
+        }
+
+        /* ── TABLET: 2 por vez ── */
+
+        @media (min-width: 768px) {
+            .section-composicao__item {
+                flex-basis: 50%;
+            }
+
+            #sc-slide-1:checked~.section-composicao__viewport .section-composicao__track {
+                transform: translateX(0%);
+            }
+
+            #sc-slide-2:checked~.section-composicao__viewport .section-composicao__track {
+                transform: translateX(-50%);
+            }
+
+            #sc-slide-3:checked~.section-composicao__viewport .section-composicao__track,
+            #sc-slide-4:checked~.section-composicao__viewport .section-composicao__track {
+                transform: translateX(-100%);
+            }
+
+            .section-composicao__btn--4 {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                opacity: 0;
+                pointer-events: none;
+                overflow: hidden;
+            }
+
+            .section-composicao__media {
+                width: 120px;
+                height: 120px;
+            }
+
+            .section-composicao__image {
+                width: 68px;
+                height: 68px;
+            }
+        }
+
+        /* ── DESKTOP: todos visíveis, sem carrossel ── */
+
+        @media (min-width: 1200px) {
+            .section-composicao__viewport {
+                overflow: visible;
+            }
+
+            .section-composicao__item {
+                flex-basis: 25%;
+            }
+
+            #sc-slide-1:checked~.section-composicao__viewport .section-composicao__track,
+            #sc-slide-2:checked~.section-composicao__viewport .section-composicao__track,
+            #sc-slide-3:checked~.section-composicao__viewport .section-composicao__track,
+            #sc-slide-4:checked~.section-composicao__viewport .section-composicao__track {
+                transform: none;
+            }
+
+            .section-composicao__controls {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                opacity: 0;
+                pointer-events: none;
+                overflow: hidden;
+            }
+        }
+    </style>
+    <style>
+        .pdp-note {
+            color: #4F5B3A;
+            font-family: sans-serif;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            text-wrap: pretty;
+            text-align: center;
+            padding: 2rem 0;
+            margin: 0;
+        }
+    </style>
+    <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
+    <article aria-labelledby="product-main-title" class="pdp" id="pdp" style="background-color: #F7EED3;">
+        <!-- HTML fica dentro dessa div PDP -->
+        <section aria-label="Cabeçalho do produto" class="product-header-2">
+            <div class="product-header__banner-2">
+                <figure class="product-header__figure-2">
+                    <img alt="Banner editorial para o Whiskey Jameson 750ml" class="product-header__banner-img-2"
+                        decoding="async" height="250" loading="eager"
+                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-escoces-ballantines-17-anos-cevada-ingredientes-lifestyle-4500078-00.webp"
+                        width="1600" />
+                </figure>
+                <div aria-label="Logo da marca" class="product-header__badge-2" role="img">
+                    <img alt="Ícone da marca Jameson" class="product-header__badge-img-2" height="90" loading="lazy"
+                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-pernod.webp" width="90" />
+                </div>
+            </div>
+            <article class="product-header__body-2">
+                <small class="product-header__brand-2"> Jameson </small>
+                <h2 class="product-header__title-2" id="product-main-title"><span>Whiskey Irlandês
+                        750ml</span><strong>Tripla destilação e sabor irlandês clássico</strong></h2>
+                <p class="product-header__subtitle-2">Whiskey irlandês produzido na Irlanda, com tripla destilação,
+                    aroma delicado, notas florais, toque frutado e final suave e persistente.</p>
+            </article>
+        </section>
+        <section aria-label="Destaque do produto com texto" class="section-6">
+            <picture>
+                <source media="(max-width: 760px)"
+                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-escoces-ballantines-17-anos-750ml-garrafa-cevada-ambientada-4500078-01-2.webp" />
+                <!-- troca de imagem -->
+                <img alt="Whiskey Jameson 750ml em destaque" class="section-6__image" decoding="async"
+                    fetchpriority="high" height="650" loading="lazy"
+                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-escoces-ballantines-17-anos-banner-garrafa-cevada-lifestyle-4500078-01-1.webp"
+                    width="1600" />
+                <div class="section-6__content">
+                    <h2 class="section-6__title">Direto dos campos da Irlanda</h2>
+                    <p class="section-6__description">Um whiskey irlandês clássico, suave e memorável, feito com
+                        tradição
+                        desde 1780.</p>
+                </div>
+        </section>
+        <section aria-labelledby="sc-title" class="section-composicao">
+            <h3 class="section-composicao__title" id="sc-title">O que faz este whiskey se destacar</h3>
+            <div class="section-composicao__divider"></div>
+            <p class="section-composicao__subtitle">Da tripla destilação ao sabor suave, cada detalhe reforça a tradição
+                irlandesa do Jameson.</p>
+            <input checked="" class="section-composicao__control" id="sc-slide-1" name="sc-carousel" type="radio" />
+            <input class="section-composicao__control" id="sc-slide-2" name="sc-carousel" type="radio" />
+            <input class="section-composicao__control" id="sc-slide-3" name="sc-carousel" type="radio" />
+            <input class="section-composicao__control" id="sc-slide-4" name="sc-carousel" type="radio" />
+            <div class="section-composicao__viewport">
+                <ul class="section-composicao__track">
+                    <li class="section-composicao__item">
+                        <figure class="section-composicao__card">
+                            <div class="section-composicao__media">
+                                <img alt="Ícone ilustrativo para tripla destilação do Jameson"
+                                    class="section-composicao__image" decoding="async" height="128" loading="lazy"
+                                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-escoces-ballantines-17-anos-icone-barril-uva-4500078-02-1.webp"
+                                    width="128" />
+                            </div>
+                            <figcaption>
+                                <h4 class="section-composicao__card-title">Tripla destilação</h4>
+                                <p class="section-composicao__card-text">Processo clássico que ajuda a entregar uma
+                                    bebida mais suave e equilibrada.</p>
+                            </figcaption>
+                        </figure>
+                    </li>
+                    <li class="section-composicao__item">
+                        <figure class="section-composicao__card">
+                            <div class="section-composicao__media">
+                                <img alt="Ícone ilustrativo para notas de sabor do Jameson"
+                                    class="section-composicao__image" decoding="async" height="128" loading="lazy"
+                                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-escoces-ballantines-17-anos-icone-flor-baunilha-4500078-02-2.webp"
+                                    width="128" />
+                            </div>
+                            <figcaption>
+                                <h4 class="section-composicao__card-title">Baunilha, caramelo e especiarias</h4>
+                                <p class="section-composicao__card-text">Notas doces e levemente especiadas para uma
+                                    experiência sensorial marcante.</p>
+                            </figcaption>
+                        </figure>
+                    </li>
+                    <li class="section-composicao__item">
+                        <figure class="section-composicao__card">
+                            <div class="section-composicao__media">
+                                <img alt="Ícone ilustrativo para final suave do Jameson"
+                                    class="section-composicao__image" decoding="async" height="128" loading="lazy"
+                                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-escoces-ballantines-17-anos-icone-colmeia-mel-4500078-02-3.webp"
+                                    width="128" />
+                            </div>
+                            <figcaption>
+                                <h4 class="section-composicao__card-title">Final suave</h4>
+                                <p class="section-composicao__card-text">Final persistente e levemente adocicado, ideal
+                                    para degustar com calma.</p>
+                            </figcaption>
+                        </figure>
+                    </li>
+                    <li class="section-composicao__item">
+                        <figure class="section-composicao__card">
+                            <div class="section-composicao__media">
+                                <img alt="Ícone ilustrativo para origem irlandesa do Jameson"
+                                    class="section-composicao__image" decoding="async" height="128" loading="lazy"
+                                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-escoces-ballantines-17-anos-icone-bandeira-escocia-4500078-02-4.webp"
+                                    width="128" />
+                            </div>
+                            <figcaption>
+                                <h4 class="section-composicao__card-title">Origem irlandesa</h4>
+                                <p class="section-composicao__card-text">Produzido na Irlanda, com tradição associada à
+                                    destilaria de Midleton.</p>
+                            </figcaption>
+                        </figure>
+                    </li>
+                </ul>
+            </div>
+            <nav aria-label="Navegação do carrossel" class="section-composicao__controls">
+                <label class="section-composicao__btn section-composicao__btn--1" for="sc-slide-1">1</label>
+                <label class="section-composicao__btn section-composicao__btn--2" for="sc-slide-2">2</label>
+                <label class="section-composicao__btn section-composicao__btn--3" for="sc-slide-3">3</label>
+                <label class="section-composicao__btn section-composicao__btn--4" for="sc-slide-4">4</label>
+            </nav>
+        </section>
+        <section aria-label="Origem e tradição do Whiskey Jameson 750ml" class="section-2">
+            <div class="section-2__container">
+                <div class="section-2__content">
+                    <div class="section-2__image-block">
+                        <figure>
+                            <img alt="Whiskey Jameson 750ml em composição ilustrativa" class="section-2__image"
+                                decoding="async" height="600" loading="lazy"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-escoces-ballantines-17-anos-750ml-garrafa-diagonal-4500078-03.webp"
+                                width="800" />
+                        </figure>
+                    </div>
+                    <div class="section-2__text-block">
+                        <h2 class="section-2__title">Um Irish Whiskey versátil para diferentes momentos</h2>
+                        <hr aria-hidden="true" class="section-2__divider" />
+                        <p class="section-2__paragraph">Jameson é uma escolha para quem busca um whiskey irlandês suave,
+                            clássico e fácil de apreciar.</p>
+                        <p class="section-2__paragraph">O sabor combina baunilha, caramelo, especiarias e frutos secos,
+                            com aroma floral delicado e toque frutado.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section aria-labelledby="section-24-title" class="section-24">
+            <input aria-label="Mostrar imagem de visão geral" checked="" class="section-24__input"
+                id="section-24-view-1" name="section-24-view" type="radio" />
+            <input aria-label="Mostrar imagem de detalhe" class="section-24__input" id="section-24-view-2"
+                name="section-24-view" type="radio" />
+            <input aria-label="Mostrar imagem de uso" class="section-24__input" id="section-24-view-3"
+                name="section-24-view" type="radio" />
+            <article class="section-24__container">
+                <section aria-labelledby="section-24-title" class="section-24__content">
+                    <nav aria-label="Escolha a imagem exibida" class="section-24__options">
+                        <label class="section-24__button section-24__button--one" for="section-24-view-1">
+                            <span class="section-24__button-title">Irlandês clássico</span>
+                            <span class="section-24__button-text">Origem: Irlanda. Produzido com processos tradicionais
+                                e ingredientes selecionados.</span>
+                        </label>
+                        <label class="section-24__button section-24__button--two" for="section-24-view-2">
+                            <span class="section-24__button-title">40% de graduação</span>
+                            <span class="section-24__button-text">Teor equilibrado para apreciar puro, com gelo ou em
+                                coquetéis, sempre com moderação.</span>
+                        </label>
+                        <label class="section-24__button section-24__button--three" for="section-24-view-3">
+                            <span class="section-24__button-title">Garrafa de 750ml</span>
+                            <span class="section-24__button-text">Volume versátil para momentos de descontração,
+                                celebrações ou preparo de drinks.</span>
+                        </label>
+                    </nav>
+                </section>
+                <figure aria-label="Imagens alternáveis do produto" class="section-24__visual">
+                    <div class="section-24__frame">
+                        <!-- IMG 1-->
+                        <div class="section-24__panel section-24__panel--one">
+                            <img alt="Whiskey Jameson em visão geral ilustrativa" class="section-24__image"
+                                decoding="async" height="900" loading="lazy"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-escoces-ballantines-17-anos-bandeira-escocia-origem-lifestyle-4500078-04-1.webp"
+                                width="1200" />
+                        </div>
+                        <!-- IMG 2-->
+                        <div class="section-24__panel section-24__panel--two">
+                            <img alt="Detalhe ilustrativo do Whiskey Jameson" class="section-24__image" decoding="async"
+                                height="900" loading="lazy"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-escoces-ballantines-17-anos-copo-gelo-casca-limao-detalhe-4500078-04-2.webp"
+                                width="1200" />
+                        </div>
+                        <!-- IMG 3-->
+                        <div class="section-24__panel section-24__panel--three">
+                            <img alt="Whiskey Jameson em contexto de degustação" class="section-24__image"
+                                decoding="async" height="900" loading="lazy"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/whisky-escoces-ballantines-17-anos-750ml-garrafa-fundo-infinito-4500078-04-3.webp"
+                                width="1200" />
+                        </div>
+                    </div>
+                    <figcaption class="section-24__caption">
+                        <span class="section-24__message section-24__message--one">Um Irish Whiskey clássico,
+                            reconhecido pela suavidade da tripla destilação.</span>
+                        <span class="section-24__message section-24__message--two">Sabor com baunilha, caramelo,
+                            especiarias e frutos secos em equilíbrio.</span>
+                        <span class="section-24__message section-24__message--three">750ml, origem irlandesa e graduação
+                            alcoólica de 40%.</span>
+                    </figcaption>
+                </figure>
+            </article>
+        </section>
+        <p class="pdp-note">
+            IMAGENS MERAMENTE ILUSTRATIVAS
+        </p>
+        <!-- Área de FAQ -->
+        <section aria-labelledby="faq-section__title" id="faq-section">
+            <div id="faq-section__header">
+                <h2 id="faq-section__title">Dúvidas Frequentes</h2>
+            </div>
+            <ul id="faq-section__list" role="list">
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> O Whiskey Jameson 750ml é indicado para qual tipo de consumo?
+                            </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> O Whiskey Jameson 750ml é indicado para quem busca um whiskey
+                                irlandês suave, clássico e versátil. Pode ser apreciado puro, com gelo ou em coquetéis,
+                                sempre com moderação. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> O Jameson pode ser tomado puro? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Sim. O Jameson pode ser apreciado puro, especialmente por quem
+                                prefere perceber melhor as notas de baunilha, caramelo, especiarias e frutos secos. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Qual é a graduação alcoólica do Whiskey Jameson 750ml? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> A graduação alcoólica do Whiskey Jameson 750ml é de 40%. Esse
+                                teor combina com a proposta de um Irish Whiskey suave, equilibrado e versátil. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> O que diferencia o Jameson de outros whiskeys? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> A tripla destilação ajuda a entregar a suavidade característica
+                                do Jameson. Na prática, isso cria um whiskey equilibrado, fácil de apreciar e com
+                                tradição irlandesa. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Qual é o sabor do Whiskey Jameson? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> O sabor do Jameson combina baunilha, caramelo, especiarias e
+                                frutos secos, com final suave, levemente adocicado e persistente no paladar. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> O aroma do Jameson é intenso? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> O aroma do Jameson é delicado e equilibrado, com fragrâncias
+                                florais, notas doces e toque sutil frutado. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> O Whiskey Jameson é de qual país? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> O Whiskey Jameson é da Irlanda. Seus processos de fabricação
+                                são feitos na Irlanda, mantendo a tradição da marca. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Quais características fazem parte do Jameson? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Jameson é um blended whiskey feito com ingredientes
+                                selecionados e grãos cuidadosamente escolhidos para entregar sabor suave e único. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> O Jameson combina com drinks? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Sim. O Jameson é versátil e pode ser usado em coquetéis como
+                                Whisky Sour e Irish Coffee, além de ser apreciado puro ou com gelo. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+            </ul>
+        </section>
+    </article>
+</div>`,
+      css:  ``,
+    },
+
+    /*@@@@Col - variacao-23 */
+    {
+      id:   'variacao-23',
+      name: 'Variação 23',
+      html: `<div class="lp-container">
+    <meta charset="utf-8">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .pdp {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            font-family: Roboto, sans-serif;
+        }
+
+        .pdp * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap"
+        rel="stylesheet">
+    <title>PDP - eFácil</title>
+    <style>
+        /*inicio-area-de-faq*/
+        #faq-section {
+            width: 100%;
+            padding: 2rem 16px;
+            box-sizing: border-box;
+            margin: 0 auto 25px;
+            padding-top: 0;
+            font-family: sans-serif;
+        }
+
+        #faq-section__header {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        #faq-section__title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 12px;
+            line-height: 98%;
+        }
+
+        #faq-section__subtitle {
+            font-size: 1rem;
+            color: #666;
+            margin: 0;
+        }
+
+        #faq-section__list {
+            list-style: none;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 60rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #faq-section__item {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        #faq-section__item summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        #faq-section__item summary::-webkit-details-marker {
+            display: none;
+        }
+
+        #faq-section__item summary:hover {
+            background: #f9f9f9;
+        }
+
+        #faq-section__q-text {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            flex: 1;
+        }
+
+        #faq-section__q-text:hover {
+            color: #ff6600;
+        }
+
+        #faq-section__icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        #faq-section__icon::before,
+        #faq-section__icon::after {
+            content: '';
+            position: absolute;
+            background: #888;
+            border-radius: 2px;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        #faq-section__icon::before {
+            width: 12px;
+            height: 1.5px;
+            top: 9px;
+            left: 4px;
+        }
+
+        #faq-section__icon::after {
+            width: 1.5px;
+            height: 12px;
+            top: 4px;
+            left: 9px;
+        }
+
+        #faq-section__item[open] #faq-section__icon::after {
+            transform: rotate(90deg);
+            opacity: 0;
+        }
+
+        #faq-section__a-inner {
+            padding: 14px 20px 16px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        #faq-section__a-text {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 480px) {
+            #faq-section__q-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        /*final-area-de-faq*/
+    </style>
+    <style>
+        .ll-carousel {
+            --ll-carousel-brand: #ff6600;
+            --ll-carousel-ink: #17253f;
+            --ll-carousel-muted: #61708a;
+            --ll-carousel-soft: #fff3e5;
+            --ll-carousel-panel: #ffffff;
+            --ll-carousel-line: #e8e4dc;
+            --ll-carousel-dot-hover: #fff9f2;
+            --ll-carousel-dot-active: #fff4e0;
+            --ll-carousel-dot-active-border: #f5c280;
+            --ll-carousel-shadow: 0 1.5rem 3rem rgba(13, 35, 51, 0.12);
+            background: var(--ll-carousel-soft);
+            color: var(--ll-carousel-ink);
+            font-family: Arial, Helvetica, sans-serif;
+            overflow: hidden;
+        }
+
+        .ll-carousel__container {
+            box-sizing: border-box;
+            container-name: ll-carousel-container;
+            container-type: inline-size;
+            margin-inline: auto;
+            padding: 0 1rem;
+            width: 100%;
+        }
+
+        .ll-carousel__control {
+            display: none;
+        }
+
+        .ll-carousel__intro {
+            display: grid;
+            gap: 1rem;
+            justify-items: center;
+            margin-block-end: 1.5rem;
+            text-align: center;
+        }
+
+        .ll-carousel--hide-intro .ll-carousel__intro {
+            display: none;
+        }
+
+        .ll-carousel__dot-number,
+        .ll-carousel__dot-text,
+        .ll-carousel__layout-eyebrow,
+        .ll-carousel__layout-title,
+        .ll-carousel__layout-text {
+            letter-spacing: 0;
+            overflow-wrap: anywhere;
+        }
+
+
+        .ll-carousel__viewport {
+            aspect-ratio: 16 / 10;
+            border: 1px solid var(--ll-carousel-line);
+            border-radius: 1rem;
+            box-shadow: var(--ll-carousel-shadow);
+            box-sizing: border-box;
+            isolation: isolate;
+            margin-inline: auto;
+            max-width: 100%;
+            overflow: hidden;
+            width: min(100%, 1280px);
+        }
+
+        .ll-carousel__track {
+            display: grid;
+            height: 100%;
+            max-width: 100%;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .ll-carousel__panel {
+            background: var(--ll-carousel-panel);
+            box-sizing: border-box;
+            grid-area: 1 / 1;
+            height: 100%;
+            inset: 0;
+            max-width: 100%;
+            min-width: 0;
+            opacity: 0;
+            overflow: hidden;
+            pointer-events: none;
+            position: absolute;
+            transform: translateX(100%);
+            transition: transform 0.8s ease, opacity 0.4s ease;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .ll-carousel__layout {
+            box-sizing: border-box;
+            height: 100%;
+            max-height: 100%;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .ll-carousel__layout--impact {
+            --ll-carousel-impact-bg: #ff6600e1;
+            --ll-carousel-impact-text: #fff7ef;
+            --ll-carousel-impact-muted: rgba(255, 247, 239, 0.84);
+            align-content: center;
+            align-items: center;
+            background: var(--ll-carousel-impact-bg);
+            color: var(--ll-carousel-impact-text);
+            display: grid;
+            gap: clamp(1.5rem, 3vw, 3.5rem);
+            grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
+            grid-template-rows: minmax(0, 1fr);
+            min-height: 0;
+            padding: clamp(1.5rem, 3.4vw, 3.5rem);
+        }
+
+        .ll-carousel__layout--impact>* {
+            min-height: 0;
+            min-width: 0;
+        }
+
+        .ll-carousel__layout-copy {
+            align-self: center;
+            display: grid;
+            gap: clamp(0.7rem, 1vw, 1.05rem);
+            justify-self: start;
+            max-height: 100%;
+            max-width: min(43ch, 100%);
+            min-width: 0;
+        }
+
+        .ll-carousel__layout-eyebrow {
+            font-size: clamp(0.75rem, 0.7rem + 0.25vw, 0.95rem);
+            font-weight: 800;
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .ll-carousel__layout-title {
+            font-size: clamp(2rem, 3.25vw, 4rem);
+            font-weight: 800;
+            line-height: 1.02;
+            margin: 0;
+            max-width: 100%;
+            text-wrap: balance;
+        }
+
+        .ll-carousel__layout-text {
+            color: var(--ll-carousel-impact-muted);
+            font-size: clamp(0.95rem, 1vw, 1.12rem);
+            line-height: 1.45;
+            margin: 0;
+            max-width: 100%;
+        }
+
+        .ll-carousel__media-card {
+            aspect-ratio: 4 / 3;
+            border-radius: 1.25rem;
+            box-shadow: 0 1.5rem 3rem rgba(20, 32, 43, 0.22);
+            margin-block: auto;
+            max-height: 76%;
+            max-width: min(100%, 38rem);
+            overflow: hidden;
+            place-self: center end;
+            width: 100%;
+        }
+
+        .ll-carousel__layout--impact-reverse {
+            grid-template-columns: minmax(0, 1.14fr) minmax(0, 0.86fr);
+        }
+
+        .ll-carousel__layout--impact-reverse .ll-carousel__layout-copy {
+            grid-column: 2;
+            grid-row: 1;
+            justify-self: end;
+            z-index: 10;
+        }
+
+        .ll-carousel__layout--impact-reverse .ll-carousel__media-card {
+            grid-column: 1;
+            grid-row: 1;
+            place-self: center start;
+        }
+
+        .ll-carousel__image,
+        .ll-carousel__picture,
+        .ll-carousel__video {
+            display: block;
+            height: 100%;
+            width: 100%;
+        }
+
+        .ll-carousel__image,
+        .ll-carousel__video {
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .ll-carousel__layout--media {
+            background: var(--ll-carousel-media-bg, #101217);
+            padding: 0;
+        }
+
+        .ll-carousel__figure {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .ll-carousel__figure .ll-carousel__image,
+        .ll-carousel__figure .ll-carousel__video {
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .ll-carousel__caption {
+            align-items: flex-start;
+            background: rgba(0, 0, 0, 0.48);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 1.25rem;
+            box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.28);
+            color: #fff;
+            display: grid;
+            gap: 0.65rem;
+            left: clamp(1.25rem, 5vw, 4.75rem);
+            max-width: min(42%, 34rem);
+            padding: clamp(1rem, 2.5vw, 2rem);
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .ll-carousel__caption h3 {
+            font-size: clamp(1.35rem, 2.4vw, 3rem);
+            line-height: 1.05;
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .ll-carousel__caption p {
+            font-size: clamp(0.85rem, 1.15vw, 1.15rem);
+            line-height: 1.45;
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
+
+        .ll-carousel__nav {
+            display: grid;
+            gap: 0.5rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            margin: 1rem auto 0;
+            max-width: 1280px;
+            width: min(100%, 1280px);
+        }
+
+        .ll-carousel__dot {
+            align-items: center;
+            background: var(--ll-carousel-panel);
+            border: 1px solid var(--ll-carousel-line);
+            border-radius: 0.5rem;
+            box-sizing: border-box;
+            color: var(--ll-carousel-ink);
+            cursor: pointer;
+            display: grid;
+            gap: 0.5rem;
+            min-height: 4rem;
+            padding: 1rem;
+            transition: background 0.4s ease, border-color 0.4s ease, color 0.4s ease, transform 0.4s ease;
+            transition: .2s;
+        }
+
+        .ll-carousel__dot:hover {
+            background: var(--ll-carousel-dot-hover);
+            border-color: var(--ll-carousel-dot-active-border);
+            transform: translateY(-0.25rem);
+            transition: .7s;
+        }
+
+        .ll-carousel__dot-number {
+            color: var(--ll-carousel-brand);
+            font-size: clamp(0.75rem, 0.72rem + 0.16vw, 0.875rem);
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .ll-carousel__dot-text {
+            font-size: clamp(0.875rem, 0.84rem + 0.16vw, 1rem);
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .ll-carousel__control--1:checked~.ll-carousel__viewport .ll-carousel__panel--1,
+        .ll-carousel__control--2:checked~.ll-carousel__viewport .ll-carousel__panel--2,
+        .ll-carousel__control--3:checked~.ll-carousel__viewport .ll-carousel__panel--3,
+        .ll-carousel__control--4:checked~.ll-carousel__viewport .ll-carousel__panel--4 {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
+            z-index: 2;
+        }
+
+        .ll-carousel__control--2:checked~.ll-carousel__viewport .ll-carousel__panel--1,
+        .ll-carousel__control--3:checked~.ll-carousel__viewport .ll-carousel__panel--1,
+        .ll-carousel__control--3:checked~.ll-carousel__viewport .ll-carousel__panel--2,
+        .ll-carousel__control--4:checked~.ll-carousel__viewport .ll-carousel__panel--1,
+        .ll-carousel__control--4:checked~.ll-carousel__viewport .ll-carousel__panel--2,
+        .ll-carousel__control--4:checked~.ll-carousel__viewport .ll-carousel__panel--3 {
+            transform: translateX(-100%);
+        }
+
+        .ll-carousel__control--1:checked~.ll-carousel__nav .ll-carousel__dot--1,
+        .ll-carousel__control--2:checked~.ll-carousel__nav .ll-carousel__dot--2,
+        .ll-carousel__control--3:checked~.ll-carousel__nav .ll-carousel__dot--3,
+        .ll-carousel__control--4:checked~.ll-carousel__nav .ll-carousel__dot--4 {
+            background: var(--ll-carousel-dot-active);
+            border-color: var(--ll-carousel-dot-active-border);
+            color: var(--ll-carousel-ink);
+        }
+
+        @media (max-width: 760px) {
+            .ll-carousel__container {
+                padding: 0 .75rem;
+            }
+
+            .ll-carousel__intro {
+                gap: 0.65rem;
+                margin-block-end: 1rem;
+            }
+
+            .ll-carousel__viewport {
+                aspect-ratio: 4 / 5;
+                border-radius: 0.95rem;
+            }
+
+            .ll-carousel__layout--impact {
+                align-content: center;
+                gap: 0.9rem;
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: auto minmax(0, 1fr);
+                padding: 1rem;
+            }
+
+            .ll-carousel__layout--impact .ll-carousel__layout-copy {
+                grid-column: 1;
+                grid-row: 1;
+                justify-self: stretch;
+                max-width: none;
+            }
+
+            .ll-carousel__layout--impact .ll-carousel__media-card {
+                grid-column: 1;
+                grid-row: 2;
+                place-self: center;
+            }
+
+            .ll-carousel__layout--impact-reverse .ll-carousel__layout-copy {
+                grid-row: 2;
+            }
+
+            .ll-carousel__layout--impact-reverse .ll-carousel__media-card {
+                grid-row: 1;
+            }
+
+            .ll-carousel__layout-title {
+                font-size: clamp(1.3rem, 6vw, 1.85rem);
+                line-height: 1.04;
+            }
+
+            .ll-carousel__layout-text {
+                font-size: 0.8rem;
+                line-height: 1.32;
+            }
+
+            .ll-carousel__media-card {
+                border-radius: 0.8rem;
+                max-height: 100%;
+                max-width: 100%;
+            }
+
+            .ll-carousel__layout--media {
+                background: #ff6600e1;
+                padding: 0.65rem;
+            }
+
+            .ll-carousel__figure {
+                display: block;
+                height: 100%;
+            }
+
+            .ll-carousel__figure .ll-carousel__picture,
+            .ll-carousel__figure>.ll-carousel__video {
+                background: #cc5200;
+                border-radius: 0.75rem;
+                display: block;
+                height: 100%;
+                min-height: 0;
+                overflow: hidden;
+            }
+
+            .ll-carousel__figure .ll-carousel__image,
+            .ll-carousel__figure .ll-carousel__video {
+                aspect-ratio: auto;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+                width: 100%;
+            }
+
+            .ll-carousel__caption {
+                background: rgba(0, 0, 0, 0.62);
+                border-radius: 0.85rem;
+                bottom: 0.72rem;
+                left: 0.72rem;
+                max-width: none;
+                padding: 0.72rem;
+                position: absolute;
+                right: 0.72rem;
+                top: auto;
+                transform: none;
+            }
+
+            .ll-carousel__caption h3 {
+                font-size: clamp(1.05rem, 5vw, 1.45rem);
+            }
+
+            .ll-carousel__caption p {
+                font-size: 0.76rem;
+                line-height: 1.3;
+            }
+
+            .ll-carousel__nav {
+                gap: 0.35rem;
+                margin-block-start: 0.65rem;
+            }
+
+            .ll-carousel__dot {
+                border-radius: 0.55rem;
+                gap: 0;
+                justify-items: center;
+                min-height: 3rem;
+                padding: 0.55rem 0.42rem;
+                text-align: center;
+                transition: .2s;
+            }
+
+            .ll-carousel__dot:hover {
+                transform: none;
+                transition: .7s;
+            }
+
+            .ll-carousel__dot-number {
+                display: none;
+            }
+
+            .ll-carousel__dot-text {
+                font-size: 0.78rem;
+                line-height: 1.05;
+            }
+        }
+
+        @container ll-carousel-container (max-width: 620px) {
+            .ll-carousel__viewport {
+                aspect-ratio: 4 / 5;
+                border-radius: 0.95rem;
+            }
+
+            .ll-carousel__layout--impact {
+                align-content: center;
+                gap: 0.9rem;
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: auto minmax(0, 1fr);
+                padding: 1rem;
+            }
+
+            .ll-carousel__layout--impact .ll-carousel__layout-copy {
+                grid-column: 1;
+                grid-row: 1;
+                justify-self: stretch;
+                max-width: none;
+            }
+
+            .ll-carousel__layout--impact .ll-carousel__media-card {
+                grid-column: 1;
+                grid-row: 2;
+                place-self: center;
+            }
+
+            .ll-carousel__layout--impact-reverse .ll-carousel__layout-copy {
+                grid-row: 2;
+            }
+
+            .ll-carousel__layout--impact-reverse .ll-carousel__media-card {
+                grid-row: 1;
+            }
+
+            .ll-carousel__layout-title {
+                font-size: clamp(1.3rem, 7.5cqw, 1.85rem);
+            }
+
+            .ll-carousel__layout-text {
+                font-size: 0.8rem;
+                line-height: 1.32;
+            }
+
+            .ll-carousel__layout--media {
+                background: #ff6600e1;
+                padding: 0.65rem;
+            }
+
+            .ll-carousel__figure {
+                display: block;
+                height: 100%;
+            }
+
+            .ll-carousel__figure .ll-carousel__picture,
+            .ll-carousel__figure>.ll-carousel__video {
+                background: #cc5200;
+                border-radius: 0.75rem;
+                display: block;
+                height: 100%;
+                min-height: 0;
+                overflow: hidden;
+            }
+
+            .ll-carousel__figure .ll-carousel__image,
+            .ll-carousel__figure .ll-carousel__video {
+                aspect-ratio: auto;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+                width: 100%;
+            }
+
+            .ll-carousel__caption {
+                background: rgba(0, 0, 0, 0.62);
+                border-radius: 0.85rem;
+                bottom: 0.72rem;
+                left: 0.72rem;
+                max-width: none;
+                padding: 0.72rem;
+                position: absolute;
+                right: 0.72rem;
+                top: auto;
+                transform: none;
+            }
+
+            .ll-carousel__caption h3 {
+                font-size: clamp(1.05rem, 5.5cqw, 1.45rem);
+            }
+
+            .ll-carousel__caption p {
+                font-size: 0.76rem;
+                line-height: 1.3;
+            }
+
+            .ll-carousel__nav {
+                gap: 0.35rem;
+                margin-block-start: 0.65rem;
+            }
+
+            .ll-carousel__dot {
+                border-radius: 0.55rem;
+                gap: 0;
+                justify-items: center;
+                min-height: 3rem;
+                padding: 0.55rem 0.42rem;
+                text-align: center;
+            }
+
+            .ll-carousel__dot:hover {
+                transform: none;
+                transition: .7s;
+            }
+
+            .ll-carousel__dot-number {
+                display: none;
+            }
+
+            .ll-carousel__dot-text {
+                font-size: 0.78rem;
+                line-height: 1.05;
+            }
+        }
+
+        .ll-carousel {
+            --ll-carousel-brand: #ff6600;
+            --ll-carousel-soft: #fff3e5;
+            --ll-carousel-dot-hover: #fff9f2;
+            --ll-carousel-dot-active: #fff4e0;
+            --ll-carousel-dot-active-border: #f5c280;
+        }
+
+        /* ===== MELHORIAS ADICIONADAS ===== */
+
+        /* 1. Fundo degradê do carrossel */
+
+        /* 2. Imagem sem ratio fixo no media-card (slide 1 e 3) */
+        .ll-carousel__media-card {
+            aspect-ratio: unset !important;
+            height: 100%;
+            max-height: 82%;
+        }
+
+        .ll-carousel__media-card .ll-carousel__image {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* 3. Nav sem background unificado — cada botão é individual */
+        .ll-carousel__nav {
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            gap: 0.5rem !important;
+            margin-top: 0.75rem !important;
+        }
+
+        /* Cada botão: card branco individual */
+        .ll-carousel__dot {
+            border-radius: 0.75rem !important;
+            border: 1.5px solid #e8e4dc !important;
+            background: #fff !important;
+            padding: 0.75rem 1rem !important;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 0.5rem !important;
+            min-height: unset !important;
+            transition: background 0.25s, border-color 0.25s !important;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06) !important;
+        }
+
+        .ll-carousel__dot:hover {
+            background: #fff9f2 !important;
+            border-color: #f5c280 !important;
+            transition: .7s;
+        }
+
+        .ll-carousel__dot-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+            min-width: 0;
+        }
+
+        .ll-carousel__dot-number {
+            color: #aaa !important;
+            font-size: 0.7rem !important;
+            font-weight: 700 !important;
+            line-height: 1 !important;
+        }
+
+        .ll-carousel__dot-text {
+            font-size: 0.875rem !important;
+            font-weight: 700 !important;
+            color: #17253f !important;
+            line-height: 1.2 !important;
+        }
+
+        .ll-carousel__dot-icon {
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #f0ede8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #17253f;
+            transition: background 0.25s, color 0.25s;
+        }
+
+        /* Active state laranja */
+        .ll-carousel__control--1:checked~.ll-carousel__nav .ll-carousel__dot--1,
+        .ll-carousel__control--2:checked~.ll-carousel__nav .ll-carousel__dot--2,
+        .ll-carousel__control--3:checked~.ll-carousel__nav .ll-carousel__dot--3,
+        .ll-carousel__control--4:checked~.ll-carousel__nav .ll-carousel__dot--4 {
+            background: #fff4e0 !important;
+            border-color: #ff6600 !important;
+        }
+
+        .ll-carousel__control--1:checked~.ll-carousel__nav .ll-carousel__dot--1 .ll-carousel__dot-number,
+        .ll-carousel__control--2:checked~.ll-carousel__nav .ll-carousel__dot--2 .ll-carousel__dot-number,
+        .ll-carousel__control--3:checked~.ll-carousel__nav .ll-carousel__dot--3 .ll-carousel__dot-number,
+        .ll-carousel__control--4:checked~.ll-carousel__nav .ll-carousel__dot--4 .ll-carousel__dot-number {
+            color: #ff6600 !important;
+        }
+
+        .ll-carousel__control--1:checked~.ll-carousel__nav .ll-carousel__dot--1 .ll-carousel__dot-text,
+        .ll-carousel__control--2:checked~.ll-carousel__nav .ll-carousel__dot--2 .ll-carousel__dot-text,
+        .ll-carousel__control--3:checked~.ll-carousel__nav .ll-carousel__dot--3 .ll-carousel__dot-text,
+        .ll-carousel__control--4:checked~.ll-carousel__nav .ll-carousel__dot--4 .ll-carousel__dot-text {
+            color: #ff6600 !important;
+        }
+
+        .ll-carousel__control--1:checked~.ll-carousel__nav .ll-carousel__dot--1 .ll-carousel__dot-icon,
+        .ll-carousel__control--2:checked~.ll-carousel__nav .ll-carousel__dot--2 .ll-carousel__dot-icon,
+        .ll-carousel__control--3:checked~.ll-carousel__nav .ll-carousel__dot--3 .ll-carousel__dot-icon,
+        .ll-carousel__control--4:checked~.ll-carousel__nav .ll-carousel__dot--4 .ll-carousel__dot-icon {
+            background: #ff6600 !important;
+            color: #fff !important;
+        }
+
+        /* Mobile: 2 colunas × 2 linhas */
+        @media (max-width: 760px) {
+            .ll-carousel__nav {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+
+            .ll-carousel__dot-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .ll-carousel__dot-icon svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
+
+        @container ll-carousel-container (max-width: 620px) {
+            .ll-carousel__nav {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            }
+        }
+
+        /* 4. Bolinhas indicadoras dentro do viewport */
+        .ll-carousel__viewport {
+            position: relative;
+        }
+
+        .ll-carousel__track::after {
+            content: '';
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* Bolinhas via pseudo-elements nos panels */
+        .ll-carousel__indicators {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 7px;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .ll-carousel__indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transition: background 0.3s, width 0.3s;
+            display: block;
+        }
+
+        .ll-carousel__control--1:checked~.ll-carousel__viewport .ll-carousel__indicator--1,
+        .ll-carousel__control--2:checked~.ll-carousel__viewport .ll-carousel__indicator--2,
+        .ll-carousel__control--3:checked~.ll-carousel__viewport .ll-carousel__indicator--3,
+        .ll-carousel__control--4:checked~.ll-carousel__viewport .ll-carousel__indicator--4 {
+            background: #fff;
+            width: 20px;
+            border-radius: 4px;
+        }
+
+        @media (min-width: 760px) {
+            #move-llcosseawd {
+                left: 2%;
+                top: 53%;
+            }
+        }
+
+        @media (min-width: 760px) {
+            #move-llcosseawd2 {
+                left: 11%;
+                top: 43%;
+            }
+        }
+    </style>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .product-header-2 {
+            --badge-size: 8rem;
+            --banner-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            font-family: sans-serif;
+            container-type: inline-size;
+        }
+
+        .product-header__banner-2 {
+            width: 100%;
+            height: var(--banner-height);
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .product-header__banner-2 figure {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        .product-header__banner-img-2 {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .product-header__badge-2 {
+            position: absolute;
+            bottom: calc(var(--badge-size) / -2);
+            width: var(--badge-size);
+            height: var(--badge-size);
+            background-color: #ff9900;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .product-header__badge-img-2 {
+            max-width: 90px;
+            max-height: 90px;
+            object-fit: contain;
+        }
+
+        .product-header__body-2 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: calc(var(--badge-size) / 2 + 1.8rem) 0.3rem 0.5rem;
+            text-align: center;
+        }
+
+        .product-header__brand-2 {
+            color: #ff9900;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-header__title-2 {
+            font-size: clamp(1.4rem, 4vw, 2.4rem);
+            line-height: clamp(1.6rem, 4vw, 3.1rem);
+            font-weight: 300;
+            max-width: 50rem;
+            text-wrap: pretty;
+            color: #1a1a1a;
+        }
+
+        .product-header__title-2 strong {
+            font-weight: 700;
+            display: block;
+        }
+
+        .product-header__subtitle-2 {
+            color: #8a8a8a;
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            line-height: 1.65;
+            margin-top: 1.25rem;
+            max-width: 48rem;
+            text-wrap: pretty;
+        }
+
+        @media (max-width: 768px) {
+            .product-header-2 {
+                --banner-height: 180px;
+            }
+        }
+
+        @media (max-width: 470px) {
+            .product-header__subtitle-2 {
+                text-align: justify;
+                font-size: clamp(0.9rem, 2vw, 1.1rem);
+            }
+        }
+    </style>
+
+    <article aria-labelledby="product-main-title" class="pdp" id="pdp">
+
+        <section class="product-header-2" aria-label="Cabeçalho do produto">
+            <header class="product-header__banner-2">
+                <figure style="width:100%;height:100%;margin:0;">
+                    <img src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/mangueira-jardim-tramontina-antitorcao-vermelha-lifestyle-mulher-rega-410688-00.webp"
+                        alt="Banner do produto" class="product-header__banner-img-2" loading="eager">
+                </figure>
+                <div class="product-header__badge-2" role="img" aria-label="Logo da marca">
+                    <img src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/tramontina/tramontina-logo.png"
+                        alt="Ícone da marca" class="product-header__badge-img-2">
+                </div>
+            </header>
+            <article class="product-header__body-2">
+                <small class="product-header__brand-2"> tramontina </small>
+                <h2 class="product-header__title-2">
+                    <span>Mangueira de Jardim Vermelha 15M</span>
+                    <strong>Antitorção e com engate</strong>
+                </h2>
+                <p class="product-header__subtitle-2">
+                    Alta performance para uso doméstico ou profissional. A mangueira de ATS, um produto altamente
+                    flexível com estrutura em 3 camadas de PVC e poliéster, resistente a pressões de até 14 bar e
+                    equipada com um prático sistema de engate rápido.
+                </p>
+            </article>
+        </section>
+
+        <section aria-label="Diferenciais da Mangueira Jardim Tramontina Vermelha Antitorção" class="ll-carousel"
+            style="background-image: linear-gradient(180deg, #ffffff, #fff3e5);">
+            <div class="ll-carousel__container">
+                <div class="ll-carousel__intro">
+                </div>
+                <input checked="" class="ll-carousel__control ll-carousel__control--1" id="ll-carousel-slide-1"
+                    name="ll-carousel-active" type="radio">
+                <input class="ll-carousel__control ll-carousel__control--2" id="ll-carousel-slide-2"
+                    name="ll-carousel-active" type="radio">
+                <div class="ll-carousel__viewport">
+                    <div class="ll-carousel__indicators">
+                        <span class="ll-carousel__indicator ll-carousel__indicator--1"></span>
+                        <span class="ll-carousel__indicator ll-carousel__indicator--2"></span>
+                    </div>
+                    <div class="ll-carousel__track">
+                        <article aria-label="Slide 1: Antitorção" class="ll-carousel__panel ll-carousel__panel--1"
+                            id="ll-carousel-panel-1">
+                            <section aria-label="Tecnologia antitorção da mangueira"
+                                class="ll-carousel__layout ll-carousel__layout--impact"
+                                style="--ll-carousel-impact-bg: #ff6600e1; --ll-carousel-impact-text: #fffdf8; --ll-carousel-impact-muted: rgba(255, 253, 248, 0.84); background-image: linear-gradient(323deg, #cc5200, #ff7900);">
+                                <div class="ll-carousel__layout-copy">
+                                    <p class="ll-carousel__layout-eyebrow">Tecnologia</p>
+                                    <h3 class="ll-carousel__layout-title">Não torce e não dobra no manuseio</h3>
+                                    <p class="ll-carousel__layout-text">Desenvolvida com alta flexibilidade e sistema
+                                        antitorção inteligente, ela permite um fluxo de água constante e livre de
+                                        interrupções incômodas durante o uso.
+                                    </p>
+                                </div>
+                                <figure class="ll-carousel__media-card">
+                                    <img class="ll-carousel__image"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/mangueira-jardim-tramontina-antitorcao-vermelha-rolo-esguicho-torneira-410688-01.webp"
+                                        alt="Mangueira de Jardim Tramontina Vermelha Antitorção em uso no jardim"
+                                        width="1800" height="1600" style="object-position: 50% 50%;" loading="lazy"
+                                        decoding="async">
+                                </figure>
+                            </section>
+                        </article>
+                        <article aria-label="Slide 2: Resistência" class="ll-carousel__panel ll-carousel__panel--2"
+                            id="ll-carousel-panel-2">
+                            <section aria-label="Resistência máxima de 3 camadas"
+                                class="ll-carousel__layout ll-carousel__layout--media"
+                                style="--ll-carousel-media-bg: #ff6600e1; background-color: #ff6600e1; ">
+                                <figure class="ll-carousel__figure">
+                                    <img class="ll-carousel__image"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/parede-quintal-ambiente-vazio-jardim-410688-02.webp"
+                                        alt="Detalhe das 3 camadas da Mangueira Tramontina" width="1800" height="1600"
+                                        style="object-position: 50% 50%;" loading="lazy" decoding="async">
+                                    <figcaption class="ll-carousel__caption" id="move-llcosseawd2">
+                                        <h3>Máxima Resistência <br>em 3 Camadas</h3>
+                                        <p>Possui camada interna em PVC, intermediária em fio de poliéster trançado e
+                                            externa em PVC. Suporta pressão de até 14 bar [203 psi] e temperaturas de
+                                            até 50ºC.</p>
+                                    </figcaption>
+                                </figure>
+                            </section>
+                        </article>
+                    </div>
+                </div>
+                <nav aria-label="Selecionar slide do carrossel" class="ll-carousel__nav"
+                    style="grid-template-columns: repeat(4, minmax(0, 1fr));">
+                    <label aria-controls="ll-carousel-panel-1" class="ll-carousel__dot ll-carousel__dot--1"
+                        for="ll-carousel-slide-1">
+                        <span class="ll-carousel__dot-copy">
+                            <span class="ll-carousel__dot-number">01</span>
+                            <span class="ll-carousel__dot-text">Antitorção</span>
+                        </span>
+                        <span class="ll-carousel__dot-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                                width="22" height="22" aria-hidden="true">
+                                <path d="M12 22c4.418 0 8-3.582 8-8 0-4.42-8-12-8-12S4 9.58 4 14c0 4.418 3.582 8 8 8z">
+                                </path>
+                            </svg>
+                        </span>
+                    </label>
+                    <label aria-controls="ll-carousel-panel-2" class="ll-carousel__dot ll-carousel__dot--2"
+                        for="ll-carousel-slide-2">
+                        <span class="ll-carousel__dot-copy">
+                            <span class="ll-carousel__dot-number">02</span>
+                            <span class="ll-carousel__dot-text">Resistência</span>
+                        </span>
+                        <span class="ll-carousel__dot-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+                                width="22" height="22" aria-hidden="true">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </span>
+                    </label>
+                </nav>
+            </div>
+        </section>
+        <p style="color: #8a8a8a; font-family: sans-serif; font-size: clamp(1rem, 2vw, 1.2rem); text-wrap: pretty;
+            text-align: center; padding: 30px 0; background-color: #fff3e5;">
+            IMAGENS MERAMENTE ILUSTRATIVAS
+        </p>
+        <section aria-labelledby="faq-section__title" id="faq-section">
+            <div id="faq-section__header">
+                <h2 id="faq-section__title">Dúvidas Frequentes</h2>
+            </div>
+            <ul id="faq-section__list" role="list">
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Para que serve e onde é recomendada a Mangueira Antitorção
+                                Tramontina? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> A mangueira é recomendada para uso doméstico ou profissional na
+                                jardinagem, sendo ideal para manter os cuidados com o seu gramado e garantir uma
+                                irrigação eficiente e constante em qualquer situação. </p>
+                        </div>
+                    </details>
+                </li>
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Qual é a vantagem da tecnologia antitorção deste modelo? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Graças à sua alta flexibilidade e estrutura reforçada, a
+                                mangueira não torce e não dobra. Isso permite que o fluxo de água permaneça constante e
+                                sem interrupções durante o manuseio no seu jardim. </p>
+                        </div>
+                    </details>
+                </li>
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> De quais materiais e camadas é feita a mangueira? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Para oferecer maior resistência, ela possui 3 camadas
+                                distintas: uma camada interna em PVC, uma intermediária em fio de poliéster trançado e
+                                uma externa em PVC. </p>
+                        </div>
+                    </details>
+                </li>
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Quais acessórios acompanham o produto e como funciona o
+                                esguicho? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Acompanha 01 esguicho com jato regulável, 02 engates rápidos e
+                                01 adaptador fêmea com rosca de 3/4" e redução de 1/2". O esguicho possui um prático
+                                sistema de regulagem frontal para ajustar o fluxo d'água e se conecta a mangueiras de
+                                1/2", 5/8" e 3/4" por engate rápido. </p>
+                        </div>
+                    </details>
+                </li>
+                <li id="faq-section__item">
+                    <details class="faq-section__details">
+                        <summary class="faq-section__summary">
+                            <h3 id="faq-section__q-text"> Quais são as recomendações de pressão, temperatura e
+                                conservação? </h3>
+                            <span aria-hidden="true" id="faq-section__icon"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Ela suporta pressão de água de até 14 bar [203 psi] e
+                                temperatura máxima de 50ºC. Para aumentar a durabilidade, não a deixe exposta
+                                diretamente ao sol após o uso e armazene-a utilizando preferencialmente um enrolador de
+                                mangueira Tramontina. </p>
+                        </div>
+                    </details>
+                </li>
+            </ul>
+        </section>
+    </article>
+</div>`,
+      css:  ``,
+    },
+
+    /*@@@@Col - variacao-24 */
+    {
+      id:   'variacao-24',
+      name: 'Variação 24',
+      html: `<div class="lp-container" style="background-color: #fef9f4;">
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Varela+Round&display=swap');
+
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .pdp {
+            display: flex;
+            flex-direction: column;
+            font-family: Roboto, sans-serif
+        }
+
+        .pdp * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        .pdp-text-gradient {
+            background: linear-gradient(90deg, #c29869, #ddbc88, #e6c588);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            background-clip: text;
+        }
+
+        @keyframes pdp-fade-up {
+            from {
+                opacity: 0;
+                transform: translateY(22px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pdp-soft-shine {
+            from {
+                transform: translateX(-120%) rotate(8deg);
+            }
+
+            to {
+                transform: translateX(135%) rotate(8deg);
+            }
+        }
+
+        @keyframes pdp-hero-content {
+            from {
+                opacity: 0;
+                transform: translateY(calc(-50% + 22px));
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(-50%);
+            }
+        }
+
+        @keyframes pdp-choco-glow {
+            from {
+                filter: saturate(0.96) brightness(0.98);
+            }
+
+            to {
+                filter: saturate(1.08) brightness(1.03);
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&amp;display=swap"
+        rel="stylesheet">
+    <title>Biscoito Itamaraty Recheado Chocolate 30x76g</title>
+    <!-- ---------------------------------------- ÁREA PARA COLOCAR STYLES ----------------------------------------------------------- -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .product-header-2 {
+            --badge-size: 8rem;
+            --banner-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            font-family: sans-serif;
+            container-type: inline-size;
+        }
+
+        .product-header__banner-2 {
+            width: 100%;
+            height: var(--banner-height);
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .product-header__banner-2 figure {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        .product-header__banner-img-2 {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .product-header__badge-2 {
+            position: absolute;
+            bottom: calc(var(--badge-size) / -2);
+            width: var(--badge-size);
+            height: var(--badge-size);
+            background-color: #ff9900;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .product-header__badge-img-2 {
+            max-width: 90px;
+            max-height: 90px;
+            object-fit: contain;
+        }
+
+        .product-header__body-2 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: calc(var(--badge-size) / 2 + 1.8rem) 0.3rem 2.5rem;
+            text-align: center;
+        }
+
+        .product-header__brand-2 {
+            color: #ff9900;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-header__title-2 {
+            font-size: clamp(1.4rem, 4vw, 2.4rem);
+            line-height: clamp(1.6rem, 4vw, 3.1rem);
+            font-weight: 300;
+            max-width: 50rem;
+            text-wrap: pretty;
+            color: #1a1a1a;
+        }
+
+        .product-header__title-2 strong {
+            font-weight: 700;
+            display: block;
+        }
+
+        .product-header__subtitle-2 {
+            color: #8a8a8a;
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            line-height: 1.65;
+            margin-top: 1.25rem;
+            max-width: 48rem;
+            text-wrap: pretty;
+        }
+
+        @media (max-width: 768px) {
+            .product-header-2 {
+                --banner-height: 180px;
+            }
+        }
+
+        @media (max-width: 470px) {
+            .product-header__subtitle-2 {
+                text-align: justify;
+                font-size: clamp(0.9rem, 2vw, 1.1rem);
+            }
+        }
+    </style>
+
+    <style>
+        .section-15-container {
+            background-color: #fff8ef;
+            padding: 1.5rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .section-15 {
+            display: flex;
+            flex-direction: column-reverse;
+            /* ← era column-reverse */
+            gap: 1.25rem;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+            animation: pdp-fade-up 0.78s ease both;
+        }
+
+        .section-15__image-wrapper {
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .section-15__image {
+            margin: auto;
+            display: block;
+            object-fit: cover;
+            width: 100%;
+            max-width: 530px;
+            aspect-ratio: 16 / 9;
+            border-radius: 18px;
+            box-shadow: 0 18px 38px rgba(63, 33, 24, 0.14);
+            transition: transform 0.75s ease, box-shadow 0.75s ease, filter 0.75s ease;
+        }
+
+        .section-15:hover .section-15__image {
+            transform: scale(1.025);
+            filter: saturate(1.05) contrast(1.03);
+            box-shadow: 0 24px 54px rgba(63, 33, 24, 0.22);
+        }
+
+        .section-15__content {
+            display: flex;
+            flex-direction: column;
+            width: 95%;
+            margin: auto;
+            box-sizing: border-box;
+        }
+
+        .section-15__title {
+            color: #3f2118;
+            font-size: 32px;
+            font-weight: 600;
+            line-height: 40px;
+            margin: 0 0 1rem;
+            text-align: left;
+        }
+
+        .section-15__desc {
+            color: #6f4a33;
+            font-size: 14px;
+            line-height: 22px;
+            margin: 0 0 1.5rem;
+            text-align: left;
+        }
+
+        .section-15__feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            list-style: none;
+            margin: 0;
+            gap: 22px;
+            padding: 0;
+        }
+
+        .section-15__feature-item {
+            align-items: flex-start;
+            display: flex;
+            flex-direction: row;
+            gap: 0.75rem;
+            padding: 0.85rem 0.9rem;
+            border: 1px solid rgba(123, 61, 34, 0.14);
+            border-radius: 14px;
+            background: rgb(255 248 239);
+            transition: transform 0.32s ease, border-color 0.32s ease, box-shadow 0.32s ease;
+        }
+
+        .section-15__feature-item:hover {
+            transform: translateY(-3px);
+            border-color: rgba(123, 61, 34, 0.34);
+            box-shadow: 0 14px 28px rgba(63, 33, 24, 0.12);
+        }
+
+        .section-15__feature-item-icon {
+            border-radius: 8px;
+            flex-shrink: 0;
+            height: 44px;
+            object-fit: contain;
+            width: 44px;
+        }
+
+        .section-15__feature-item-body {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .section-15__feature-item-title {
+            color: #3f2118;
+            font-size: 1.05rem;
+            font-weight: 700;
+            line-height: 1.35;
+            margin: 0;
+        }
+
+        .section-15__feature-item-text {
+            color: #6f4a33;
+            font-size: 0.8125rem;
+            line-height: 1.55;
+            margin: 0;
+        }
+
+        /* ── NOVO: aspect-ratio e desc oculta no mobile ── */
+        @media (max-width: 759px) {
+
+            .section-15__image {
+                aspect-ratio: 4 / 3;
+            }
+        }
+
+        @media (min-width: 480px) {
+            .section-15-container {
+                padding: 1.75rem;
+            }
+
+            .section-15__feature-item-title {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .section-15-container {
+                padding: 2rem;
+            }
+
+            .section-15 {
+                max-width: 768px;
+            }
+
+            .section-15__image {
+                border-radius: 20px;
+                aspect-ratio: 16 / 9;
+            }
+        }
+
+        @media (min-width: 760px) {
+            .section-15 {
+                align-items: center;
+                flex-direction: row;
+                gap: 1.5rem;
+                justify-content: center;
+                max-width: 960px;
+            }
+
+            .section-15--reverse {
+                flex-direction: row-reverse;
+            }
+
+            .section-15__image-wrapper {
+                flex: 0 0 48%;
+                max-width: 48%;
+            }
+
+            .section-15__image {
+                aspect-ratio: 4 / 3;
+                height: 100%;
+                max-height: 420px;
+            }
+
+            .section-15__content {
+                flex: 1 1 0;
+                min-width: 0;
+            }
+
+            .section-15__feature-list--icon-right .section-15__feature-item {
+                flex-direction: row-reverse;
+            }
+
+            .section-15__feature-list--icon-right .section-15__feature-item-body {
+                align-items: flex-end;
+            }
+
+            .section-15__feature-list--icon-right .section-15__feature-item-title,
+            .section-15__feature-list--icon-right .section-15__feature-item-text {
+                text-align: right;
+            }
+
+            .section-15__feature-item-icon {
+                height: 48px;
+                width: 48px;
+            }
+
+            .section-15__feature-item-title {
+                font-size: 1.2rem;
+            }
+
+            .section-15__feature-item-text {
+                font-size: 0.875rem;
+            }
+        }
+
+        @media (min-width: 1060px) {
+            .section-15 {
+                max-width: 1060px;
+                gap: 2rem;
+            }
+
+            .section-15__feature-list {
+                gap: 1.25rem;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .section-15 {
+                max-width: 1280px;
+                gap: 2.5rem;
+            }
+
+            .section-15__image-wrapper {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+
+            .section-15__image {
+                max-height: 460px;
+            }
+
+            .section-15__feature-item-title {
+                font-size: 1.3rem;
+            }
+
+            .section-15__feature-item-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        .is-reverse {
+            flex-direction: row-reverse;
+        }
+
+        @media (max-width: 760px) {
+            .is-reverse {
+                flex-direction: column-reverse;
+            }
+        }
+
+        .is-reverse-760 {
+            flex-direction: row-reverse;
+        }
+
+        @media (max-width: 760px) {
+            .is-reverse-760 {
+                flex-direction: column;
+            }
+        }
+    </style>
+
+    <style>
+        /*inicio-area-de-faq*/
+        #faq-section {
+            width: 100%;
+            padding: 2rem 16px;
+            box-sizing: border-box;
+            margin: 0 auto 25px;
+            padding-top: 0;
+            font-family: sans-serif;
+            background: #fffaf4;
+            animation: pdp-fade-up 0.78s ease both;
+        }
+
+        #faq-section__header {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        #faq-section__title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: bold;
+            color: #3f2118;
+            margin: 0 0 12px;
+            line-height: 98%;
+        }
+
+        #faq-section__subtitle {
+            font-size: 1rem;
+            color: #6f4a33;
+            margin: 0;
+        }
+
+        #faq-section__list {
+            list-style: none;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 60rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #faq-section__item {
+            background: #fff;
+            border: 1px solid rgba(123, 61, 34, 0.16);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 24px rgba(63, 33, 24, 0.05);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #faq-section__item summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        #faq-section__item summary::-webkit-details-marker {
+            display: none;
+        }
+
+        #faq-section__item summary:hover {
+            background: rgba(255, 240, 221, 0.72);
+        }
+
+        #faq-section__item:hover {
+            transform: translateY(-2px);
+            border-color: rgba(123, 61, 34, 0.34);
+            box-shadow: 0 16px 34px rgba(63, 33, 24, 0.12);
+        }
+
+        #faq-section__q-text {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #3f2118;
+            flex: 1;
+        }
+
+        #faq-section__q-text:hover {
+            color: #7b3d22;
+        }
+
+        #faq-section__icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        #faq-section__icon::before,
+        #faq-section__icon::after {
+            content: '';
+            position: absolute;
+            background: #7b3d22;
+            border-radius: 2px;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        #faq-section__icon::before {
+            width: 12px;
+            height: 1.5px;
+            top: 9px;
+            left: 4px;
+        }
+
+        #faq-section__icon::after {
+            width: 1.5px;
+            height: 12px;
+            top: 4px;
+            left: 9px;
+        }
+
+        #faq-section__item[open] #faq-section__icon::after {
+            transform: rotate(90deg);
+            opacity: 0;
+        }
+
+        #faq-section__a-inner {
+            padding: 14px 20px 16px;
+            border-top: 1px solid rgba(123, 61, 34, 0.16);
+        }
+
+        #faq-section__a-text {
+            font-size: 0.9rem;
+            color: #6f4a33;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 480px) {
+            #faq-section__q-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        /*final-area-de-faq*/
+    </style>
+
+    <style>
+        /* ===== HERO SECTION — VARIÁVEIS ===== */
+        .section-6 {
+            --pos-y: 50%;
+            --pos-x: 2%;
+            --color-title: #fff0dd;
+            --bg-box: rgba(63, 33, 24, 0.58);
+
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            background: #3f2118;
+        }
+
+        /* ===== IMAGEM ===== */
+        .section-6__image {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 1s ease, filter 1s ease;
+        }
+
+        .section-6:hover .section-6__image {
+            transform: scale(1.018);
+            filter: saturate(1.06) contrast(1.03);
+        }
+
+        /* ===== CONTEÚDO SOBREPOSTO ===== */
+        .section-6__content {
+            position: absolute;
+            top: var(--pos-y);
+            left: clamp(0%, var(--pos-x), 100%);
+            transform: translateY(-50%);
+            max-width: min(40%, 480px);
+            z-index: 10;
+            background-color: var(--bg-box);
+            padding: clamp(12px, 2vw, 20px);
+            border-radius: 15px;
+            backdrop-filter: blur(4px);
+            overflow: hidden;
+            box-shadow: 0 20px 46px rgba(63, 33, 24, 0.28);
+            animation: pdp-hero-content 0.78s ease both;
+        }
+
+        .section-6__content::after {
+            content: "";
+            position: absolute;
+            inset: -40% auto -40% 0;
+            width: 36%;
+            background: linear-gradient(90deg, transparent, rgba(255, 240, 221, 0.18), transparent);
+            animation: pdp-soft-shine 5s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .section-6__title {
+            font-size: clamp(1.4rem, 3.5vw, 2.6rem);
+            color: var(--color-title);
+            margin: 0 0 10px;
+            line-height: 1.2;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+            font-weight: 800;
+        }
+
+        .section-6__description {
+            font-size: clamp(0.95rem, 2vw, 1.4rem);
+            color: #fff;
+            margin: 0 0 24px;
+            line-height: 1.5;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.35);
+        }
+
+        /* ===== MOBILE ===== */
+        @media (max-width: 760px) {
+            .section-6 {
+                border-radius: 0;
+                padding-top: 15px;
+            }
+
+            .section-6__content {
+                position: static;
+                transform: none;
+                max-width: 100%;
+                padding: 24px 20px 0 20px;
+                background: transparent;
+                backdrop-filter: none;
+                text-align: center;
+                box-shadow: none;
+                animation: pdp-fade-up 0.78s ease both;
+            }
+
+            .section-6__content::after {
+                display: none;
+            }
+
+            .section-6__title {
+                font-size: 1.8rem;
+                color: #f1eae8;
+                text-shadow: none;
+            }
+
+            .section-6__description {
+                margin-bottom: 0;
+                font-size: 1.1rem;
+                color: #f1eae8;
+                text-shadow: none;
+            }
+
+            .section-6__image {
+                width: 95%;
+                margin: auto;
+                height: auto;
+                display: block;
+                border-radius: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-6__title {
+                font-size: 1.5rem;
+            }
+
+            .section-6__description {
+                font-size: 1rem;
+            }
+        }
+    </style>
+
+    <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
+    <div class="pdp" id="pdp"> <!-- HTML fica dentro dessa div PDP -->
+
+
+        <section class="product-header-2" aria-label="Cabeçalho do produto">
+            <header class="product-header__banner-2">
+                <figure style="width:100%;height:100%;margin:0;">
+                    <picture>
+                        <source media="(max-width: 320px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/header_degrade_4303600_00.webp?ims=288x">
+                        <source media="(max-width: 375px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/header_degrade_4303600_00.webp?ims=343x">
+                        <source media="(max-width: 425px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/header_degrade_4303600_00.webp?ims=393x">
+                        <source media="(max-width: 768px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/header_degrade_4303600_00.webp?ims=736x">
+                        <source media="(max-width: 1024px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/header_degrade_4303600_00.webp?ims=992x">
+                        <source media="(max-width: 1440px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/header_degrade_4303600_00.webp?ims=1248x">
+                        <img class="product-header__banner-img-2"
+                            src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/header_degrade_4303600_00.webp" alt="Banner do produto"
+                            loading="eager" decoding="async">
+                    </picture>
+                </figure>
+                <div class="product-header__badge-2" role="img" aria-label="Logo da marca">
+                    <img src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/itamaraty/itamaraty-logo.png"
+                        alt="Ícone da marca" class="product-header__badge-img-2">
+                </div>
+            </header>
+            <article class="product-header__body-2">
+                <small class="product-header__brand-2">── itamaraty ──</small>
+                <h2 class="product-header__title-2">
+                    <span>Biscoito Recheado Chocolate</span>
+                    <strong>caixa com 30 unidades de 76g</strong>
+                </h2>
+                <p class="product-header__subtitle-2">
+                    Sabor chocolate em porções práticas para vender, compartilhar ou abastecer a rotina com um doce
+                    fácil de levar.
+                </p>
+            </article>
+        </section>
+
+
+        <section class="section-6" aria-label="Destaque do produto com texto">
+            <picture>
+                <source media="(max-width: 320px)"
+                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-fundo-infinito-splash-4303600-01-2.webp?ims=274x">
+                <source media="(max-width: 375px)"
+                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-fundo-infinito-splash-4303600-01-2.webp?ims=326x">
+                <source media="(max-width: 425px)"
+                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-fundo-infinito-splash-4303600-01-2.webp?ims=374x">
+                <source media="(max-width: 760px)"
+                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-fundo-infinito-splash-4303600-01-2.webp?ims=692x">
+                <!-- troca de imagem -->
+                <source media="(max-width: 768px)"
+                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-ambientada-splash-4303600-01-1.webp?ims=736x">
+                <source media="(max-width: 1024px)"
+                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-ambientada-splash-4303600-01-1.webp?ims=992x">
+                <source media="(max-width: 1440px)"
+                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-ambientada-splash-4303600-01-1.webp?ims=1248x">
+                <img class="section-6__image"
+                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-ambientada-splash-4303600-01-1.webp"
+                    alt="Biscoito Itamaraty Recheado Chocolate com embalagem sobre calda de chocolate" width="1600"
+                    height="650" fetchpriority="high" loading="lazy" decoding="async">
+            </picture>
+            <div class="section-6__content">
+                <h2 class="section-6__title">Recheado de chocolate para qualquer pausa</h2>
+                <p class="section-6__description">Pacote de 76g com biscoito crocante e recheio sabor chocolate em uma
+                    caixa com 30 unidades.</p>
+            </div>
+        </section>
+
+
+        <div class="section-15-container" style="background-color: #fff8ef;">
+            <div class="section-15 is-reverse">
+                <div class="section-15__content">
+                    <h2 class="section-15__title">
+                        Prático para vender, servir ou ter sempre por perto
+                    </h2>
+
+                    <p class="section-15__desc">
+                        A caixa com 30 pacotes de 76g facilita o abastecimento de lanchonetes, mercearias, escritórios
+                        ou despensas que precisam de porções individuais de giro rápido.
+                    </p>
+                </div>
+                <div class="section-15__image-wrapper">
+                    <picture>
+                        <source media="(max-width: 320px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-detalhe-mesa-cafe-4303600-03.webp?ims=240x">
+                        <source media="(max-width: 375px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-detalhe-mesa-cafe-4303600-03.webp?ims=295x">
+                        <source media="(max-width: 425px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-detalhe-mesa-cafe-4303600-03.webp?ims=345x">
+                        <source media="(max-width: 768px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-detalhe-mesa-cafe-4303600-03.webp?ims=323x">
+                        <source media="(max-width: 1024px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-detalhe-mesa-cafe-4303600-03.webp?ims=446x">
+                        <source media="(max-width: 1440px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-detalhe-mesa-cafe-4303600-03.webp?ims=530x">
+                        <img class="section-15__image"
+                            src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-detalhe-mesa-cafe-4303600-03.webp"
+                            alt="Pessoa consumindo biscoito recheado Itamaraty Chocolate" loading="lazy"
+                            decoding="async">
+                    </picture>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-15-container" style="background-color: #3f2118;">
+            <div class="section-15">
+                <div class="section-15__content">
+                    <ul class="section-15__feature-list" aria-label="Benefícios do produto">
+                        <li class="section-15__feature-item">
+                            <div class="section-15__feature-item-body">
+                                <strong class="section-15__feature-item-title">Chocolate que chama atenção</strong>
+                                <p class="section-15__feature-item-text">Sabor clássico para quem procura um doce rápido
+                                    e fácil de escolher.</p>
+                            </div>
+                        </li>
+                        <li class="section-15__feature-item">
+                            <div class="section-15__feature-item-body">
+                                <strong class="section-15__feature-item-title">30 unidades na caixa</strong>
+                                <p class="section-15__feature-item-text">Formato ideal para reposição, revenda ou
+                                    consumo compartilhado.</p>
+                            </div>
+                        </li>
+                        <li class="section-15__feature-item">
+                            <div class="section-15__feature-item-body">
+                                <strong class="section-15__feature-item-title">Pacote individual de 76g</strong>
+                                <p class="section-15__feature-item-text">Porção prática para levar, expor no balcão ou
+                                    incluir no lanche.</p>
+                            </div>
+                        </li>
+                        <li class="section-15__feature-item">
+                            <div class="section-15__feature-item-body">
+                                <strong class="section-15__feature-item-title">Informação clara de alérgenos</strong>
+                                <p class="section-15__feature-item-text">Contém glúten e derivados de trigo e soja,
+                                    conforme ficha do produto.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="section-15__image-wrapper">
+                    <picture>
+                        <source media="(max-width: 320px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-lifestyle-modelo-4303600-02.webp?ims=240x">
+                        <source media="(max-width: 375px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-lifestyle-modelo-4303600-02.webp?ims=295x">
+                        <source media="(max-width: 425px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-lifestyle-modelo-4303600-02.webp?ims=345x">
+                        <source media="(max-width: 768px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-lifestyle-modelo-4303600-02.webp?ims=323x">
+                        <source media="(max-width: 1024px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-lifestyle-modelo-4303600-02.webp?ims=446x">
+                        <source media="(max-width: 1440px)"
+                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-lifestyle-modelo-4303600-02.webp?ims=530x">
+                        <img class="section-15__image"
+                            src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/biscoito-recheado-itamaraty-chocolate-76g-lifestyle-modelo-4303600-02.webp"
+                            alt="Biscoito Itamaraty Recheado Chocolate em mesa com café e embalagem de 76g"
+                            loading="lazy" decoding="async">
+                    </picture>
+                </div>
+            </div>
+        </div>
+
+        <p
+            style="color: #8a8a8a; font-family: sans-serif; font-size: clamp(1rem, 2vw, 1.2rem); text-wrap: pretty; text-align: center; padding: 30px 0;">
+            IMAGENS MERAMENTE ILUSTRATIVAS</p>
+
+        <section id="faq-section" aria-labelledby="faq-section-title">
+            <div id="faq-section__header">
+                <h2 id="faq-section__title">Dúvidas Frequentes</h2>
+            </div>
+            <ul id="faq-section__list" role="list">
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details>
+                        <summary>
+                            <h3 id="faq-section__q-text"> O biscoito recheado Itamaraty é sabor chocolate? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Sim. Este item é o Biscoito Itamaraty Recheado Chocolate, uma
+                                opção prática para quem busca biscoito doce em embalagem individual. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details>
+                        <summary>
+                            <h3 id="faq-section__q-text"> O Biscoito Itamaraty Recheado Chocolate contém glúten? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Sim. Ele contém glúten, pois leva farinha de trigo enriquecida
+                                com ferro e ácido fólico em sua composição. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details>
+                        <summary>
+                            <h3 id="faq-section__q-text"> O Biscoito Itamaraty Recheado Chocolate contém derivados de
+                                trigo e soja? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Sim. Ele contém derivados de trigo e soja, informação
+                                importante para quem precisa conferir alergênicos antes da compra. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+
+                <!-- Cole aqui as perguntas e respostas -->
+                <li id="faq-section__item">
+                    <details>
+                        <summary>
+                            <h3 id="faq-section__q-text"> O biscoito pode conter leite ou ovo? </h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text"> Sim. Pode conter leite, ovo e outros ingredientes como
+                                amendoim, avelã, centeio, cevada, aveia e castanhas, ajudando você a comprar com mais
+                                atenção. </p>
+                        </div>
+                    </details>
+                </li>
+                <!-------------------------->
+            </ul>
+        </section>
+    </div>
+</div>`,
+      css:  ``,
+    },
+
+    /*@@@@Col - variacao-25 */
+    {
+      id:   'variacao-25',
+      name: 'Variação 25',
+      html: `<div class="lp-container">
+    <meta charset="UTF-8">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        .pdp {
+            display: flex;
+            flex-direction: column;
+            font-family: Roboto, sans-serif
+        }
+
+        .pdp * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <title>PDP - eFácil</title>
+    <!-- ---------------------------------------- ÁREA PARA COLOCAR STYLES ----------------------------------------------------------- -->
+
+    <style>
+        /*inicio-area-de-faq*/
+        #faq-section {
+            width: 100%;
+            padding: 2rem 16px;
+            box-sizing: border-box;
+            margin: 0 auto 25px;
+            padding-top: 0;
+            font-family: sans-serif;
+        }
+
+        #faq-section__header {
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        #faq-section__title {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: bold;
+            color: #333;
+            margin: 0 0 12px;
+            line-height: 98%;
+        }
+
+        #faq-section__subtitle {
+            font-size: 1rem;
+            color: #666;
+            margin: 0;
+        }
+
+        #faq-section__list {
+            list-style: none;
+            margin: 0 auto;
+            padding: 0;
+            max-width: 60rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        #faq-section__item {
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        #faq-section__item summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 16px 20px;
+            cursor: pointer;
+            list-style: none;
+        }
+
+        #faq-section__item summary::-webkit-details-marker {
+            display: none;
+        }
+
+        #faq-section__item summary:hover {
+            background: #f9f9f9;
+        }
+
+        #faq-section__q-text {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            flex: 1;
+        }
+
+        #faq-section__q-text:hover {
+            color: #ea5b0c;
+        }
+
+        #faq-section__icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        #faq-section__icon::before,
+        #faq-section__icon::after {
+            content: '';
+            position: absolute;
+            background: #888;
+            border-radius: 2px;
+            transition: transform 0.25s ease, opacity 0.25s ease;
+        }
+
+        #faq-section__icon::before {
+            width: 12px;
+            height: 1.5px;
+            top: 9px;
+            left: 4px;
+        }
+
+        #faq-section__icon::after {
+            width: 1.5px;
+            height: 12px;
+            top: 4px;
+            left: 9px;
+        }
+
+        #faq-section__item[open] #faq-section__icon::after {
+            transform: rotate(90deg);
+            opacity: 0;
+        }
+
+        #faq-section__a-inner {
+            padding: 14px 20px 16px;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        #faq-section__a-text {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        @media (max-width: 480px) {
+            #faq-section__q-text {
+                font-size: 0.9rem;
+            }
+        }
+
+        /*final-area-de-faq*/
+    </style>
+
+    <style>
+        .section-32__container {
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .section-32__groupimage-section {
+            position: relative;
+            width: 100%;
+            margin: 0;
+        }
+
+        .section-32__groupimage-section img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 30px;
+        }
+
+        .section-32__grouptext-overlay {
+            position: absolute;
+            top: 50%;
+            left: 25%;
+            transform: translate(-50%, -50%);
+            max-width: 40%;
+            color: #fff;
+            text-align: center;
+            font-family: sans-serif;
+            z-index: 20;
+        }
+
+        .grouptext-overlay-Background {
+            background: rgba(0, 0, 0, 0.438);
+            border-radius: 2.8vw;
+            padding: 0.5rem;
+            backdrop-filter: blur(0.5vw);
+            -webkit-backdrop-filter: blur(0.5vw);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (prefers-contrast: more) {
+            .grouptext-overlay-Background {
+                background: #000;
+            }
+        }
+
+        .section-32__grouptext-overlay h2 {
+            font-size: 2vw;
+            font-weight: bold;
+            margin-bottom: 1.5px;
+            line-height: 120%;
+        }
+
+        .section-32__grouptext-overlay p {
+            font-size: 1.2vw;
+            margin: 0;
+            line-height: 120%;
+        }
+
+        @media (max-width: 960px) {
+            .section-32__grouptext-overlay h2 {
+                font-size: 2.1vw;
+            }
+
+            .section-32__grouptext-overlay p {
+                font-size: 1.5vw;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .section-32__grouptext-overlay h2 {
+                font-size: 2.5vw;
+            }
+
+            .section-32__grouptext-overlay p {
+                font-size: 2vw;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .section-32__grouptext-overlay {
+                max-width: 50%;
+            }
+
+            .section-32__grouptext-overlay h2 {
+                font-size: 3vw;
+            }
+
+            .section-32__grouptext-overlay p {
+                font-size: 2.3vw;
+            }
+        }
+
+        @media (max-width: 470px) {
+            .section-32__grouptext-overlay p {
+                font-size: 2.4vw;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .section-32__grouptext-overlay p {
+                font-size: 2.8vw;
+            }
+        }
+    </style>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .product-header-2 {
+            --badge-size: 8rem;
+            --banner-height: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: relative;
+            font-family: sans-serif;
+            container-type: inline-size;
+        }
+
+        .product-header__banner-2 {
+            width: 100%;
+            height: var(--banner-height);
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .product-header__banner-2 figure {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+
+        .product-header__banner-img-2 {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .product-header__badge-2 {
+            position: absolute;
+            bottom: calc(var(--badge-size) / -2);
+            width: var(--badge-size);
+            height: var(--badge-size);
+            background-color: #ff9900;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .product-header__badge-img-2 {
+            max-width: 90px;
+            max-height: 90px;
+            object-fit: contain;
+        }
+
+        .product-header__body-2 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: calc(var(--badge-size) / 2 + 1.8rem) 0.3rem 2.5rem;
+            text-align: center;
+        }
+
+        .product-header__brand-2 {
+            color: #ff9900;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+        }
+
+        .product-header__title-2 {
+            font-size: clamp(1.4rem, 4vw, 2.4rem);
+            line-height: clamp(1.6rem, 4vw, 3.1rem);
+            font-weight: 300;
+            max-width: 50rem;
+            text-wrap: pretty;
+            color: #1a1a1a;
+        }
+
+        .product-header__title-2 strong {
+            font-weight: 700;
+            display: block;
+        }
+
+        .product-header__subtitle-2 {
+            color: #8a8a8a;
+            font-size: clamp(0.95rem, 2vw, 1.1rem);
+            line-height: 1.65;
+            margin-top: 1.25rem;
+            max-width: 48rem;
+            text-wrap: pretty;
+        }
+
+        @media (max-width: 768px) {
+            .product-header-2 {
+                --banner-height: 180px;
+            }
+        }
+
+        @media (max-width: 470px) {
+            .product-header__subtitle-2 {
+                text-align: justify;
+                font-size: clamp(0.9rem, 2vw, 1.1rem);
+            }
+        }
+    </style>
+
+    <style>
+        .section-33__container {
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .section-33__video-section {
+            position: relative;
+            width: 100%;
+            max-height: 865px;
+            overflow: hidden;
+            background: linear-gradient(239deg, #a5876e 0%, #d3b296 40%, #b19177 70%, #e6d4c5 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 0;
+        }
+
+        .section-33__video-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1280px;
+            max-height: 865px;
+
+            /*
+     * PROPORÇÃO DO VÍDEO
+     * 16:9 = padding-bottom: 56.25%
+     * 4:3  = padding-bottom: 75%
+     * 1:1  = padding-bottom: 100%
+     */
+            padding-bottom: 56.25%;
+
+            margin: 0 auto;
+        }
+
+        .section-33__video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 18px;
+        }
+    </style>
+
+    <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
+    <div class="pdp" id="pdp"> <!-- HTML fica dentro dessa div PDP -->
+
+        <section class="product-header-2" aria-label="Cabeçalho do produto">
+            <header class="product-header__banner-2">
+                <figure style="width:100%;height:100%;margin:0;">
+                    <img src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/banner-maquina-lavar-panasonic-na-f190-detalhe-abstrato-2224635-2224636-00.webp"
+                        alt="Banner do produto" class="product-header__banner-img-2" loading="eager">
+                </figure>
+                <div class="product-header__badge-2" role="img" aria-label="Logo da marca">
+                    <img src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/panasonic/logo-panasonic.png"
+                        alt="Ícone da marca" class="product-header__badge-img-2">
+                </div>
+            </header>
+            <article class="product-header__body-2">
+                <small class="product-header__brand-2">panasonic</small>
+                <h2 class="product-header__title-2">
+                    <span>Lavadora Automática 19kg</span>
+                    <strong>Branca com Sistema Ciclone</strong>
+                </h2>
+                <p class="product-header__subtitle-2">
+                    Desenvolvida para entregar a melhor lavagem da categoria, a Lavadora Panasonic possui
+                    capacidade para 19kg, Sistema Ciclone sem agitador, painel digital moderno e recursos que oferecem
+                    praticidade, eficiência e mais cuidado com as roupas no dia a dia.
+                </p>
+            </article>
+        </section>
+
+        <section class="section-32__container" aria-label="Destaque visual do produto">
+            <figure class="section-32__groupimage-section">
+                <img src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/maquina-lavar-panasonic-na-f190-19kg-branca-aberta-visao-superior-lifestyle-2224635-2224636-01.webp"
+                    alt="Lavadora Panasonic com cesto aberto e Sistema Ciclone" width="1600" height="865"
+                    loading="eager" decoding="async" style="border-radius: 30px 30px 0 0;">
+                <figcaption class="section-32__grouptext-overlay left grouptext-overlay-Background" style="top: 55%;
+    left: 76%;
+    max-width: 55%;">
+                    <h2><strong>SISTEMA CICLONE SEM AGITADOR</strong></h2>
+                    <p>O Sistema Ciclone dispensa o agitador central, proporcionando uma lavagem mais eficiente e maior
+                        cuidado com as roupas, além de oferecer amplo espaço interno.</p>
+                </figcaption>
+            </figure>
+        </section>
+
+        <section class="section-32__container" aria-label="Destaque visual do produto">
+            <figure class="section-32__groupimage-section">
+                <img src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/maquina-lavar-panasonic-na-f190-19kg-branca-tampa-vidro-fechada-lifestyle-2224635-2224636-02.webp"
+                    alt="Painel digital da Lavadora Panasonic" width="1600" height="865" loading="eager"
+                    decoding="async" style="border-radius: 0;">
+                <figcaption class="section-32__grouptext-overlay left grouptext-overlay-Background"
+                    style="top: 50%; left: 25%; max-width: 40%;">
+                    <h2><strong>PAINEL DIGITAL MODERNO</strong></h2>
+                    <p>O painel digital permite programar ciclos de lavagem, controlar o tempo de funcionamento e salvar
+                        seu programa favorito para tornar o uso ainda mais prático.</p>
+                </figcaption>
+            </figure>
+        </section>
+
+        <section class="section-32__container" aria-label="Destaque visual do produto">
+            <figure class="section-32__groupimage-section">
+                <img src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/maquina-lavar-panasonic-na-f190-19kg-branca-painel-ligado-ambiente-lifestyle-2224635-2224636-03.webp"
+                    alt="Tampa com fechamento suave da Lavadora Panasonic" width="1600" height="865"
+                    loading="eager" decoding="async" style="border-radius: 0 ">
+                <figcaption class="section-32__grouptext-overlay left grouptext-overlay-Background"
+                    style="top: 50%; left: 23%; max-width: 40%;">
+                    <h2><strong>FECHAMENTO SUAVE DA TAMPA</strong></h2>
+                    <p>O sistema anti-impacto proporciona fechamento suave e seguro da tampa, oferecendo mais conforto e
+                        segurança durante o uso da lavadora.</p>
+                </figcaption>
+            </figure>
+        </section>
+
+        <section class="section-33__container" aria-label="Seção de vídeo do produto">
+            <div class="section-33__video-section">
+                <div class="section-33__video-wrapper">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/yCqzakXqBVs?si=xDNg4dIQMPuc3lD4"
+                        title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+            </div>
+        </section>
+
+        <p style="color: #8a8a8a; font-family: sans-serif; font-size: clamp(1rem, 2vw, 1.2rem); text-wrap: pretty;
+        text-align: center; padding: 30px 0;">
+            IMAGENS MERAMENTE ILUSTRATIVAS
+        </p>
+
+        <!-- Área de FAQ -->
+        <section id="faq-section" aria-labelledby="faq-section-title">
+            <div id="faq-section__header">
+                <h2 id="faq-section__title" id="faq-section-title">Perguntas Frequentes</h2>
+                <p id="faq-section__subtitle">Saiba mais sobre a Lavadora Panasonic 19kg.</p>
+            </div>
+
+            <ul id="faq-section__list">
+
+                <li id="faq-section__item">
+                    <details id="faq-section__item">
+                        <summary>
+                            <h3 id="faq-section__q-text">Qual é a capacidade de lavagem da Panasonic?</h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text">
+                                A lavadora possui capacidade para até 19 kg de roupas, permitindo lavar desde grandes
+                                volumes de peças até edredons em um único ciclo.
+                            </p>
+                        </div>
+                    </details>
+                </li>
+
+                <li id="faq-section__item">
+                    <details id="faq-section__item">
+                        <summary>
+                            <h3 id="faq-section__q-text">O que é o Sistema Ciclone?</h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text">
+                                O Sistema Ciclone dispensa o agitador central e utiliza movimentos específicos para
+                                oferecer
+                                maior eficiência de lavagem e mais cuidado com os tecidos.
+                            </p>
+                        </div>
+                    </details>
+                </li>
+
+                <li id="faq-section__item">
+                    <details id="faq-section__item">
+                        <summary>
+                            <h3 id="faq-section__q-text">Quais recursos o painel digital oferece?</h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text">
+                                O painel digital permite selecionar ciclos de lavagem, programar o tempo de
+                                funcionamento e
+                                salvar o programa favorito para facilitar o uso diário.
+                            </p>
+                        </div>
+                    </details>
+                </li>
+
+                <li id="faq-section__item">
+                    <details id="faq-section__item">
+                        <summary>
+                            <h3 id="faq-section__q-text">A lavadora possui programas especiais?</h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text">
+                                Sim. Ela conta com Programa Vanish, Ciclo Pet para remoção de pelos de animais, programa
+                                para roupas perfumadas por mais tempo e 10 programas de lavagem.
+                            </p>
+                        </div>
+                    </details>
+                </li>
+
+                <li id="faq-section__item">
+                    <details id="faq-section__item">
+                        <summary>
+                            <h3 id="faq-section__q-text">Quais outros diferenciais a lavadora oferece?</h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text">
+                                O modelo conta com cesto em inox, filtro de fiapos, dispenser para sabão e amaciante,
+                                reuso de água, fechamento suave da tampa e classificação energética A.
+                            </p>
+                        </div>
+                    </details>
+                </li>
+
+            </ul>
+        </section>
+
+    </div>
+</div>`,
+      css:  ``,
+    },
+
   ]
 });

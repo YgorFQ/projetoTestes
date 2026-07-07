@@ -25,6 +25,15 @@ var COL_GITHUB_LEGACY_TOKEN_KEY  = 'senkolib_colecoes_github_token';
  * A logica continua local: Colecoes nao importa nem chama a Biblioteca.
  */
 
+function colGithubDetectPagesConfig() {
+  var host = window.location.hostname || '';
+  var parts = window.location.pathname.split('/').filter(Boolean);
+  if (/^[^.]+\.github\.io$/i.test(host) && parts.length > 0) {
+    return { OWNER: host.split('.')[0], REPO: parts[0], BRANCH: 'main', _auto: true };
+  }
+  return null;
+}
+
 function colGithubReadStoredConfig() {
   var saved = null;
   try { saved = JSON.parse(localStorage.getItem(COL_GITHUB_CONFIG_KEY) || 'null'); } catch (error) {}
@@ -43,15 +52,11 @@ function colGithubReadStoredConfig() {
 }
 
 var COL_GITHUB_CONFIG = (function () {
+  var pagesConfig = colGithubDetectPagesConfig();
+  if (pagesConfig) return pagesConfig;
+
   var saved = colGithubReadStoredConfig();
   if (saved) return saved;
-
-  var host = window.location.hostname || '';
-  var parts = window.location.pathname.split('/').filter(Boolean);
-  if (/^[^.]+\.github\.io$/i.test(host) && parts.length > 0) {
-    return { OWNER: host.split('.')[0], REPO: parts[0], BRANCH: 'main', _auto: true };
-  }
-
   return { OWNER: '', REPO: '', BRANCH: 'main', _auto: false };
 })();
 
@@ -72,11 +77,25 @@ function colGithubPersistConfig() {
 }
 
 function colGithubSyncStoredConfig() {
+  /*
+   * Em GitHub Pages, a URL aberta e a fonte mais confiavel. Uma configuracao
+   * antiga salva no navegador nao deve mandar Colecoes salvar em outro repo.
+   */
+  var pagesConfig = colGithubDetectPagesConfig();
+  if (pagesConfig) {
+    COL_GITHUB_CONFIG.OWNER = pagesConfig.OWNER;
+    COL_GITHUB_CONFIG.REPO = pagesConfig.REPO;
+    COL_GITHUB_CONFIG.BRANCH = pagesConfig.BRANCH;
+    COL_GITHUB_CONFIG._auto = true;
+    return;
+  }
+
   var saved = colGithubReadStoredConfig();
   if (!saved) return;
   COL_GITHUB_CONFIG.OWNER = saved.OWNER;
   COL_GITHUB_CONFIG.REPO = saved.REPO;
   COL_GITHUB_CONFIG.BRANCH = saved.BRANCH || 'main';
+  COL_GITHUB_CONFIG._auto = false;
 }
 
 function colGithubGetToken() {

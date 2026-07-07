@@ -1,0 +1,10 @@
+{
+  "liveServer.settings.ignoreFiles": [
+    ".vscode/**",
+    "**/*.bak",
+    "app/features/biblioteca/data/layouts/**",
+    "app/features/biblioteca/data/variants/**",
+    "backups/**"
+  ],
+  "liveServer.settings.donotShowInfoMsg": true
+}
