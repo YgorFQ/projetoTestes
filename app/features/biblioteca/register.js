@@ -77,6 +77,18 @@
     });
   }
 
+  function getManifestFile(entry) {
+    if (typeof entry === 'string') return entry;
+    if (entry && typeof entry.file === 'string') return entry.file;
+    return '';
+  }
+
+  function getManifestFiles(entries) {
+    return (Array.isArray(entries) ? entries : [])
+      .map(getManifestFile)
+      .filter(Boolean);
+  }
+
   function loadSecondaryModules(manifest) {
     if (secondaryLoadPromise) return secondaryLoadPromise;
 
@@ -87,7 +99,7 @@
      */
     secondaryLoadPromise = new Promise(function (resolve) {
       var run = function () {
-        var variants = Array.isArray(manifest.variants) ? manifest.variants : [];
+        var variants = getManifestFiles(manifest.variants);
         var variantLoads = variants.map(function (path) {
           return loadScript('data/' + path);
         });
@@ -148,7 +160,7 @@
       var content = window.SenkoBiblioteca.createView();
       panel.replaceChildren(content);
 
-      var layouts = Array.isArray(manifest.layouts) ? manifest.layouts : [];
+      var layouts = getManifestFiles(manifest.layouts);
       await Promise.all([
         Promise.all(layouts.map(function (path) {
           return loadScript('data/' + path);

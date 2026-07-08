@@ -15,6 +15,7 @@
   var loadPromise;
   var githubLoadPromise;
   var collectionFilesBySlug = {};
+  var collectionLayoutFilesBySlug = {};
   var collectionLoadPromises = {};
 
   function featureUrl(path) {
@@ -73,6 +74,18 @@
     });
   }
 
+  function getManifestFile(entry) {
+    if (typeof entry === 'string') return entry;
+    if (entry && typeof entry.file === 'string') return entry.file;
+    return '';
+  }
+
+  function getManifestFiles(entries) {
+    return (Array.isArray(entries) ? entries : [])
+      .map(getManifestFile)
+      .filter(Boolean);
+  }
+
   function registerCollectionCatalog(manifest) {
     var entries = Array.isArray(manifest.collections) ? manifest.collections : [];
     var legacyFiles = [];
@@ -91,13 +104,14 @@
 
       var slug = entry.slug.toLowerCase();
       collectionFilesBySlug[slug] = entry.file;
-      ColLib.register({
+      collectionLayoutFilesBySlug[slug] = getManifestFiles(entry.layouts);
+      ColLib.registerCollection({
         slug: slug,
         name: entry.name || slug,
         group: entry.group || '',
         tags: Array.isArray(entry.tags) ? entry.tags : [],
         layouts: [],
-        layoutCount: Number(entry.layoutCount) || 0,
+        layoutCount: Number(entry.layoutCount) || collectionLayoutFilesBySlug[slug].length || 0,
         _senkoLazy: true
       });
     });
@@ -125,6 +139,11 @@
     }
 
     collectionLoadPromises[normalizedSlug] = loadScript('data/' + file).then(function () {
+      var layoutFiles = collectionLayoutFilesBySlug[normalizedSlug] || [];
+      return Promise.all(layoutFiles.map(function (layoutFile) {
+        return loadScript('data/' + layoutFile);
+      }));
+    }).then(function () {
       var loaded = ColLib.getBySlug(normalizedSlug);
       if (!loaded) throw new Error('Colecao nao foi registrada: ' + normalizedSlug);
       loaded.layoutCount = (loaded.layouts || []).length;

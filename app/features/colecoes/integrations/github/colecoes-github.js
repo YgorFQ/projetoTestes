@@ -19,6 +19,7 @@ var COL_GITHUB_CONFIG_KEY = 'senkolib_github_config';
 var COL_GITHUB_TOKEN_KEY  = 'senkolib_github_token';
 var COL_GITHUB_LEGACY_CONFIG_KEY = 'senkolib_colecoes_github_config';
 var COL_GITHUB_LEGACY_TOKEN_KEY  = 'senkolib_colecoes_github_token';
+var COL_GH_MANIFEST_PATH = 'app/features/colecoes/data/manifest.js';
 
 /*
  * A configuracao GitHub e global porque owner/repo/token pertencem ao projeto.
@@ -267,6 +268,35 @@ function colGithubPutFile(filePath, content, sha, message) {
   });
 }
 
+function colGithubDeleteFile(filePath, sha, message) {
+  var token = typeof colGithubGetToken === 'function' ? colGithubGetToken() : '';
+  var url = 'https://api.github.com/repos/'
+    + COL_GITHUB_CONFIG.OWNER + '/'
+    + COL_GITHUB_CONFIG.REPO  + '/contents/'
+    + filePath;
+
+  return fetch(url, {
+    method: 'DELETE',
+    headers: {
+      'Authorization': 'token ' + token,
+      'Accept':        'application/vnd.github+json',
+      'Content-Type':  'application/json',
+    },
+    body: JSON.stringify({
+      message: message,
+      sha: sha,
+      branch: COL_GITHUB_CONFIG.BRANCH,
+    }),
+  }).then(function (res) {
+    if (!res.ok) {
+      return res.json().then(function (d) {
+        throw new Error('GitHub DELETE falhou (' + res.status + '): ' + (d.message || filePath));
+      });
+    }
+    return true;
+  });
+}
+
 function colGithubLockSave() {
   if (colGithubSaving) return false;
   colGithubSaving = true;
@@ -313,7 +343,206 @@ function colGithubStartDeployWatch(filePath) {
   Caminho do arquivo de uma coleção no repositório.
 */
 function colGhFilePath(slug) {
-  return 'app/features/colecoes/data/' + slug.toLowerCase() + '.js';
+  var normalizedSlug = String(slug || '').toLowerCase();
+  return 'app/features/colecoes/data/collections/' + normalizedSlug + '/collection.js';
+}
+
+function colGhParseManifestContent(content) {
+  var assignment = 'window.SenkoColecoesManifest';
+  var assignmentIndex = content.indexOf(assignment);
+  var equalsIndex = content.indexOf('=', assignmentIndex);
+  var source = equalsIndex === -1
+    ? ''
+    : content.slice(equalsIndex + 1).trim().replace(/;\s*$/, '');
+
+  if (assignmentIndex === -1 || !source) {
+    throw new Error('Formato do catalogo de Colecoes nao reconhecido.');
+  }
+  return JSON.parse(source);
+}
+
+function colGhSerializeManifest(manifest) {
+  return (
+    '/* Catalogo privado de Colecoes. Atualizado pela integracao GitHub. */\n' +
+    'window.SenkoColecoesManifest = ' +
+    JSON.stringify(manifest, null, 2) +
+    ';\n'
+  );
+}
+
+function colGhReadManifest() {
+  return colGithubGetFile(COL_GH_MANIFEST_PATH).then(function (data) {
+    return {
+      content: data.content,
+      sha: data.sha,
+      manifest: colGhParseManifestContent(data.content)
+    };
+  });
+}
+
+function colGhFindCollectionEntry(manifest, slug) {
+  var normalizedSlug = String(slug || '').toLowerCase();
+  var fileName = 'collections/' + normalizedSlug + '/collection.js';
+  var collections = Array.isArray(manifest.collections) ? manifest.collections : [];
+
+  for (var i = 0; i < collections.length; i++) {
+    var entry = collections[i];
+    if (
+      entry === fileName ||
+      (entry && typeof entry === 'object' &&
+        (entry.file === fileName || entry.file === normalizedSlug + '.js' || String(entry.slug || '').toLowerCase() === normalizedSlug))
+    ) {
+      return { entry: entry, index: i };
+    }
+  }
+  return { entry: null, index: -1 };
+}
+
+function colGhSetManifestEntry(slug, shouldInclude, meta) {
+  var normalizedSlug = String(slug || '').toLowerCase();
+  meta = meta || {};
+
+  return colGhReadManifest().then(function (info) {
+    var manifest = info.manifest;
+    if (!Array.isArray(manifest.collections)) manifest.collections = [];
+
+    var found = colGhFindCollectionEntry(manifest, normalizedSlug);
+    var existing = found.entry && typeof found.entry === 'object' ? found.entry : {};
+
+    if (shouldInclude) {
+      var entry = {
+        file: existing.file || ('collections/' + normalizedSlug + '/collection.js'),
+        slug: normalizedSlug,
+        name: meta.name || existing.name || normalizedSlug,
+        group: meta.group || existing.group || '',
+        tags: Array.isArray(meta.tags) ? meta.tags : (Array.isArray(existing.tags) ? existing.tags : []),
+        layoutCount: typeof meta.layoutCount === 'number'
+          ? meta.layoutCount
+          : (Array.isArray(existing.layouts) ? existing.layouts.length : (Number(existing.layoutCount) || 0)),
+        layouts: Array.isArray(existing.layouts) ? existing.layouts : []
+      };
+      if (found.index === -1) manifest.collections.push(entry);
+      else manifest.collections[found.index] = entry;
+    } else if (found.index !== -1) {
+      manifest.collections.splice(found.index, 1);
+    }
+
+    return colGithubPutFile(
+      COL_GH_MANIFEST_PATH,
+      colGhSerializeManifest(manifest),
+      info.sha,
+      shouldInclude
+        ? '[Colecoes] register collection file: ' + normalizedSlug
+        : '[Colecoes] unregister collection file: ' + normalizedSlug
+    ).then(function () { return COL_GH_MANIFEST_PATH; });
+  });
+}
+
+function colGhSyncManifestFromMemory(slug) {
+  var col = typeof ColLib !== 'undefined' ? ColLib.getBySlug(slug) : null;
+  if (!col) return Promise.resolve(true);
+  return colGhSetManifestEntry(slug, true, {
+    name: col.name,
+    group: col.group,
+    tags: col.tags || [],
+    layoutCount: Array.isArray(col.layouts) ? col.layouts.length : 0
+  });
+}
+
+function colGhFindLayoutManifestEntry(slug, layoutId) {
+  var normalizedLayoutId = String(layoutId || '').toLowerCase();
+
+  return colGhReadManifest().then(function (info) {
+    var found = colGhFindCollectionEntry(info.manifest, slug);
+    var entry = found.entry;
+    var layouts = entry && typeof entry === 'object' && Array.isArray(entry.layouts)
+      ? entry.layouts
+      : [];
+
+    for (var i = 0; i < layouts.length; i++) {
+      var layoutEntry = layouts[i];
+      if (
+        layoutEntry &&
+        typeof layoutEntry === 'object' &&
+        layoutEntry.file &&
+        String(layoutEntry.id || '').toLowerCase() === normalizedLayoutId
+      ) {
+        return {
+          manifestInfo: info,
+          collectionEntry: entry,
+          layoutEntry: layoutEntry,
+          path: 'app/features/colecoes/data/' + layoutEntry.file
+        };
+      }
+    }
+    return null;
+  });
+}
+
+function colGhSetLayoutManifestEntry(slug, layout, shouldInclude) {
+  var normalizedSlug = String(slug || '').toLowerCase();
+  var normalizedLayoutId = String(layout && layout.id || '').toLowerCase();
+
+  return colGhReadManifest().then(function (info) {
+    var manifest = info.manifest;
+    if (!Array.isArray(manifest.collections)) manifest.collections = [];
+
+    var found = colGhFindCollectionEntry(manifest, normalizedSlug);
+    if (found.index === -1 || !found.entry || typeof found.entry !== 'object') {
+      throw new Error('Colecao nao catalogada no manifest: ' + normalizedSlug);
+    }
+
+    var entry = found.entry;
+    if (!Array.isArray(entry.layouts)) entry.layouts = [];
+
+    var layoutIndex = -1;
+    for (var i = 0; i < entry.layouts.length; i++) {
+      var current = entry.layouts[i];
+      if (current && typeof current === 'object' && String(current.id || '').toLowerCase() === normalizedLayoutId) {
+        layoutIndex = i;
+        break;
+      }
+    }
+
+    if (shouldInclude) {
+      var nextEntry = {
+        file: 'collections/' + normalizedSlug + '/layouts/' + normalizedLayoutId + '.js',
+        id: normalizedLayoutId,
+        name: layout.name || normalizedLayoutId
+      };
+      if (layoutIndex === -1) entry.layouts.push(nextEntry);
+      else entry.layouts[layoutIndex] = nextEntry;
+      entry.layoutCount = Math.max(Number(entry.layoutCount) || 0, entry.layouts.length);
+    } else if (layoutIndex !== -1) {
+      entry.layouts.splice(layoutIndex, 1);
+      entry.layoutCount = entry.layouts.length;
+    }
+
+    return colGithubPutFile(
+      COL_GH_MANIFEST_PATH,
+      colGhSerializeManifest(manifest),
+      info.sha,
+      shouldInclude
+        ? '[Colecoes] register layout file: ' + normalizedSlug + '/' + normalizedLayoutId
+        : '[Colecoes] unregister layout file: ' + normalizedSlug + '/' + normalizedLayoutId
+    ).then(function () {
+      return COL_GH_MANIFEST_PATH;
+    });
+  });
+}
+
+function colGhGetCollectionLayoutFiles(slug) {
+  var normalizedSlug = String(slug || '').toLowerCase();
+  return colGhReadManifest().then(function (info) {
+    var found = colGhFindCollectionEntry(info.manifest, normalizedSlug);
+    var entry = found.entry;
+    if (!entry || typeof entry !== 'object' || !Array.isArray(entry.layouts)) return [];
+    return entry.layouts
+      .filter(function (layoutEntry) { return layoutEntry && layoutEntry.file; })
+      .map(function (layoutEntry) { return 'app/features/colecoes/data/' + layoutEntry.file; });
+  }).catch(function () {
+    return [];
+  });
 }
 
 function colGhEscapeJsString(value) {
@@ -331,43 +560,22 @@ function colGhEscapeJsString(value) {
 }
 
 /*
-  Monta o conteúdo completo de um arquivo de coleção a partir de um objeto.
-  Usado na criação e também para reescrever após edições de metadados.
+  Monta o conteúdo do arquivo de metadados de uma coleção.
+  Os layouts ficam em arquivos individuais dentro de collections/[slug]/layouts.
 */
 function colGhBuildFileContent(col) {
   var tagsStr = (col.tags || [])
     .map(function (t) { return "'" + colGhEscapeJsString(t) + "'"; })
     .join(', ');
 
-  var layoutsCode = (col.layouts || []).map(function (l) {
-    var safeHtml = colGithubEscapeTemplateLiteral(l.html);
-    var safeCss  = colGithubEscapeTemplateLiteral(l.css);
-    return (
-      '\n    /*@@@@Col - ' + l.id + ' */\n' +
-      '    {\n' +
-      "      id:   '" + colGhEscapeJsString(l.id)   + "',\n" +
-      "      name: '" + colGhEscapeJsString(l.name) + "',\n" +
-      '      html: `' + safeHtml + '`,\n' +
-      '      css:  `' + safeCss  + '`,\n' +
-      '    },'
-    );
-  }).join('\n');
-
   return (
     '// @ts-nocheck\n' +
-    '/* ═══════════════════════════════════════════════════════════════════════\n' +
-    '   app/features/colecoes/data/' + col.slug + '.js — Coleção: ' + col.name + '\n' +
-    '\n' +
-    '   ATENÇÃO: Arquivo gerado pelo modulo GitHub de Colecoes.\n' +
-    '   NÃO edite manualmente em produção.\n' +
-    '═══════════════════════════════════════════════════════════════════════ */\n' +
-    'ColLib.register({\n' +
+    'ColLib.registerCollection({\n' +
     "  slug:  '" + colGhEscapeJsString(col.slug)  + "',\n" +
     "  name:  '" + colGhEscapeJsString(col.name)  + "',\n" +
     "  group: '" + colGhEscapeJsString(col.group) + "',\n" +
     '  tags:  [' + tagsStr   + '],\n' +
-    '  layouts: [' + layoutsCode + '\n' +
-    '  ]\n' +
+    '  layouts: []\n' +
     '});\n'
   );
 }
@@ -425,69 +633,35 @@ function colGhBuildGroupsFileContent() {
   );
 }
 
-/*
-  Parser de layout dentro de um arquivo de coleção.
-  Localiza o bloco `/*@@@@Col - [id] * /` e retorna { start, end }.
-  Seguro para template literals com backticks escapados.
-*/
-function colGhFindLayoutBounds(content, layoutId) {
-  var marker    = '/*@@@@Col - ' + layoutId + ' */';
-  var markerPos = content.indexOf(marker);
-  if (markerPos === -1) return null;
-
-  var objOpen = content.indexOf('{', markerPos + marker.length);
-  if (objOpen === -1) return null;
-
-  var i          = objOpen;
-  var depth      = 0;
-  var inTemplate = false;
-  var len        = content.length;
-
-  while (i < len) {
-    var ch = content[i];
-
-    if (ch === '`') {
-      var backslashes = 0;
-      var j = i - 1;
-      while (j >= 0 && content[j] === '\\') { backslashes++; j--; }
-      if (backslashes % 2 === 0) inTemplate = !inTemplate;
-      i++; continue;
+function colGhFlushGroups() {
+  if (typeof ColGroups === 'undefined') return Promise.resolve(true);
+  var content = colGhBuildGroupsFileContent();
+  return colGithubGetFile('app/features/colecoes/data/col-groups-data.js').then(function (data) {
+    return colGithubPutFile('app/features/colecoes/data/col-groups-data.js', content, data.sha, '[Colecoes] sync groups');
+  }).catch(function (error) {
+    if (error.message && error.message.indexOf('404') !== -1) {
+      return colGithubPutFile('app/features/colecoes/data/col-groups-data.js', content, null, '[Colecoes] create groups file');
     }
-
-    if (inTemplate) { i++; continue; }
-    if (ch === '{')  { depth++; i++; continue; }
-
-    if (ch === '}') {
-      depth--;
-      if (depth === 0) {
-        var end = i + 1;
-        if (content[end] === ',') end++;
-        if (content[end] === '\n') end++;
-        return { start: markerPos, end: end };
-      }
-      i++; continue;
-    }
-
-    i++;
-  }
-
-  return null;
+    throw error;
+  }).then(function () {
+    if (typeof ColGroups !== 'undefined') ColGroups.clearPending();
+    return true;
+  });
 }
 
-/*
-  Monta o bloco de código de um layout para inserção/substituição no arquivo.
-*/
-function colGhBuildLayoutBlock(layout) {
+function colGhBuildLayoutFileContent(slug, layout) {
   var safeHtml = colGithubEscapeTemplateLiteral(layout.html);
   var safeCss  = colGithubEscapeTemplateLiteral(layout.css);
   return (
-    '    /*@@@@Col - ' + layout.id + ' */\n' +
-    '    {\n' +
-    "      id:   '" + colGhEscapeJsString(layout.id)   + "',\n" +
-    "      name: '" + colGhEscapeJsString(layout.name) + "',\n" +
-    '      html: `' + safeHtml + '`,\n' +
-    '      css:  `' + safeCss  + '`,\n' +
-    '    },'
+    '// @ts-nocheck\n' +
+    "ColLib.registerCollectionLayout('" + colGhEscapeJsString(slug.toLowerCase()) + "',\n" +
+    '{\n' +
+    "  id: '" + colGhEscapeJsString(layout.id) + "',\n" +
+    "  name: '" + colGhEscapeJsString(layout.name) + "',\n" +
+    '  html: `' + safeHtml + '`,\n' +
+    '  css: `' + safeCss + '`\n' +
+    '}\n' +
+    ');\n'
   );
 }
 
@@ -508,465 +682,157 @@ function colGhNormalizeName(value) {
     .replace(/\s+/g, ' ');
 }
 
-/*
- * Confere os nomes do arquivo remoto, alem do estado em memoria. Essa
- * segunda camada cobre abas antigas que ainda nao receberam uma edicao.
- */
-function colGhContentHasLayoutName(content, name, exceptLayoutId) {
-  var target = colGhNormalizeName(name);
-  var re = /\/\*@@@@Col - ([^*]+) \*\/[\s\S]*?\bname:\s*'((?:\\.|[^'])*)'/g;
-  var match;
-
-  while ((match = re.exec(content)) !== null) {
-    var layoutId = String(match[1] || '').trim();
-    if (layoutId !== exceptLayoutId && colGhNormalizeName(match[2]) === target) {
-      return true;
-    }
-  }
-  return false;
-}
-
 function colGhGetFile(slug) {
-  var path = colGhFilePath(slug);
-  return colGithubGetFile(path).then(function (data) {
-    return { exists: true, sha: data.sha, content: data.content, path: path };
-  }).catch(function (err) {
-    if (err.message && err.message.indexOf('404') !== -1) {
-      return { exists: false, path: path };
+  var normalizedSlug = String(slug || '').toLowerCase();
+  return colGhReadManifest().then(function (info) {
+    var found = colGhFindCollectionEntry(info.manifest, normalizedSlug);
+    if (found.entry && typeof found.entry === 'object' && found.entry.file) {
+      return 'app/features/colecoes/data/' + found.entry.file;
     }
-    throw err;
-  });
-}
-
-/*
-  Adiciona ou remove o arquivo no manifesto privado da feature.
-*/
-function colGhSetManifestEntry(slug, shouldInclude, metadata) {
-  /*
-   * O manifesto e o catalogo privado de Colecoes. Nenhuma operacao desta
-   * feature precisa editar o index.html ou arquivos de outra janela.
-   */
-  var manifestPath = 'app/features/colecoes/data/manifest.js';
-  var normalizedSlug = slug.toLowerCase();
-  var fileName = normalizedSlug + '.js';
-
-  return colGithubGetFile(manifestPath).then(function (data) {
-    var manifest;
-    try {
-      /*
-       * Le somente o objeto JSON atribuido ao namespace de Colecoes. Nao usa
-       * eval e nao executa o conteudo recebido da API do GitHub.
-       */
-      var assignment = 'window.SenkoColecoesManifest';
-      var assignmentIndex = data.content.indexOf(assignment);
-      var equalsIndex = data.content.indexOf('=', assignmentIndex);
-      var source = equalsIndex === -1
-        ? ''
-        : data.content.slice(equalsIndex + 1).trim().replace(/;\s*$/, '');
-
-      if (assignmentIndex === -1 || !source) {
-        throw new Error('Formato do catalogo nao reconhecido.');
+    return colGhFilePath(normalizedSlug);
+  }).catch(function () {
+    return colGhFilePath(normalizedSlug);
+  }).then(function (path) {
+    return colGithubGetFile(path).then(function (data) {
+      return { exists: true, sha: data.sha, content: data.content, path: path };
+    }).catch(function (err) {
+      if (err.message && err.message.indexOf('404') !== -1) {
+        return { exists: false, path: path };
       }
-      manifest = JSON.parse(source);
-    } catch (error) {
-      throw new Error('Catalogo de Colecoes possui JavaScript invalido.');
-    }
-
-    if (!Array.isArray(manifest.collections)) manifest.collections = [];
-
-    var index = -1;
-    for (var i = 0; i < manifest.collections.length; i++) {
-      var current = manifest.collections[i];
-      if (
-        current === fileName ||
-        (current && typeof current === 'object' &&
-          (current.file === fileName || current.slug === normalizedSlug))
-      ) {
-        index = i;
-        break;
-      }
-    }
-
-    if (shouldInclude) {
-      var source = metadata || {};
-      var nextEntry = {
-        file: fileName,
-        slug: normalizedSlug,
-        name: source.name || normalizedSlug,
-        group: source.group || '',
-        tags: Array.isArray(source.tags) ? source.tags : [],
-        layoutCount: Number(source.layoutCount) || 0
-      };
-
-      if (index === -1) manifest.collections.push(nextEntry);
-      else manifest.collections[index] = nextEntry;
-    } else if (index !== -1) {
-      manifest.collections.splice(index, 1);
-    }
-
-    if (!shouldInclude && index === -1) {
-      return manifestPath;
-    }
-
-    return colGithubPutFile(
-      manifestPath,
-      '/* Catalogo privado de Colecoes. Atualizado pela integracao GitHub. */\n' +
-        'window.SenkoColecoesManifest = ' +
-        JSON.stringify(manifest, null, 2) +
-        ';\n',
-      data.sha,
-      shouldInclude
-        ? '[Colecoes] register collection file: ' + slug
-        : '[Colecoes] unregister collection file: ' + slug
-    ).then(function () {
-      return manifestPath;
+      throw err;
     });
   });
 }
-
-function colGhSyncManifestFromMemory(slug) {
-  var col = typeof ColLib !== 'undefined' ? ColLib.getBySlug(slug) : null;
-  if (!col) return Promise.resolve();
-
-  return colGhSetManifestEntry(slug, true, {
-    name: col.name,
-    group: col.group,
-    tags: col.tags || [],
-    layoutCount: (col.layouts || []).length
-  });
-}
-
-
-/* ═══════════════════════════════════════════════════════════════════════
-   FLUSH DE GRUPOS PENDENTES
-   Deve ser chamado ANTES de qualquer commit de coleção.
-   Se não houver grupos pendentes, resolve imediatamente sem fazer nada.
-═══════════════════════════════════════════════════════════════════════ */
-
-function colGhFlushGroups() {
-  /* Sem pendentes — resolve imediatamente */
-  if (typeof ColGroups === 'undefined') return Promise.resolve();
-  var pending = ColGroups.getPending();
-  if (pending.length === 0) return Promise.resolve();
-
-  colGithubSetStatus('Salvando grupos…', 'saving');
-
-  var newContent = colGhBuildGroupsFileContent();
-
-  return colGithubGetFile('app/features/colecoes/data/col-groups-data.js').then(function (data) {
-    return colGithubPutFile(
-      'app/features/colecoes/data/col-groups-data.js',
-      newContent,
-      data.sha,
-      '[Colecoes] update groups (' + pending.map(function (g) { return g.slug; }).join(', ') + ')'
-    );
-  }).then(function () {
-    ColGroups.clearPending();
-    colGithubSetStatus('✓ Grupos salvos', 'ok');
-  }).catch(function (e) {
-    /* Arquivo de grupos ainda não existe — cria */
-    if (e.message && e.message.indexOf('404') !== -1) {
-      return colGithubPutFile(
-        'app/features/colecoes/data/col-groups-data.js',
-        newContent,
-        null,
-        '[Colecoes] create groups file'
-      ).then(function () {
-        ColGroups.clearPending();
-        colGithubSetStatus('✓ Grupos salvos', 'ok');
-      });
-    }
-    throw e;
-  });
-}
-
-
-/* ═══════════════════════════════════════════════════════════════════════
-   CRIAR COLEÇÃO
-═══════════════════════════════════════════════════════════════════════ */
-
-function colGhCreateCollection(colData) {
-  if (typeof ColLib !== 'undefined'
-      && typeof ColLib.hasCollectionName === 'function'
-      && ColLib.hasCollectionName(colData.name, null)) {
-    colGithubShowErrorModal('Ja existe uma colecao com o nome "' + colData.name + '". Escolha outro nome.');
-    return Promise.resolve(false);
-  }
-
-  if (!colGithubLockSave()) return Promise.resolve(false);
-  if (!colGithubEnsureToken()) {
-    colGithubUnlockSave();
-    colGithubSetStatus('Token não configurado', 'error');
-    return Promise.resolve(false);
-  }
-
-  colGithubSetStatus('Verificando duplicata…', 'saving');
-
-  var slug = colData.slug;
-  var path = colGhFilePath(slug);
-
-  /* 1. Flush de grupos pendentes */
-  return colGhFlushGroups()
-
-  /* 2. Verifica se o arquivo já existe */
-  .then(function () {
-    return colGhGetFile(slug);
-  })
-  .then(function (fileInfo) {
-    if (fileInfo.exists) {
-      colGithubSetStatus('Coleção já existe', 'error');
-      colGithubUnlockSave();
-      colGithubShowErrorModal('Já existe uma coleção com esse nome no repositório.\nEscolha outro nome.');
-      return false;
-    }
-
-    colGithubSetStatus('Criando arquivo…', 'saving');
-
-    var newObj = {
-      slug:    slug,
-      name:    colData.name,
-      group:   colData.group,
-      tags:    colData.tags || [],
-      layouts: [],
-    };
-
-    var content = colGhBuildFileContent(newObj);
-
-    /* 3. Cria o arquivo da coleção */
-    return colGithubPutFile(
-      path,
-      content,
-      null,
-      '[Colecoes] create collection: ' + slug
-    );
-  })
-
-  /* 4. Registra o arquivo no manifesto de Colecoes */
-  .then(function (result) {
-    if (result === false) return false;
-    colGithubSetStatus('Atualizando manifesto de Colecoes…', 'saving');
-    return colGhSetManifestEntry(slug, true, {
-      name: colData.name,
-      group: colData.group,
-      tags: colData.tags || [],
-      layoutCount: 0
-    }).then(function () { return true; });
-  })
-
-  /* 5. Atualiza memória e UI */
-  .then(function (ok) {
-    if (!ok) return false;
-    ColLib.register({
-      slug:    colData.slug,
-      name:    colData.name,
-      group:   colData.group,
-      tags:    colData.tags || [],
-      layouts: [],
-    });
-    colGithubSetStatus('✓ Coleção criada: ' + slug, 'ok');
-    colGithubUnlockSave();
-    if (typeof colGithubStartDeployWatch === 'function') colGithubStartDeployWatch(colGhFilePath(slug));
-    if (typeof colRenderGrid === 'function') colRenderGrid();
-    return true;
-  })
-
-  .catch(function (e) {
-    console.error('[colecoes-github] Erro ao criar coleção:', e);
-    colGithubSetStatus('Erro: ' + e.message, 'error');
-    colGithubUnlockSave();
-    colGithubShowErrorModal(e.message);
-    return false;
-  });
-}
-
-
-/* ═══════════════════════════════════════════════════════════════════════
-   EDITAR METADADOS DE COLEÇÃO (name, group, tags)
-   Não toca nos layouts — reescreve o arquivo preservando-os.
-═══════════════════════════════════════════════════════════════════════ */
-
-function colGhEditCollection(colData) {
-  if (typeof ColLib !== 'undefined'
-      && typeof ColLib.hasCollectionName === 'function'
-      && ColLib.hasCollectionName(colData.name, colData.slug)) {
-    colGithubShowErrorModal('Ja existe outra colecao com o nome "' + colData.name + '". Escolha outro nome.');
-    return Promise.resolve(false);
-  }
-
-  if (!colGithubLockSave()) return Promise.resolve(false);
-  if (!colGithubEnsureToken()) {
-    colGithubUnlockSave();
-    colGithubSetStatus('Token não configurado', 'error');
-    return Promise.resolve(false);
-  }
-
-  var slug = colData.slug;
-  colGithubSetStatus('Lendo coleção…', 'saving');
-
-  /* Lê arquivo atual (flush de grupos é feito APÓS salvar a coleção,
-     quando a memória já reflete o novo grupo — veja comentário abaixo) */
-  return colGhGetFile(slug)
-  .then(function (fileInfo) {
-    if (!fileInfo.exists) {
-      colGithubSetStatus('Arquivo não encontrado', 'error');
-      colGithubUnlockSave();
-      colGithubShowErrorModal('Arquivo da coleção "' + slug + '" não encontrado no repositório.');
-      return false;
-    }
-
-    /* Preserva os layouts que já existem na memória */
-    var existing = typeof ColLib !== 'undefined' ? ColLib.getBySlug(slug) : null;
-    var newObj   = {
-      slug:    slug,
-      name:    colData.name,
-      group:   colData.group,
-      tags:    colData.tags || [],
-      layouts: existing ? (existing.layouts || []) : [],
-    };
-
-    var newContent = colGhBuildFileContent(newObj);
-    colGithubSetStatus('Salvando no GitHub…', 'saving');
-
-    return colGithubPutFile(
-      fileInfo.path,
-      newContent,
-      fileInfo.sha,
-      '[Colecoes] edit collection: ' + slug
-    ).then(function () {
-      /* Atualiza a memoria antes de regravar os dados relacionados.
-         colGhBuildGroupsFileContent preserva todos os grupos cadastrados,
-         inclusive os que ficaram sem colecao apontando para eles. */
-      ColLib.updateCollection(slug, {
-        name:  colData.name,
-        group: colData.group,
-        tags:  colData.tags,
-      });
-
-      return colGhSyncManifestFromMemory(slug).then(function () {
-        /* Flush pos-edicao: reescreve col-groups-data.js sem apagar grupos vazios. */
-        colGithubSetStatus('Atualizando grupos…', 'saving');
-        var groupsContent = colGhBuildGroupsFileContent();
-
-        return colGithubGetFile('app/features/colecoes/data/col-groups-data.js').then(function (gData) {
-          return colGithubPutFile(
-            'app/features/colecoes/data/col-groups-data.js',
-            groupsContent,
-            gData.sha,
-            '[Colecoes] sync groups after edit: ' + slug
-          );
-        }).catch(function (err) {
-          if (err.message && err.message.indexOf('404') !== -1) {
-            return colGithubPutFile(
-              'app/features/colecoes/data/col-groups-data.js',
-              groupsContent,
-              null,
-              '[Colecoes] create groups file'
-            );
-          }
-          throw err;
-        }).then(function () {
-          if (typeof ColGroups !== 'undefined') ColGroups.clearPending();
-          colGithubSetStatus('✓ Metadados salvos', 'ok');
-          colGithubUnlockSave();
-          if (typeof colGithubStartDeployWatch === 'function') colGithubStartDeployWatch(fileInfo.path);
-          if (typeof colRenderGrid === 'function') colRenderGrid();
-          return true;
-        });
-      });
-    });
-  })
-
-  .catch(function (e) {
-    console.error('[colecoes-github] Erro ao editar coleção:', e);
-    colGithubSetStatus('Erro: ' + e.message, 'error');
-    colGithubUnlockSave();
-    colGithubShowErrorModal(e.message);
-    return false;
-  });
-}
-
-
-/* ═══════════════════════════════════════════════════════════════════════
-   EXCLUIR COLEÇÃO
-   Remove o arquivo da coleção e sua entrada no manifesto da feature.
-═══════════════════════════════════════════════════════════════════════ */
-
-function colGhDeleteCollection(slug) {
-  if (!colGithubLockSave()) return Promise.resolve(false);
-  if (!colGithubEnsureToken()) {
-    colGithubUnlockSave();
-    colGithubSetStatus('Token não configurado', 'error');
-    return Promise.resolve(false);
-  }
-
-  colGithubSetStatus('Excluindo coleção…', 'saving');
-
-  /* 1. Lê o arquivo para obter o SHA */
-  return colGhGetFile(slug)
-  .then(function (fileInfo) {
-    if (!fileInfo.exists) {
-      /* Arquivo ja nao existe: limpa memoria e manifesto mesmo assim. */
-      return null;
-    }
-    return colGithubGetFile(fileInfo.path).then(function (data) {
-      /* Exclui o arquivo via API (conteúdo vazio + sha) */
-      var token = typeof colGithubGetToken === 'function' ? colGithubGetToken() : '';
-      var url   = 'https://api.github.com/repos/'
-        + COL_GITHUB_CONFIG.OWNER + '/'
-        + COL_GITHUB_CONFIG.REPO  + '/contents/'
-        + fileInfo.path;
-      return fetch(url, {
-        method:  'DELETE',
-        headers: {
-          'Authorization': 'token ' + token,
-          'Accept':        'application/vnd.github+json',
-          'Content-Type':  'application/json',
-        },
-        body: JSON.stringify({
-          message: '[Colecoes] delete collection: ' + slug,
-          sha:     data.sha,
-          branch:  COL_GITHUB_CONFIG.BRANCH,
-        }),
-      }).then(function (res) {
-        if (!res.ok) {
-          return res.json().then(function (d) {
-            throw new Error('GitHub DELETE falhou (' + res.status + '): ' + (d.message || fileInfo.path));
-          });
-        }
-        return true;
-      });
-    });
-  })
-
-  /* 2. Remove o arquivo do manifesto de Colecoes */
-  .then(function () {
-    colGithubSetStatus('Atualizando manifesto de Colecoes…', 'saving');
-    return colGhSetManifestEntry(slug, false);
-  })
-
-  /* 3. Atualiza memória e UI */
-  .then(function () {
-    ColLib.removeCollection(slug);
-    colGithubSetStatus('✓ Coleção excluída', 'ok');
-    colGithubUnlockSave();
-    if (typeof colRenderGrid === 'function') colRenderGrid();
-    return true;
-  })
-
-  .catch(function (e) {
-    console.error('[colecoes-github] Erro ao excluir coleção:', e);
-    colGithubSetStatus('Erro: ' + e.message, 'error');
-    colGithubUnlockSave();
-    colGithubShowErrorModal(e.message);
-    return false;
-  });
-}
-
 
 /* ═══════════════════════════════════════════════════════════════════════
    ADICIONAR LAYOUT À COLEÇÃO
-   Insere o bloco do layout antes do fechamento `]` do array layouts.
+   Cria um arquivo JS individual para o layout e registra no manifesto.
 ═══════════════════════════════════════════════════════════════════════ */
+
+function colGhCreateCollection(colData) {
+  if (typeof ColLib !== 'undefined' && typeof ColLib.hasCollectionName === 'function' && ColLib.hasCollectionName(colData.name, null)) {
+    colGithubShowErrorModal('Ja existe uma colecao com o nome "' + colData.name + '". Escolha outro nome.');
+    return Promise.resolve(false);
+  }
+  if (!colGithubLockSave()) return Promise.resolve(false);
+  if (!colGithubEnsureToken()) { colGithubUnlockSave(); colGithubSetStatus('Token nao configurado', 'error'); return Promise.resolve(false); }
+
+  var slug = String(colData.slug || '').toLowerCase();
+  var path = colGhFilePath(slug);
+  colGithubSetStatus('Verificando colecao...', 'saving');
+
+  return colGhFlushGroups().then(function () { return colGhGetFile(slug); }).then(function (fileInfo) {
+    if (fileInfo.exists) {
+      colGithubSetStatus('Colecao ja existe', 'error');
+      colGithubUnlockSave();
+      colGithubShowErrorModal('Ja existe uma colecao com esse nome no repositorio.');
+      return false;
+    }
+    return colGithubPutFile(path, colGhBuildFileContent({ slug: slug, name: colData.name, group: colData.group, tags: colData.tags || [], layouts: [] }), null, '[Colecoes] create collection: ' + slug);
+  }).then(function (result) {
+    if (result === false) return false;
+    return colGhSetManifestEntry(slug, true, { name: colData.name, group: colData.group, tags: colData.tags || [], layoutCount: 0 });
+  }).then(function (ok) {
+    if (ok === false) return false;
+    ColLib.registerCollection({ slug: slug, name: colData.name, group: colData.group, tags: colData.tags || [], layouts: [] });
+    colGithubSetStatus('Colecao criada: ' + slug, 'ok');
+    colGithubUnlockSave();
+    if (typeof colGithubStartDeployWatch === 'function') colGithubStartDeployWatch(COL_GH_MANIFEST_PATH);
+    if (typeof colRenderGrid === 'function') colRenderGrid();
+    return true;
+  }).catch(function (e) {
+    console.error('[colecoes-github] Erro ao criar colecao:', e);
+    colGithubSetStatus('Erro: ' + e.message, 'error');
+    colGithubUnlockSave();
+    colGithubShowErrorModal(e.message);
+    return false;
+  });
+}
+
+function colGhEditCollection(colData) {
+  if (typeof ColLib !== 'undefined' && typeof ColLib.hasCollectionName === 'function' && ColLib.hasCollectionName(colData.name, colData.slug)) {
+    colGithubShowErrorModal('Ja existe outra colecao com o nome "' + colData.name + '". Escolha outro nome.');
+    return Promise.resolve(false);
+  }
+  if (!colGithubLockSave()) return Promise.resolve(false);
+  if (!colGithubEnsureToken()) { colGithubUnlockSave(); colGithubSetStatus('Token nao configurado', 'error'); return Promise.resolve(false); }
+
+  var slug = String(colData.slug || '').toLowerCase();
+  colGithubSetStatus('Lendo colecao...', 'saving');
+
+  return colGhGetFile(slug).then(function (fileInfo) {
+    if (!fileInfo.exists) {
+      colGithubSetStatus('Arquivo nao encontrado', 'error');
+      colGithubUnlockSave();
+      colGithubShowErrorModal('Arquivo da colecao "' + slug + '" nao encontrado no repositorio.');
+      return false;
+    }
+    return colGithubPutFile(fileInfo.path, colGhBuildFileContent({ slug: slug, name: colData.name, group: colData.group, tags: colData.tags || [], layouts: [] }), fileInfo.sha, '[Colecoes] edit collection: ' + slug);
+  }).then(function (ok) {
+    if (ok === false) return false;
+    ColLib.updateCollection(slug, { name: colData.name, group: colData.group, tags: colData.tags || [] });
+    return colGhSetManifestEntry(slug, true, { name: colData.name, group: colData.group, tags: colData.tags || [] });
+  }).then(function (ok) {
+    if (ok === false) return false;
+    return colGhFlushGroups();
+  }).then(function () {
+    colGithubSetStatus('Metadados salvos', 'ok');
+    colGithubUnlockSave();
+    if (typeof colGithubStartDeployWatch === 'function') colGithubStartDeployWatch(COL_GH_MANIFEST_PATH);
+    if (typeof colRenderGrid === 'function') colRenderGrid();
+    return true;
+  }).catch(function (e) {
+    console.error('[colecoes-github] Erro ao editar colecao:', e);
+    colGithubSetStatus('Erro: ' + e.message, 'error');
+    colGithubUnlockSave();
+    colGithubShowErrorModal(e.message);
+    return false;
+  });
+}
+
+function colGhDeleteCollection(slug) {
+  if (!colGithubLockSave()) return Promise.resolve(false);
+  if (!colGithubEnsureToken()) { colGithubUnlockSave(); colGithubSetStatus('Token nao configurado', 'error'); return Promise.resolve(false); }
+
+  var normalizedSlug = String(slug || '').toLowerCase();
+  var layoutFilesToDelete = [];
+  colGithubSetStatus('Excluindo colecao...', 'saving');
+
+  return colGhGetCollectionLayoutFiles(normalizedSlug).then(function (files) {
+    layoutFilesToDelete = files;
+    return colGhGetFile(normalizedSlug);
+  }).then(function (fileInfo) {
+    var deleteLayouts = Promise.all(layoutFilesToDelete.map(function (layoutPath) {
+      return colGithubGetFile(layoutPath).then(function (layoutData) {
+        return colGithubDeleteFile(layoutPath, layoutData.sha, '[Colecoes] delete collection layout file: ' + normalizedSlug);
+      }).catch(function (error) {
+        if (error.message && error.message.indexOf('404') !== -1) return true;
+        throw error;
+      });
+    }));
+
+    return deleteLayouts.then(function () {
+      if (!fileInfo.exists) return true;
+      return colGithubGetFile(fileInfo.path).then(function (data) {
+        return colGithubDeleteFile(fileInfo.path, data.sha, '[Colecoes] delete collection: ' + normalizedSlug);
+      });
+    });
+  }).then(function () {
+    return colGhSetManifestEntry(normalizedSlug, false);
+  }).then(function () {
+    ColLib.removeCollection(normalizedSlug);
+    colGithubSetStatus('Colecao excluida', 'ok');
+    colGithubUnlockSave();
+    if (typeof colRenderGrid === 'function') colRenderGrid();
+    return true;
+  }).catch(function (e) {
+    console.error('[colecoes-github] Erro ao excluir colecao:', e);
+    colGithubSetStatus('Erro: ' + e.message, 'error');
+    colGithubUnlockSave();
+    colGithubShowErrorModal(e.message);
+    return false;
+  });
+}
 
 function colGhAddLayout(slug, layoutData) {
   if (typeof ColLib !== 'undefined'
@@ -983,69 +849,40 @@ function colGhAddLayout(slug, layoutData) {
     return Promise.resolve(false);
   }
 
-  colGithubSetStatus('Lendo coleção…', 'saving');
+  var normalizedSlug = String(slug || '').toLowerCase();
+  layoutData.id = String(layoutData.id || '').toLowerCase();
+  var layoutPath = 'app/features/colecoes/data/collections/' + normalizedSlug + '/layouts/' + layoutData.id + '.js';
 
-  return colGhGetFile(slug)
-  .then(function (fileInfo) {
-    if (!fileInfo.exists) {
-      colGithubSetStatus('Coleção não encontrada', 'error');
-      colGithubUnlockSave();
-      colGithubShowErrorModal('Arquivo da coleção "' + slug + '" não encontrado no repositório.');
-      return false;
-    }
+  colGithubSetStatus('Criando arquivo individual…', 'saving');
 
-    var content = fileInfo.content;
-    var sha     = fileInfo.sha;
-
-    /* Verifica o identificador interno gerado a partir do nome. */
-    var idMarker = '/*@@@@Col - ' + layoutData.id + ' */';
-    if (content.indexOf(idMarker) !== -1) {
-      colGithubSetStatus('Nome de layout duplicado', 'error');
-      colGithubUnlockSave();
-      colGithubShowErrorModal('Já existe um layout com esse nome nesta coleção.\nEscolha outro nome.');
-      return false;
-    }
-    if (colGhContentHasLayoutName(content, layoutData.name, null)) {
-      colGithubSetStatus('Nome de layout duplicado', 'error');
-      colGithubUnlockSave();
-      colGithubShowErrorModal('Ja existe um layout com o nome "' + layoutData.name + '" nesta colecao.');
-      return false;
-    }
-
-    /* Localiza o fechamento do array de layouts: `  ]` antes do `});` */
-    var closePos = content.lastIndexOf('\n  ]');
-    if (closePos === -1) {
-      colGithubSetStatus('Estrutura do arquivo inválida', 'error');
-      colGithubUnlockSave();
-      colGithubShowErrorModal('Não foi possível localizar o fechamento do array de layouts em "' + fileInfo.path + '".');
-      return false;
-    }
-
-    var block      = colGhBuildLayoutBlock(layoutData);
-    var newContent =
-      content.slice(0, closePos) +
-      '\n' + block + '\n' +
-      content.slice(closePos);
-
-    colGithubSetStatus('Salvando no GitHub…', 'saving');
+  return colGithubGetFile(layoutPath).then(function () {
+    colGithubSetStatus('Layout já existe', 'error');
+    colGithubUnlockSave();
+    colGithubShowErrorModal('Já existe um arquivo individual para este layout.\nUse editar para modificar o layout existente.');
+    return false;
+  }).catch(function (error) {
+    if (!error.message || error.message.indexOf('404') === -1) throw error;
 
     return colGithubPutFile(
-      fileInfo.path,
-      newContent,
-      sha,
-      '[Colecoes] add layout "' + layoutData.id + '" to collection: ' + slug
+      layoutPath,
+      colGhBuildLayoutFileContent(normalizedSlug, layoutData),
+      null,
+      '[Colecoes] add layout file "' + layoutData.id + '" to collection: ' + normalizedSlug
     ).then(function () {
-      ColLib.addLayout(slug, layoutData);
-      return colGhSyncManifestFromMemory(slug).then(function () {
-        colGithubSetStatus('✓ Layout adicionado', 'ok');
-        colGithubUnlockSave();
-        if (typeof colGithubStartDeployWatch === 'function') colGithubStartDeployWatch(fileInfo.path);
-        /* Re-renderiza o grid de layouts dentro do modal de coleção */
-        var col = typeof ColLib !== 'undefined' ? ColLib.getBySlug(slug) : null;
-        if (col && typeof _colRenderLayoutsGrid === 'function') _colRenderLayoutsGrid(col);
-        if (typeof colRenderGrid === 'function') colRenderGrid();
-        return true;
-      });
+      return colGhSetLayoutManifestEntry(normalizedSlug, layoutData, true);
+    }).then(function () {
+      if (typeof ColLib.registerCollectionLayout === 'function') {
+        ColLib.registerCollectionLayout(normalizedSlug, layoutData);
+      } else {
+        ColLib.addLayout(normalizedSlug, layoutData);
+      }
+      colGithubSetStatus('✓ Layout adicionado', 'ok');
+      colGithubUnlockSave();
+      if (typeof colGithubStartDeployWatch === 'function') colGithubStartDeployWatch(COL_GH_MANIFEST_PATH);
+      var col = typeof ColLib !== 'undefined' ? ColLib.getBySlug(normalizedSlug) : null;
+      if (col && typeof _colRenderLayoutsGrid === 'function') _colRenderLayoutsGrid(col);
+      if (typeof colRenderGrid === 'function') colRenderGrid();
+      return true;
     });
   })
 
@@ -1061,7 +898,7 @@ function colGhAddLayout(slug, layoutData) {
 
 /* ═══════════════════════════════════════════════════════════════════════
    EDITAR LAYOUT DE COLEÇÃO
-   Substitui o bloco existente usando o parser de marcadores.
+   Regrava o arquivo JS individual indicado pelo manifesto.
 ═══════════════════════════════════════════════════════════════════════ */
 
 function colGhEditLayout(slug, layoutId, layoutData) {
@@ -1081,54 +918,36 @@ function colGhEditLayout(slug, layoutId, layoutData) {
 
   colGithubSetStatus('Lendo coleção…', 'saving');
 
-  return colGhGetFile(slug)
-  .then(function (fileInfo) {
-    if (!fileInfo.exists) {
-      colGithubSetStatus('Coleção não encontrada', 'error');
-      colGithubUnlockSave();
-      colGithubShowErrorModal('Arquivo da coleção "' + slug + '" não encontrado.');
-      return false;
-    }
+  return colGhFindLayoutManifestEntry(slug, layoutId).then(function (manifestEntry) {
+    if (!manifestEntry) return null;
 
-    var content = fileInfo.content;
-    var sha     = fileInfo.sha;
-    if (colGhContentHasLayoutName(content, layoutData.name, layoutId)) {
-      colGithubSetStatus('Nome de layout duplicado', 'error');
-      colGithubUnlockSave();
-      colGithubShowErrorModal('Ja existe outro layout com o nome "' + layoutData.name + '" nesta colecao.');
-      return false;
-    }
-    var bounds  = colGhFindLayoutBounds(content, layoutId);
-
-    if (!bounds) {
-      colGithubSetStatus('Layout não encontrado', 'error');
-      colGithubUnlockSave();
-      colGithubShowErrorModal('Marcador do layout "' + layoutId + '" não encontrado em "' + fileInfo.path + '".');
-      return false;
-    }
-
-    var block      = colGhBuildLayoutBlock(layoutData);
-    var newContent =
-      content.slice(0, bounds.start) +
-      block + '\n' +
-      content.slice(bounds.end);
-
-    colGithubSetStatus('Salvando no GitHub…', 'saving');
-
-    return colGithubPutFile(
-      fileInfo.path,
-      newContent,
-      sha,
-      '[Colecoes] edit layout "' + layoutId + '" in collection: ' + slug
-    ).then(function () {
-      ColLib.updateLayout(slug, layoutId, layoutData);
-      colGithubSetStatus('✓ Layout salvo', 'ok');
-      colGithubUnlockSave();
-      if (typeof colGithubStartDeployWatch === 'function') colGithubStartDeployWatch(fileInfo.path);
-      var col = typeof ColLib !== 'undefined' ? ColLib.getBySlug(slug) : null;
-      if (col && typeof _colRenderLayoutsGrid === 'function') _colRenderLayoutsGrid(col);
-      return true;
+    colGithubSetStatus('Lendo arquivo individual…', 'saving');
+    return colGithubGetFile(manifestEntry.path).then(function (data) {
+      colGithubSetStatus('Salvando no GitHub…', 'saving');
+      return colGithubPutFile(
+        manifestEntry.path,
+        colGhBuildLayoutFileContent(slug, layoutData),
+        data.sha,
+        '[Colecoes] edit layout file "' + layoutId + '" in collection: ' + slug
+      ).then(function () {
+        return colGhSetLayoutManifestEntry(slug, layoutData, true);
+      }).then(function () {
+        ColLib.updateLayout(slug, layoutId, layoutData);
+        colGithubSetStatus('✓ Layout salvo', 'ok');
+        colGithubUnlockSave();
+        if (typeof colGithubStartDeployWatch === 'function') colGithubStartDeployWatch(manifestEntry.path);
+        var col = typeof ColLib !== 'undefined' ? ColLib.getBySlug(slug) : null;
+        if (col && typeof _colRenderLayoutsGrid === 'function') _colRenderLayoutsGrid(col);
+        return true;
+      });
     });
+  }).then(function (directResult) {
+    if (directResult) return directResult;
+
+    colGithubSetStatus('Layout fora do manifesto', 'error');
+    colGithubUnlockSave();
+    colGithubShowErrorModal('Layout "' + layoutId + '" não possui arquivo individual no manifest de Colecoes.');
+    return false;
   })
 
   .catch(function (e) {
@@ -1143,7 +962,7 @@ function colGhEditLayout(slug, layoutId, layoutData) {
 
 /* ═══════════════════════════════════════════════════════════════════════
    EXCLUIR LAYOUT DE COLEÇÃO
-   Remove o bloco do layout usando o parser de marcadores.
+   Remove o arquivo JS individual e sua entrada no manifesto.
 ═══════════════════════════════════════════════════════════════════════ */
 
 function colGhDeleteLayout(slug, layoutId) {
@@ -1156,49 +975,36 @@ function colGhDeleteLayout(slug, layoutId) {
 
   colGithubSetStatus('Lendo coleção…', 'saving');
 
-  return colGhGetFile(slug)
-  .then(function (fileInfo) {
-    if (!fileInfo.exists) {
-      colGithubSetStatus('Coleção não encontrada', 'error');
-      colGithubUnlockSave();
-      colGithubShowErrorModal('Arquivo da coleção "' + slug + '" não encontrado.');
-      return false;
-    }
+  return colGhFindLayoutManifestEntry(slug, layoutId).then(function (manifestEntry) {
+    if (!manifestEntry) return null;
 
-    var content = fileInfo.content;
-    var sha     = fileInfo.sha;
-    var bounds  = colGhFindLayoutBounds(content, layoutId);
-
-    if (!bounds) {
-      colGithubSetStatus('Layout não encontrado', 'error');
-      colGithubUnlockSave();
-      colGithubShowErrorModal('Marcador do layout "' + layoutId + '" não encontrado. Verifique o arquivo manualmente.');
-      return false;
-    }
-
-    var newContent =
-      content.slice(0, bounds.start) +
-      content.slice(bounds.end);
-
-    colGithubSetStatus('Salvando no GitHub…', 'saving');
-
-    return colGithubPutFile(
-      fileInfo.path,
-      newContent,
-      sha,
-      '[Colecoes] delete layout "' + layoutId + '" from collection: ' + slug
-    ).then(function () {
-      ColLib.removeLayout(slug, layoutId);
-      return colGhSyncManifestFromMemory(slug).then(function () {
+    colGithubSetStatus('Lendo arquivo individual…', 'saving');
+    return colGithubGetFile(manifestEntry.path).then(function (data) {
+      colGithubSetStatus('Excluindo arquivo individual…', 'saving');
+      return colGithubDeleteFile(
+        manifestEntry.path,
+        data.sha,
+        '[Colecoes] delete layout file "' + layoutId + '" from collection: ' + slug
+      ).then(function () {
+        return colGhSetLayoutManifestEntry(slug, { id: layoutId, name: layoutId }, false);
+      }).then(function () {
+        ColLib.removeLayout(slug, layoutId);
         colGithubSetStatus('✓ Layout excluído', 'ok');
         colGithubUnlockSave();
-        if (typeof colGithubStartDeployWatch === 'function') colGithubStartDeployWatch(fileInfo.path);
+        if (typeof colGithubStartDeployWatch === 'function') colGithubStartDeployWatch(COL_GH_MANIFEST_PATH);
         var col = typeof ColLib !== 'undefined' ? ColLib.getBySlug(slug) : null;
         if (col && typeof _colRenderLayoutsGrid === 'function') _colRenderLayoutsGrid(col);
         if (typeof colRenderGrid === 'function') colRenderGrid();
         return true;
       });
     });
+  }).then(function (directResult) {
+    if (directResult) return directResult;
+
+    colGithubSetStatus('Layout fora do manifesto', 'error');
+    colGithubUnlockSave();
+    colGithubShowErrorModal('Layout "' + layoutId + '" não possui arquivo individual no manifest de Colecoes.');
+    return false;
   })
 
   .catch(function (e) {

@@ -147,7 +147,13 @@
           terms: 'manifest data indice arquivos carregar layouts colecoes variantes',
           paragraphs: [
             'O manifest e o indice de dados da feature. Ele diz quais arquivos devem ser carregados.',
-            'Se um arquivo existe na pasta, mas nao esta no manifest, a feature pode nao saber que ele existe.'
+            'Se um arquivo existe na pasta, mas nao esta no manifest, a feature pode nao saber que ele existe.',
+            'O manifest usa entradas em objeto com file, id e nome para apontar cada arquivo individual.'
+          ],
+          bullets: [
+            'Formato novo: { file: "layouts/section-1.js", id: "section-1", name: "Section 1" }.',
+            'Em Colecoes, uma entrada de colecao pode listar layouts filhos em layouts: [{ file: "collections/minha/layouts/hero.js", id: "hero" }].',
+            'Biblioteca, variantes e Colecoes carregam arquivos JS individuais catalogados pelo manifest.'
           ],
           note: 'Analogia: o manifest e o sumario de um livro. O capitulo pode existir, mas se nao esta no sumario, ninguem lembra de abrir.'
         },
@@ -395,6 +401,8 @@
             'Criar/editar: GET do arquivo, monta conteudo, PUT com SHA.',
             'Excluir: GET do arquivo, DELETE com SHA.',
             'Se criar arquivo novo, atualiza o manifest da feature.',
+            'Quando o manifest aponta para arquivo individual, Biblioteca e Colecoes salvam esse arquivo direto e nao procuram marcador.',
+            'Itens antigos sem arquivo individual ainda usam os marcadores como fallback temporario.',
             'Se o token falhar, a operacao deve parar e mostrar erro.'
           ]
         }
@@ -444,14 +452,15 @@
         {
           title: 'Adicionar layout na Biblioteca',
           badge: 'biblioteca',
-          terms: 'adicionar layout biblioteca layouts001 manifest senkolib register',
+          terms: 'adicionar layout biblioteca arquivo individual layouts001 manifest senkolib register registerLayout',
           paragraphs: [
-            'Layouts manuais entram em data/layouts e precisam estar no manifest.'
+            'Layouts manuais entram em data/layouts e precisam estar no manifest.',
+            'Cada layout deve ficar em um arquivo proprio e registrar com SenkoLib.registerLayout({...}).'
           ],
           bullets: [
             'Editar ou criar arquivo em app/features/biblioteca/data/layouts.',
-            'Registrar com SenkoLib.register([...]).',
-            'Atualizar app/features/biblioteca/data/manifest.js.',
+            'Formato novo: registrar com SenkoLib.registerLayout({...}).',
+            'Atualizar app/features/biblioteca/data/manifest.js com o objeto do arquivo individual.',
             'Testar se aparece no grid.',
             'Testar abrir, copiar, editar e criar variante.'
           ]
@@ -461,12 +470,14 @@
           badge: 'variante',
           terms: 'adicionar editar variante variacao biblioteca nome duplicado manifest section layout',
           paragraphs: [
-            'Variantes pertencem a um layout da Biblioteca e precisam manter nome unico dentro daquele layout.'
+            'Variantes pertencem a um layout da Biblioteca e precisam manter nome unico dentro daquele layout.',
+            'Cada variante deve ficar em um arquivo proprio e registrar com SenkoLib.registerVariantFile(layoutId, {...}).'
           ],
           bullets: [
             'Conferir qual layout e dono da variante.',
             'Criar ou editar o arquivo em app/features/biblioteca/data/variants.',
-            'Garantir que o manifest aponta para a variante correta.',
+            'Formato novo: registrar com SenkoLib.registerVariantFile(layoutId, {...}).',
+            'Garantir que o manifest aponta para o arquivo individual da variante.',
             'Bloquear nome repetido ao criar e ao editar.',
             'Testar abrir o layout, selecionar variante, editar, salvar e recarregar.'
           ]
@@ -474,14 +485,15 @@
         {
           title: 'Adicionar colecao',
           badge: 'colecoes',
-          terms: 'adicionar colecao collib manifest grupos slug',
+          terms: 'adicionar colecao arquivo individual collib registerCollection manifest grupos slug',
           paragraphs: [
-            'Colecoes manuais entram em data e precisam aparecer no manifest.'
+            'Colecoes manuais entram em data/collections/[slug] e precisam aparecer no manifest.',
+            'O formato novo deve registrar os metadados da colecao com ColLib.registerCollection({...}) e deixar os layouts da colecao em arquivos proprios.'
           ],
           bullets: [
-            'Criar app/features/colecoes/data/slug-da-colecao.js.',
-            'Registrar com ColLib.register({...}).',
-            'Atualizar app/features/colecoes/data/manifest.js.',
+            'Criar o arquivo de metadados em app/features/colecoes/data/collections/[slug]/collection.js.',
+            'Formato novo: registrar com ColLib.registerCollection({...}).',
+            'Atualizar app/features/colecoes/data/manifest.js com file da colecao e, quando existir, a lista layouts.',
             'Garantir que o grupo exista em col-groups-data.js.',
             'Testar card, abertura e edicao.'
           ]
@@ -491,10 +503,12 @@
           badge: 'layout colecao',
           terms: 'adicionar editar layout colecao nome duplicado collib grupo',
           paragraphs: [
-            'Layout dentro de colecao e dado da feature Colecoes, nao da Biblioteca.'
+            'Layout dentro de colecao e dado da feature Colecoes, nao da Biblioteca.',
+            'O formato novo deve registrar um layout de colecao por arquivo com ColLib.registerCollectionLayout(slug, {...}).'
           ],
           bullets: [
             'Editar apenas arquivos de app/features/colecoes.',
+            'Formato novo: registrar com ColLib.registerCollectionLayout(slug, {...}).',
             'Garantir nome unico dentro da colecao.',
             'Nao importar funcoes internas da Biblioteca.',
             'Testar criar, editar, excluir e recarregar a colecao.'

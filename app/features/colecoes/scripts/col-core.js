@@ -8,6 +8,7 @@
 
    EXPÕE (via objeto global ColLib):
      ColLib.register(obj)                          → registra uma coleção
+     ColLib.registerCollection(obj)                → registra uma coleção individual
      ColLib.getAll()                               → todas as coleções
      ColLib.getBySlug(slug)                        → busca por slug
      ColLib.hasCollectionName(name, exceptSlug)    → consulta unicidade
@@ -15,6 +16,7 @@
      ColLib.updateCollection(slug, patch)          → atualiza metadados em memória
      ColLib.removeCollection(slug)                 → remove da memória
      ColLib.addLayout(slug, layout)                → adiciona layout à coleção
+     ColLib.registerCollectionLayout(slug, layout) → registra layout individual
      ColLib.updateLayout(slug, layoutId, patch)    → atualiza layout em memória
      ColLib.removeLayout(slug, layoutId)           → remove layout da coleção
 
@@ -93,6 +95,64 @@ var ColLib = (function () {
     return false;
   }
 
+  function _registerCollection(obj) {
+    if (!obj || !obj.slug) {
+      console.warn('[ColLib] register: objeto sem slug ignorado', obj);
+      return false;
+    }
+    var slug = obj.slug.toLowerCase();
+    obj.slug = slug;
+
+    /* Garante que layouts seja sempre array */
+    if (!Array.isArray(obj.layouts)) obj.layouts = [];
+
+    var idx = _findIndex(slug);
+    if (_hasCollectionName(obj.name, slug)) {
+      console.error('[ColLib] Nome de colecao duplicado foi recusado: ' + obj.name);
+      return false;
+    }
+    if (_hasDuplicateLayoutNames(obj.layouts)) {
+      console.error('[ColLib] Colecao recusada porque contem layouts com nomes duplicados: ' + slug);
+      return false;
+    }
+    if (idx !== -1) {
+      _collections[idx] = obj;  /* substitui - evita duplicata */
+    } else {
+      _collections.push(obj);
+    }
+    return true;
+  }
+
+  function _registerCollectionLayout(slug, layout) {
+    var idx = _findIndex(slug);
+    if (idx === -1) return false;
+    if (!layout || !layout.id || !layout.name) {
+      console.error('[ColLib] Layout sem id ou nome foi ignorado.', layout);
+      return false;
+    }
+
+    var col = _collections[idx];
+    if (!Array.isArray(col.layouts)) col.layouts = [];
+
+    var layoutIndex = -1;
+    for (var i = 0; i < col.layouts.length; i++) {
+      if (col.layouts[i].id === layout.id) {
+        layoutIndex = i;
+        break;
+      }
+    }
+
+    if (_hasLayoutName(slug, layout.name, layout.id)) {
+      console.error('[ColLib] Nome de layout duplicado foi recusado em "' + slug + '": ' + layout.name);
+      return false;
+    }
+
+    if (layoutIndex !== -1) col.layouts[layoutIndex] = layout;
+    else col.layouts.push(layout);
+
+    return true;
+  }
+
   return {
 
     /* ─────────────────────────────────────────────────────────────────
@@ -101,31 +161,11 @@ var ColLib = (function () {
        Se o slug já existir (ex: hot-reload), substitui sem duplicar.
     ───────────────────────────────────────────────────────────────── */
     register: function (obj) {
-      if (!obj || !obj.slug) {
-        console.warn('[ColLib] register: objeto sem slug ignorado', obj);
-        return;
-      }
-      var slug = obj.slug.toLowerCase();
-      obj.slug = slug;
+      return _registerCollection(obj);
+    },
 
-      /* Garante que layouts seja sempre array */
-      if (!Array.isArray(obj.layouts)) obj.layouts = [];
-
-      var idx = _findIndex(slug);
-      if (_hasCollectionName(obj.name, slug)) {
-        console.error('[ColLib] Nome de colecao duplicado foi recusado: ' + obj.name);
-        return false;
-      }
-      if (_hasDuplicateLayoutNames(obj.layouts)) {
-        console.error('[ColLib] Colecao recusada porque contem layouts com nomes duplicados: ' + slug);
-        return false;
-      }
-      if (idx !== -1) {
-        _collections[idx] = obj;  /* substitui — evita duplicata */
-      } else {
-        _collections.push(obj);
-      }
-      return true;
+    registerCollection: function (obj) {
+      return _registerCollection(obj);
     },
 
     /* ─────────────────────────────────────────────────────────────────
@@ -202,6 +242,10 @@ var ColLib = (function () {
       }
       col.layouts.push(layout);
       return true;
+    },
+
+    registerCollectionLayout: function (slug, layout) {
+      return _registerCollectionLayout(slug, layout);
     },
 
     /* ─────────────────────────────────────────────────────────────────

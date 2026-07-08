@@ -9,10 +9,9 @@
      - Mantem favoritos e aba atual em localStorage.
 
    CONTRATOS IMPORTANTES:
-     - data/layouts/*.js registra layouts via SenkoLib.register([...]).
-     - data/variants/*.js registra variantes via SenkoLib.registerVariant(id, [...]).
-     - Os marcadores "@@@@Senko - id" sao usados pelos modulos GitHub
-       para localizar e substituir objetos no repositorio.
+     - data/layouts/*.js registra layouts via SenkoLib.registerLayout({...}).
+     - data/variants/[layout]/*.js registra variantes via SenkoLib.registerVariantFile(id, {...}).
+     - Cada layout e variante deve ter seu proprio arquivo JS.
      - Este arquivo atualiza a UI e a memoria do navegador; persistencia
        real fica nos modulos de integracao (GitHub/FSA, quando carregados).
 ═══════════════════════════════════════════════════════ */
@@ -580,15 +579,15 @@ function updateGeneratedCode() {
   var safeCss  = escapeTemplateLiteral(css);
 
   document.getElementById('generatedCode').textContent =
-    '/*@@@@Senko - ' + id.toLowerCase() + ' */\n' +
-    '  /* variantes: app/features/biblioteca/data/variants/' + id.toLowerCase() + '.js */\n' +
-    '  {\n' +
+    'SenkoLib.registerLayout(\n' +
+    '{\n' +
     "    id: '"   + id.toLowerCase() + "',\n" +
     "    name: '" + safeName         + "',\n" +
     '    tags: [' + tagsStr          + '],\n' +
     '    html: `' + safeHtml         + '`,\n' +
     '    css: `'  + safeCss          + '`\n' +
-    '  },'
+    '}\n' +
+    ');'
 }
 
 /* ─── Modal variantes ───────────────────────────────── */
@@ -825,12 +824,14 @@ function updateNewVarCode() {
   var safeCss  = escapeTemplateLiteral(css);
 
   document.getElementById('newVarGeneratedCode').textContent =
-    '/*@@@@Senko - ' + name + ' */\n' +
-    '  {\n' +
+    "SenkoLib.registerVariantFile('" + parentId + "',\n" +
+    '{\n' +
+    "    id: '" + name + "',\n" +
     "    name: '" + name + "',\n" +
     '    html: `' + safeHtml + '`,\n' +
-    '    css: `'  + safeCss  + '`,\n' +
-    '  },';
+    '    css: `'  + safeCss  + '`\n' +
+    '}\n' +
+    ');';
 }
 
 
@@ -944,12 +945,14 @@ function updateEditVarCode() {
   }
 
   if (genCode) genCode.textContent =
-    '/*@@@@Senko - ' + name + ' */\n' +
-    '  {\n' +
+    "SenkoLib.registerVariantFile('" + parentId + "',\n" +
+    '{\n' +
+    "    id: '" + (state.currentEditVariant && state.currentEditVariant.id ? state.currentEditVariant.id : name) + "',\n" +
     "    name: '" + name + "',\n" +
     '    html: `' + safeHtml + '`,\n' +
-    '    css: `'  + safeCss  + '`,\n' +
-    '  },';
+    '    css: `'  + safeCss  + '`\n' +
+    '}\n' +
+    ');';
 
   /*
    * IMPORTANTE: não mutamos state.currentEditVariant aqui.
@@ -1059,15 +1062,15 @@ function updateEditCode() {
   var safeCss  = escapeTemplateLiteral(css);
 
   document.getElementById('editGeneratedCode').textContent =
-    '/*@@@@Senko - ' + id + ' */\n' +
-    '  /* variantes: app/features/biblioteca/data/variants/' + id + '.js */\n' +
-    '  {\n' +
+    'SenkoLib.registerLayout(\n' +
+    '{\n' +
     "    id: '"   + id   + "',\n" +
     "    name: '" + safeName + "',\n" +
     '    tags: [' + tagsStr + '],\n' +
     '    html: `' + safeHtml + '`,\n' +
     '    css: `'  + safeCss  + '`\n' +
-    '  },';
+    '}\n' +
+    ');';
 }
 
 /*

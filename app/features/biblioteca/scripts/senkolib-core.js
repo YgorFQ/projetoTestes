@@ -7,10 +7,12 @@
      Todos os outros módulos dependem deste arquivo.
 
    EXPÕE (via objeto global SenkoLib):
-     SenkoLib.register(arr)               → registra um array de layouts
+     register legado                     -> mantido apenas para compatibilidade
+     SenkoLib.registerLayout(obj)          → registra um layout individual
      SenkoLib.getAll()                    → retorna todos os layouts registrados
      SenkoLib.updateLayout(id, patch)      → edita um layout validando o nome
      SenkoLib.registerVariant(name, arr)  → registra variantes de um layout
+     SenkoLib.registerVariantFile(name, obj) → registra uma variante individual
      SenkoLib.getVariants(name)           → retorna variantes de um layout
      SenkoLib.updateVariant(name, v, patch) → edita variante validando o nome
 
@@ -54,33 +56,80 @@ var SenkoLib = (function () {
     });
   }
 
+  function _registerLayout(layout) {
+    if (!layout || !layout.id || !layout.name) {
+      console.error('[SenkoLib] Layout sem id ou nome foi ignorado.', layout);
+      return false;
+    }
+
+    var existingIndex = _layouts.findIndex(function (item) {
+      return item.id === layout.id;
+    });
+
+    if (_hasLayoutName(layout.name, layout.id)) {
+      console.error('[SenkoLib] Nome de layout duplicado foi recusado: ' + layout.name);
+      return false;
+    }
+
+    /* O mesmo id pode ser substituido durante recarga dos arquivos. */
+    if (existingIndex !== -1) _layouts[existingIndex] = layout;
+    else _layouts.push(layout);
+
+    return true;
+  }
+
+  function _registerVariantFile(layoutName, variant) {
+    var key = String(layoutName || '').toLowerCase();
+    if (!key) {
+      console.error('[SenkoLib] Variante sem layout pai foi ignorada.', variant);
+      return false;
+    }
+    if (!variant || !variant.name) {
+      console.error('[SenkoLib] Variante sem nome foi ignorada.', variant);
+      return false;
+    }
+
+    if (!_variants[key]) _variants[key] = [];
+
+    var variants = _variants[key];
+    var existingIndex = -1;
+
+    if (variant.id) {
+      existingIndex = variants.findIndex(function (item) {
+        return item.id === variant.id;
+      });
+    }
+
+    if (existingIndex === -1 && variant.id) {
+      existingIndex = variants.findIndex(function (item) {
+        return !item.id && _normalizeName(item.name) === _normalizeName(variant.name);
+      });
+    }
+
+    var existingVariant = existingIndex !== -1 ? variants[existingIndex] : null;
+    if (_hasVariantName(key, variant.name, existingVariant)) {
+      console.error('[SenkoLib] Nome de variante duplicado foi recusado em "' + key + '": ' + variant.name);
+      return false;
+    }
+
+    if (existingIndex !== -1) variants[existingIndex] = variant;
+    else variants.push(variant);
+
+    return true;
+  }
+
   return {
     register: function (arr) {
       var accepted = true;
 
       (Array.isArray(arr) ? arr : []).forEach(function (layout) {
-        if (!layout || !layout.id || !layout.name) {
-          console.error('[SenkoLib] Layout sem id ou nome foi ignorado.', layout);
-          accepted = false;
-          return;
-        }
-
-        var existingIndex = _layouts.findIndex(function (item) {
-          return item.id === layout.id;
-        });
-
-        if (_hasLayoutName(layout.name, layout.id)) {
-          console.error('[SenkoLib] Nome de layout duplicado foi recusado: ' + layout.name);
-          accepted = false;
-          return;
-        }
-
-        /* O mesmo id pode ser substituído durante recarga dos arquivos. */
-        if (existingIndex !== -1) _layouts[existingIndex] = layout;
-        else _layouts.push(layout);
+        if (!_registerLayout(layout)) accepted = false;
       });
 
       return accepted;
+    },
+    registerLayout: function (layout) {
+      return _registerLayout(layout);
     },
     getAll: function () {
       return _layouts;
@@ -117,6 +166,9 @@ var SenkoLib = (function () {
         _variants[key].push(variant);
       });
       return accepted;
+    },
+    registerVariantFile: function (layoutName, variant) {
+      return _registerVariantFile(layoutName, variant);
     },
     getVariants: function (layoutName) {
       return _variants[layoutName.toLowerCase()] || [];

@@ -36,98 +36,16 @@
 ═══════════════════════════════════════════════════════════════════════ */
 
 
-/* ═══════════════════════════════════════════════════════════════════════
-   UTILITÁRIO: Localiza bounds de um objeto de variante no conteúdo do arquivo
-   Retorna { start, end } | { duplicate: true } | null
-═══════════════════════════════════════════════════════════════════════ */
-function ghvFindVariantObjectBounds(content, variantName) {
-  var marker    = '/*@@@@Senko - ' + variantName.toLowerCase() + ' */';
-  var markerPos = content.indexOf(marker);
-  if (markerPos === -1) return null;
-
-  /* Detecta duplicata antes de tentar parsear */
-  if (content.indexOf(marker, markerPos + marker.length) !== -1) {
-    return { duplicate: true };
-  }
-
-  var objOpen = content.indexOf('{', markerPos + marker.length);
-  if (objOpen === -1) return null;
-
-  var i          = objOpen;
-  var depth      = 0;
-  var inTemplate = false;
-  var len        = content.length;
-
-  while (i < len) {
-    var ch = content[i];
-
-    if (ch === '`') {
-      var backslashes = 0;
-      var j = i - 1;
-      while (j >= 0 && content[j] === '\\') { backslashes++; j--; }
-      if (backslashes % 2 === 0) inTemplate = !inTemplate;
-      i++; continue;
-    }
-
-    if (inTemplate) { i++; continue; }
-    if (ch === '{')  { depth++; i++; continue; }
-
-    if (ch === '}') {
-      depth--;
-      if (depth === 0) {
-        var end = i + 1;
-        if (content[end] === ',') end++;
-        if (content[end] === '\n') end++;
-        return { start: markerPos, end: end };
-      }
-      i++; continue;
-    }
-
-    i++;
-  }
-
-  return null;
-}
 
 
-/* ═══════════════════════════════════════════════════════════════════════
-   UTILITÁRIO: Conta objetos de variante no arquivo (via marcadores)
-═══════════════════════════════════════════════════════════════════════ */
-function ghvCountVariants(content) {
-  var re      = /\/\*@@@@Senko - /g;
-  var matches = content.match(re);
-  return matches ? matches.length : 0;
-}
 
 
-/* ═══════════════════════════════════════════════════════════════════════
-   UTILITÁRIO: Monta conteúdo inicial de um arquivo de variantes novo
-═══════════════════════════════════════════════════════════════════════ */
-function ghvBuildNewVariantFile(parentId, objectCode) {
-  return (
-    '// @ts-nocheck\n' +
-    "SenkoLib.registerVariant('" + parentId.toLowerCase() + "', [\n" +
-    objectCode + '\n' +
-    ']);\n'
-  );
-}
 
 
-/* ═══════════════════════════════════════════════════════════════════════
-   UTILITÁRIO: Lê o arquivo de variantes do GitHub
-   Retorna { exists, sha, content, path } ou { exists: false, path }
-═══════════════════════════════════════════════════════════════════════ */
-function ghvGetVariantFile(parentId) {
-  var filePath = 'app/features/biblioteca/data/variants/' + parentId.toLowerCase() + '.js';
-  return githubGetFile(filePath).then(function (data) {
-    return { exists: true, sha: data.sha, content: data.content, path: filePath };
-  }).catch(function (err) {
-    if (err.message && err.message.indexOf('404') !== -1) {
-      return { exists: false, path: filePath };
-    }
-    throw err;
-  });
-}
+
+
+
+
 
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -169,13 +87,171 @@ function ghvSerializeManifest(manifest) {
   );
 }
 
+function ghvSafeFileName(value, fallback) {
+  var slug = String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .replace(/-{2,}/g, '-');
+  return slug || fallback || 'variant';
+}
+
+function ghvReadManifest() {
+  return githubGetFile(GH_VARIANT_MANIFEST_PATH).then(function (data) {
+    return {
+      content: data.content,
+      sha: data.sha,
+      manifest: ghvParseManifest(data.content)
+    };
+  });
+}
+
+function ghvFindVariantManifestEntry(parentId, variantNameOrId) {
+  var parentKey = String(parentId || '').toLowerCase();
+  var variantKey = String(variantNameOrId || '').toLowerCase();
+
+  return ghvReadManifest().then(function (info) {
+    var variants = Array.isArray(info.manifest.variants) ? info.manifest.variants : [];
+    for (var i = 0; i < variants.length; i++) {
+      var entry = variants[i];
+      if (!entry || typeof entry !== 'object' || !entry.file) continue;
+      if (String(entry.layoutId || '').toLowerCase() !== parentKey) continue;
+      if (
+        String(entry.id || '').toLowerCase() === variantKey ||
+        String(entry.name || '').toLowerCase() === variantKey
+      ) {
+        return {
+          manifestInfo: info,
+          entry: entry,
+          path: 'app/features/biblioteca/data/' + entry.file
+        };
+      }
+    }
+    return null;
+  });
+}
+
+function ghvSetVariantManifestEntry(parentId, variant, shouldInclude) {
+  var parentKey = String(parentId || '').toLowerCase();
+  var variantId = ghvSafeFileName(variant && (variant.id || variant.name), 'variant');
+  var parentFile = ghvSafeFileName(parentId, 'layout');
+  var file = 'variants/' + parentFile + '/' + variantId + '.js';
+
+  return ghvReadManifest().then(function (info) {
+    var manifest = info.manifest;
+    if (!Array.isArray(manifest.layouts)) manifest.layouts = [];
+    if (!Array.isArray(manifest.variants)) manifest.variants = [];
+
+    var index = -1;
+    for (var i = 0; i < manifest.variants.length; i++) {
+      var current = manifest.variants[i];
+      if (
+        current &&
+        typeof current === 'object' &&
+        String(current.layoutId || '').toLowerCase() === parentKey &&
+        String(current.id || '').toLowerCase() === variantId
+      ) {
+        index = i;
+        break;
+      }
+    }
+
+    if (shouldInclude) {
+      var existingFile = index !== -1 && manifest.variants[index].file
+        ? manifest.variants[index].file
+        : file;
+      var entry = {
+        file: existingFile,
+        layoutId: parentId,
+        id: variantId,
+        name: variant.name || variantId
+      };
+      if (index === -1) manifest.variants.push(entry);
+      else manifest.variants[index] = entry;
+    } else if (index !== -1) {
+      manifest.variants.splice(index, 1);
+    }
+
+    if (!shouldInclude && index === -1) return GH_VARIANT_MANIFEST_PATH;
+
+    return githubPutFile(
+      GH_VARIANT_MANIFEST_PATH,
+      ghvSerializeManifest(manifest),
+      info.sha,
+      shouldInclude
+        ? '[SenkoLib] register variant file: ' + parentKey + '/' + variantId
+        : '[SenkoLib] unregister variant file: ' + parentKey + '/' + variantId
+    ).then(function () {
+      return GH_VARIANT_MANIFEST_PATH;
+    });
+  });
+}
+
+function ghvEscapeTemplateLiteral(value) {
+  return String(value == null ? '' : value)
+    .replace(/\\/g, '\\\\')
+    .replace(/`/g, '\\`')
+    .replace(/\$\{/g, '\\${');
+}
+
+function ghvBuildVariantFileContent(parentId, variant) {
+  var variantId = ghvSafeFileName(variant.id || variant.name, 'variant');
+  return (
+    '// @ts-nocheck\n' +
+    'SenkoLib.registerVariantFile(' + JSON.stringify(String(parentId)) + ',\n' +
+    '{\n' +
+    '  id: ' + JSON.stringify(variantId) + ',\n' +
+    '  name: ' + JSON.stringify(String(variant.name || variantId)) + ',\n' +
+    '  html: `' + ghvEscapeTemplateLiteral(variant.html) + '`,\n' +
+    '  css: `' + ghvEscapeTemplateLiteral(variant.css) + '`\n' +
+    '}\n' +
+    ');\n'
+  );
+}
+
+function ghvDeleteFile(filePath, sha, message) {
+  var token = ghGetToken();
+  var url   = 'https://api.github.com/repos/'
+    + GITHUB_CONFIG.OWNER + '/'
+    + GITHUB_CONFIG.REPO  + '/contents/'
+    + filePath;
+
+  return fetch(url, {
+    method:  'DELETE',
+    headers: {
+      'Authorization': 'token ' + token,
+      'Accept':        'application/vnd.github+json',
+      'Content-Type':  'application/json'
+    },
+    body: JSON.stringify({
+      message: message,
+      sha:     sha,
+      branch:  GITHUB_CONFIG.BRANCH
+    })
+  }).then(function (res) {
+    if (res.status === 401) {
+      ghSetToken('');
+      ghUpdateLockButton();
+      throw new Error('Token inválido ou expirado. Clique no cadeado para configurar um novo.');
+    }
+    if (!res.ok) {
+      return res.json().then(function (e) {
+        throw new Error('GitHub DELETE falhou (' + res.status + '): ' + (e.message || filePath));
+      });
+    }
+    return true;
+  });
+}
+
 function ghvSetManifestEntry(parentId, shouldInclude) {
   var entry = 'variants/' + parentId.toLowerCase() + '.js';
 
-  return githubGetFile(GH_VARIANT_MANIFEST_PATH).then(function (data) {
-    var manifest;
+  return ghvReadManifest().then(function (data) {
+    var manifest = data.manifest;
     try {
-      manifest = ghvParseManifest(data.content);
+      if (!manifest || typeof manifest !== 'object') throw new Error('Manifest invalido.');
     } catch (error) {
       throw new Error('Catalogo da Biblioteca possui JavaScript invalido.');
     }
@@ -183,10 +259,20 @@ function ghvSetManifestEntry(parentId, shouldInclude) {
     if (!Array.isArray(manifest.layouts)) manifest.layouts = [];
     if (!Array.isArray(manifest.variants)) manifest.variants = [];
 
+    var originalLength = manifest.variants.length;
     var index = manifest.variants.indexOf(entry);
+    if (!shouldInclude) {
+      manifest.variants = manifest.variants.filter(function (variantEntry) {
+        return !(
+          variantEntry &&
+          typeof variantEntry === 'object' &&
+          String(variantEntry.layoutId || '').toLowerCase() === String(parentId || '').toLowerCase()
+        );
+      });
+    }
     if (shouldInclude && index === -1) manifest.variants.push(entry);
     if (!shouldInclude && index !== -1) manifest.variants.splice(index, 1);
-    if ((shouldInclude && index !== -1) || (!shouldInclude && index === -1)) {
+    if ((shouldInclude && index !== -1) || (!shouldInclude && index === -1 && manifest.variants.length === originalLength)) {
       return GH_VARIANT_MANIFEST_PATH;
     }
 
@@ -203,8 +289,60 @@ function ghvSetManifestEntry(parentId, shouldInclude) {
   });
 }
 
+function ghvDeleteVariantFilesForLayout(parentId) {
+  var parentKey = String(parentId || '').toLowerCase();
+
+  return ghvReadManifest().then(function (info) {
+    var manifest = info.manifest;
+    if (!Array.isArray(manifest.variants)) manifest.variants = [];
+
+    var toDelete = manifest.variants.filter(function (entry) {
+      return entry &&
+        typeof entry === 'object' &&
+        entry.file &&
+        String(entry.layoutId || '').toLowerCase() === parentKey;
+    });
+
+    var remaining = manifest.variants.filter(function (entry) {
+      return !(
+        entry &&
+        typeof entry === 'object' &&
+        String(entry.layoutId || '').toLowerCase() === parentKey
+      ) && entry !== 'variants/' + parentKey + '.js';
+    });
+
+    var deletes = toDelete.map(function (entry) {
+      var path = 'app/features/biblioteca/data/' + entry.file;
+      return githubGetFile(path).then(function (data) {
+        return ghvDeleteFile(
+          path,
+          data.sha,
+          '[SenkoLib] delete variant file: ' + parentKey + '/' + (entry.id || entry.name || 'variant')
+        );
+      }).catch(function (error) {
+        if (error.message && error.message.indexOf('404') !== -1) return true;
+        throw error;
+      });
+    });
+
+    return Promise.all(deletes).then(function () {
+      manifest.variants = remaining;
+      return githubPutFile(
+        GH_VARIANT_MANIFEST_PATH,
+        ghvSerializeManifest(manifest),
+        info.sha,
+        '[SenkoLib] unregister variant files: ' + parentKey
+      );
+    }).then(function () {
+      return true;
+    });
+  });
+}
+
 window.SenkoBibliotecaGithubManifest = {
-  setVariantEntry: ghvSetManifestEntry
+  setVariantEntry: ghvSetManifestEntry,
+  setVariantFileEntry: ghvSetVariantManifestEntry,
+  deleteVariantFilesForLayout: ghvDeleteVariantFilesForLayout
 };
 
 function ghvUpdateVariantInMemory(parentId, originalName, newName, html, css) {
@@ -262,10 +400,10 @@ function githubCreateVariant(parentId, variantName, objectCode) {
     return Promise.resolve(false);
   }
 
-  if (!/^[a-z0-9-]+$/.test(parentId.toLowerCase())) {
+  if (!String(parentId || '').trim()) {
     ghUnlockSave();
     ghSetStatus('ID inválido', 'error');
-    alert('O ID do layout pai ("' + parentId + '") contém caracteres inválidos.\nUse apenas letras minúsculas, números e hífen.');
+    alert('O layout pai da variante não foi identificado.');
     return Promise.resolve(false);
   }
 
@@ -277,86 +415,42 @@ function githubCreateVariant(parentId, variantName, objectCode) {
     return Promise.resolve(false);
   }
 
-  ghSetStatus('Verificando arquivo de variantes…', 'saving');
+  ghSetStatus('Criando arquivo de variante…', 'saving');
 
-  return ghvGetVariantFile(parentId).then(function (fileInfo) {
+  var variantId = ghvSafeFileName(nameLower, 'variant');
+  var variantFile = 'variants/' + ghvSafeFileName(parentId, 'layout') + '/' + variantId + '.js';
+  var variantPath = 'app/features/biblioteca/data/' + variantFile;
+  var htmlValue = document.getElementById('newVarHtml') ? document.getElementById('newVarHtml').value : '';
+  var cssValue  = document.getElementById('newVarCss')  ? document.getElementById('newVarCss').value  : '';
+  var variantData = { id: variantId, name: variantName, html: htmlValue, css: cssValue };
 
-    /* ── Arquivo existe: verifica duplicata e insere ── */
-    if (fileInfo.exists) {
-      var content = fileInfo.content;
-      var sha     = fileInfo.sha;
-
-      /* Checa duplicata pelo marcador */
-      var marker = '/*@@@@Senko - ' + nameLower + ' */';
-      if (content.indexOf(marker) !== -1) {
-        ghSetStatus('Nome duplicado', 'error');
-        ghUnlockSave();
-        alert('Já existe uma variante com o nome "' + variantName + '" em ' + fileInfo.path + '.\nEscolha outro nome.');
-        return false;
-      }
-
-      var closePos = content.lastIndexOf(']);');
-      if (closePos === -1) {
-        ghSetStatus('Estrutura inválida', 'error');
-        ghUnlockSave();
-        alert('Não foi possível encontrar o fechamento do array em ' + fileInfo.path + '.');
-        return false;
-      }
-
-      var newContent =
-        content.slice(0, closePos) +
-        objectCode + '\n' +
-        content.slice(closePos);
-
-      ghSetStatus('Salvando no GitHub…', 'saving');
-
-      return githubPutFile(
-        fileInfo.path,
-        newContent,
-        sha,
-        '[SenkoLib] add variant: ' + nameLower + ' (' + parentId + ')'
-      ).then(function () {
-        var html = document.getElementById('newVarHtml') ? document.getElementById('newVarHtml').value : '';
-        var css  = document.getElementById('newVarCss')  ? document.getElementById('newVarCss').value  : '';
-        SenkoLib.registerVariant(parentId, [{ name: variantName, html: html, css: css }]);
-        ghSetStatus('✓ Variante salva em ' + fileInfo.path, 'ok');
-        ghUnlockSave();
-        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(fileInfo.path);
-        return fileInfo.path;
-      }).catch(function (e) {
-        ghSetStatus('Erro ao salvar: ' + e.message, 'error');
-        ghUnlockSave();
-        throw e;
-      });
-    }
-
-    /* ── Arquivo não existe: cria do zero ── */
-    var newFileContent = ghvBuildNewVariantFile(parentId, objectCode);
-
-    ghSetStatus('Criando arquivo de variantes…', 'saving');
+  return githubGetFile(variantPath).then(function () {
+    ghSetStatus('Variante duplicada', 'error');
+    ghUnlockSave();
+    alert('Já existe um arquivo individual para a variante "' + variantName + '".');
+    return false;
+  }).catch(function (error) {
+    if (!error.message || error.message.indexOf('404') === -1) throw error;
 
     return githubPutFile(
-      fileInfo.path,
-      newFileContent,
+      variantPath,
+      ghvBuildVariantFileContent(parentId, variantData),
       null,
-      '[SenkoLib] create variants file: ' + parentId
+      '[SenkoLib] create variant file: ' + parentId + '/' + variantId
     ).then(function () {
       ghSetStatus('Atualizando manifesto da Biblioteca…', 'saving');
-      return ghvSetManifestEntry(parentId, true);
+      return ghvSetVariantManifestEntry(parentId, variantData, true);
     }).then(function () {
-      var html = document.getElementById('newVarHtml') ? document.getElementById('newVarHtml').value : '';
-      var css  = document.getElementById('newVarCss')  ? document.getElementById('newVarCss').value  : '';
-      SenkoLib.registerVariant(parentId, [{ name: variantName, html: html, css: css }]);
-      ghSetStatus('✓ Arquivo criado: ' + fileInfo.path, 'ok');
+      SenkoLib.registerVariantFile(parentId, variantData);
+      ghSetStatus('✓ Variante criada: ' + variantFile, 'ok');
       ghUnlockSave();
-      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(fileInfo.path);
-      return fileInfo.path;
+      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(GH_VARIANT_MANIFEST_PATH);
+      return variantPath;
     }).catch(function (e) {
-      ghSetStatus('Erro ao criar arquivo: ' + e.message, 'error');
+      ghSetStatus('Erro ao criar variante: ' + e.message, 'error');
       ghUnlockSave();
       throw e;
     });
-
   }).catch(function (e) {
     console.error('[senko-github-variants] Erro ao criar variante:', e);
     ghSetStatus('Erro: ' + e.message, 'error');
@@ -370,8 +464,8 @@ function githubCreateVariant(parentId, variantName, objectCode) {
 /* ═══════════════════════════════════════════════════════════════════════
    CORE: Editar variante existente no GitHub
    ───────────────────────────────────────────────────────────────────────
-   Recebe o nome ORIGINAL para localizar o marcador e o nome NOVO para
-   validar duplicidade antes de substituir o objeto.
+   Recebe o nome ORIGINAL para localizar a entrada no manifesto e o nome NOVO para
+   validar duplicidade antes de regravar o arquivo individual.
 ═══════════════════════════════════════════════════════════════════════ */
 function githubSaveVariant(parentId, originalName, newName, objectCode) {
   if (typeof senkoVariantNameExists === 'function'
@@ -387,61 +481,43 @@ function githubSaveVariant(parentId, originalName, newName, objectCode) {
     return Promise.resolve(false);
   }
 
-  var filePath = 'app/features/biblioteca/data/variants/' + parentId.toLowerCase() + '.js';
   ghSetStatus('Lendo arquivo de variantes…', 'saving');
 
-  return githubGetFile(filePath).then(function (data) {
-    var content = data.content;
-    var sha     = data.sha;
+  return ghvFindVariantManifestEntry(parentId, originalName).then(function (manifestEntry) {
+    if (!manifestEntry) return null;
 
-    var bounds = ghvFindVariantObjectBounds(content, originalName);
+    var htmlValue = document.getElementById('editVarHtml') ? document.getElementById('editVarHtml').value : '';
+    var cssValue  = document.getElementById('editVarCss')  ? document.getElementById('editVarCss').value  : '';
+    var variantData = {
+      id: manifestEntry.entry.id || ghvSafeFileName(originalName, 'variant'),
+      name: newName,
+      html: htmlValue,
+      css: cssValue
+    };
 
-    if (!bounds) {
-      ghSetStatus('Variante não encontrada', 'error');
-      ghUnlockSave();
-      alert('Variante "' + originalName + '" não encontrada em ' + filePath + '.\nVerifique se o arquivo está correto.');
-      return false;
-    }
-
-    if (bounds.duplicate) {
-      ghSetStatus('Variante duplicada no arquivo', 'error');
-      ghUnlockSave();
-      alert('A variante "' + originalName + '" aparece mais de uma vez em ' + filePath + '.\nCorrija manualmente antes de editar.');
-      return false;
-    }
-
-    /*
-     * A memória protege a interface atual; esta checagem protege contra uma
-     * aba desatualizada, consultando o arquivo remoto obtido imediatamente
-     * antes do PUT.
-     */
-    var originalMarker = '/*@@@@Senko - ' + originalName.toLowerCase() + ' */';
-    var newMarker = '/*@@@@Senko - ' + newName.toLowerCase() + ' */';
-    if (newMarker !== originalMarker && content.indexOf(newMarker) !== -1) {
-      ghSetStatus('Nome de variante duplicado', 'error');
-      ghUnlockSave();
-      alert('Já existe uma variante com o nome "' + newName + '" em ' + filePath + '.\nEscolha outro nome.');
-      return false;
-    }
-
-    var newContent =
-      content.slice(0, bounds.start) +
-      objectCode + '\n' +
-      content.slice(bounds.end);
-
-    ghSetStatus('Salvando no GitHub…', 'saving');
-
-    return githubPutFile(
-      filePath,
-      newContent,
-      sha,
-      '[SenkoLib] edit variant: ' + originalName.toLowerCase() + ' (' + parentId + ')'
-    ).then(function () {
-      ghSetStatus('✓ Salvo em ' + filePath, 'ok');
-      ghUnlockSave();
-      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(filePath);
-      return filePath;
+    return githubGetFile(manifestEntry.path).then(function (data) {
+      ghSetStatus('Salvando no GitHub…', 'saving');
+      return githubPutFile(
+        manifestEntry.path,
+        ghvBuildVariantFileContent(parentId, variantData),
+        data.sha,
+        '[SenkoLib] edit variant file: ' + parentId + '/' + variantData.id
+      ).then(function () {
+        return ghvSetVariantManifestEntry(parentId, variantData, true);
+      }).then(function () {
+        ghSetStatus('✓ Salvo em ' + manifestEntry.entry.file, 'ok');
+        ghUnlockSave();
+        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(manifestEntry.path);
+        return manifestEntry.path;
+      });
     });
+  }).then(function (directResult) {
+    if (directResult) return directResult;
+
+    ghSetStatus('Variante fora do manifesto', 'error');
+    ghUnlockSave();
+    alert('Variante "' + originalName + '" não possui arquivo individual no manifest da Biblioteca.');
+    return false;
 
   }).catch(function (e) {
     console.error('[senko-github-variants] Erro ao editar variante:', e);
@@ -465,95 +541,33 @@ function githubDeleteVariant(parentId, variantNome) {
 
   ghSetStatus('Buscando variante…', 'saving');
 
-  return ghvGetVariantFile(parentId).then(function (fileInfo) {
-    if (!fileInfo.exists) {
-      ghSetStatus('Arquivo não encontrado', 'error');
-      alert('O arquivo de variantes para "' + parentId + '" não foi encontrado no GitHub.');
-      return false;
-    }
+  return ghvFindVariantManifestEntry(parentId, variantNome).then(function (manifestEntry) {
+    if (!manifestEntry) return null;
 
-    var content = fileInfo.content;
-    var sha     = fileInfo.sha;
-    var bounds  = ghvFindVariantObjectBounds(content, variantNome);
-
-    if (!bounds) {
-      ghSetStatus('Variante não encontrada', 'error');
-      alert('Variante "' + variantNome + '" não encontrada em ' + fileInfo.path + '.');
-      return false;
-    }
-
-    if (bounds.duplicate) {
-      ghSetStatus('Variante duplicada', 'error');
-      alert('A variante "' + variantNome + '" aparece mais de uma vez no arquivo.\nCorrija manualmente.');
-      return false;
-    }
-
-    var remaining = ghvCountVariants(content);
-
-    /* ── Era a única variante: deleta o arquivo inteiro ── */
-    if (remaining <= 1) {
-      ghSetStatus('Removendo arquivo de variantes…', 'saving');
-
-      var token = ghGetToken();
-      var url   = 'https://api.github.com/repos/'
-        + GITHUB_CONFIG.OWNER + '/'
-        + GITHUB_CONFIG.REPO  + '/contents/'
-        + fileInfo.path;
-
-      return fetch(url, {
-        method:  'DELETE',
-        headers: {
-          'Authorization': 'token ' + token,
-          'Accept':        'application/vnd.github+json',
-          'Content-Type':  'application/json'
-        },
-        body: JSON.stringify({
-          message: '[SenkoLib] delete variants file: ' + parentId,
-          sha:     sha,
-          branch:  GITHUB_CONFIG.BRANCH
-        })
-      }).then(function (res) {
-        if (res.status === 401) {
-          ghSetToken('');
-          ghUpdateLockButton();
-          throw new Error('Token inválido ou expirado. Clique no cadeado para configurar um novo.');
-        }
-        if (!res.ok) {
-          return res.json().then(function (e) {
-            throw new Error('GitHub DELETE falhou (' + res.status + '): ' + (e.message || fileInfo.path));
-          });
-        }
-        return ghvSetManifestEntry(parentId, false);
+    return githubGetFile(manifestEntry.path).then(function (data) {
+      ghSetStatus('Removendo variante…', 'saving');
+      return ghvDeleteFile(
+        manifestEntry.path,
+        data.sha,
+        '[SenkoLib] delete variant file: ' + parentId + '/' + (manifestEntry.entry.id || variantNome)
+      ).then(function () {
+        return ghvSetVariantManifestEntry(parentId, {
+          id: manifestEntry.entry.id || ghvSafeFileName(variantNome, 'variant'),
+          name: manifestEntry.entry.name || variantNome
+        }, false);
       }).then(function () {
         ghvRemoveVariantFromMemory(parentId, variantNome);
-        ghSetStatus('✓ Arquivo de variantes removido: ' + fileInfo.path, 'ok');
-        if (typeof ghStartDeployWatch === 'function') {
-          ghStartDeployWatch(GH_VARIANT_MANIFEST_PATH);
-        }
+        ghSetStatus('✓ Variante excluída: ' + variantNome, 'ok');
+        if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(GH_VARIANT_MANIFEST_PATH);
         return true;
       });
-    }
-
-    /* ── Ainda há outras variantes: remove só o objeto ── */
-    var newContent =
-      content.slice(0, bounds.start) +
-      content.slice(bounds.end);
-
-    newContent = newContent.replace(/\n\n\n/g, '\n\n');
-
-    ghSetStatus('Salvando no GitHub…', 'saving');
-
-    return githubPutFile(
-      fileInfo.path,
-      newContent,
-      sha,
-      '[SenkoLib] delete variant: ' + variantNome.toLowerCase() + ' (' + parentId + ')'
-    ).then(function () {
-      ghvRemoveVariantFromMemory(parentId, variantNome);
-      ghSetStatus('✓ Variante excluída: ' + variantNome, 'ok');
-      if (typeof ghStartDeployWatch === 'function') ghStartDeployWatch(fileInfo.path);
-      return true;
     });
+  }).then(function (directResult) {
+    if (directResult) return directResult;
+
+    ghSetStatus('Variante fora do manifesto', 'error');
+    alert('Variante "' + variantNome + '" não possui arquivo individual no manifest da Biblioteca.');
+    return false;
 
   }).catch(function (e) {
     console.error('[senko-github-variants] Erro ao deletar variante:', e);
@@ -682,12 +696,14 @@ function ghvInjectNewVariantButton() {
     var safeCss   = escapeTemplateLiteral(css);
 
     var objectCode =
-      '/*@@@@Senko - ' + nomeLower + ' */\n' +
-      '  {\n' +
+      "SenkoLib.registerVariantFile('" + parentId + "',\n" +
+      '{\n' +
+      "    id: '" + nomeLower + "',\n" +
       "    name: '" + nomeLower + "',\n" +
       '    html: `' + safeHtml + '`,\n' +
-      '    css: `'  + safeCss  + '`,\n' +
-      '  },';
+      '    css: `'  + safeCss  + '`\n' +
+      '}\n' +
+      ');';
 
     btn.textContent = 'Salvando…';
     btn.disabled    = true;
@@ -765,12 +781,14 @@ function ghvInjectEditVariantButton() {
     var safeHtml   = escapeTemplateLiteral(html);
     var safeCss    = escapeTemplateLiteral(css);
     var objectCode =
-      '/*@@@@Senko - ' + newName + ' */\n' +
-      '  {\n' +
+      "SenkoLib.registerVariantFile('" + parentId + "',\n" +
+      '{\n' +
+      "    id: '" + (state.currentEditVariant.id || newName) + "',\n" +
       "    name: '" + newName + "',\n" +
       '    html: `' + safeHtml + '`,\n' +
-      '    css: `'  + safeCss  + '`,\n' +
-      '  },';
+      '    css: `'  + safeCss  + '`\n' +
+      '}\n' +
+      ');';
 
     btn.textContent = 'Salvando…';
     btn.disabled    = true;

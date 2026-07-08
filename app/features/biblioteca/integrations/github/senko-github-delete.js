@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 /*
  * INDEPENDENCIA DE FEATURE:
  * Este modulo GitHub pertence somente a Biblioteca. Ele pode depender de
@@ -22,65 +22,14 @@
 
    REQUISITOS:
      - senko-github-v2.js carregado antes (usa ghGetToken, ghEnsureToken,
-       githubGetFile, githubPutFile, ghFindObjectBounds, ghDeduplicateMarkers,
-       githubListDir, GH_ICON, GITHUB_CONFIG)
+       githubGetFile, githubPutFile, GH_ICON, GITHUB_CONFIG)
 ═══════════════════════════════════════════════════════════════════════ */
 
 
-/* ═══════════════════════════════════════════════════════════════════════
-   CORE: Remove o bloco do layout de dentro do arquivo de layouts
-   Retorna o conteúdo novo (string) sem o objeto, ou lança erro.
-═══════════════════════════════════════════════════════════════════════ */
-function ghDeleteLayoutFromContent(content, layoutId) {
-  var cleaned = ghDeduplicateMarkers(content, layoutId);
-  var bounds  = ghFindObjectBounds(cleaned, layoutId);
-
-  if (!bounds || bounds.error === 'no_marker') {
-    throw new Error('Marcador não encontrado para "' + layoutId + '".');
-  }
-  if (!bounds.start && bounds.start !== 0) {
-    throw new Error('Não foi possível localizar o objeto "' + layoutId + '" para remoção.');
-  }
-
-  /* Remove também a linha do comentário de variantes que fica logo após o marcador,
-     se existir (ex: "  /* variantes: app/features/biblioteca/data/variants/section-49.js *\/") */
-  var before = cleaned.slice(0, bounds.start);
-  var after  = cleaned.slice(bounds.end);
-
-  /* Limpa linha em branco dupla que possa sobrar */
-  after = after.replace(/^\n\n/, '\n');
-
-  return before + after;
-}
 
 
-/* ═══════════════════════════════════════════════════════════════════════
-   CORE: Verifica se o arquivo de variantes existe no GitHub
-   Retorna { exists: bool, sha: string|null }
-═══════════════════════════════════════════════════════════════════════ */
-function ghCheckVariantFile(layoutId) {
-  var token = ghGetToken();
-  var path  = 'app/features/biblioteca/data/variants/' + layoutId + '.js';
-  var url   = 'https://api.github.com/repos/'
-    + GITHUB_CONFIG.OWNER + '/'
-    + GITHUB_CONFIG.REPO  + '/contents/'
-    + path + '?ref=' + GITHUB_CONFIG.BRANCH;
 
-  return fetch(url, {
-    headers: {
-      'Authorization': 'token ' + token,
-      'Accept': 'application/vnd.github+json'
-    }
-  }).then(function (res) {
-    if (res.status === 404) return { exists: false, sha: null };
-    if (!res.ok) return { exists: false, sha: null };
-    return res.json().then(function (data) {
-      return { exists: true, sha: data.sha, path: data.path };
-    });
-  }).catch(function () {
-    return { exists: false, sha: null };
-  });
-}
+
 
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -133,6 +82,19 @@ function ghRemoveLayoutFromMemory(layoutId) {
   if (idx !== -1) layouts.splice(idx, 1);
 }
 
+function ghDeleteVariantsForLayout(layoutId, deleteVariants) {
+  if (!deleteVariants) return Promise.resolve(true);
+
+  if (
+    window.SenkoBibliotecaGithubManifest &&
+    typeof window.SenkoBibliotecaGithubManifest.deleteVariantFilesForLayout === 'function'
+  ) {
+    return window.SenkoBibliotecaGithubManifest.deleteVariantFilesForLayout(layoutId);
+  }
+
+  return Promise.resolve(true);
+}
+
 
 /* ═══════════════════════════════════════════════════════════════════════
    CORE: Fluxo principal de exclusão
@@ -142,105 +104,52 @@ function githubDeleteLayout(layoutId, deleteVariants) {
   if (typeof ghLockSave === 'function' && !ghLockSave()) return Promise.resolve(false);
   if (!ghEnsureToken()) {
     if (typeof ghUnlockSave === 'function') ghUnlockSave();
-    ghSetStatus('Token não configurado', 'error');
+    ghSetStatus('Token nao configurado', 'error');
     return Promise.resolve(false);
   }
 
-  ghSetStatus('Buscando arquivo…', 'saving');
+  ghSetStatus('Buscando arquivo...', 'saving');
 
-  /* 1. Procura o marcador em todos os arquivos de layouts */
-  return githubListDir('app/features/biblioteca/data/layouts').then(function (entries) {
-    var jsFiles = entries.filter(function (e) {
-      return e.type === 'file' && e.name.endsWith('.js');
-    });
+  if (typeof ghFindLayoutManifestEntry !== 'function') {
+    ghSetStatus('Manifesto indisponivel', 'error');
+    if (typeof ghUnlockSave === 'function') ghUnlockSave();
+    return Promise.resolve(false);
+  }
 
-    var marker   = '/*@@@@Senko - ' + layoutId.toLowerCase() + ' */';
-    var promises = jsFiles.map(function (entry) {
-      return githubGetFile(entry.path).then(function (data) {
-        if (data.content.indexOf(marker) !== -1) {
-          return { entry: entry, content: data.content, sha: data.sha };
-        }
-        return null;
-      });
-    });
+  return ghFindLayoutManifestEntry(layoutId).then(function (manifestEntry) {
+    if (!manifestEntry) return null;
 
-    return Promise.all(promises).then(function (results) {
-      var candidates = results.filter(Boolean);
-
-      if (candidates.length === 0) {
-        ghSetStatus('Marcador não encontrado', 'error');
-        alert('Marcador não encontrado para "' + layoutId + '".\nO layout pode já ter sido removido manualmente do arquivo.');
-        return false;
-      }
-
-      if (candidates.length > 1) {
-        ghSetStatus('Duplicata detectada', 'error');
-        var names = candidates.map(function (c) { return c.entry.name; }).join(', ');
-        alert('O marcador de "' + layoutId + '" foi encontrado em mais de um arquivo:\n' + names + '\n\nCorrija a duplicata manualmente antes de excluir.');
-        return false;
-      }
-
-      var target     = candidates[0];
-      var newContent;
-
-      try {
-        newContent = ghDeleteLayoutFromContent(target.content, layoutId);
-      } catch (e) {
-        ghSetStatus('Erro ao remover objeto', 'error');
-        alert('Erro ao remover o objeto do arquivo:\n' + e.message);
-        return false;
-      }
-
-      ghSetStatus('Salvando no GitHub…', 'saving');
-
-      /* 2. Salva o arquivo de layouts sem o objeto */
-      return githubPutFile(
-        target.entry.path,
-        newContent,
-        target.sha,
-        '[SenkoLib] delete layout: ' + layoutId
+    ghSetStatus('Lendo arquivo individual...', 'saving');
+    return githubGetFile(manifestEntry.path).then(function (data) {
+      ghSetStatus('Excluindo arquivo individual...', 'saving');
+      return ghDeleteFile(
+        manifestEntry.path,
+        data.sha,
+        '[SenkoLib] delete layout file: ' + layoutId
       ).then(function () {
-
-        /* 3. Se pediu para apagar variantes, deleta o arquivo */
-        if (deleteVariants) {
-          return ghCheckVariantFile(layoutId).then(function (info) {
-            if (!info.exists) return true;
-            ghSetStatus('Removendo variantes…', 'saving');
-            return ghDeleteFile(
-              'app/features/biblioteca/data/variants/' + layoutId + '.js',
-              info.sha,
-              '[SenkoLib] delete variants: ' + layoutId
-            );
-          }).then(function () {
-            /*
-             * O modulo de variantes e carregado antes deste arquivo e e o
-             * unico responsavel por escrever no manifesto da Biblioteca.
-             */
-            if (window.SenkoBibliotecaGithubManifest) {
-              return window.SenkoBibliotecaGithubManifest.setVariantEntry(layoutId, false);
-            }
-            return true;
-          });
+        if (typeof ghSetLayoutManifestEntry === 'function') {
+          return ghSetLayoutManifestEntry(layoutId, manifestEntry.entry.file, manifestEntry.entry.name, false);
         }
         return true;
-
+      }).then(function () {
+        return ghDeleteVariantsForLayout(layoutId, deleteVariants);
       }).then(function () {
         ghRemoveLayoutFromMemory(layoutId);
-        ghSetStatus('✓ Layout excluído: ' + layoutId, 'ok');
+        ghSetStatus('Layout excluido: ' + layoutId, 'ok');
         if (typeof ghUnlockSave === 'function') ghUnlockSave();
         if (typeof ghStartDeployWatch === 'function') {
-          ghStartDeployWatch(
-            deleteVariants
-              ? 'app/features/biblioteca/data/manifest.js'
-              : target.entry.path
-          );
+          ghStartDeployWatch('app/features/biblioteca/data/manifest.js');
         }
         renderGrid();
         return true;
       });
-
     });
-
+  }).then(function (directResult) {
+    if (directResult) return directResult;
+    ghSetStatus('Layout fora do manifesto', 'error');
+    if (typeof ghUnlockSave === 'function') ghUnlockSave();
+    alert('Layout "' + layoutId + '" nao possui arquivo individual no manifest da Biblioteca.');
+    return false;
   }).catch(function (e) {
     console.error('[senko-github-delete] Erro ao excluir layout:', e);
     ghSetStatus('Erro: ' + e.message, 'error');

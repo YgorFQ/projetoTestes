@@ -39,6 +39,7 @@
 
 var GH_CONFIG_KEY = 'senkolib_github_config';
 var GH_LAYOUTS_DIR = 'app/features/biblioteca/data/layouts';
+var GH_BIBLIOTECA_MANIFEST_PATH = 'app/features/biblioteca/data/manifest.js';
 
 var GITHUB_CONFIG = (function () {
   var hostname = window.location.hostname;
@@ -262,84 +263,9 @@ function githubListDir(path) {
    PARSER â€” localiza e substitui objetos de layout
 â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/*
- * Parser textual intencional: os arquivos de layout sao JavaScript com
- * template literals, nao JSON. Por isso a busca percorre caractere por
- * caractere e ignora chaves dentro de crases antes de substituir o objeto.
- */
-function ghFindObjectBounds(content, layoutId) {
-  var marker    = '/*@@@@Senko - ' + layoutId.toLowerCase() + ' */';
-  var markerPos = content.indexOf(marker);
 
-  if (markerPos === -1) return { error: 'no_marker' };
 
-  var objOpen = content.indexOf('{', markerPos + marker.length);
-  if (objOpen === -1) return null;
 
-  var i          = objOpen;
-  var depth      = 0;
-  var inTemplate = false;
-  var len        = content.length;
-
-  while (i < len) {
-    var ch = content[i];
-
-    if (ch === '`') {
-      var backslashes = 0;
-      var j = i - 1;
-      while (j >= 0 && content[j] === '\\') { backslashes++; j--; }
-      if (backslashes % 2 === 0) inTemplate = !inTemplate;
-      i++; continue;
-    }
-
-    if (inTemplate) { i++; continue; }
-    if (ch === '{') { depth++; i++; continue; }
-
-    if (ch === '}') {
-      depth--;
-      if (depth === 0) {
-        var end = i + 1;
-        if (content[end] === ',') end++;
-        if (content[end] === '\n') end++;
-        return { start: markerPos, end: end };
-      }
-      i++; continue;
-    }
-
-    i++;
-  }
-
-  return null;
-}
-
-/*
- * Mantem apenas o ultimo marcador repetido. Isso protege contra salvamentos
- * antigos que deixaram comentarios duplicados antes do mesmo objeto.
- */
-function ghDeduplicateMarkers(content, layoutId) {
-  var marker    = '/*@@@@Senko - ' + layoutId.toLowerCase() + ' */';
-  var positions = [];
-  var search    = 0;
-
-  while (true) {
-    var pos = content.indexOf(marker, search);
-    if (pos === -1) break;
-    positions.push(pos);
-    search = pos + marker.length;
-  }
-
-  if (positions.length <= 1) return content;
-
-  for (var k = positions.length - 2; k >= 0; k--) {
-    var start   = positions[k];
-    var lineEnd = content.indexOf('\n', start);
-    if (lineEnd === -1) lineEnd = content.length;
-    else lineEnd += 1;
-    content = content.slice(0, start) + content.slice(lineEnd);
-  }
-
-  return content;
-}
 
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -371,6 +297,131 @@ function ghUnlockSave() {
   }
 }
 
+function ghParseBibliotecaManifest(content) {
+  var assignment = 'window.SenkoBibliotecaManifest';
+  var assignmentIndex = content.indexOf(assignment);
+  var equalsIndex = content.indexOf('=', assignmentIndex);
+  var source = equalsIndex === -1
+    ? ''
+    : content.slice(equalsIndex + 1).trim().replace(/;\s*$/, '');
+
+  if (assignmentIndex === -1 || !source) {
+    throw new Error('Formato do catalogo da Biblioteca nao reconhecido.');
+  }
+  return JSON.parse(source);
+}
+
+function ghSerializeBibliotecaManifest(manifest) {
+  return (
+    '/* Catalogo privado da Biblioteca. Atualizado pela integracao GitHub. */\n' +
+    'window.SenkoBibliotecaManifest = ' +
+    JSON.stringify(manifest, null, 2) +
+    ';\n'
+  );
+}
+
+function ghReadBibliotecaManifest() {
+  return githubGetFile(GH_BIBLIOTECA_MANIFEST_PATH).then(function (data) {
+    return {
+      content: data.content,
+      sha: data.sha,
+      manifest: ghParseBibliotecaManifest(data.content)
+    };
+  });
+}
+
+function ghFindLayoutManifestEntry(layoutId) {
+  var normalizedId = String(layoutId || '').toLowerCase();
+  return ghReadBibliotecaManifest().then(function (info) {
+    var layouts = Array.isArray(info.manifest.layouts) ? info.manifest.layouts : [];
+    for (var i = 0; i < layouts.length; i++) {
+      var entry = layouts[i];
+      if (entry && typeof entry === 'object' && entry.file && String(entry.id || '').toLowerCase() === normalizedId) {
+        return {
+          manifestInfo: info,
+          entry: entry,
+          path: 'app/features/biblioteca/data/' + entry.file
+        };
+      }
+    }
+    return null;
+  });
+}
+
+function ghSetLayoutManifestEntry(layoutId, file, name, shouldInclude) {
+  var normalizedId = String(layoutId || '').toLowerCase();
+  return ghReadBibliotecaManifest().then(function (info) {
+    var manifest = info.manifest;
+    if (!Array.isArray(manifest.layouts)) manifest.layouts = [];
+
+    var index = -1;
+    for (var i = 0; i < manifest.layouts.length; i++) {
+      var current = manifest.layouts[i];
+      if (current && typeof current === 'object' && String(current.id || '').toLowerCase() === normalizedId) {
+        index = i;
+        break;
+      }
+    }
+
+    if (shouldInclude) {
+      var entry = {
+        file: file,
+        id: normalizedId,
+        name: name || normalizedId
+      };
+      if (index === -1) manifest.layouts.push(entry);
+      else manifest.layouts[index] = entry;
+    } else if (index !== -1) {
+      manifest.layouts.splice(index, 1);
+    }
+
+    if (!shouldInclude && index === -1) return GH_BIBLIOTECA_MANIFEST_PATH;
+
+    return githubPutFile(
+      GH_BIBLIOTECA_MANIFEST_PATH,
+      ghSerializeBibliotecaManifest(manifest),
+      info.sha,
+      shouldInclude
+        ? '[SenkoLib] register layout file: ' + normalizedId
+        : '[SenkoLib] unregister layout file: ' + normalizedId
+    ).then(function () {
+      return GH_BIBLIOTECA_MANIFEST_PATH;
+    });
+  });
+}
+
+function ghSingleLayoutObjectCode(objectCode) {
+  var code = String(objectCode || '').trim();
+  code = code.replace(/^\/\*\s*variantes:[\s\S]*?\*\/\s*/, '');
+  code = code.replace(/,\s*$/, '');
+  return code;
+}
+
+function ghBuildSingleLayoutFileContent(objectCode) {
+  return (
+    '// @ts-nocheck\n' +
+    'SenkoLib.registerLayout(\n' +
+    ghSingleLayoutObjectCode(objectCode) +
+    '\n);\n'
+  );
+}
+
+function ghUpdateLayoutMemory(layoutId, name) {
+  var editTags = document.getElementById('editTags');
+  var editHtml = document.getElementById('editHtml');
+  var editCss  = document.getElementById('editCss');
+  SenkoLib.updateLayout(layoutId, {
+    name: name,
+    tags: editTags
+      ? (typeof senkoParseMetadataTags === 'function'
+        ? senkoParseMetadataTags(editTags.value)
+        : editTags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean))
+      : [],
+    html: editHtml ? editHtml.value : '',
+    css: editCss ? editCss.value : ''
+  });
+}
+
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
    CORE: Salvar layout existente
@@ -385,94 +436,47 @@ function githubSaveLayout(layoutId, objectCode) {
     : '';
   if (typeof senkoLayoutNameExists === 'function'
       && senkoLayoutNameExists(nextName, layoutId)) {
-    ghShowErrorModal('JÃ¡ existe outro layout com o nome "' + nextName + '". Escolha outro nome.');
+    ghShowErrorModal('Ja existe outro layout com o nome "' + nextName + '". Escolha outro nome.');
     return Promise.resolve(false);
   }
 
   if (!ghLockSave()) return Promise.resolve(false);
   if (!ghEnsureToken()) {
     ghUnlockSave();
-    ghSetStatus('Token nÃ£o configurado', 'error');
+    ghSetStatus('Token nao configurado', 'error');
     return Promise.resolve(false);
   }
 
-  ghSetStatus('Buscando arquivoâ€¦', 'saving');
+  ghSetStatus('Buscando arquivo...', 'saving');
 
-  return githubListDir(GH_LAYOUTS_DIR).then(function (entries) {
-    var jsFiles = entries.filter(function (e) {
-      return e.type === 'file' && e.name.endsWith('.js');
-    });
+  return ghFindLayoutManifestEntry(layoutId).then(function (manifestEntry) {
+    if (!manifestEntry) return null;
 
-    var marker = '/*@@@@Senko - ' + layoutId.toLowerCase() + ' */';
-
-    var promises = jsFiles.map(function (entry) {
-      return githubGetFile(entry.path).then(function (data) {
-        if (data.content.indexOf(marker) !== -1) {
-          return { entry: entry, content: data.content, sha: data.sha };
-        }
-        return null;
-      });
-    });
-
-    return Promise.all(promises).then(function (results) {
-      var candidates = results.filter(Boolean);
-
-      if (candidates.length === 0) {
-        ghSetStatus('Marcador nÃ£o encontrado', 'error');
-        ghShowErrorModal('Marcador nÃ£o encontrado para "' + layoutId + '".\n\nSe Ã© um layout novo: use o botÃ£o "GitHub" no modal de criaÃ§Ã£o.');
-        return false;
-      }
-
-      if (candidates.length > 1) {
-        ghSetStatus('Duplicata detectada', 'error');
-        var names = candidates.map(function (c) { return c.entry.name; }).join(', ');
-        ghShowErrorModal('O marcador de "' + layoutId + '" foi encontrado em mais de um arquivo: ' + names + '. Corrija a duplicata manualmente.');
-        return false;
-      }
-
-      var target  = candidates[0];
-      var content = ghDeduplicateMarkers(target.content, layoutId);
-      var bounds  = ghFindObjectBounds(content, layoutId);
-
-      if (!bounds || bounds.error) {
-        ghSetStatus('Objeto nÃ£o localizado', 'error');
-        ghShowErrorModal('NÃ£o foi possÃ­vel localizar o objeto "' + layoutId + '" para substituiÃ§Ã£o. Salve manualmente.');
-        return false;
-      }
-
-      var newContent =
-        content.slice(0, bounds.start) +
-        objectCode + '\n' +
-        content.slice(bounds.end);
-
-      ghSetStatus('Salvando no GitHubâ€¦', 'saving');
+    ghSetStatus('Lendo arquivo individual...', 'saving');
+    return githubGetFile(manifestEntry.path).then(function (data) {
+      ghSetStatus('Salvando no GitHub...', 'saving');
 
       return githubPutFile(
-        target.entry.path,
-        newContent,
-        target.sha,
-        '[SenkoLib] edit layout: ' + layoutId
+        manifestEntry.path,
+        ghBuildSingleLayoutFileContent(objectCode),
+        data.sha,
+        '[SenkoLib] edit layout file: ' + layoutId
       ).then(function () {
-        var editTags = document.getElementById('editTags');
-        var editHtml = document.getElementById('editHtml');
-        var editCss  = document.getElementById('editCss');
-        SenkoLib.updateLayout(layoutId, {
-          name: nextName,
-          tags: editTags
-            ? (typeof senkoParseMetadataTags === 'function'
-              ? senkoParseMetadataTags(editTags.value)
-              : editTags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean))
-            : [],
-          html: editHtml ? editHtml.value : '',
-          css: editCss ? editCss.value : ''
-        });
-        ghSetStatus('âœ“ Salvo em ' + target.entry.name, 'ok');
+        ghUpdateLayoutMemory(layoutId, nextName);
+        ghSetStatus('Salvo em ' + manifestEntry.entry.file, 'ok');
         ghUnlockSave();
-        ghStartDeployWatch(target.entry.path);
+        ghStartDeployWatch(manifestEntry.path);
         renderGrid();
-        return target.entry.name;
+        return manifestEntry.entry.file;
       });
     });
+  }).then(function (directResult) {
+    if (directResult) return directResult;
+
+    ghSetStatus('Layout fora do manifesto', 'error');
+    ghShowErrorModal('Layout "' + layoutId + '" nao possui arquivo individual no manifest da Biblioteca.');
+    ghUnlockSave();
+    return false;
   }).catch(function (e) {
     console.error('[senko-github] Erro ao salvar layout:', e);
     ghSetStatus('Erro: ' + e.message, 'error');
@@ -496,51 +500,36 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
     : layoutId;
   if (typeof senkoLayoutNameExists === 'function'
       && senkoLayoutNameExists(nextName, null)) {
-    ghShowErrorModal('JÃ¡ existe um layout com o nome "' + nextName + '". Escolha outro nome.');
+    ghShowErrorModal('Ja existe um layout com o nome "' + nextName + '". Escolha outro nome.');
     return Promise.resolve(false);
   }
 
   if (!ghLockSave()) return Promise.resolve(false);
   if (!ghEnsureToken()) {
     ghUnlockSave();
-    ghSetStatus('Token nÃ£o configurado', 'error');
+    ghSetStatus('Token nao configurado', 'error');
     return Promise.resolve(false);
   }
 
-  ghSetStatus('Lendo arquivoâ€¦', 'saving');
+  var normalizedId = String(layoutId || '').toLowerCase();
+  var individualFile = 'layouts/' + normalizedId + '.js';
+  var individualPath = 'app/features/biblioteca/data/' + individualFile;
 
-  return githubGetFile(GH_LAYOUTS_DIR + '/' + fileName).then(function (data) {
-    var content = data.content;
-    var sha     = data.sha;
+  ghSetStatus('Criando arquivo individual...', 'saving');
 
-    var marker = '/*@@@@Senko - ' + layoutId.toLowerCase() + ' */';
-    if (content.indexOf(marker) !== -1) {
-      ghSetStatus('Nome jÃ¡ existe', 'error');
-      ghUnlockSave();
-      ghShowErrorModal('JÃ¡ existe um layout com esse nome em ' + fileName + '. Use o botÃ£o de editar no card para modificar layouts existentes.');
-      return false;
-    }
-
-    var closePos = content.lastIndexOf(']);');
-    if (closePos === -1) {
-      ghSetStatus('Estrutura invÃ¡lida', 'error');
-      ghUnlockSave();
-      ghShowErrorModal('NÃ£o foi possÃ­vel encontrar o fechamento do array em ' + fileName + '. Verifique se o arquivo segue o padrÃ£o SenkoLib.register([...]);');
-      return false;
-    }
-
-    var newContent =
-      content.slice(0, closePos) +
-      '\n' + objectCode + '\n\n' +
-      content.slice(closePos);
-
-    ghSetStatus('Salvando no GitHubâ€¦', 'saving');
+  return githubGetFile(individualPath).then(function () {
+    ghSetStatus('Arquivo ja existe', 'error');
+    ghUnlockSave();
+    ghShowErrorModal('Ja existe um arquivo individual para "' + normalizedId + '". Use editar no card para modificar este layout.');
+    return false;
+  }).catch(function (error) {
+    if (!error.message || error.message.indexOf('404') === -1) throw error;
 
     return githubPutFile(
-      GH_LAYOUTS_DIR + '/' + fileName,
-      newContent,
-      sha,
-      '[SenkoLib] add layout: ' + layoutId
+      individualPath,
+      ghBuildSingleLayoutFileContent(objectCode),
+      null,
+      '[SenkoLib] add layout file: ' + normalizedId
     ).then(function () {
       var addHtml = document.getElementById('addHtml');
       var addCss  = document.getElementById('addCss');
@@ -559,12 +548,14 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
           : addTags.value.split(',').map(function (t) { return t.trim(); }).filter(Boolean))
         : [];
 
-      SenkoLib.register([{ id: layoutId, name: name, tags: tags, html: html, css: css }]);
-      ghSetStatus('âœ“ Salvo em ' + GH_LAYOUTS_DIR + '/' + fileName, 'ok');
-      ghUnlockSave();
-      ghStartDeployWatch(GH_LAYOUTS_DIR + '/' + fileName);
-      renderGrid();
-      return fileName;
+      return ghSetLayoutManifestEntry(normalizedId, individualFile, name, true).then(function () {
+        SenkoLib.registerLayout({ id: normalizedId, name: name, tags: tags, html: html, css: css });
+        ghSetStatus('Salvo em ' + individualPath, 'ok');
+        ghUnlockSave();
+        ghStartDeployWatch(GH_BIBLIOTECA_MANIFEST_PATH);
+        renderGrid();
+        return individualFile;
+      });
     });
   }).catch(function (e) {
     console.error('[senko-github] Erro ao salvar novo layout:', e);
@@ -576,121 +567,7 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
 }
 
 
-/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
-   CORE: Salvar variante
-â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-function githubSaveVariant(parentId, variantNome, objectCode) {
-  if (!ghLockSave()) return Promise.resolve(false);
-  if (!ghEnsureToken()) {
-    ghUnlockSave();
-    ghSetStatus('Token nÃ£o configurado', 'error');
-    return Promise.resolve(false);
-  }
-
-  var filePath = 'app/features/biblioteca/data/variants/' + parentId + '.js';
-  ghSetStatus('Lendo variantesâ€¦', 'saving');
-
-  return githubGetFile(filePath).then(function (data) {
-    var content = data.content;
-    var sha     = data.sha;
-
-    var marker = '/*@@@@Senko - ' + variantNome.toLowerCase() + ' */';
-    var pos    = content.indexOf(marker);
-
-    if (pos === -1) {
-      ghSetStatus('Variante nÃ£o encontrada', 'error');
-      ghUnlockSave();
-      ghShowErrorModal('Variante "' + variantNome + '" nÃ£o encontrada em ' + filePath);
-      return false;
-    }
-    if (content.indexOf(marker, pos + marker.length) !== -1) {
-      ghSetStatus('Variante duplicada', 'error');
-      ghUnlockSave();
-      ghShowErrorModal('A variante "' + variantNome + '" aparece mais de uma vez no arquivo. Corrija manualmente.');
-      return false;
-    }
-
-    var objOpen = content.indexOf('{', pos + marker.length);
-    if (objOpen === -1) {
-      ghSetStatus('Objeto da variante nÃ£o encontrado', 'error');
-      ghUnlockSave();
-      ghShowErrorModal('InÃ­cio do objeto da variante nÃ£o encontrado.');
-      return false;
-    }
-
-    var i = objOpen, depth = 0, inTemplate = false, len = content.length, objEnd = -1;
-    while (i < len) {
-      var ch = content[i];
-      if (ch === '`') {
-        var backslashes = 0; var j = i - 1;
-        while (j >= 0 && content[j] === '\\') { backslashes++; j--; }
-        if (backslashes % 2 === 0) inTemplate = !inTemplate;
-        i++; continue;
-      }
-      if (inTemplate) { i++; continue; }
-      if (ch === '{') { depth++; i++; continue; }
-      if (ch === '}') {
-        depth--;
-        if (depth === 0) {
-          objEnd = i + 1;
-          if (content[objEnd] === ',') objEnd++;
-          if (content[objEnd] === '\n') objEnd++;
-          break;
-        }
-        i++; continue;
-      }
-      i++;
-    }
-
-    if (objEnd === -1) {
-      ghSetStatus('Fim da variante nÃ£o encontrado', 'error');
-      ghUnlockSave();
-      ghShowErrorModal('Fim do objeto da variante nÃ£o encontrado.');
-      return false;
-    }
-
-    var newContent =
-      content.slice(0, pos) +
-      objectCode + '\n' +
-      content.slice(objEnd);
-
-    ghSetStatus('Salvando no GitHubâ€¦', 'saving');
-
-    return githubPutFile(
-      filePath,
-      newContent,
-      sha,
-      '[SenkoLib] edit variant: ' + variantNome + ' (' + parentId + ')'
-    ).then(function () {
-      var html = document.getElementById('newVarHtml') ? document.getElementById('newVarHtml').value : '';
-      var css  = document.getElementById('newVarCss')  ? document.getElementById('newVarCss').value  : '';
-      var variants    = SenkoLib.getVariants(parentId);
-      var existingIdx = -1;
-      for (var k = 0; k < variants.length; k++) {
-        if ((variants[k].name || '').toLowerCase() === variantNome.toLowerCase()) { existingIdx = k; break; }
-      }
-      if (existingIdx !== -1) {
-        variants[existingIdx].html = html;
-        variants[existingIdx].css  = css;
-      } else {
-        SenkoLib.registerVariant(parentId, [{ name: variantNome, html: html, css: css }]);
-      }
-
-      ghSetStatus('âœ“ Salvo em ' + filePath, 'ok');
-      ghUnlockSave();
-      ghStartDeployWatch(filePath);
-      renderGrid();
-      return filePath;
-    });
-  }).catch(function (e) {
-    console.error('[senko-github] Erro ao salvar variante:', e);
-    ghSetStatus('Erro: ' + e.message, 'error');
-    ghUnlockSave();
-    ghShowErrorModal(e.message);
-    return false;
-  });
-}
 
 
 /* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -1478,13 +1355,13 @@ function initSenkoBibliotecaGithubV2() {
   /* â”€â”€â”€ Modal criaÃ§Ã£o â€” botÃ£o GitHub â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   var copyGeneratedAnchor = document.getElementById('copyGeneratedBtn');
   if (copyGeneratedAnchor && !document.getElementById('ghNewLayoutGroup')) {
-    var ghNewLayoutTargetFile = 'layouts001.js';
+    var ghNewLayoutTargetFile = '';
 
     var ghNewBtn = document.createElement('button');
     ghNewBtn.id        = 'ghSaveNewLayoutBtn';
     ghNewBtn.className = 'btn-github';
     ghNewBtn.innerHTML = GH_ICON + ' GitHub';
-    ghNewBtn.title     = 'Salvar novo layout em layouts001.js no repositÃ³rio GitHub';
+    ghNewBtn.title     = 'Salvar novo layout em arquivo individual no reposit?rio GitHub';
 
     var ghGroup = document.createElement('div');
     ghGroup.id        = 'ghNewLayoutGroup';
