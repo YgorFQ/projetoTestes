@@ -145,6 +145,11 @@ window.SenkoBibliotecaManifest = {
       "file": "layouts/teste-gamer-3.js",
       "id": "teste-gamer-3",
       "name": "teste-gamer-3"
+    },
+    {
+      "file": "layouts/testegamer-22311212.js",
+      "id": "testegamer-22311212",
+      "name": "testegamer-22311212"
     }
   ],
   "variants": [
