@@ -1,0 +1,400 @@
+/*
+ * Senko Guide - prototipo de janela de documentacao.
+ *
+ * Este CSS pertence somente ao guia. Ele usa os tokens globais do SenkoLib,
+ * mas nao interfere nas features e nao depende do CSS interno de nenhuma delas.
+ */
+
+.guide-toggle {
+  color: var(--text3);
+}
+
+.guide-toggle.is-active,
+.guide-toggle:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.senko-guide-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: rgba(10, 12, 14, .58);
+  backdrop-filter: blur(10px);
+}
+
+.senko-guide-overlay[hidden] {
+  display: none !important;
+}
+
+.senko-guide-modal {
+  width: min(1180px, 100%);
+  height: min(760px, calc(100vh - 2.5rem));
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  overflow: hidden;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+}
+
+.senko-guide-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+}
+
+.senko-guide-title {
+  min-width: 0;
+}
+
+.senko-guide-kicker {
+  color: var(--accent);
+  font-family: var(--font-code);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.senko-guide-title h2 {
+  margin-top: .15rem;
+  color: var(--text);
+  font-size: 1.15rem;
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+.senko-guide-title p {
+  margin-top: .2rem;
+  color: var(--text2);
+  font-size: .82rem;
+  font-weight: 700;
+}
+
+.senko-guide-close {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+}
+
+.senko-guide-searchbar {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto;
+  gap: .75rem;
+  padding: .8rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.senko-guide-search-wrap {
+  position: relative;
+  min-width: 0;
+}
+
+.senko-guide-search-icon {
+  position: absolute;
+  top: 50%;
+  left: .75rem;
+  width: 16px;
+  height: 16px;
+  color: var(--text3);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.senko-guide-search {
+  width: 100%;
+  min-height: 38px;
+  padding: .48rem .75rem .48rem 2.25rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  outline: none;
+  background: var(--bg3);
+  color: var(--text);
+  font-size: .9rem;
+  font-weight: 700;
+}
+
+.senko-guide-search:focus {
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+.senko-guide-counter {
+  min-width: 128px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: .35rem .7rem;
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-family: var(--font-code);
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.senko-guide-layout {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+}
+
+.senko-guide-nav {
+  min-height: 0;
+  overflow: auto;
+  padding: .9rem;
+  border-right: 1px solid var(--border);
+  background: var(--bg2);
+}
+
+.senko-guide-nav-title {
+  margin: .25rem .45rem .55rem;
+  color: var(--text3);
+  font-family: var(--font-code);
+  font-size: .62rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.senko-guide-tab {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  margin-bottom: .35rem;
+  padding: .52rem .6rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text2);
+  cursor: pointer;
+  text-align: left;
+  font-size: .84rem;
+  font-weight: 800;
+}
+
+.senko-guide-tab:hover {
+  border-color: var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.senko-guide-tab.is-active {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.senko-guide-tab-count {
+  min-width: 24px;
+  padding: .05rem .35rem;
+  border-radius: var(--radius-pill);
+  background: var(--bg3);
+  color: var(--text3);
+  font-family: var(--font-code);
+  font-size: .62rem;
+  text-align: center;
+}
+
+.senko-guide-tab.is-active .senko-guide-tab-count {
+  background: rgba(255, 107, 0, .14);
+  color: var(--accent);
+}
+
+.senko-guide-content {
+  min-height: 0;
+  overflow: auto;
+  padding: 1rem 1.1rem 1.25rem;
+  background: var(--bg);
+}
+
+.senko-guide-empty {
+  display: none;
+  padding: 2rem;
+  border: 1px dashed var(--border2);
+  border-radius: var(--radius);
+  color: var(--text2);
+  text-align: center;
+  font-weight: 800;
+}
+
+.senko-guide-empty.is-visible {
+  display: block;
+}
+
+.senko-guide-card {
+  margin-bottom: .85rem;
+  padding: .95rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg2);
+}
+
+.senko-guide-card.is-hidden {
+  display: none;
+}
+
+.senko-guide-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: .55rem;
+}
+
+.senko-guide-card h3 {
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.senko-guide-badge {
+  flex: 0 0 auto;
+  padding: .14rem .45rem;
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius-pill);
+  color: var(--accent);
+  font-family: var(--font-code);
+  font-size: .62rem;
+  font-weight: 700;
+}
+
+.senko-guide-card p {
+  margin: .35rem 0;
+  color: var(--text2);
+  font-size: .9rem;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.senko-guide-card ul,
+.senko-guide-card ol {
+  margin: .45rem 0 .2rem 1.2rem;
+  color: var(--text2);
+  font-size: .88rem;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.senko-guide-card li {
+  margin: .2rem 0;
+}
+
+.senko-guide-card code {
+  padding: .05rem .28rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg3);
+  color: var(--accent);
+  font-family: var(--font-code);
+  font-size: .82em;
+}
+
+.senko-guide-note {
+  margin-top: .65rem;
+  padding: .55rem .65rem;
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+  background: var(--accent-bg);
+  color: var(--text2);
+  font-size: .84rem;
+  font-weight: 800;
+}
+
+.senko-guide-note strong {
+  color: var(--accent);
+}
+
+.senko-guide-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  margin-top: .75rem;
+}
+
+.senko-guide-action {
+  min-height: 34px;
+  padding: .42rem .68rem;
+  border: 1px solid var(--accent-border);
+  border-radius: var(--radius);
+  background: var(--accent-bg);
+  color: var(--accent);
+  cursor: pointer;
+  font-size: .8rem;
+  font-weight: 900;
+}
+
+.senko-guide-action:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.senko-guide-mark {
+  padding: 0 .12rem;
+  border-radius: 3px;
+  background: rgba(255, 107, 0, .22);
+  color: inherit;
+}
+
+[data-theme="dark"] .senko-guide-overlay {
+  background: rgba(0, 0, 0, .68);
+}
+
+@media (max-width: 860px) {
+  .senko-guide-overlay {
+    padding: .75rem;
+  }
+
+  .senko-guide-modal {
+    height: calc(100vh - 1.5rem);
+  }
+
+  .senko-guide-searchbar {
+    grid-template-columns: 1fr;
+  }
+
+  .senko-guide-counter {
+    justify-content: flex-start;
+  }
+
+  .senko-guide-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .senko-guide-nav {
+    display: flex;
+    gap: .4rem;
+    overflow-x: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .senko-guide-nav-title {
+    display: none;
+  }
+
+  .senko-guide-tab {
+    width: auto;
+    flex: 0 0 auto;
+    margin-bottom: 0;
+  }
+}

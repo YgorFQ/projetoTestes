@@ -1,0 +1,83 @@
+1. Como funciona a arquitetura
+
+O index.html e o shell principal do SenkoLib.
+
+O shell e a "casa" do app: ele carrega o topo do site, logo, abas, tema, botoes globais e a area onde cada feature aparece.
+
+As features nao ficam soltas na pagina. Cada uma se registra no shell, e o shell decide qual janela mostrar quando o usuario troca de aba.
+
+Exemplo:
+- Biblioteca
+- Colecoes
+- Imagens
+- Sources
+- Preview
+
+O shell nao deve cuidar das regras internas dessas features. Ele apenas organiza e exibe.
+
+
+2. Onde fica cada coisa
+
+index.html
+- Entrada principal do projeto.
+- Carrega o shell e os arquivos register.js das features.
+
+app/shell/
+- Estrutura geral do app.
+- Controla abas, tema, header e botoes globais.
+
+app/shared/
+- Estilos, tokens e componentes globais.
+- Deve ter apenas coisas realmente compartilhadas pelo projeto inteiro.
+
+app/features/
+- Onde ficam as features principais.
+- Cada feature tem seus proprios scripts, estilos, dados e integracoes.
+
+app/prototype/
+- Onde ficam telas em teste ou prototipos, como o Preview beta.
+
+
+3. Como adicionar ou alterar algo
+
+Se for uma mudanca global:
+- Mexer em index.html, app/shell ou app/shared.
+
+Se for uma mudanca de uma feature:
+- Mexer apenas dentro da pasta daquela feature.
+
+Se criar novos dados manualmente:
+- Atualizar o data/manifest.js da feature.
+- O manifest funciona como um indice dos arquivos que aquela feature deve carregar.
+
+Se criar uma feature nova:
+- Criar a pasta da feature.
+- Criar seu register.js.
+- Registrar a feature no shell.
+- Manter scripts, estilos, dados e integracoes dentro dela.
+
+Se for algo experimental:
+- Comecar em app/prototype.
+
+
+4. Regras principais
+
+Cada feature deve ser independente.
+
+Uma feature nao deve depender de funcoes internas de outra feature.
+
+Uma feature nao deve alterar comportamento de outra sem necessidade real.
+
+Se algo for realmente global, deve ir para shared ou shell.
+
+Estilos de outras features podem servir como referencia visual, mas nao devem ser herdados diretamente.
+
+Todas as janelas devem seguir o padrao visual do SenkoLib, usando os estilos e tokens globais.
+
+Integracoes externas, como GitHub, devem ter logica separada por feature.
+
+Configuracoes globais, como token e repositorio do GitHub, podem ser compartilhadas, mas a logica de uso deve continuar dentro de cada feature.
+
+Ao remover uma feature, as outras devem continuar funcionando normalmente.
+
+Sempre testar troca de abas, tema, criacao, edicao, exclusao, nomes duplicados e comportamento sem token.

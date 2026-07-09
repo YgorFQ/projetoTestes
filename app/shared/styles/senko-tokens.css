@@ -1,0 +1,91 @@
+/* ==========================================================================
+   SenkoLib - tokens visuais oficiais
+
+   Este arquivo e a fonte compartilhada de cores, fontes, sombras e raios.
+   Shell e features podem consumir estes tokens sem depender uma da outra.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* Superficies claras */
+  --bg:        #f8f8f8;
+  --bg2:       #f2f2f2;
+  --bg3:       #e8e8e8;
+  --border:    #e8e8e8;
+  --border2:   #d4d4d4;
+
+  /* Texto */
+  --text:      #1a1a1a;
+  --text2:     #555555;
+  --text3:     #aaaaaa;
+
+  /* Marca e estados */
+  --accent:    #ff6b00;
+  --accent2:   #ff8c38;
+  --accent-bg: rgba(255,107,0,.08);
+  --accent-border: rgba(255,107,0,.28);
+  --red:       #e03030;
+  --green:     #1a9e52;
+  --yellow:    #c98200;
+  --cyan:      #06b6d4;
+
+  /* Forma */
+  --radius:      10px;
+  --radius-sm:   5px;
+  --radius-lg:   16px;
+  --radius-pill: 99px;
+
+  /* Elevacao */
+  --shadow:      0 2px 12px rgba(0,0,0,.07);
+  --shadow-lg:   0 8px 48px rgba(0,0,0,.13);
+  --shadow-card: 0 1px 4px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.05);
+  --focus-ring:  0 0 0 3px var(--accent-bg);
+
+  /* Tipografia */
+  --font-display: 'Nunito', sans-serif;
+  --font-body:    'Nunito', sans-serif;
+  --font-code:    'DM Mono', monospace;
+
+  --transition: .2s cubic-bezier(.4,0,.2,1);
+
+  /*
+   * Aliases para ferramentas antigas em iframe.
+   * Mantem compatibilidade com Imagens/Sources/Preview ate a reforma delas.
+   */
+  --surface:  var(--bg);
+  --surface2: var(--bg2);
+  --surface3: var(--bg3);
+  --sans:     var(--font-body);
+  --mono:     var(--font-code);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg:        #1c1e1f;
+  --bg2:       #1f2223;
+  --bg3:       #25282a;
+  --border:    #363b3d;
+  --border2:   #3c4144;
+
+  --text:      #d8d4cf;
+  --text2:     #b2aca2;
+  --text3:     #b2aca2;
+
+  --accent:    #ff7a1a;
+  --accent2:   #aa4800;
+  --accent-bg: rgba(204,86,0,.08);
+  --accent-border: rgba(204,86,0,.36);
+  --red:       #a91919;
+  --green:     #157e42;
+  --yellow:    #c49a00;
+  --cyan:      #06b6d4;
+
+  --shadow-card: 0 1px 6px rgba(0,0,0,.5), 0 4px 16px rgba(0,0,0,.4);
+  --shadow-lg:   0 8px 48px rgba(0,0,0,.6);
+
+  --surface:  var(--bg);
+  --surface2: var(--bg2);
+  --surface3: var(--bg3);
+}

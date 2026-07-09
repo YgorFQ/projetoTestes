@@ -1,0 +1,1804 @@
+# Documentação Completa do SenkoLib
+
+Este documento explica o SenkoLib da forma mais simples possível, mas sem esconder as partes importantes.
+
+A ideia é que qualquer pessoa consiga entender:
+
+- o que o projeto faz;
+- como abrir e testar;
+- onde cada coisa fica;
+- como uma feature entra no app;
+- como os dados são carregados;
+- como funciona a integração com GitHub;
+- quais regras não podem ser quebradas.
+
+
+## 1. O Que É O SenkoLib
+
+O SenkoLib é uma ferramenta web/local para organizar e trabalhar com recursos usados em páginas, layouts e conteúdos ricos.
+
+Ele reúne várias ferramentas em uma mesma interface:
+
+- Biblioteca: layouts e variações de layouts.
+- Coleções: grupos de layouts organizados em coleções.
+- Imagens: compressor e redimensionador de imagens.
+- Sources: ferramenta para gerar `<picture>`, `<source>` e `?ims`.
+- Preview: área beta para testar visualizações.
+
+Pense no SenkoLib como uma oficina.
+
+Cada bancada da oficina faz uma coisa:
+
+- uma bancada cuida dos layouts;
+- outra cuida das coleções;
+- outra cuida das imagens;
+- outra cuida dos sources;
+- outra é uma bancada experimental.
+
+O projeto inteiro é a oficina. Cada bancada é uma feature.
+
+
+## 2. Ideia Principal Da Arquitetura
+
+A regra mais importante do SenkoLib é:
+
+Cada feature deve ser independente.
+
+Isso significa que Biblioteca, Coleções, Imagens, Sources e Preview devem funcionar sem depender de funções internas umas das outras.
+
+Se a pasta da Biblioteca for removida, Coleções não deve quebrar.
+
+Se Imagens for removida, Sources não deve quebrar.
+
+Se Preview for removido, Biblioteca e Coleções devem continuar funcionando.
+
+A única parte comum é o shell, que organiza a tela principal.
+
+
+## 3. O Que É O Shell
+
+O shell é a casca principal do aplicativo.
+
+Uma analogia simples:
+
+O shell é como o shopping.
+
+As features são as lojas.
+
+O shopping tem:
+
+- entrada;
+- corredor;
+- placas;
+- iluminação;
+- segurança;
+- mapa das lojas.
+
+Mas o shopping não decide como cada loja trabalha por dentro.
+
+No SenkoLib:
+
+- o shell mostra o topo;
+- mostra o logo;
+- controla as abas;
+- controla o tema claro/escuro;
+- mostra botões globais;
+- cria a área onde a feature aparece.
+
+Mas o shell não deve saber como criar layout, editar coleção, comprimir imagem ou gerar source.
+
+Essas regras pertencem às features.
+
+
+## 4. Arquivos Principais
+
+Estrutura resumida:
+
+```text
+SenkoLib/
+|-- index.html
+|-- sw.js
+|-- app/
+|   |-- shell/
+|   |-- shared/
+|   |-- features/
+|   |   |-- biblioteca/
+|   |   |-- colecoes/
+|   |   |-- imagens/
+|   |   `-- sources/
+|   `-- prototype/
+|       `-- gamer-preview/
+```
+
+
+## 5. Para Que Serve Cada Pasta
+
+### index.html
+
+É a entrada principal do projeto.
+
+Ele:
+
+- carrega os estilos globais;
+- cria o header;
+- cria o botão de tema;
+- cria o botão global de GitHub;
+- cria a raiz das features;
+- carrega o shell;
+- carrega o `register.js` de cada feature.
+
+O `index.html` não deve ter regra interna de feature.
+
+Ele não deve saber como a Biblioteca salva layout.
+
+Ele não deve saber como Coleções cria grupo.
+
+Ele apenas prepara a casa para as features entrarem.
+
+
+### sw.js
+
+É o Service Worker.
+
+Ele serve para evitar cache antigo no navegador.
+
+Em vez de o navegador ficar segurando CSS ou JS antigo, o `sw.js` tenta buscar tudo fresco.
+
+Isso ajuda a evitar o problema de precisar apertar `CTRL + SHIFT + R` toda hora.
+
+Observação:
+
+- em `http://` ou `https://`, o Service Worker pode funcionar;
+- em `file://`, Service Worker não funciona;
+- no `file://`, o projeto usa URLs com `_senko_reload` para forçar arquivos novos.
+
+
+### app/shell/
+
+É o núcleo neutro do app.
+
+Arquivos principais:
+
+```text
+app/shell/scripts/senko-shell.js
+app/shell/styles/styles.css
+```
+
+O shell controla:
+
+- registro de features;
+- troca de abas;
+- aba ativa;
+- botão global de GitHub;
+- logo que volta para a primeira feature;
+- estado vazio, caso nenhuma feature carregue.
+
+O shell não deve importar código interno de uma feature.
+
+
+### app/shared/
+
+É a parte compartilhada do projeto.
+
+Aqui ficam coisas realmente globais:
+
+```text
+app/shared/styles/senko-tokens.css
+app/shared/styles/senko-components.css
+app/shared/assets/
+```
+
+`senko-tokens.css` define:
+
+- cores;
+- tema claro;
+- tema escuro;
+- fontes;
+- bordas;
+- sombras;
+- raios;
+- estados como vermelho, verde, amarelo e ciano.
+
+`senko-components.css` define componentes visuais neutros:
+
+- botões;
+- cards;
+- modal;
+- inputs;
+- tags;
+- toolbar.
+
+Regra:
+
+Se algo é visual e usado por várias features, pode ir para `shared`.
+
+Se algo é específico de uma feature, fica dentro da feature.
+
+
+### app/features/
+
+É onde ficam as features principais.
+
+Cada feature deve ter seus próprios:
+
+- scripts;
+- estilos;
+- dados;
+- integração com GitHub, se existir;
+- tela própria;
+- lógica própria.
+
+Hoje existem:
+
+```text
+app/features/biblioteca/
+app/features/colecoes/
+app/features/imagens/
+app/features/sources/
+```
+
+
+### app/prototype/
+
+É a área de protótipos.
+
+Protótipo é algo em teste.
+
+Atualmente existe:
+
+```text
+app/prototype/gamer-preview/
+```
+
+O Preview ainda é beta, por isso fica em `prototype`.
+
+
+## 6. Como O Projeto Carrega
+
+Fluxo simplificado:
+
+```text
+1. O navegador abre index.html
+2. index.html carrega tokens e estilos globais
+3. index.html carrega o shell
+4. index.html carrega o register.js de cada feature
+5. Cada feature se registra no shell
+6. O shell cria as abas
+7. Quando o usuário abre uma aba, a feature monta sua tela
+```
+
+Uma feature não aparece sozinha.
+
+Ela precisa chamar:
+
+```js
+window.SenkoShell.registerFeature({
+  id: 'biblioteca',
+  label: 'Biblioteca',
+  order: 10,
+  mount: mountBiblioteca
+});
+```
+
+Isso significa:
+
+"Shell, existe uma feature chamada Biblioteca. Quando precisar mostrar ela, chame `mountBiblioteca`."
+
+
+## 7. O Que É register.js
+
+O `register.js` é a porta de entrada de uma feature.
+
+Ele não é necessariamente onde toda a lógica acontece.
+
+Ele serve para:
+
+- avisar o shell que a feature existe;
+- criar o painel da feature;
+- carregar CSS da feature;
+- carregar scripts da feature;
+- carregar dados da feature;
+- inicializar a feature.
+
+Analogia:
+
+O `register.js` é como o funcionário que abre a loja no shopping.
+
+Ele:
+
+- abre a porta;
+- acende as luzes;
+- chama os outros funcionários;
+- deixa tudo pronto para o cliente entrar.
+
+
+## 8. O Que É view.js
+
+O `view.js` monta a parte visual inicial da feature.
+
+Ele geralmente cria HTML por JavaScript.
+
+Exemplo de responsabilidade:
+
+- criar estrutura da tela;
+- criar containers;
+- criar botões;
+- criar áreas de resultado;
+- criar campos.
+
+O `view.js` não deve virar o dono de toda a lógica.
+
+Ele deve montar a estrutura visual.
+
+A lógica principal fica nos scripts da feature.
+
+
+## 9. O Que É data/manifest.js
+
+O `manifest.js` é o índice de dados da feature.
+
+Analogia:
+
+O manifest é como o sumário de um livro.
+
+O arquivo pode existir na pasta, mas se não estiver no sumário, ninguém vai lembrar de abrir.
+
+No SenkoLib, o manifest diz:
+
+"Esses são os arquivos de dados que essa feature deve carregar."
+
+Exemplo da Biblioteca:
+
+```js
+window.SenkoBibliotecaManifest = {
+  layouts: [
+    'layouts/layouts001.js'
+  ],
+  variants: [
+    'variants/section-1.js'
+  ]
+};
+```
+
+Exemplo de Coleções:
+
+```js
+window.SenkoColecoesManifest = {
+  collections: [
+    {
+      file: 'colecao-joel.js',
+      slug: 'colecao-joel',
+      name: 'Coleção Joel',
+      group: 'joel',
+      tags: ['Responsivo'],
+      layoutCount: 2
+    }
+  ]
+};
+```
+
+Se criar um arquivo novo manualmente, precisa atualizar o manifest da feature.
+
+Se o GitHub criar o arquivo, a integração deve atualizar o manifest automaticamente.
+
+
+## 10. Por Que O Manifest É JavaScript E Não JSON
+
+O projeto usa `manifest.js`, não `manifest.json`, para funcionar também abrindo direto pelo `index.html`.
+
+Em muitos navegadores, quando você abre via `file://`, o `fetch` de JSON local pode ser bloqueado.
+
+Mas scripts locais ainda podem ser carregados.
+
+Por isso os manifests são scripts que criam variáveis globais como:
+
+```js
+window.SenkoBibliotecaManifest
+window.SenkoColecoesManifest
+```
+
+Isso ajuda o projeto a funcionar tanto com servidor quanto abrindo direto.
+
+
+## 11. Biblioteca
+
+Pasta:
+
+```text
+app/features/biblioteca/
+```
+
+A Biblioteca guarda layouts e variações de layouts.
+
+Arquivos importantes:
+
+```text
+register.js
+view.js
+styles/biblioteca.css
+scripts/senkolib-core.js
+scripts/script.js
+scripts/copy-base.js
+data/manifest.js
+data/layouts/
+data/variants/
+integrations/github/
+prototypes/
+```
+
+
+### 11.1 Como A Biblioteca Carrega
+
+Fluxo:
+
+```text
+1. register.js registra a feature no shell
+2. Quando a aba abre, carrega biblioteca.css
+3. Carrega view.js
+4. Carrega senkolib-core.js
+5. Carrega data/manifest.js
+6. Carrega os arquivos em data/layouts/
+7. Carrega scripts/script.js
+8. Renderiza o grid
+9. Depois carrega variantes e integração GitHub
+```
+
+As variantes e o GitHub entram depois para não atrasar a primeira renderização.
+
+
+### 11.2 Motor Da Biblioteca
+
+Arquivo:
+
+```text
+app/features/biblioteca/scripts/senkolib-core.js
+```
+
+Ele expõe o objeto:
+
+```js
+SenkoLib
+```
+
+Funções principais:
+
+- `SenkoLib.register(arr)`: registra layouts.
+- `SenkoLib.getAll()`: retorna todos os layouts.
+- `SenkoLib.updateLayout(id, patch)`: atualiza layout em memória.
+- `SenkoLib.registerVariant(layoutName, arr)`: registra variantes.
+- `SenkoLib.getVariants(layoutName)`: retorna variantes de um layout.
+- `SenkoLib.updateVariant(layoutName, variant, patch)`: edita variante em memória.
+- `SenkoLib.hasLayoutName(name, exceptId)`: verifica nome duplicado de layout.
+- `SenkoLib.hasVariantName(layoutName, name, exceptVariant)`: verifica nome duplicado de variante.
+
+
+### 11.3 Dados De Layout
+
+Os layouts ficam em:
+
+```text
+app/features/biblioteca/data/layouts/
+```
+
+Um arquivo de layout chama:
+
+```js
+SenkoLib.register([
+  {
+    id: 'section-1',
+    name: 'Section 1',
+    category: '...',
+    tags: ['...'],
+    html: `...`,
+    css: `...`
+  }
+]);
+```
+
+O layout precisa ter:
+
+- `id`: identificador técnico;
+- `name`: nome exibido;
+- `html`: código HTML;
+- `css`: código CSS;
+- opcionalmente categoria e tags.
+
+
+### 11.4 Dados De Variantes
+
+As variantes ficam em:
+
+```text
+app/features/biblioteca/data/variants/
+```
+
+Um arquivo de variante chama:
+
+```js
+SenkoLib.registerVariant('section-1', [
+  {
+    name: 'Variação 1',
+    html: `...`,
+    css: `...`
+  }
+]);
+```
+
+Cada variante pertence a um layout.
+
+Não pode existir variante com nome repetido dentro do mesmo layout.
+
+
+### 11.5 Regras De Nome Na Biblioteca
+
+Não pode repetir:
+
+- nome de layout;
+- nome de variante dentro do mesmo layout.
+
+A verificação considera diferenças disfarçadas.
+
+Exemplo:
+
+```text
+Section 1
+section-1
+SECTION 1
+```
+
+Esses nomes podem ser tratados como equivalentes, dependendo da normalização.
+
+A ideia é evitar duplicatas que parecem diferentes, mas significam a mesma coisa.
+
+
+### 11.6 GitHub Da Biblioteca
+
+Pasta:
+
+```text
+app/features/biblioteca/integrations/github/
+```
+
+Arquivos:
+
+```text
+senko-github-v2.js
+senko-github-variants.js
+senko-github-delete.js
+```
+
+Responsabilidades:
+
+- salvar layout;
+- criar layout;
+- editar layout;
+- excluir layout;
+- criar variante;
+- editar variante;
+- excluir variante;
+- atualizar manifest da Biblioteca quando necessário.
+
+Importante:
+
+A integração GitHub da Biblioteca pertence somente à Biblioteca.
+
+Coleções não deve importar esse código.
+
+
+## 12. Coleções
+
+Pasta:
+
+```text
+app/features/colecoes/
+```
+
+Coleções organiza layouts em coleções e grupos.
+
+Arquivos importantes:
+
+```text
+register.js
+view.js
+styles/col-styles.css
+scripts/col-groups.js
+scripts/col-core.js
+scripts/col-script.js
+scripts/col-modals.js
+data/manifest.js
+data/col-groups-data.js
+data/*.js
+integrations/github/colecoes-github.js
+```
+
+
+### 12.1 Como Coleções Carrega
+
+Fluxo:
+
+```text
+1. register.js registra Coleções no shell
+2. Quando a aba abre, carrega col-styles.css
+3. Carrega view.js
+4. Carrega col-groups.js
+5. Carrega data/manifest.js
+6. Cria a tela
+7. Carrega col-groups-data.js
+8. Carrega col-core.js
+9. Carrega col-script.js
+10. Carrega col-modals.js
+11. Registra cards usando o manifest
+12. Carrega GitHub em segundo plano
+```
+
+
+### 12.2 Motor De Grupos
+
+Arquivo:
+
+```text
+app/features/colecoes/scripts/col-groups.js
+```
+
+Objeto:
+
+```js
+ColGroups
+```
+
+Funções principais:
+
+- `ColGroups.load(arr)`: carrega grupos confirmados.
+- `ColGroups.getAll()`: retorna grupos confirmados + pendentes.
+- `ColGroups.getBySlug(slug)`: busca grupo.
+- `ColGroups.addPending(grupo)`: adiciona grupo novo ainda não salvo.
+- `ColGroups.getPending()`: retorna pendentes.
+- `ColGroups.clearPending()`: limpa pendentes depois de salvar.
+- `ColGroups.slugify(name)`: gera slug do grupo.
+
+Grupo tem:
+
+```js
+{
+  slug: 'projetos-2026',
+  name: 'Projetos 2026',
+  cor: '#6366f1'
+}
+```
+
+
+### 12.3 Grupos Vazios
+
+Regra atual:
+
+Um grupo pode continuar existindo mesmo sem coleção dentro dele.
+
+Exemplo:
+
+Se uma coleção estava no grupo "Joel" e depois vai para "Pedro", o grupo "Joel" não deve ser apagado automaticamente.
+
+Isso é importante porque grupo é um cadastro próprio, não apenas consequência das coleções atuais.
+
+Observação:
+
+A interface pode esconder pills de grupos vazios para não poluir a tela, mas o dado do grupo continua existindo.
+
+
+### 12.4 Motor De Coleções
+
+Arquivo:
+
+```text
+app/features/colecoes/scripts/col-core.js
+```
+
+Objeto:
+
+```js
+ColLib
+```
+
+Funções principais:
+
+- `ColLib.register(obj)`: registra uma coleção.
+- `ColLib.getAll()`: retorna todas as coleções.
+- `ColLib.getBySlug(slug)`: busca por slug.
+- `ColLib.hasCollectionName(name, exceptSlug)`: verifica nome duplicado de coleção.
+- `ColLib.hasLayoutName(slug, name, exceptId)`: verifica nome duplicado de layout dentro da coleção.
+- `ColLib.updateCollection(slug, patch)`: atualiza coleção em memória.
+- `ColLib.removeCollection(slug)`: remove coleção da memória.
+- `ColLib.addLayout(slug, layout)`: adiciona layout.
+- `ColLib.updateLayout(slug, layoutId, patch)`: edita layout.
+- `ColLib.removeLayout(slug, layoutId)`: remove layout.
+
+
+### 12.5 Dados De Coleções
+
+Cada coleção fica em:
+
+```text
+app/features/colecoes/data/[slug].js
+```
+
+Um arquivo de coleção chama:
+
+```js
+ColLib.register({
+  slug: 'colecao-joel',
+  name: 'Coleção Joel',
+  group: 'joel',
+  tags: ['Responsivo'],
+  layouts: [
+    {
+      id: 'layout-1',
+      name: 'Layout 1',
+      html: `...`,
+      css: `...`
+    }
+  ]
+});
+```
+
+
+### 12.6 Manifest De Coleções
+
+Arquivo:
+
+```text
+app/features/colecoes/data/manifest.js
+```
+
+Ele guarda um catálogo leve.
+
+Isso permite mostrar o card da coleção sem carregar todo o HTML/CSS da coleção imediatamente.
+
+Analogia:
+
+É como ver a capa de um livro na estante sem abrir o livro inteiro.
+
+Quando o usuário abre ou edita a coleção, o arquivo completo é carregado.
+
+
+### 12.7 Regras De Nome Em Coleções
+
+Não pode repetir:
+
+- nome de coleção;
+- nome de layout dentro da mesma coleção;
+- id de layout dentro da mesma coleção.
+
+Na edição também não pode repetir.
+
+Exemplo:
+
+Se já existe uma coleção chamada "Coleção Joel", editar outra coleção para esse mesmo nome deve ser bloqueado.
+
+
+### 12.8 GitHub De Coleções
+
+Arquivo:
+
+```text
+app/features/colecoes/integrations/github/colecoes-github.js
+```
+
+Responsabilidades:
+
+- criar coleção;
+- editar coleção;
+- excluir coleção;
+- criar grupo;
+- salvar grupos;
+- adicionar layout à coleção;
+- editar layout da coleção;
+- excluir layout da coleção;
+- atualizar manifest de Coleções;
+- preservar grupos vazios.
+
+Importante:
+
+A integração GitHub de Coleções não importa a integração da Biblioteca.
+
+Ela tem lógica própria.
+
+
+## 13. Imagens
+
+Pasta:
+
+```text
+app/features/imagens/
+```
+
+Imagens tem duas ferramentas:
+
+- Compressor;
+- Redimensionador.
+
+Arquivos importantes:
+
+```text
+scripts/register.js
+scripts/imagens-view.js
+scripts/imagens-utils.js
+scripts/imagens-app.js
+scripts/compressor.js
+scripts/resizer.js
+styles/imagens.css
+vendor/
+```
+
+
+### 13.1 Shadow DOM Em Imagens
+
+Imagens é montada dentro de um Shadow DOM.
+
+Analogia:
+
+É como colocar a feature dentro de uma caixa transparente.
+
+Ela aparece no app, mas seus estilos não vazam para fora.
+
+Isso evita que classes como `.btn`, `.card` ou `.view` interfiram em Biblioteca, Coleções ou Sources.
+
+
+### 13.2 Compressor
+
+Arquivo:
+
+```text
+app/features/imagens/scripts/compressor.js
+```
+
+Ele permite:
+
+- selecionar imagens;
+- arrastar imagens;
+- comprimir;
+- ordenar por nome;
+- baixar individualmente;
+- baixar tudo em ZIP;
+- limpar lista.
+
+Bibliotecas usadas:
+
+- `browser-image-compression`;
+- `UPNG`;
+- `JSZip`.
+
+
+### 13.3 Redimensionador
+
+Arquivo:
+
+```text
+app/features/imagens/scripts/resizer.js
+```
+
+Ele permite:
+
+- selecionar imagens;
+- definir medidas/breakpoints;
+- escolher formato WebP, JPG ou ambos;
+- escolher qualidade;
+- gerar ZIP com variantes;
+- limpar arquivos.
+
+
+### 13.4 Download De Imagens
+
+Arquivo:
+
+```text
+app/features/imagens/scripts/imagens-utils.js
+```
+
+A função `downloadBlob` cria um link temporário e força o download.
+
+Para imagens, ela usa `application/octet-stream` para reduzir a chance de o navegador abrir a imagem em outra aba.
+
+
+## 14. Sources
+
+Pasta:
+
+```text
+app/features/sources/
+```
+
+Sources ajuda a transformar imagens comuns em estruturas responsivas com:
+
+- `<picture>`;
+- `<source>`;
+- `srcset`;
+- `?ims=`.
+
+Arquivos importantes:
+
+```text
+scripts/register.js
+scripts/sources-view.js
+scripts/sources-utils.js
+scripts/sources-app.js
+scripts/picture.js
+styles/sources.css
+```
+
+
+### 14.1 Shadow DOM Em Sources
+
+Sources também usa Shadow DOM.
+
+Isso isola a interface e impede conflito de estilos com outras features.
+
+
+### 14.2 Como Sources Funciona
+
+Fluxo:
+
+```text
+1. Usuário cola HTML no campo da esquerda
+2. Usuário define multiplicador e breakpoints
+3. Clica em Analisar
+4. A ferramenta encontra imagens e sources
+5. Cada imagem vira um card
+6. O usuário informa ou mede larguras
+7. A ferramenta gera o <picture>
+8. O usuário seleciona cards
+9. Clica em preencher automaticamente
+10. Copia o HTML final
+```
+
+
+### 14.3 Breakpoints
+
+Breakpoints são larguras de tela analisadas.
+
+Exemplo:
+
+```text
+320, 375, 425, 768, 1024, 1440
+```
+
+Analogia:
+
+Breakpoint é como perguntar:
+
+"E se a tela tiver esse tamanho, qual imagem deve ser usada?"
+
+
+### 14.4 Multiplicador
+
+O multiplicador ajuda a calcular o `?ims`.
+
+Exemplo:
+
+Se uma imagem mede 300px e o multiplicador é 1.9:
+
+```text
+300 x 1.9 = 570
+```
+
+Então pode gerar:
+
+```html
+?ims=570x
+```
+
+
+### 14.5 Última Medida
+
+Existe uma opção para não multiplicar a última medida.
+
+Ela serve para casos onde a última largura deve ser usada exatamente como foi medida.
+
+
+### 14.6 Modo De Medição
+
+Sources possui dois modos:
+
+- Padrão;
+- Base.html.
+
+No modo Padrão, a ferramenta mede usando um documento simples criado internamente.
+
+No modo Base.html, o usuário importa uma base HTML para medir dentro de um contexto mais parecido com a página real.
+
+O botão "Selecionar Base.html" só aparece quando o modo Base.html é escolhido.
+
+
+### 14.7 Saída Final
+
+Depois que cards estão prontos, o usuário pode:
+
+- selecionar cards;
+- gerar conteúdo final;
+- copiar o HTML pronto.
+
+Ao gerar final, a ferramenta tenta substituir as imagens originais pelo `<picture>` gerado.
+
+
+## 15. Preview Beta
+
+Pasta:
+
+```text
+app/prototype/gamer-preview/
+```
+
+É uma área experimental.
+
+Ela fica em `prototype` porque ainda não deve ser tratada como feature totalmente final.
+
+Arquivos principais:
+
+```text
+register.js
+view.js
+script.js
+styles.css
+```
+
+
+## 16. GitHub No Projeto
+
+O GitHub é uma integração opcional.
+
+Ele serve para salvar alterações direto no repositório.
+
+Exemplos:
+
+- criar layout;
+- editar layout;
+- excluir layout;
+- criar variante;
+- criar coleção;
+- editar coleção;
+- excluir coleção;
+- criar grupo;
+- editar layout de coleção.
+
+
+## 17. Configuração Global Do GitHub
+
+As configurações globais ficam no `localStorage` do navegador.
+
+Chaves principais:
+
+```text
+senkolib_github_config
+senkolib_github_token
+```
+
+`senkolib_github_config` guarda:
+
+```js
+{
+  OWNER: 'usuario',
+  REPO: 'repositorio',
+  BRANCH: 'main'
+}
+```
+
+`senkolib_github_token` guarda o token.
+
+Importante:
+
+O token não fica no código-fonte.
+
+Ele fica salvo somente no navegador da pessoa.
+
+
+## 18. GitHub Global, Mas Lógica Separada
+
+Existe um botão global de GitHub no header.
+
+Ele fica no shell porque é um controle geral.
+
+Mas a lógica continua separada por feature.
+
+Analogia:
+
+O botão global é como uma tomada na parede.
+
+Cada aparelho usa a tomada, mas cada aparelho tem seu próprio motor.
+
+No SenkoLib:
+
+- o shell mostra o botão;
+- Biblioteca registra seu provedor GitHub;
+- Coleções registra seu provedor GitHub;
+- cada feature decide como salvar seus próprios dados.
+
+Isso mantém independência.
+
+
+## 19. Como Uma Feature Registra GitHub No Shell
+
+O shell oferece:
+
+```js
+SenkoShell.registerGithubProvider(featureId, provider)
+```
+
+O provider informa:
+
+- label;
+- função para abrir configuração;
+- função para saber se tem credenciais.
+
+Exemplo conceitual:
+
+```js
+SenkoShell.registerGithubProvider('biblioteca', {
+  label: 'Biblioteca',
+  openConfig: abrirModal,
+  hasCredentials: verificarToken
+});
+```
+
+O shell não sabe como o GitHub da Biblioteca funciona.
+
+Ele só chama callbacks.
+
+
+## 20. GitHub Pages
+
+O projeto pode detectar automaticamente GitHub Pages.
+
+Formato comum:
+
+```text
+usuario.github.io/repositorio
+```
+
+Nesse caso:
+
+- `usuario` vira OWNER;
+- `repositorio` vira REPO.
+
+Mesmo assim, ainda precisa de token para salvar alterações.
+
+
+## 21. Token Do GitHub
+
+O token precisa ter permissão para ler e escrever no repositório.
+
+Pode ser:
+
+- classic token com escopo `repo`;
+- fine-grained token com permissão de Contents read/write.
+
+Se o token faltar ou expirar, o projeto deve mostrar erro e não tentar salvar silenciosamente.
+
+
+## 22. Como O Projeto Salva No GitHub
+
+A integração usa a GitHub Contents API.
+
+Fluxo comum:
+
+```text
+1. Confere token
+2. Busca arquivo atual no GitHub
+3. Pega o SHA do arquivo
+4. Monta novo conteúdo
+5. Envia PUT para o GitHub
+6. Atualiza memória local
+7. Atualiza manifest, se necessário
+8. Mostra status
+```
+
+Para deletar:
+
+```text
+1. Busca arquivo atual
+2. Pega SHA
+3. Envia DELETE
+4. Atualiza manifest
+5. Remove da memória local
+```
+
+
+## 23. Bolinha De Deploy
+
+Existe uma bolinha no header:
+
+```text
+ghDeployDot
+```
+
+Ela aparece quando uma publicação está sendo acompanhada.
+
+A ideia é indicar que uma alteração foi salva e o GitHub Pages pode estar atualizando.
+
+
+## 24. Tema Claro E Escuro
+
+O tema é global.
+
+Ele usa:
+
+```text
+senkolib_theme
+```
+
+no `localStorage`.
+
+O tema é aplicado em:
+
+```html
+<html data-theme="dark">
+```
+
+ou:
+
+```html
+<html data-theme="light">
+```
+
+As cores vêm de:
+
+```text
+app/shared/styles/senko-tokens.css
+```
+
+Regra:
+
+Toda feature deve respeitar os tokens globais.
+
+
+## 25. Padrão Visual
+
+O visual oficial vem de:
+
+```text
+app/shared/styles/senko-tokens.css
+app/shared/styles/senko-components.css
+app/shell/styles/styles.css
+```
+
+Features podem ter estilos próprios, mas devem seguir:
+
+- cores do SenkoLib;
+- fontes do SenkoLib;
+- espaçamentos compatíveis;
+- tema claro e escuro;
+- botões com aparência parecida;
+- cards e modais consistentes.
+
+Regra importante:
+
+Uma feature pode olhar o estilo de outra como referência, mas não deve depender do CSS dela.
+
+
+## 26. Shadow DOM
+
+Imagens e Sources usam Shadow DOM.
+
+Isso significa que elas têm uma raiz isolada dentro do painel.
+
+Vantagem:
+
+- CSS de Imagens não bagunça Biblioteca;
+- CSS de Sources não bagunça Coleções;
+- classes genéricas podem existir sem conflito.
+
+Desvantagem:
+
+- para buscar elementos internamente, o código precisa procurar dentro da raiz da feature;
+- por isso existem helpers como `api.$`, `api.query` e `api.queryAll`.
+
+
+## 27. Cache E Reload
+
+O projeto tenta evitar cache antigo de três formas:
+
+1. Meta tags no `index.html`.
+2. URLs com `_senko_reload`.
+3. Service Worker em `sw.js`.
+
+O `_senko_reload` funciona assim:
+
+```text
+script.js?_senko_reload=token
+```
+
+Cada abertura recebe um token novo.
+
+Isso força o navegador a pedir o arquivo de novo.
+
+Analogia:
+
+É como colocar uma etiqueta nova em uma caixa.
+
+Mesmo que a caixa pareça igual, o navegador entende que é uma versão diferente.
+
+
+## 28. Como Rodar O Projeto
+
+Opção 1: abrir direto
+
+```text
+Abrir index.html no navegador
+```
+
+Opção 2: servidor local
+
+```bash
+python -m http.server 5190 --bind 127.0.0.1
+```
+
+Depois abrir:
+
+```text
+http://127.0.0.1:5190/index.html
+```
+
+Recomendação:
+
+Use servidor local para testes mais parecidos com GitHub Pages.
+
+
+## 29. Como Adicionar Uma Feature Nova
+
+Passos:
+
+1. Criar pasta da feature:
+
+```text
+app/features/nova-feature/
+```
+
+2. Criar `register.js`.
+
+3. Criar `view.js`.
+
+4. Criar pasta `scripts/`.
+
+5. Criar pasta `styles/`.
+
+6. Se tiver dados, criar pasta `data/`.
+
+7. Se tiver GitHub, criar `integrations/github/`.
+
+8. Adicionar chamada no `index.html`:
+
+```js
+SenkoFreshAssets.writeScript('app/features/nova-feature/register.js');
+```
+
+9. Dentro do `register.js`, chamar:
+
+```js
+window.SenkoShell.registerFeature({
+  id: 'nova-feature',
+  label: 'Nova Feature',
+  order: 50,
+  mount: mountNovaFeature
+});
+```
+
+10. Testar se a aba aparece.
+
+
+## 30. Regras Para Feature Nova
+
+Uma feature nova deve:
+
+- funcionar sozinha;
+- não depender de funções internas de outra feature;
+- não usar CSS de outra feature;
+- carregar seus próprios scripts;
+- ter seus próprios utilitários;
+- usar shared apenas para tokens e componentes globais;
+- ter comentários explicando partes difíceis;
+- registrar sua aba no shell;
+- não alterar o funcionamento de outra feature.
+
+
+## 31. Como Adicionar Um Layout Manualmente Na Biblioteca
+
+Passos:
+
+1. Criar ou editar um arquivo em:
+
+```text
+app/features/biblioteca/data/layouts/
+```
+
+2. Adicionar o layout em `SenkoLib.register([...])`.
+
+3. Conferir se o arquivo está listado em:
+
+```text
+app/features/biblioteca/data/manifest.js
+```
+
+4. Abrir a Biblioteca.
+
+5. Ver se o layout aparece.
+
+6. Testar abrir, copiar, editar e criar variante.
+
+
+## 32. Como Adicionar Uma Variante Manualmente
+
+Passos:
+
+1. Criar ou editar arquivo em:
+
+```text
+app/features/biblioteca/data/variants/
+```
+
+2. Usar:
+
+```js
+SenkoLib.registerVariant('id-do-layout', [
+  {
+    name: 'Nome da variação',
+    html: `...`,
+    css: `...`
+  }
+]);
+```
+
+3. Adicionar o arquivo no `variants` do manifest.
+
+4. Testar no modal de variantes.
+
+
+## 33. Como Adicionar Uma Coleção Manualmente
+
+Passos:
+
+1. Criar arquivo:
+
+```text
+app/features/colecoes/data/nome-da-colecao.js
+```
+
+2. Registrar com:
+
+```js
+ColLib.register({
+  slug: 'nome-da-colecao',
+  name: 'Nome da Coleção',
+  group: 'grupo',
+  tags: [],
+  layouts: []
+});
+```
+
+3. Atualizar:
+
+```text
+app/features/colecoes/data/manifest.js
+```
+
+4. Conferir se o grupo existe em:
+
+```text
+app/features/colecoes/data/col-groups-data.js
+```
+
+5. Testar a aba Coleções.
+
+
+## 34. Como Adicionar Um Grupo Manualmente
+
+Editar:
+
+```text
+app/features/colecoes/data/col-groups-data.js
+```
+
+Adicionar:
+
+```js
+{ slug: 'grupo-novo', name: 'Grupo Novo', cor: '#ff6b00' }
+```
+
+Regra:
+
+O slug deve ser simples:
+
+- letras minúsculas;
+- números;
+- hífen;
+- sem espaços.
+
+
+## 35. Como Alterar Estilos
+
+Se for cor, fonte, sombra ou padrão global:
+
+```text
+app/shared/styles/senko-tokens.css
+app/shared/styles/senko-components.css
+```
+
+Se for layout do topo, abas ou shell:
+
+```text
+app/shell/styles/styles.css
+```
+
+Se for visual específico de uma feature:
+
+```text
+app/features/[feature]/styles/
+```
+
+Não colocar CSS de uma feature em outra.
+
+
+## 36. Como Testar Depois De Alterar
+
+Checklist mínimo:
+
+- abrir o projeto;
+- trocar entre todas as abas;
+- testar tema claro e escuro;
+- abrir Biblioteca;
+- abrir Coleções;
+- abrir Imagens;
+- abrir Sources;
+- abrir Preview;
+- olhar console do navegador;
+- testar reload normal;
+- testar busca;
+- testar criar item;
+- testar editar item;
+- testar excluir item;
+- testar nome duplicado;
+- testar sem token GitHub;
+- testar com token GitHub, se for alteração de integração.
+
+
+## 37. Problemas Comuns
+
+### A feature não aparece na aba
+
+Verificar:
+
+- o `register.js` está sendo carregado no `index.html`;
+- o `register.js` chama `SenkoShell.registerFeature`;
+- não existe erro no console;
+- o caminho do arquivo está correto.
+
+
+### O arquivo existe, mas não aparece no app
+
+Provável causa:
+
+O arquivo não está no `data/manifest.js`.
+
+Lembre:
+
+Manifest é o índice.
+
+Se não está no índice, a feature pode não carregar.
+
+
+### Alterei CSS/JS, mas o navegador mostra antigo
+
+Verificar:
+
+- se abriu o `index.html` certo;
+- se o Service Worker atualizou;
+- se o arquivo está com caminho correto;
+- tentar reload normal;
+- se necessário, testar em servidor local.
+
+O projeto tenta evitar cache, mas o navegador pode ser teimoso em alguns casos.
+
+
+### GitHub não salva
+
+Verificar:
+
+- owner correto;
+- repo correto;
+- token configurado;
+- token não expirou;
+- token tem permissão;
+- branch correta;
+- arquivo existe no repositório;
+- console do navegador.
+
+
+### Erro de nome duplicado
+
+O projeto bloqueia duplicatas.
+
+Verificar:
+
+- nome de layout;
+- nome de variante;
+- nome de coleção;
+- nome de layout dentro de coleção.
+
+Às vezes parece diferente, mas normalização pode considerar igual.
+
+
+### Grupo sumiu da barra
+
+Um grupo vazio pode não aparecer como pill na barra de filtros.
+
+Isso não significa que ele foi apagado do arquivo.
+
+O dado continua em `col-groups-data.js` se foi salvo corretamente.
+
+
+### Sources não mostra botão Base.html
+
+Isso é esperado.
+
+O botão só aparece quando o modo de medição está em:
+
+```text
+Base.html
+```
+
+
+### Download de imagem abriu em nova aba
+
+O projeto tenta forçar download via `downloadBlob`.
+
+Alguns navegadores podem ter configurações próprias, mas o código evita `target="_blank"` e usa blob como download.
+
+
+## 38. Glossário
+
+### Shell
+
+Casca principal do app.
+
+Controla topo, abas, tema, botões globais e área onde features aparecem.
+
+
+### Feature
+
+Uma ferramenta independente dentro do SenkoLib.
+
+Exemplo:
+
+- Biblioteca;
+- Coleções;
+- Imagens;
+- Sources.
+
+
+### Shared
+
+Área para coisas globais e compartilhadas.
+
+Não é lugar para regras internas de feature.
+
+
+### Manifest
+
+Índice de dados da feature.
+
+Lista quais arquivos devem ser carregados.
+
+
+### Slug
+
+Identificador simples usado em código e arquivos.
+
+Exemplo:
+
+```text
+colecao-joel
+selecao-francesa
+```
+
+
+### localStorage
+
+Armazenamento do navegador.
+
+Usado para:
+
+- tema;
+- aba ativa;
+- configuração GitHub;
+- token GitHub.
+
+
+### Service Worker
+
+Script especial do navegador que pode controlar requisições.
+
+No SenkoLib, é usado para evitar cache antigo.
+
+
+### Shadow DOM
+
+Área isolada de HTML/CSS dentro de um componente.
+
+Usado em Imagens e Sources.
+
+
+### GitHub Provider
+
+Objeto que uma feature registra no shell para informar:
+
+- como abrir configuração GitHub;
+- se já tem token/configuração;
+- qual label mostrar.
+
+
+## 39. Regras Que Não Devem Ser Quebradas
+
+1. Uma feature não deve depender de outra feature.
+
+2. Código de Biblioteca não deve ficar em Coleções.
+
+3. Código de Coleções não deve ficar em Biblioteca.
+
+4. Imagens e Sources não devem compartilhar arquivos internos.
+
+5. Se algo é usado por várias features, avaliar se deve ir para `shared`.
+
+6. Mesmo em `shared`, colocar apenas coisas realmente globais.
+
+7. O shell não deve conhecer detalhes internos das features.
+
+8. O GitHub deve ter lógica separada por feature.
+
+9. O token do GitHub nunca deve ir para o código.
+
+10. Não permitir nomes duplicados.
+
+11. Grupos de Coleções não devem ser apagados automaticamente só porque ficaram vazios.
+
+12. Toda alteração deve ser testada em mais de uma aba.
+
+
+## 40. Roteiro Para Explicar O Projeto A Outra Pessoa
+
+Use esta ordem:
+
+1. O SenkoLib é um app com várias ferramentas.
+
+2. O `index.html` abre o app.
+
+3. O shell é a casca que controla abas, topo, tema e botões globais.
+
+4. Cada feature é independente e se registra no shell.
+
+5. Cada feature tem sua própria pasta.
+
+6. Dados ficam dentro da própria feature.
+
+7. O manifest é o índice dos dados.
+
+8. O shared guarda apenas padrões globais.
+
+9. GitHub é opcional e separado por feature.
+
+10. A regra mais importante é não misturar features.
+
+
+## 41. Resumo Curto
+
+O SenkoLib é organizado assim:
+
+```text
+index.html = entrada
+shell = estrutura geral
+shared = padrões globais
+features = ferramentas independentes
+prototype = testes e betas
+manifest = índice de dados
+GitHub = integração opcional por feature
+```
+
+Frase principal:
+
+O SenkoLib deve funcionar como um conjunto de ferramentas independentes dentro de uma mesma interface.
+
