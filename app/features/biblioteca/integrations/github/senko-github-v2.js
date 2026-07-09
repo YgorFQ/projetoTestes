@@ -385,6 +385,7 @@ function ghSetLayoutManifestEntry(layoutId, file, name, shouldInclude) {
         ? '[SenkoLib] register layout file: ' + normalizedId
         : '[SenkoLib] unregister layout file: ' + normalizedId
     ).then(function () {
+      window.SenkoBibliotecaManifest = manifest;
       return GH_BIBLIOTECA_MANIFEST_PATH;
     });
   });
@@ -392,6 +393,11 @@ function ghSetLayoutManifestEntry(layoutId, file, name, shouldInclude) {
 
 function ghSingleLayoutObjectCode(objectCode) {
   var code = String(objectCode || '').trim();
+  var registerPrefix = 'SenkoLib.registerLayout(';
+  if (code.indexOf(registerPrefix) === 0) {
+    code = code.slice(registerPrefix.length).trim();
+    code = code.replace(/\);\s*$/, '').trim();
+  }
   code = code.replace(/^\/\*\s*variantes:[\s\S]*?\*\/\s*/, '');
   code = code.replace(/,\s*$/, '');
   return code;
@@ -404,6 +410,32 @@ function ghBuildSingleLayoutFileContent(objectCode) {
     ghSingleLayoutObjectCode(objectCode) +
     '\n);\n'
   );
+}
+
+function ghValidateSingleLayoutFileContent(content, expectedId) {
+  var registered = null;
+  var fakeSenkoLib = {
+    registerLayout: function (layout) {
+      registered = layout;
+      return true;
+    }
+  };
+
+  try {
+    new Function('SenkoLib', content)(fakeSenkoLib);
+  } catch (error) {
+    throw new Error('O JS do layout foi gerado com erro de sintaxe: ' + error.message);
+  }
+
+  if (!registered || !registered.id || !registered.name) {
+    throw new Error('O arquivo do layout nao chamou SenkoLib.registerLayout com id e name.');
+  }
+
+  if (expectedId && String(registered.id).toLowerCase() !== String(expectedId).toLowerCase()) {
+    throw new Error('O id registrado no arquivo ("' + registered.id + '") nao bate com o id criado ("' + expectedId + '").');
+  }
+
+  return registered;
 }
 
 function ghUpdateLayoutMemory(layoutId, name) {
@@ -455,10 +487,12 @@ function githubSaveLayout(layoutId, objectCode) {
     ghSetStatus('Lendo arquivo individual...', 'saving');
     return githubGetFile(manifestEntry.path).then(function (data) {
       ghSetStatus('Salvando no GitHub...', 'saving');
+      var nextContent = ghBuildSingleLayoutFileContent(objectCode);
+      ghValidateSingleLayoutFileContent(nextContent, layoutId);
 
       return githubPutFile(
         manifestEntry.path,
-        ghBuildSingleLayoutFileContent(objectCode),
+        nextContent,
         data.sha,
         '[SenkoLib] edit layout file: ' + layoutId
       ).then(function () {
@@ -514,6 +548,16 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
   var normalizedId = String(layoutId || '').toLowerCase();
   var individualFile = 'layouts/' + normalizedId + '.js';
   var individualPath = 'app/features/biblioteca/data/' + individualFile;
+  var nextContent;
+
+  try {
+    nextContent = ghBuildSingleLayoutFileContent(objectCode);
+    ghValidateSingleLayoutFileContent(nextContent, normalizedId);
+  } catch (validationError) {
+    ghSetStatus('JS invalido', 'error');
+    ghShowErrorModal(validationError.message);
+    return Promise.resolve(false);
+  }
 
   ghSetStatus('Criando arquivo individual...', 'saving');
 
@@ -527,7 +571,7 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
 
     return githubPutFile(
       individualPath,
-      ghBuildSingleLayoutFileContent(objectCode),
+      nextContent,
       null,
       '[SenkoLib] add layout file: ' + normalizedId
     ).then(function () {
@@ -550,9 +594,12 @@ function githubSaveNewLayout(fileName, objectCode, layoutId) {
 
       return ghSetLayoutManifestEntry(normalizedId, individualFile, name, true).then(function () {
         SenkoLib.registerLayout({ id: normalizedId, name: name, tags: tags, html: html, css: css });
+        state.search = '';
+        var searchInput = document.getElementById('searchInput');
+        if (searchInput) searchInput.value = '';
         ghSetStatus('Salvo em ' + individualPath, 'ok');
         ghUnlockSave();
-        ghStartDeployWatch(GH_BIBLIOTECA_MANIFEST_PATH);
+        ghStartDeployWatch(individualPath);
         renderGrid();
         return individualFile;
       });

@@ -163,7 +163,10 @@
       var layouts = getManifestFiles(manifest.layouts);
       await Promise.all([
         Promise.all(layouts.map(function (path) {
-          return loadScript('data/' + path);
+          return loadScript('data/' + path).catch(function (error) {
+            console.error('[Biblioteca] Layout nao carregado:', path, error);
+            return false;
+          });
         })),
         loadScript('scripts/script.js?v=20260613-eager-previews'),
         loadScript('scripts/copy-base.js?v=20260613-fast-load-2')
