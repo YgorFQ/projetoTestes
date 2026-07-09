@@ -236,7 +236,7 @@ window.SenkoBibliotecaManifest = {
       "file": "variants/teste32/section-94-1.js",
       "layoutId": "teste32",
       "id": "section-94-1",
-      "name": "section-94-1"
+      "name": "section-94-2"
     }
   ]
 };
