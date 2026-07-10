@@ -26,7 +26,7 @@ SenkoLib.registerVariantFile("section-16",
             </span>
             <div class="section-3__copy">
                 <h2 class="section-3__title">5 funções em um só produto</h2>
-                <p class="section-3__text">Pica, mói, fatia, tritura e rala para facilitar o preparo das
+                <p class="section-3__text">Picsa, mói, fatia, tritura e rala para facilitar o preparo das
                     refeições.</p>
             </div>
         </article>
