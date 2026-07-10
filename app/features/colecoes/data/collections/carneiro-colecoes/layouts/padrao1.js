@@ -1,8 +1,8 @@
 // @ts-nocheck
-ColLib.registerCollectionLayout("carneiro-colecoes",
+ColLib.registerCollectionLayout('carneiro-colecoes',
 {
-  id: "padrao1",
-  name: "Padrão 1",
+  id: 'padrao1',
+  name: 'Padrão 10000',
   html: `<div class="lp-container">
     <meta charset="UTF-8">
     <link rel="preconnect" href="https://fonts.googleapis.com">
