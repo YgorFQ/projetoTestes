@@ -197,7 +197,7 @@
 
 .proto-meta-grid {
   display: grid;
-  grid-template-columns: minmax(160px, .55fr) minmax(260px, 1.45fr);
+  grid-template-columns: 2fr 1fr;
   gap: 10px;
   padding: 12px;
   border-bottom: 1px solid var(--border, #ddd);
