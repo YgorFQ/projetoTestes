@@ -57,22 +57,35 @@
   align-items: center;
 }
 
-.proto-name-input {
-  width: min(520px, 100%);
+.proto-editor-heading {
   min-width: 0;
-  border: 0;
-  border-bottom: 1px solid transparent;
-  background: transparent;
   color: var(--text, #1f2933);
   font-family: var(--font-display, inherit);
-  font-size: 1.35rem;
+  font-size: 1.18rem;
   font-weight: 900;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.proto-name-input {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid var(--border, #ddd);
+  border-radius: 7px;
+  background: var(--bg2, #fff);
+  color: var(--text, #1f2933);
+  font-family: var(--font-body, inherit);
+  font-size: .86rem;
+  font-weight: 800;
+  height: 34px;
   outline: none;
-  padding: 2px 0;
+  padding: 0 10px;
 }
 
 .proto-name-input:focus {
-  border-bottom-color: var(--accent, #f26a21);
+  border-color: var(--accent, #f26a21);
+  box-shadow: 0 0 0 3px var(--accent-bg, rgba(242, 106, 33, .08));
 }
 
 .proto-file-pill {
@@ -123,6 +136,33 @@
   background: var(--accent-bg, rgba(242, 106, 33, .08));
 }
 
+.proto-primary-btn {
+  border-color: var(--accent, #f26a21);
+  background: var(--accent, #f26a21);
+  color: #fff;
+}
+
+.proto-primary-btn:hover {
+  background: #df5c17;
+  color: #fff;
+}
+
+.proto-danger-btn {
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.proto-danger-btn:hover {
+  border-color: #dc2626;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.proto-btn:disabled {
+  cursor: wait;
+  opacity: .65;
+}
+
 .proto-icon-btn {
   width: 34px;
   padding: 0;
@@ -157,7 +197,7 @@
 
 .proto-meta-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(150px, 220px);
+  grid-template-columns: minmax(160px, .55fr) minmax(260px, 1.45fr);
   gap: 10px;
   padding: 12px;
   border-bottom: 1px solid var(--border, #ddd);
@@ -168,6 +208,10 @@
   min-width: 0;
   display: grid;
   gap: 5px;
+}
+
+.proto-field-hidden {
+  display: none;
 }
 
 .proto-field label {
@@ -185,12 +229,6 @@
   background: var(--bg2, #fff);
   color: var(--text, #1f2933);
   padding: 0 10px;
-}
-
-.proto-field input[readonly] {
-  background: var(--bg, #f6f7f8);
-  color: var(--text3, #78838f);
-  font-weight: 800;
 }
 
 .proto-tabs,
@@ -390,10 +428,6 @@
 .proto-mobile-tabs button.active {
   color: var(--accent, #f26a21);
   background: var(--accent-bg, rgba(242, 106, 33, .08));
-}
-
-.btn-proto-editor {
-  min-width: 0;
 }
 
 @media (max-width: 1100px) {

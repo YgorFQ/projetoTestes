@@ -48,64 +48,6 @@
     </div>
   </main>
 
-  <!-- MODAL VISUALIZAR -->
-  <!-- MODAL EDITAR LAYOUT -->
-  <div class="modal-overlay hidden" id="editModalOverlay">
-    <div class="modal edit-modal" id="editModal">
-      <div class="modal-header">
-        <div class="modal-meta">
-          <span class="modal-category">Editar</span>
-          <h2 class="modal-title">Editar Layout</h2>
-        </div>
-        <div style="display:flex;gap:.5rem;align-items:center;">
-          <!-- Âncora para GitHub injetar botão de salvar -->
-          <span id="saveToFileBtn" style="display:none;"></span>
-          <button class="modal-close" id="editModalClose" title="Fechar">✕</button>
-        </div>
-      </div>
-
-      <!-- Campos de metadados -->
-      <input type="hidden" id="editId" />
-      <div class="add-fields">
-        <div class="field-row">
-          <div class="field-group" style="flex:1;">
-            <label>Nome <span class="req">*</span></label>
-            <input type="text" id="editName" placeholder="ex: Section-58" />
-            <span class="field-desc">Nome de exibição na biblioteca.</span>
-          </div>
-        </div>
-        <div class="field-row">
-          <div class="field-group">
-            <label>Tags <span class="hint">(separadas por vírgula)</span></label>
-            <input type="text" id="editTags" placeholder="ex: hero, banner, cta" />
-            <span class="field-desc">Palavras-chave para busca.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Seletor de modo -->
-      <div class="edit-mode-bar">
-        <button class="edit-mode-btn" data-editmode="html">HTML</button>
-        <button class="edit-mode-btn" data-editmode="css">CSS</button>
-        <button class="edit-mode-btn active" data-editmode="preview">Visualizar</button>
-      </div>
-
-      <!-- Painéis — ocupam todo o espaço restante -->
-      <div class="edit-mode-panel" id="editModeHtml">
-        <textarea id="editHtml" class="code-textarea edit-textarea" placeholder="HTML do layout…"></textarea>
-      </div>
-      <div class="edit-mode-panel" id="editModeCss">
-        <textarea id="editCss" class="code-textarea edit-textarea" placeholder="CSS do layout…"></textarea>
-      </div>
-      <div class="edit-mode-panel active" id="editModePreview">
-        <iframe id="editPreviewIframe" class="edit-preview-iframe" sandbox="allow-scripts"></iframe>
-      </div>
-
-      <!-- Campo oculto para o objeto gerado (só para copiar) -->
-      <pre id="editGeneratedCode" style="display:none"></pre>
-    </div>
-  </div>
-
   <!-- MODAL ADICIONAR -->
   <div class="modal-overlay hidden" id="addModalOverlay">
     <div class="modal add-modal" id="addModal">
@@ -200,65 +142,6 @@
       <div class="variants-grid-wrap">
         <div class="variants-grid" id="variantsGrid"></div>
       </div>
-    </div>
-  </div>
-
-  <!-- MODAL EDITAR VARIANTE -->
-  <div class="modal-overlay hidden" id="editVarOverlay">
-    <div class="modal edit-modal" id="editVarModal">
-      <div class="modal-header">
-        <div class="modal-meta">
-          <span class="modal-category">Editar Variante</span>
-          <h2 class="modal-title" id="editVarParentName"></h2>
-        </div>
-        <div style="display:flex;gap:.5rem;align-items:center;">
-          <!-- Botão excluir variante — dentro do modal de edição -->
-          <button class="btn-delete-var-modal btn-delete-variant-card" id="editVarDeleteBtn" title="Excluir variante" style="display:none;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-              <polyline points="3 6 5 6 21 6"/>
-              <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/>
-              <path d="M10 11v6M14 11v6"/>
-              <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
-            </svg>
-            Excluir
-          </button>
-          <!-- Âncora para GitHub injetar botão de salvar -->
-          <span id="saveVarToFileBtn" style="display:none;"></span>
-          <button class="modal-close" id="editVarClose" title="Fechar">✕</button>
-        </div>
-      </div>
-
-      <!-- Campo nome -->
-      <div class="add-fields">
-        <div class="field-row">
-          <div class="field-group" style="flex:1;">
-            <label>Nome <span class="req">*</span></label>
-            <input type="text" id="editVarName" placeholder="ex: section-1-2" />
-            <span class="field-desc">Use apenas letras, numeros, espacos e hifen.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Seletor de modo -->
-      <div class="edit-mode-bar">
-        <button class="edit-var-mode-btn" data-evmode="html">HTML</button>
-        <button class="edit-var-mode-btn" data-evmode="css">CSS</button>
-        <button class="edit-var-mode-btn active" data-evmode="preview">Visualizar</button>
-      </div>
-
-      <!-- Painéis -->
-      <div class="edit-mode-panel" id="editVarModeHtml">
-        <textarea id="editVarHtml" class="code-textarea edit-textarea" placeholder="HTML da variante…"></textarea>
-      </div>
-      <div class="edit-mode-panel" id="editVarModeCss">
-        <textarea id="editVarCss" class="code-textarea edit-textarea" placeholder="CSS da variante…"></textarea>
-      </div>
-      <div class="edit-mode-panel active" id="editVarModePreview">
-        <iframe id="editVarPreviewIframe" class="edit-preview-iframe" sandbox="allow-scripts"></iframe>
-      </div>
-
-      <!-- Objeto gerado (oculto — só para copiar) -->
-      <pre id="editVarGeneratedCode" style="display:none"></pre>
     </div>
   </div>
 

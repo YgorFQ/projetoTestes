@@ -439,6 +439,21 @@ function ghValidateSingleLayoutFileContent(content, expectedId) {
 }
 
 function ghUpdateLayoutMemory(layoutId, name) {
+  var editorData = window.SenkoLayoutEditor
+    && typeof window.SenkoLayoutEditor.getCurrentData === 'function'
+    ? window.SenkoLayoutEditor.getCurrentData()
+    : null;
+  if (editorData && editorData.mode === 'layout'
+      && String(editorData.id || '').toLowerCase() === String(layoutId || '').toLowerCase()) {
+    SenkoLib.updateLayout(layoutId, {
+      name: editorData.name,
+      tags: editorData.tags || [],
+      html: editorData.html || '',
+      css: editorData.css || ''
+    });
+    return;
+  }
+
   var editTags = document.getElementById('editTags');
   var editHtml = document.getElementById('editHtml');
   var editCss  = document.getElementById('editCss');
@@ -460,8 +475,15 @@ function ghUpdateLayoutMemory(layoutId, name) {
 â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
 function githubSaveLayout(layoutId, objectCode) {
+  var editorData = window.SenkoLayoutEditor
+    && typeof window.SenkoLayoutEditor.getCurrentData === 'function'
+    ? window.SenkoLayoutEditor.getCurrentData()
+    : null;
   var editName = document.getElementById('editName');
-  var nextName = editName
+  var nextName = editorData && editorData.mode === 'layout'
+    && String(editorData.id || '').toLowerCase() === String(layoutId || '').toLowerCase()
+    ? editorData.name
+    : editName
     ? (typeof senkoGetMetadataInputValue === 'function'
       ? senkoGetMetadataInputValue('editName', false).trim()
       : editName.value.trim())

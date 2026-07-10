@@ -505,7 +505,7 @@ function createCard(layout, index) {
   btnPlus.addEventListener('click', function (e) { e.stopPropagation(); openVariantsModal(layout); });
 
   actions.append(btnH, btnC, btnFav, btnPlus);
-  card.addEventListener('click', function () { openEditModal(layout); });
+  card.addEventListener('click', function () { openLayoutEditor(layout); });
   card.append(preview, body, actions);
   return card;
 }
@@ -634,7 +634,8 @@ function closeVariantsModal() {
   document.getElementById('variantsOverlay').classList.add('hidden');
   document.body.style.overflow = '';
   /* Só zera currentForVariant se o modal de edição de variante também estiver fechado */
-  if (document.getElementById('editVarOverlay').classList.contains('hidden')) {
+  var oldEditVarOverlay = document.getElementById('editVarOverlay');
+  if (!oldEditVarOverlay || oldEditVarOverlay.classList.contains('hidden')) {
     state.currentForVariant = null;
   }
 }
@@ -731,7 +732,7 @@ function renderVariantBlocks(variants) {
       /* Ignora cliques nos botões de ação */
       if (e.target.closest('.variant-actions')) return;
       document.getElementById('variantsOverlay').classList.add('hidden');
-      openEditVariantModal(v);
+      openVariantEditor(v);
     });
 
     grid.appendChild(block);
@@ -837,6 +838,17 @@ function updateNewVarCode() {
 
 /* ─── Modal editar variante ─────────────────────────── */
 function openEditVariantModal(v) {
+  if (window.SenkoLayoutEditor && typeof window.SenkoLayoutEditor.openVariant === 'function') {
+    window.SenkoLayoutEditor.openVariant(state.currentForVariant, v);
+    return;
+  }
+
+  var legacyOverlay = document.getElementById('editVarOverlay');
+  if (!legacyOverlay) {
+    alert('Editor de variacoes indisponivel.');
+    return;
+  }
+
   /* Guarda referência ao objeto (é referência direta ao array em memória) */
   state.currentEditVariant = v;
 
@@ -880,7 +892,12 @@ function openEditVariantModal(v) {
 }
 
 function closeEditVariantModal() {
-  document.getElementById('editVarOverlay').classList.add('hidden');
+  var legacyOverlay = document.getElementById('editVarOverlay');
+  if (legacyOverlay) legacyOverlay.classList.add('hidden');
+  if (!legacyOverlay && window.SenkoLayoutEditor && window.SenkoLayoutEditor.isOpen()) {
+    window.SenkoLayoutEditor.close();
+    return;
+  }
   /* Re-renderiza e reabre o modal de variantes (pode ter sido escondido por baixo) */
   if (state.currentForVariant) {
     var parentId = state.currentForVariant.id;
@@ -982,7 +999,42 @@ function overlayClick(id, closeFn) {
 
 
 /* ─── Modal editar layout ───────────────────────────── */
+function openLayoutEditor(layout) {
+  if (window.SenkoLayoutEditor && typeof window.SenkoLayoutEditor.openLayout === 'function') {
+    window.SenkoLayoutEditor.openLayout(layout);
+    return;
+  }
+  if (typeof window.openOfficialLayoutEditor === 'function') {
+    window.openOfficialLayoutEditor(layout);
+    return;
+  }
+  alert('Editor de layouts ainda nao carregou. Tente novamente em instantes.');
+}
+
+function openVariantEditor(variant) {
+  if (window.SenkoLayoutEditor && typeof window.SenkoLayoutEditor.openVariant === 'function') {
+    window.SenkoLayoutEditor.openVariant(state.currentForVariant, variant);
+    return;
+  }
+  if (typeof window.openOfficialVariantEditor === 'function') {
+    window.openOfficialVariantEditor(state.currentForVariant, variant);
+    return;
+  }
+  alert('Editor de variacoes ainda nao carregou. Tente novamente em instantes.');
+}
+
 function openEditModal(layout) {
+  if (window.SenkoLayoutEditor && typeof window.SenkoLayoutEditor.openLayout === 'function') {
+    window.SenkoLayoutEditor.openLayout(layout);
+    return;
+  }
+
+  var legacyOverlay = document.getElementById('editModalOverlay');
+  if (!legacyOverlay) {
+    alert('Editor de layouts indisponivel.');
+    return;
+  }
+
   state.currentEdit = layout;
 
   document.getElementById('editId').value   = layout.id   || '';
@@ -1015,7 +1067,11 @@ function switchEditMode(mode) {
 }
 
 function closeEditModal() {
-  document.getElementById('editModalOverlay').classList.add('hidden');
+  var legacyOverlay = document.getElementById('editModalOverlay');
+  if (legacyOverlay) legacyOverlay.classList.add('hidden');
+  if (!legacyOverlay && window.SenkoLayoutEditor && window.SenkoLayoutEditor.isOpen()) {
+    window.SenkoLayoutEditor.close();
+  }
   if (state._editFromVariant) {
     state._editFromVariant = false;
     document.getElementById('variantsOverlay').classList.remove('hidden');
@@ -1156,40 +1212,52 @@ bibliotecaApi.init = function initBiblioteca() {
   });
 
 
-  /* Modal editar variante */
-  document.getElementById('editVarClose').addEventListener('click', closeEditVariantModal);
-  document.getElementById('editVarOverlay').addEventListener('click', overlayClick('editVar', closeEditVariantModal));
-  document.querySelectorAll('.edit-var-mode-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      switchEditVarMode(this.dataset.evmode);
-      updateEditVarCode();
+  /* Compatibilidade com o modal antigo, quando existir em builds legados. */
+  var editVarClose = document.getElementById('editVarClose');
+  var editVarOverlay = document.getElementById('editVarOverlay');
+  if (editVarClose && editVarOverlay) {
+    editVarClose.addEventListener('click', closeEditVariantModal);
+    editVarOverlay.addEventListener('click', overlayClick('editVar', closeEditVariantModal));
+    document.querySelectorAll('.edit-var-mode-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        switchEditVarMode(this.dataset.evmode);
+        updateEditVarCode();
+      });
     });
-  });
-  ['editVarName','editVarHtml','editVarCss'].forEach(function (id) {
-    document.getElementById(id).addEventListener('input', updateEditVarCode);
-  });
+    ['editVarName','editVarHtml','editVarCss'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('input', updateEditVarCode);
+    });
+  }
 
-  /* Modal editar layout */
-  document.getElementById('editModalClose').addEventListener('click', closeEditModal);
-  document.getElementById('editModalOverlay').addEventListener('click', overlayClick('editModal', closeEditModal));
-  document.querySelectorAll('#editModal .edit-mode-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      switchEditMode(this.dataset.editmode);
-      updateEditCode();
+  var editModalClose = document.getElementById('editModalClose');
+  var editModalOverlay = document.getElementById('editModalOverlay');
+  if (editModalClose && editModalOverlay) {
+    editModalClose.addEventListener('click', closeEditModal);
+    editModalOverlay.addEventListener('click', overlayClick('editModal', closeEditModal));
+    document.querySelectorAll('#editModal .edit-mode-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        switchEditMode(this.dataset.editmode);
+        updateEditCode();
+      });
     });
-  });
-  ['editName','editTags','editHtml','editCss'].forEach(function (id) {
-    document.getElementById(id).addEventListener('input', updateEditCode);
-  });
+    ['editName','editTags','editHtml','editCss'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) el.addEventListener('input', updateEditCode);
+    });
+  }
 
   /* Escape */
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    if (!document.getElementById('editVarOverlay').classList.contains('hidden'))         closeEditVariantModal();
-    else if (!document.getElementById('newVarOverlay').classList.contains('hidden'))     closeNewVariantModal();
-    else if (!document.getElementById('variantsOverlay').classList.contains('hidden'))   closeVariantsModal();
-    else if (!document.getElementById('editModalOverlay').classList.contains('hidden'))  closeEditModal();
-    else if (!document.getElementById('addModalOverlay').classList.contains('hidden'))   closeAddModal();
+    var oldEditVar = document.getElementById('editVarOverlay');
+    var oldEditLayout = document.getElementById('editModalOverlay');
+    if (window.SenkoLayoutEditor && window.SenkoLayoutEditor.isOpen())                  window.SenkoLayoutEditor.close();
+    else if (oldEditVar && !oldEditVar.classList.contains('hidden'))                    closeEditVariantModal();
+    else if (!document.getElementById('newVarOverlay').classList.contains('hidden'))    closeNewVariantModal();
+    else if (!document.getElementById('variantsOverlay').classList.contains('hidden'))  closeVariantsModal();
+    else if (oldEditLayout && !oldEditLayout.classList.contains('hidden'))              closeEditModal();
+    else if (!document.getElementById('addModalOverlay').classList.contains('hidden'))  closeAddModal();
   });
 
 };

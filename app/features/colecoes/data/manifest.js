@@ -10,8 +10,13 @@ window.SenkoColecoesManifest = {
         "Responsivo",
         "adaptativos"
       ],
-      "layoutCount": 24,
+      "layoutCount": 25,
       "layouts": [
+        {
+          "file": "collections/carneiro-colecoes/layouts/padrao1.js",
+          "id": "padrao1",
+          "name": "Padrão 1"
+        },
         {
           "file": "collections/carneiro-colecoes/layouts/modelo2.js",
           "id": "modelo2",
@@ -142,7 +147,7 @@ window.SenkoColecoesManifest = {
       "tags": [
         "Responsivo"
       ],
-      "layoutCount": 3,
+      "layoutCount": 4,
       "layouts": [
         {
           "file": "collections/colecao-joel/layouts/padraoconteudo-joel.js",
@@ -158,6 +163,11 @@ window.SenkoColecoesManifest = {
           "file": "collections/colecao-joel/layouts/test.js",
           "id": "test",
           "name": "test"
+        },
+        {
+          "file": "collections/colecao-joel/layouts/teste2.js",
+          "id": "teste2",
+          "name": "teste2"
         }
       ]
     },

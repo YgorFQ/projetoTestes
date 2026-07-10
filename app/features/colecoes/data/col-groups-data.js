@@ -2,7 +2,7 @@
 /* ═══════════════════════════════════════════════════════════════════════
    col-groups-data.js — Dados dos grupos de coleções
 
-   ATENÇÃO: Arquivo gerado pelo modulo GitHub de Colecoes.
+   ATENÇÃO: Arquivo gerado pelo módulo GitHub do SenkoLib.
    NÃO edite manualmente em produção.
 ═══════════════════════════════════════════════════════════════════════ */
 ColGroups.load([
@@ -10,6 +10,4 @@ ColGroups.load([
   { slug: 'joel', name: 'Joel', cor: '#06b6d4' },
   { slug: 'pedro', name: 'pedro', cor: '#f59e0b' },
   { slug: 'selecao-francesa', name: 'Seleção Francesa', cor: '#ef4444' },
-  { slug: 'test', name: 'Test', cor: '#8b5cf6' },
-  { slug: 'aw2q-2-p344-23-4-cpw-3a-0212-zzzz', name: '~/~[´[aw2q´[2´p344´23´[4´´çpw[´´[3a+_+0212|||\\\\\\\\/zzzz////};);', cor: '#ec4899' },
 ]);

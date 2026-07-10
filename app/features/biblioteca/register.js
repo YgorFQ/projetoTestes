@@ -107,10 +107,7 @@
         Promise.all(variantLoads).then(function () {
           if (window.SenkoBiblioteca) window.SenkoBiblioteca.render(true);
 
-          return Promise.all([
-            loadScript('prototypes/layout-editor-prototype.js?v=20260613-fast-load'),
-            loadScript('integrations/github/senko-github-v2.js?v=20260614-token-feedback')
-          ]);
+          return loadScript('integrations/github/senko-github-v2.js?v=20260614-token-feedback');
         }).then(function () {
           if (window.SenkoBibliotecaGithubV2) {
             window.SenkoBibliotecaGithubV2.init();
@@ -168,6 +165,7 @@
             return false;
           });
         })),
+        loadScript('prototypes/layout-editor-prototype.js?v=20260613-official-editor'),
         loadScript('scripts/script.js?v=20260613-eager-previews'),
         loadScript('scripts/copy-base.js?v=20260613-fast-load-2')
       ]);

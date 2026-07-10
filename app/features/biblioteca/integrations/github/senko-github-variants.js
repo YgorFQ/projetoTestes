@@ -486,8 +486,18 @@ function githubSaveVariant(parentId, originalName, newName, objectCode) {
   return ghvFindVariantManifestEntry(parentId, originalName).then(function (manifestEntry) {
     if (!manifestEntry) return null;
 
-    var htmlValue = document.getElementById('editVarHtml') ? document.getElementById('editVarHtml').value : '';
-    var cssValue  = document.getElementById('editVarCss')  ? document.getElementById('editVarCss').value  : '';
+    var editorData = window.SenkoLayoutEditor
+      && typeof window.SenkoLayoutEditor.getCurrentData === 'function'
+      ? window.SenkoLayoutEditor.getCurrentData()
+      : null;
+    var htmlValue = editorData && editorData.mode === 'variant'
+      && String(editorData.id || '').toLowerCase() === String(parentId || '').toLowerCase()
+      ? editorData.html
+      : document.getElementById('editVarHtml') ? document.getElementById('editVarHtml').value : '';
+    var cssValue  = editorData && editorData.mode === 'variant'
+      && String(editorData.id || '').toLowerCase() === String(parentId || '').toLowerCase()
+      ? editorData.css
+      : document.getElementById('editVarCss')  ? document.getElementById('editVarCss').value  : '';
     var variantData = {
       id: manifestEntry.entry.id || ghvSafeFileName(originalName, 'variant'),
       name: newName,
@@ -635,6 +645,9 @@ function ghvOpenDeleteModal(parentId, variantNome) {
     setTimeout(function () {
       githubDeleteVariant(parentId, variantNome).then(function (result) {
         if (result && state.currentForVariant) {
+          if (window.SenkoLayoutEditor && window.SenkoLayoutEditor.isOpen()) {
+            window.SenkoLayoutEditor.close();
+          }
           var updated = SenkoLib.getVariants(parentId);
           if (typeof renderVariantBlocks === 'function') renderVariantBlocks(updated);
           if (typeof updateVariantsCount === 'function') updateVariantsCount(parentId);
