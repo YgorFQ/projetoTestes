@@ -1,8 +1,8 @@
 // @ts-nocheck
 ColLib.registerCollection({
-  slug: "carneiro-colecoes",
-  name: "Ygor Coleções",
-  group: "ygor",
-  tags: ["Responsivo", "adaptativos"],
+  slug:  'carneiro-colecoes',
+  name:  'Ygor Coleçõess',
+  group: 'ygor',
+  tags:  ['Responsivo', 'adaptativos', 'gamer'],
   layouts: []
 });
