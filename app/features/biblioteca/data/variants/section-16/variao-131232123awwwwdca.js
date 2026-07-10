@@ -2,7 +2,7 @@
 SenkoLib.registerVariantFile("section-16",
 {
   id: "variao-131232123awwwwdca",
-  name: "variao-131232123awwwwdca",
+  name: "variao-131232123awwwwdca-999999",
   html: `<section class="section-3" aria-label="Funções do Mini Processador de Alimentos Elgin Turbo Press">
     <article class="section-3__frame">
         <figure class="section-3__media">
