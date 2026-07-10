@@ -398,7 +398,7 @@
 
 .library-editor-preview-iframe {
   width: 100%;
-  min-height: 540px;
+  min-height: 100vh;
   display: block;
   border: 0;
   background: #fff;
