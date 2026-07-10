@@ -416,14 +416,15 @@ Arquivos importantes:
 register.js
 view.js
 styles/biblioteca.css
+styles/layout-editor.css
 scripts/senkolib-core.js
 scripts/script.js
+scripts/layout-editor.js
 scripts/copy-base.js
 data/manifest.js
 data/layouts/
 data/variants/
 integrations/github/
-prototypes/
 ```
 
 

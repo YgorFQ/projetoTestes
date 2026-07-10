@@ -11,13 +11,12 @@ SenkoLib/
 |   |   |-- biblioteca/
 |   |   |   |-- register.js              - registra e carrega a feature
 |   |   |   |-- view.js                  - dashboard e modais da Biblioteca
-|   |   |   |-- scripts/                 - motor, UI e HTML Basico
-|   |   |   |-- styles/biblioteca.css    - estilos exclusivos da feature
+|   |   |   |-- scripts/                 - motor, UI, editor de layouts e HTML Basico
+|   |   |   |-- styles/                  - estilos exclusivos da feature e do editor
 |   |   |   |-- data/manifest.js         - lista local dos pacotes de dados, compativel com file://
-|   |   |   |-- data/layouts/            - pacotes SenkoLib.register([...])
-|   |   |   |-- data/variants/           - arquivos SenkoLib.registerVariant(...)
+|   |   |   |-- data/layouts/            - arquivos SenkoLib.registerLayout({...})
+|   |   |   |-- data/variants/           - arquivos SenkoLib.registerVariantFile(...)
 |   |   |   |-- integrations/github/      - integracao GitHub exclusiva da Biblioteca
-|   |   |   `-- prototypes/              - prototipo do editor de layouts
 |   |   |
 |   |   |-- colecoes/
 |   |   |   |-- register.js              - registra e carrega a feature

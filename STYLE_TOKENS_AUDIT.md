@@ -11,7 +11,7 @@ padronizacao futura dos estilos em `app/shared/styles/`.
 | `app/shared/styles/senko-components.css` | Componentes visuais neutros criados para padronizacao gradual. |
 | `app/shell/styles/styles.css` | Tema principal, layout do shell e boa parte do visual da Biblioteca. |
 | `app/features/colecoes/styles/col-styles.css` | Estilos especificos da feature Colecoes, usando os tokens do shell. |
-| `app/features/biblioteca/prototypes/layout-editor-prototype.css` | Editor/prototipo da Biblioteca, ja usa varios tokens globais com fallback. |
+| `app/features/biblioteca/styles/layout-editor.css` | Editor oficial da Biblioteca, usa varios tokens globais com fallback. |
 | `app/features/imagens/styles/imagens.css` | Estilos proprios da feature Imagens, consumindo os tokens oficiais do SenkoLib. |
 | `app/features/sources/styles/sources.css` | Estilos proprios da feature Sources, consumindo os tokens oficiais do SenkoLib. |
 | `app/prototype/gamer-preview/styles.css` | Preview beta renderizado como painel direto; usa iframe apenas para o preview interno. |

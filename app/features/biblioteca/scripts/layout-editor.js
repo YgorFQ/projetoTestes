@@ -46,90 +46,90 @@
   }
 
   function ensureModal() {
-    var existing = document.getElementById('protoLayoutOverlay');
+    var existing = document.getElementById('layoutEditorLayoutOverlay');
     if (existing) return existing;
 
     var overlay = document.createElement('div');
-    overlay.id = 'protoLayoutOverlay';
-    overlay.className = 'proto-layout-overlay hidden';
+    overlay.id = 'layoutEditorLayoutOverlay';
+    overlay.className = 'library-editor-layout-overlay hidden';
     overlay.innerHTML =
-      '<div class="proto-layout-modal" id="protoLayoutModal">' +
-        '<div class="proto-layout-topbar">' +
-          '<div class="proto-title-area">' +
-            '<div class="proto-kicker" id="protoKicker">Editor</div>' +
-            '<div class="proto-name-row">' +
-              '<div class="proto-editor-heading" id="protoEditorHeading">Editar layout</div>' +
-              '<div class="proto-file-pill" id="protoFilePill"></div>' +
+      '<div class="library-editor-layout-modal" id="layoutEditorLayoutModal">' +
+        '<div class="library-editor-layout-topbar">' +
+          '<div class="library-editor-title-area">' +
+            '<div class="library-editor-kicker" id="layoutEditorKicker">Editor</div>' +
+            '<div class="library-editor-name-row">' +
+              '<div class="library-editor-editor-heading" id="layoutEditorEditorHeading">Editar layout</div>' +
+              '<div class="library-editor-file-pill" id="layoutEditorFilePill"></div>' +
             '</div>' +
           '</div>' +
-          '<div class="proto-actions">' +
-            '<button class="proto-btn proto-danger-btn" id="protoDeleteBtn">Excluir</button>' +
-            '<button class="proto-btn proto-primary-btn" id="protoSaveBtn">Salvar</button>' +
-            '<button class="proto-btn" id="protoCopyHtmlBtn">Copiar HTML</button>' +
-            '<button class="proto-btn" id="protoCopyCssBtn">Copiar CSS</button>' +
-            '<button class="proto-btn proto-icon-btn" id="protoCloseBtn" title="Fechar">x</button>' +
+          '<div class="library-editor-actions">' +
+            '<button class="library-editor-btn library-editor-danger-btn" id="layoutEditorDeleteBtn">Excluir</button>' +
+            '<button class="library-editor-btn library-editor-primary-btn" id="layoutEditorSaveBtn">Salvar</button>' +
+            '<button class="library-editor-btn" id="layoutEditorCopyHtmlBtn">Copiar HTML</button>' +
+            '<button class="library-editor-btn" id="layoutEditorCopyCssBtn">Copiar CSS</button>' +
+            '<button class="library-editor-btn library-editor-icon-btn" id="layoutEditorCloseBtn" title="Fechar">x</button>' +
           '</div>' +
         '</div>' +
-        '<div class="proto-body" id="protoBody">' +
-          '<section class="proto-pane proto-editor-pane">' +
-            '<div class="proto-meta-grid">' +
-              '<div class="proto-field proto-field--tags" id="protoTagsField">' +
-                '<label for="protoTagsInput">Tags</label>' +
-                '<input id="protoTagsInput" />' +
+        '<div class="library-editor-body" id="layoutEditorBody">' +
+          '<section class="library-editor-pane library-editor-editor-pane">' +
+            '<div class="library-editor-meta-grid">' +
+              '<div class="library-editor-field library-editor-field--tags" id="layoutEditorTagsField">' +
+                '<label for="layoutEditorTagsInput">Tags</label>' +
+                '<input id="layoutEditorTagsInput" />' +
               '</div>' +
-              '<div class="proto-field proto-field--name">' +
-                '<label for="protoNameInput" id="protoNameLabel">Nome</label>' +
-                '<input class="proto-name-input" id="protoNameInput" aria-label="Nome" />' +
+              '<div class="library-editor-field library-editor-field--name">' +
+                '<label for="layoutEditorNameInput" id="layoutEditorNameLabel">Nome</label>' +
+                '<input class="library-editor-name-input" id="layoutEditorNameInput" aria-label="Nome" />' +
               '</div>' +
             '</div>' +
-            '<div class="proto-tabs">' +
-              '<div class="proto-tab-group">' +
-                '<button class="proto-seg active" data-proto-tab="html">HTML</button>' +
-                '<button class="proto-seg" data-proto-tab="css">CSS</button>' +
+            '<div class="library-editor-tabs">' +
+              '<div class="library-editor-tab-group">' +
+                '<button class="library-editor-seg active" data-editor-tab="html">HTML</button>' +
+                '<button class="library-editor-seg" data-editor-tab="css">CSS</button>' +
               '</div>' +
-              '<div class="proto-live-label" id="protoDirtyLabel">Pronto para editar</div>' +
+              '<div class="library-editor-live-label" id="layoutEditorDirtyLabel">Pronto para editar</div>' +
             '</div>' +
-            '<div class="proto-code-wrap">' +
-              '<div class="proto-code-head">' +
-                '<span id="protoCodeLabel">layout.html</span>' +
-                '<span id="protoStatusLabel">Sem alteracoes salvas</span>' +
+            '<div class="library-editor-code-wrap">' +
+              '<div class="library-editor-code-head">' +
+                '<span id="layoutEditorCodeLabel">layout.html</span>' +
+                '<span id="layoutEditorStatusLabel">Sem alteracoes salvas</span>' +
               '</div>' +
-              '<textarea class="proto-code-editor" id="protoCodeEditor" spellcheck="false"></textarea>' +
+              '<textarea class="library-editor-code-editor" id="layoutEditorCodeEditor" spellcheck="false"></textarea>' +
             '</div>' +
           '</section>' +
-          '<section class="proto-pane proto-preview-pane">' +
-            '<div class="proto-preview-toolbar">' +
-              '<div class="proto-preview-title">' +
-                '<span class="proto-dot"></span>' +
+          '<section class="library-editor-pane library-editor-preview-pane">' +
+            '<div class="library-editor-preview-toolbar">' +
+              '<div class="library-editor-preview-title">' +
+                '<span class="library-editor-dot"></span>' +
                 '<span>Visualizacao</span>' +
               '</div>' +
-              '<div class="proto-size-tools">' +
-                '<button class="proto-seg" data-proto-width="390">390</button>' +
-                '<button class="proto-seg" data-proto-width="760">760</button>' +
-                '<button class="proto-seg active" data-proto-width="1200">1200</button>' +
-                '<button class="proto-seg" data-proto-width="1500">1500</button>' +
-                '<label class="proto-width-control" for="protoWidthRange">' +
-                  '<input id="protoWidthRange" type="range" min="340" max="1500" value="1200" />' +
-                  '<input class="proto-width-number" id="protoWidthNumber" type="number" min="340" max="1500" value="1200" />' +
-                  '<span class="proto-zoom-label" id="protoZoomLabel">100%</span>' +
+              '<div class="library-editor-size-tools">' +
+                '<button class="library-editor-seg" data-editor-width="390">390</button>' +
+                '<button class="library-editor-seg" data-editor-width="760">760</button>' +
+                '<button class="library-editor-seg active" data-editor-width="1200">1200</button>' +
+                '<button class="library-editor-seg" data-editor-width="1500">1500</button>' +
+                '<label class="library-editor-width-control" for="editorWidthRange">' +
+                  '<input id="editorWidthRange" type="range" min="340" max="1500" value="1200" />' +
+                  '<input class="library-editor-width-number" id="editorWidthNumber" type="number" min="340" max="1500" value="1200" />' +
+                  '<span class="library-editor-zoom-label" id="layoutEditorZoomLabel">100%</span>' +
                 '</label>' +
-                '<button class="proto-btn proto-icon-btn" id="protoRefreshBtn" title="Recarregar preview">R</button>' +
+                '<button class="library-editor-btn library-editor-icon-btn" id="layoutEditorRefreshBtn" title="Recarregar preview">R</button>' +
               '</div>' +
             '</div>' +
-            '<div class="proto-preview-stage" id="protoPreviewStage">' +
-              '<div class="proto-device-shell" id="protoDeviceShell">' +
-                '<div class="proto-device-scale" id="protoDeviceScale">' +
-                  '<div class="proto-device-frame" id="protoDeviceFrame">' +
-                    '<iframe class="proto-preview-iframe" id="protoPreviewIframe" sandbox="allow-scripts"></iframe>' +
+            '<div class="library-editor-preview-stage" id="layoutEditorPreviewStage">' +
+              '<div class="library-editor-device-shell" id="layoutEditorDeviceShell">' +
+                '<div class="library-editor-device-scale" id="layoutEditorDeviceScale">' +
+                  '<div class="library-editor-device-frame" id="layoutEditorDeviceFrame">' +
+                    '<iframe class="library-editor-preview-iframe" id="layoutEditorPreviewIframe" sandbox="allow-scripts"></iframe>' +
                   '</div>' +
                 '</div>' +
               '</div>' +
             '</div>' +
           '</section>' +
-          '<nav class="proto-mobile-tabs" aria-label="Navegacao do editor">' +
-            '<button class="active" data-proto-mobile="html">HTML</button>' +
-            '<button data-proto-mobile="css">CSS</button>' +
-            '<button data-proto-mobile="preview">Preview</button>' +
+          '<nav class="library-editor-mobile-tabs" aria-label="Navegacao do editor">' +
+            '<button class="active" data-editor-mobile="html">HTML</button>' +
+            '<button data-editor-mobile="css">CSS</button>' +
+            '<button data-editor-mobile="preview">Preview</button>' +
           '</nav>' +
         '</div>' +
       '</div>';
@@ -140,12 +140,12 @@
   }
 
   function setStatus(text) {
-    var label = document.getElementById('protoStatusLabel');
+    var label = document.getElementById('layoutEditorStatusLabel');
     if (label) label.textContent = text || '';
   }
 
   function setBusy(isBusy) {
-    ['protoSaveBtn', 'protoDeleteBtn', 'protoCopyHtmlBtn', 'protoCopyCssBtn'].forEach(function (id) {
+    ['layoutEditorSaveBtn', 'layoutEditorDeleteBtn', 'layoutEditorCopyHtmlBtn', 'layoutEditorCopyCssBtn'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.disabled = Boolean(isBusy);
     });
@@ -158,14 +158,14 @@
   }
 
   function syncCurrentEditor() {
-    var editor = document.getElementById('protoCodeEditor');
+    var editor = document.getElementById('layoutEditorCodeEditor');
     if (!editor) return;
     if (editorState.activeTab === 'css') editorState.css = editor.value;
     else editorState.html = editor.value;
   }
 
   function refreshPreview() {
-    var iframe = document.getElementById('protoPreviewIframe');
+    var iframe = document.getElementById('layoutEditorPreviewIframe');
     if (!iframe) return;
     iframe.srcdoc = buildPreviewDoc(editorState.html, editorState.css);
   }
@@ -176,7 +176,7 @@
   }
 
   function resizeIframeHeight() {
-    var iframe = document.getElementById('protoPreviewIframe');
+    var iframe = document.getElementById('layoutEditorPreviewIframe');
     if (!iframe) return;
     try {
       var doc = iframe.contentDocument || iframe.contentWindow.document;
@@ -193,12 +193,12 @@
   }
 
   function fitPreview() {
-    var stage = document.getElementById('protoPreviewStage');
-    var shell = document.getElementById('protoDeviceShell');
-    var scaleEl = document.getElementById('protoDeviceScale');
-    var frame = document.getElementById('protoDeviceFrame');
-    var iframe = document.getElementById('protoPreviewIframe');
-    var label = document.getElementById('protoZoomLabel');
+    var stage = document.getElementById('layoutEditorPreviewStage');
+    var shell = document.getElementById('layoutEditorDeviceShell');
+    var scaleEl = document.getElementById('layoutEditorDeviceScale');
+    var frame = document.getElementById('layoutEditorDeviceFrame');
+    var iframe = document.getElementById('layoutEditorPreviewIframe');
+    var label = document.getElementById('layoutEditorZoomLabel');
     if (!stage || !shell || !scaleEl || !frame || !iframe || !label) return;
 
     var available = stage.clientWidth - 2;
@@ -216,10 +216,10 @@
 
   function setPreviewWidth(value) {
     editorState.width = clampWidth(value);
-    document.getElementById('protoWidthRange').value = editorState.width;
-    document.getElementById('protoWidthNumber').value = editorState.width;
-    document.querySelectorAll('[data-proto-width]').forEach(function (btn) {
-      btn.classList.toggle('active', Number(btn.dataset.protoWidth) === editorState.width);
+    document.getElementById('editorWidthRange').value = editorState.width;
+    document.getElementById('editorWidthNumber').value = editorState.width;
+    document.querySelectorAll('[data-editor-width]').forEach(function (btn) {
+      btn.classList.toggle('active', Number(btn.dataset.editorWidth) === editorState.width);
     });
     fitPreview();
   }
@@ -228,21 +228,21 @@
     if (!skipSync) syncCurrentEditor();
     editorState.activeTab = tab === 'css' ? 'css' : 'html';
 
-    document.querySelectorAll('[data-proto-tab]').forEach(function (btn) {
-      btn.classList.toggle('active', btn.dataset.protoTab === editorState.activeTab);
+    document.querySelectorAll('[data-editor-tab]').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.editorTab === editorState.activeTab);
     });
 
     var prefix = editorState.mode === 'variant' ? 'variant' : 'layout';
-    document.getElementById('protoCodeLabel').textContent =
+    document.getElementById('layoutEditorCodeLabel').textContent =
       prefix + (editorState.activeTab === 'css' ? '.css' : '.html');
-    document.getElementById('protoCodeEditor').value =
+    document.getElementById('layoutEditorCodeEditor').value =
       editorState.activeTab === 'css' ? editorState.css : editorState.html;
   }
 
   function setMobileView(view) {
-    var body = document.getElementById('protoBody');
-    document.querySelectorAll('[data-proto-mobile]').forEach(function (btn) {
-      btn.classList.toggle('active', btn.dataset.protoMobile === view);
+    var body = document.getElementById('layoutEditorBody');
+    document.querySelectorAll('[data-editor-mobile]').forEach(function (btn) {
+      btn.classList.toggle('active', btn.dataset.editorMobile === view);
     });
 
     body.classList.toggle('show-preview', view === 'preview');
@@ -264,7 +264,7 @@
   }
 
   function closeEditor() {
-    var overlay = document.getElementById('protoLayoutOverlay');
+    var overlay = document.getElementById('layoutEditorLayoutOverlay');
     if (overlay) overlay.classList.add('hidden');
     document.body.style.overflow = '';
 
@@ -278,7 +278,7 @@
   }
 
   function isOpen() {
-    var overlay = document.getElementById('protoLayoutOverlay');
+    var overlay = document.getElementById('layoutEditorLayoutOverlay');
     return Boolean(overlay && !overlay.classList.contains('hidden'));
   }
 
@@ -315,8 +315,8 @@
 
   function getCurrentData() {
     syncCurrentEditor();
-    var nameInput = document.getElementById('protoNameInput');
-    var tagsInput = document.getElementById('protoTagsInput');
+    var nameInput = document.getElementById('layoutEditorNameInput');
+    var tagsInput = document.getElementById('layoutEditorTagsInput');
     var rawName = nameInput ? nameInput.value : '';
     var name = editorState.mode === 'variant'
       ? normalizeVariantName(rawName)
@@ -523,85 +523,85 @@
   }
 
   function bindModalEvents() {
-    document.getElementById('protoCloseBtn').addEventListener('click', closeEditor);
-    document.getElementById('protoLayoutOverlay').addEventListener('click', function (event) {
+    document.getElementById('layoutEditorCloseBtn').addEventListener('click', closeEditor);
+    document.getElementById('layoutEditorLayoutOverlay').addEventListener('click', function (event) {
       if (event.target === this) closeEditor();
     });
 
-    document.querySelectorAll('[data-proto-tab]').forEach(function (btn) {
+    document.querySelectorAll('[data-editor-tab]').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        setEditorTab(btn.dataset.protoTab);
+        setEditorTab(btn.dataset.editorTab);
       });
     });
 
-    document.getElementById('protoCodeEditor').addEventListener('input', function () {
+    document.getElementById('layoutEditorCodeEditor').addEventListener('input', function () {
       syncCurrentEditor();
       setStatus('Alteracoes nao salvas');
       schedulePreview();
     });
 
-    document.getElementById('protoNameInput').addEventListener('input', function () {
+    document.getElementById('layoutEditorNameInput').addEventListener('input', function () {
       this.value = editorState.mode === 'variant'
         ? sanitizeVariantName(this.value)
         : sanitizeLayoutName(this.value);
       setStatus('Alteracoes nao salvas');
     });
 
-    document.getElementById('protoTagsInput').addEventListener('input', function () {
+    document.getElementById('layoutEditorTagsInput').addEventListener('input', function () {
       this.value = sanitizeTags(this.value);
       setStatus('Alteracoes nao salvas');
     });
 
-    document.querySelectorAll('[data-proto-width]').forEach(function (btn) {
+    document.querySelectorAll('[data-editor-width]').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        setPreviewWidth(btn.dataset.protoWidth);
+        setPreviewWidth(btn.dataset.editorWidth);
       });
     });
 
-    document.getElementById('protoWidthRange').addEventListener('input', function () {
+    document.getElementById('editorWidthRange').addEventListener('input', function () {
       setPreviewWidth(this.value);
     });
 
-    document.getElementById('protoWidthNumber').addEventListener('input', function () {
+    document.getElementById('editorWidthNumber').addEventListener('input', function () {
       setPreviewWidth(this.value);
     });
 
-    document.getElementById('protoRefreshBtn').addEventListener('click', function () {
+    document.getElementById('layoutEditorRefreshBtn').addEventListener('click', function () {
       syncCurrentEditor();
       refreshPreview();
     });
 
-    document.getElementById('protoCopyHtmlBtn').addEventListener('click', function () {
+    document.getElementById('layoutEditorCopyHtmlBtn').addEventListener('click', function () {
       copyFromEditor('html', this);
     });
 
-    document.getElementById('protoCopyCssBtn').addEventListener('click', function () {
+    document.getElementById('layoutEditorCopyCssBtn').addEventListener('click', function () {
       copyFromEditor('css', this);
     });
 
-    document.getElementById('protoSaveBtn').addEventListener('click', saveCurrent);
-    document.getElementById('protoDeleteBtn').addEventListener('click', deleteCurrent);
+    document.getElementById('layoutEditorSaveBtn').addEventListener('click', saveCurrent);
+    document.getElementById('layoutEditorDeleteBtn').addEventListener('click', deleteCurrent);
 
-    document.querySelectorAll('[data-proto-mobile]').forEach(function (btn) {
+    document.querySelectorAll('[data-editor-mobile]').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        setMobileView(btn.dataset.protoMobile);
+        setMobileView(btn.dataset.editorMobile);
       });
     });
 
-    document.getElementById('protoPreviewIframe').addEventListener('load', resizeIframeHeight);
+    document.getElementById('layoutEditorPreviewIframe').addEventListener('load', resizeIframeHeight);
     window.addEventListener('resize', fitPreview);
   }
 
   function applyModeChrome() {
     var isVariant = editorState.mode === 'variant';
     var parentName = editorState.layout ? (editorState.layout.name || editorState.layout.id || '') : '';
-    document.getElementById('protoKicker').textContent = isVariant ? 'Editor de variacao' : 'Editor de layout';
-    document.getElementById('protoEditorHeading').textContent = isVariant
+    document.getElementById('layoutEditorKicker').textContent = isVariant ? 'Editor de variacao' : 'Editor de layout';
+    document.getElementById('layoutEditorEditorHeading').textContent = isVariant
       ? 'Editar variacao de ' + parentName
       : 'Editar layout';
-    document.getElementById('protoNameLabel').textContent = isVariant ? 'Nome da variacao' : 'Nome';
-    document.getElementById('protoTagsField').classList.toggle('proto-field-hidden', isVariant);
-    document.getElementById('protoFilePill').textContent = isVariant
+    document.getElementById('layoutEditorNameLabel').textContent = isVariant ? 'Nome da variacao' : 'Nome';
+    document.getElementById('layoutEditorTagsField').classList.toggle('library-editor-field-hidden', isVariant);
+    document.getElementById('layoutEditorFilePill').textContent = isVariant
       ? 'data/variants/' + (editorState.layout ? editorState.layout.id : 'layout') + '/' + ((editorState.variant && (editorState.variant.id || editorState.variant.name)) || 'variacao') + '.js'
       : 'data/layouts/' + (editorState.layout ? editorState.layout.id : 'layout') + '.js';
   }
@@ -622,8 +622,8 @@
     state.currentEditVariant = null;
 
     applyModeChrome();
-    document.getElementById('protoNameInput').value = layout.name || '';
-    document.getElementById('protoTagsInput').value = (layout.tags || []).filter(Boolean).join(', ');
+    document.getElementById('layoutEditorNameInput').value = layout.name || '';
+    document.getElementById('layoutEditorTagsInput').value = (layout.tags || []).filter(Boolean).join(', ');
 
     setEditorTab('html', true);
     setPreviewWidth(1200);
@@ -631,7 +631,7 @@
     setStatus('Sem alteracoes salvas');
     refreshPreview();
 
-    document.getElementById('protoLayoutOverlay').classList.remove('hidden');
+    document.getElementById('layoutEditorLayoutOverlay').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     setTimeout(fitPreview, 0);
   }
@@ -653,8 +653,8 @@
     state.currentEdit = null;
 
     applyModeChrome();
-    document.getElementById('protoNameInput').value = variant.name || '';
-    document.getElementById('protoTagsInput').value = '';
+    document.getElementById('layoutEditorNameInput').value = variant.name || '';
+    document.getElementById('layoutEditorTagsInput').value = '';
 
     setEditorTab('html', true);
     setPreviewWidth(1200);
@@ -662,7 +662,7 @@
     setStatus('Sem alteracoes salvas');
     refreshPreview();
 
-    document.getElementById('protoLayoutOverlay').classList.remove('hidden');
+    document.getElementById('layoutEditorLayoutOverlay').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
     setTimeout(fitPreview, 0);
   }
@@ -677,7 +677,6 @@
     buildVariantObjectCode: function () { return buildVariantObjectCode(getCurrentData()); }
   };
 
-  window.openPrototypeLayoutEditor = openLayout;
   window.openOfficialLayoutEditor = openLayout;
   window.openOfficialVariantEditor = openVariant;
 })();

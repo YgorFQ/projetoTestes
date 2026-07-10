@@ -146,7 +146,7 @@
 
     loadPromise = (async function () {
       loadStyle('styles/biblioteca.css?v=20260613-library-scroll');
-      loadStyle('prototypes/layout-editor-prototype.css?v=20260613-feature-module');
+      loadStyle('styles/layout-editor.css?v=20260613-official-editor');
 
       var initialResources = await Promise.all([
         loadScript('view.js?v=20260613-fast-load'),
@@ -165,7 +165,7 @@
             return false;
           });
         })),
-        loadScript('prototypes/layout-editor-prototype.js?v=20260613-official-editor'),
+        loadScript('scripts/layout-editor.js?v=20260613-official-editor'),
         loadScript('scripts/script.js?v=20260613-eager-previews'),
         loadScript('scripts/copy-base.js?v=20260613-fast-load-2')
       ]);
