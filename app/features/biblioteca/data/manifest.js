@@ -226,12 +226,6 @@ window.SenkoBibliotecaManifest = {
       "layoutId": "section-6",
       "id": "section-6-1",
       "name": "section-6-1"
-    },
-    {
-      "file": "variants/section-16/variao-131232123awwwwdca.js",
-      "layoutId": "section-16",
-      "id": "variao-131232123awwwwdca",
-      "name": "variao-131232123awwwwdca-999999"
     }
   ]
 };
