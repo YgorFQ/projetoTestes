@@ -15,7 +15,7 @@ window.SenkoColecoesManifest = {
         {
           "file": "collections/carneiro-colecoes/layouts/padrao1.js",
           "id": "padrao1",
-          "name": "Padrão 1"
+          "name": "Padrão 10000"
         },
         {
           "file": "collections/carneiro-colecoes/layouts/modelo2.js",
