@@ -142,7 +142,7 @@ window.SenkoColecoesManifest = {
       "tags": [
         "Responsivo"
       ],
-      "layoutCount": 4,
+      "layoutCount": 3,
       "layouts": [
         {
           "file": "collections/colecao-joel/layouts/padraoconteudo-joel.js",
@@ -158,11 +158,6 @@ window.SenkoColecoesManifest = {
           "file": "collections/colecao-joel/layouts/test.js",
           "id": "test",
           "name": "test"
-        },
-        {
-          "file": "collections/colecao-joel/layouts/teste2.js",
-          "id": "teste2",
-          "name": "teste2"
         }
       ]
     },
