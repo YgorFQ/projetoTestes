@@ -232,19 +232,6 @@ window.SenkoColecoesManifest = {
           "name": "padrão 2"
         }
       ]
-    },
-    {
-      "file": "collections/teste/collection.js",
-      "slug": "teste",
-      "name": "Teste",
-      "group": "test",
-      "tags": [
-        "Teste",
-        "test",
-        "Teste"
-      ],
-      "layoutCount": 0,
-      "layouts": []
     }
   ]
 };
