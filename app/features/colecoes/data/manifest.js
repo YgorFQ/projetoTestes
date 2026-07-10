@@ -241,8 +241,14 @@ window.SenkoColecoesManifest = {
       "tags": [
         "\\\\\\\\´´´´´´~~~~);};12383455%¨¨¨%@¨q%¨¨12374234?////QWE23/;//"
       ],
-      "layoutCount": 0,
-      "layouts": []
+      "layoutCount": 1,
+      "layouts": [
+        {
+          "file": "collections/12383455-q-12374234-qwe23/layouts/fgsfsefef.js",
+          "id": "fgsfsefef",
+          "name": "FGSFSEFEF"
+        }
+      ]
     }
   ]
 };
