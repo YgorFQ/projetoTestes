@@ -11,4 +11,5 @@ ColGroups.load([
   { slug: 'pedro', name: 'pedro', cor: '#f59e0b' },
   { slug: 'selecao-francesa', name: 'Seleção Francesa', cor: '#ef4444' },
   { slug: 'test', name: 'Test', cor: '#8b5cf6' },
+  { slug: 'aw2q-2-p344-23-4-cpw-3a-0212-zzzz', name: '~/~[´[aw2q´[2´p344´23´[4´´çpw[´´[3a+_+0212|||\\\\\\\\/zzzz////};);', cor: '#ec4899' },
 ]);
