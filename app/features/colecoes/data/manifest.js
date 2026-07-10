@@ -11,13 +11,8 @@ window.SenkoColecoesManifest = {
         "adaptativos",
         "gamer"
       ],
-      "layoutCount": 25,
+      "layoutCount": 24,
       "layouts": [
-        {
-          "file": "collections/carneiro-colecoes/layouts/padrao1.js",
-          "id": "padrao1",
-          "name": "Padrão 10000"
-        },
         {
           "file": "collections/carneiro-colecoes/layouts/modelo2.js",
           "id": "modelo2",
