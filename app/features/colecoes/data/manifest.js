@@ -4,12 +4,11 @@ window.SenkoColecoesManifest = {
     {
       "file": "collections/carneiro-colecoes/collection.js",
       "slug": "carneiro-colecoes",
-      "name": "Ygor Coleçõess",
-      "group": "selecao-francesa",
+      "name": "Ygor Coleções",
+      "group": "ygor",
       "tags": [
         "Responsivo",
-        "adaptativos",
-        "gamer"
+        "adaptativos"
       ],
       "layoutCount": 24,
       "layouts": [
