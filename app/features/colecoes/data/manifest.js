@@ -232,6 +232,17 @@ window.SenkoColecoesManifest = {
           "name": "padrão 2"
         }
       ]
+    },
+    {
+      "file": "collections/12383455-q-12374234-qwe23/collection.js",
+      "slug": "12383455-q-12374234-qwe23",
+      "name": "\\\\\\\\´´´´´´~~~~);};12383455%¨¨¨%@¨q%¨¨12374234?////QWE23/;//",
+      "group": "aw2q-2-p344-23-4-cpw-3a-0212-zzzz",
+      "tags": [
+        "\\\\\\\\´´´´´´~~~~);};12383455%¨¨¨%@¨q%¨¨12374234?////QWE23/;//"
+      ],
+      "layoutCount": 0,
+      "layouts": []
     }
   ]
 };
