@@ -10,4 +10,5 @@ ColGroups.load([
   { slug: 'joel', name: 'Joel', cor: '#06b6d4' },
   { slug: 'pedro', name: 'pedro', cor: '#f59e0b' },
   { slug: 'selecao-francesa', name: 'Seleção Francesa', cor: '#ef4444' },
+  { slug: 'test', name: 'Test', cor: '#8b5cf6' },
 ]);
