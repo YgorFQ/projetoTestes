@@ -2,14 +2,14 @@
 SenkoLib.registerLayout(
 {
     id: 'section-16',
-    name: 'Section-16',
+    name: 'Section-16-2q32743',
     tags: ['Alerta', 'Ingredientes', 'gamer'],
     html: `    <section class="section-ingredients" aria-labelledby="ingredients-title">
       <div class="section-ingredients__inner">
         <h2 class="section-ingredients__title" id="ingredients-title">Ingredientes</h2>
         <p class="section-ingredients__text">
           Sal, pimenta-do-reino preta, coentro, cominho, orégano, cúrcuma, pimenta-calabresa, fécula de mandioca e
-          antiumectante dióxido de silício. Gamer
+          antiumectante dióxido de silício. Gam
         </p>
         <div class="section-ingredients__alert" role="alert" aria-live="polite">
           <span class="section-ingredients__alert-icon" aria-hidden="true">⚠️</span>
