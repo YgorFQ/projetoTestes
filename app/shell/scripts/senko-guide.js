@@ -367,6 +367,8 @@
           ],
           bullets: [
             'Notas da equipe: app/prototype/team-notes/.',
+            'O acionador de Notas da equipe reutiliza o controle theme-toggle do shell e o painel consome os tokens visuais compartilhados do SenkoLib. A feature mantem classes proprias e nao deve criar uma paleta paralela.',
+            'A experiencia de Notas da equipe organiza busca, filtros, lista e editor em areas claras, sinaliza alteracoes nao salvas e pede confirmacao antes de descarta-las.',
             'Cada nota criada pelo Team Notes deve virar um arquivo proprio em app/prototype/team-notes/data/notes e entrar no manifest.js.',
             'Preview: app/prototype/gamer-preview/.',
             'Senko Guide nao e mais prototipo; ele fica em app/shell/.',
@@ -392,7 +394,7 @@
             'Imagens: feature independente, mas merece revisao cuidadosa quando houver reforma interna.',
             'Sources: feature independente, mas merece revisao cuidadosa quando houver reforma interna.',
             'Criacao rapida: ferramenta oficial do shell com providers registrados pelas features.',
-            'Notas da equipe: prototipo beta com arquivos individuais e salvamento via GitHub.',
+            'Notas da equipe: prototipo beta integrado aos tokens do shell, com arquivos individuais e salvamento via GitHub.',
             'Preview: prototipo beta em app/prototype.',
             'Senko Guide: ferramenta oficial do shell e prioridade maxima de manutencao.',
             'Editor da Biblioteca: oficial, integrado em app/features/biblioteca/scripts/layout-editor.js.',

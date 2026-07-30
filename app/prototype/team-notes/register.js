@@ -27,6 +27,8 @@
   var loadingPromise = null;
   var saving = false;
   var previousBodyOverflow = '';
+  var previousFocus = null;
+  var formDirty = false;
 
   var fallbackNotes = [
     {
@@ -87,17 +89,17 @@
       button = document.createElement('button');
       button.type = 'button';
       button.id = 'senkoTeamNotesBtn';
-      button.className = 'senko-team-notes-trigger';
+      button.className = 'theme-toggle senko-team-notes-trigger';
       button.title = 'Notas da equipe';
       button.setAttribute('aria-label', 'Abrir notas da equipe');
       button.setAttribute('aria-haspopup', 'dialog');
+      button.setAttribute('aria-expanded', 'false');
       button.innerHTML =
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" aria-hidden="true">' +
-        '  <path d="M5 4h11l3 3v13H5z" />' +
-        '  <path d="M16 4v4h4" />' +
-        '  <path d="M8 11h8" />' +
-        '  <path d="M8 15h6" />' +
-        '</svg>';
+        '  <path d="M5 4h14v16H5z" />' +
+        '  <path d="M8 8h8M8 12h5M8 16h7" />' +
+        '</svg>' +
+        '<span class="senko-team-notes-trigger-label">Notas</span>';
 
       var globalCreateButton = document.getElementById('senkoGlobalCreateBtn');
       var actions = document.querySelector('.header-actions');
@@ -218,37 +220,66 @@
     overlay.innerHTML =
       '<section class="senko-team-notes-modal" role="dialog" aria-modal="true" aria-labelledby="senkoTeamNotesTitle">' +
       '  <div class="senko-team-notes-head">' +
-      '    <div>' +
+      '    <div class="senko-team-notes-head-copy">' +
       '      <span class="senko-team-notes-kicker">Equipe</span>' +
       '      <h2 id="senkoTeamNotesTitle">Notas da equipe</h2>' +
+      '      <p>Prompts, regras e padroes compartilhados em um so lugar.</p>' +
       '    </div>' +
       '    <div class="senko-team-notes-head-actions">' +
-      '      <button class="senko-team-notes-gh" id="senkoTeamNotesGithubBtn" type="button">GitHub</button>' +
-      '      <button class="senko-team-notes-close" id="senkoTeamNotesCloseBtn" type="button" title="Fechar" aria-label="Fechar">x</button>' +
+      '      <button class="senko-team-notes-gh" id="senkoTeamNotesGithubBtn" type="button">' +
+      '        <span class="senko-team-notes-gh-dot" aria-hidden="true"></span>' +
+      '        <span id="senkoTeamNotesGithubLabel">Configurar GitHub</span>' +
+      '      </button>' +
+      '      <button class="senko-team-notes-close" id="senkoTeamNotesCloseBtn" type="button" title="Fechar" aria-label="Fechar notas">×</button>' +
       '    </div>' +
       '  </div>' +
-      '  <div class="senko-team-notes-status" id="senkoTeamNotesStatus"></div>' +
+      '  <div class="senko-team-notes-status" id="senkoTeamNotesStatus" role="status" aria-live="polite"></div>' +
       '  <div class="senko-team-notes-body" id="senkoTeamNotesBody">' +
       '    <aside class="senko-team-notes-sidebar">' +
-      '      <div class="senko-team-notes-tools">' +
-      '        <input id="senkoTeamNotesSearch" type="search" placeholder="Buscar notas" autocomplete="off">' +
-      '        <select id="senkoTeamNotesTypeFilter" aria-label="Filtrar por tipo">' +
-      '          <option value="">Todos</option>' +
-      '          <option value="prompt">Prompts</option>' +
-      '          <option value="regra">Regras</option>' +
-      '          <option value="guia">Guias</option>' +
-      '          <option value="padrao">Padroes</option>' +
-      '          <option value="geral">Geral</option>' +
-      '        </select>' +
+      '      <div class="senko-team-notes-sidebar-head">' +
+      '        <div>' +
+      '          <span>Biblioteca</span>' +
+      '          <strong>Encontre ou crie uma nota</strong>' +
+      '        </div>' +
+      '        <span class="senko-team-notes-count" id="senkoTeamNotesCount">0 notas</span>' +
       '      </div>' +
-      '      <button class="senko-team-notes-new" id="senkoTeamNotesNewBtn" type="button">+ Nova nota</button>' +
+      '      <button class="senko-team-notes-new" id="senkoTeamNotesNewBtn" type="button">' +
+      '        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>' +
+      '        <span>Nova nota</span>' +
+      '      </button>' +
+      '      <div class="senko-team-notes-tools">' +
+      '        <label class="senko-team-notes-search">' +
+      '          <span class="senko-team-notes-sr-only">Buscar notas</span>' +
+      '          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>' +
+      '          <input id="senkoTeamNotesSearch" type="search" placeholder="Buscar por titulo, tag ou conteudo" autocomplete="off">' +
+      '        </label>' +
+      '        <label class="senko-team-notes-filter">' +
+      '          <span>Filtrar</span>' +
+      '          <select id="senkoTeamNotesTypeFilter" aria-label="Filtrar notas por tipo">' +
+      '            <option value="">Todos os tipos</option>' +
+      '            <option value="prompt">Prompts</option>' +
+      '            <option value="regra">Regras</option>' +
+      '            <option value="guia">Guias</option>' +
+      '            <option value="padrao">Padroes</option>' +
+      '            <option value="geral">Geral</option>' +
+      '          </select>' +
+      '        </label>' +
+      '      </div>' +
       '      <div class="senko-team-notes-list" id="senkoTeamNotesList"></div>' +
       '    </aside>' +
       '    <form class="senko-team-notes-editor" id="senkoTeamNotesForm">' +
       '      <input type="hidden" id="senkoTeamNotesId">' +
+      '      <div class="senko-team-notes-editor-head">' +
+      '        <div>' +
+      '          <span id="senkoTeamNotesEditorKicker">Nota selecionada</span>' +
+      '          <h3 id="senkoTeamNotesEditorTitle">Editar nota</h3>' +
+      '          <p id="senkoTeamNotesEditorHint">Atualize os campos e salve quando terminar.</p>' +
+      '        </div>' +
+      '        <span class="senko-team-notes-dirty" id="senkoTeamNotesDirty">Salva</span>' +
+      '      </div>' +
       '      <label class="senko-team-notes-field">' +
       '        <span>Titulo</span>' +
-      '        <input id="senkoTeamNotesTitleInput" type="text" placeholder="Ex: Prompt para PDP">' +
+      '        <input id="senkoTeamNotesTitleInput" type="text" placeholder="Ex: Prompt para PDP" required>' +
       '      </label>' +
       '      <div class="senko-team-notes-row">' +
       '        <label class="senko-team-notes-field">' +
@@ -267,13 +298,15 @@
       '        </label>' +
       '      </div>' +
       '      <label class="senko-team-notes-field senko-team-notes-content-field">' +
-      '        <span>Conteudo</span>' +
-      '        <textarea id="senkoTeamNotesContent" placeholder="Cole aqui prompts, regras, guias ou padroes da equipe."></textarea>' +
+      '        <span class="senko-team-notes-content-label"><span>Conteudo</span><small id="senkoTeamNotesContentCount">0 caracteres</small></span>' +
+      '        <textarea id="senkoTeamNotesContent" placeholder="Cole aqui prompts, regras, guias ou padroes da equipe." required></textarea>' +
       '      </label>' +
       '      <div class="senko-team-notes-editor-footer">' +
-      '        <button class="senko-team-notes-copy" id="senkoTeamNotesCopyBtn" type="button">Copiar</button>' +
       '        <button class="senko-team-notes-delete" id="senkoTeamNotesDeleteBtn" type="button">Excluir</button>' +
-      '        <button class="senko-team-notes-save" id="senkoTeamNotesSaveBtn" type="submit">Salvar no GitHub</button>' +
+      '        <div class="senko-team-notes-editor-actions">' +
+      '          <button class="senko-team-notes-copy" id="senkoTeamNotesCopyBtn" type="button">Copiar conteudo</button>' +
+      '          <button class="senko-team-notes-save" id="senkoTeamNotesSaveBtn" type="submit">Salvar nota</button>' +
+      '        </div>' +
       '      </div>' +
       '    </form>' +
       '  </div>' +
@@ -286,10 +319,17 @@
     typeFilter = document.getElementById('senkoTeamNotesTypeFilter');
     statusEl = document.getElementById('senkoTeamNotesStatus');
 
-    document.getElementById('senkoTeamNotesCloseBtn').addEventListener('click', closeModal);
-    document.getElementById('senkoTeamNotesNewBtn').addEventListener('click', newNote);
+    document.getElementById('senkoTeamNotesCloseBtn').addEventListener('click', function () {
+      closeModal();
+    });
+    document.getElementById('senkoTeamNotesNewBtn').addEventListener('click', function () {
+      if (canDiscardChanges()) newNote();
+    });
     document.getElementById('senkoTeamNotesForm').addEventListener('submit', saveCurrentNote);
-    document.getElementById('senkoTeamNotesForm').addEventListener('input', updateEditorButtons);
+    document.getElementById('senkoTeamNotesForm').addEventListener('input', function () {
+      formDirty = true;
+      updateEditorButtons();
+    });
     document.getElementById('senkoTeamNotesCopyBtn').addEventListener('click', copyCurrentNote);
     document.getElementById('senkoTeamNotesDeleteBtn').addEventListener('click', deleteCurrentNote);
     document.getElementById('senkoTeamNotesGithubBtn').addEventListener('click', openGithubConfig);
@@ -298,11 +338,16 @@
     noteList.addEventListener('click', function (event) {
       var item = event.target.closest('[data-note-id]');
       if (!item) return;
+      if (item.dataset.noteId !== selectedId && !canDiscardChanges()) return;
       selectNote(item.dataset.noteId);
     });
     overlay.addEventListener('click', function (event) {
       if (event.target === overlay) closeModal();
     });
+  }
+
+  function canDiscardChanges() {
+    return !formDirty || window.confirm('Descartar alteracoes nao salvas desta nota?');
   }
 
   function setStatus(message, type) {
@@ -340,15 +385,48 @@
     document.getElementById('senkoTeamNotesType').value = safe.type || 'geral';
     document.getElementById('senkoTeamNotesTags').value = (safe.tags || []).join(', ');
     document.getElementById('senkoTeamNotesContent').value = safe.content || '';
+    formDirty = false;
+    updateEditorContext(safe);
     updateEditorButtons();
+  }
+
+  function updateEditorContext(note) {
+    var safe = note || {};
+    var isNew = !safe.id;
+    var kicker = document.getElementById('senkoTeamNotesEditorKicker');
+    var title = document.getElementById('senkoTeamNotesEditorTitle');
+    var hint = document.getElementById('senkoTeamNotesEditorHint');
+    if (!kicker || !title || !hint) return;
+
+    if (isNew) {
+      kicker.textContent = 'Nova nota';
+      title.textContent = 'Comece pelo titulo';
+      hint.textContent = 'Escolha o tipo, adicione tags e registre o conteudo da equipe.';
+      return;
+    }
+
+    kicker.textContent = safe._sample ? 'Exemplo local' : 'Nota selecionada';
+    title.textContent = safe.title || 'Editar nota';
+    hint.textContent = safe._sample
+      ? 'Use como referencia ou salve para compartilhar com a equipe.'
+      : 'Atualize os campos e salve quando terminar.';
   }
 
   function updateEditorButtons() {
     var id = (document.getElementById('senkoTeamNotesId') || {}).value || '';
     var content = (document.getElementById('senkoTeamNotesContent') || {}).value || '';
     var note = id ? findNote(id) : null;
+    var dirty = document.getElementById('senkoTeamNotesDirty');
+    var count = document.getElementById('senkoTeamNotesContentCount');
     document.getElementById('senkoTeamNotesDeleteBtn').disabled = !note || note._sample;
     document.getElementById('senkoTeamNotesCopyBtn').disabled = !content.trim();
+    if (count) {
+      count.textContent = content.length.toLocaleString('pt-BR') + (content.length === 1 ? ' caractere' : ' caracteres');
+    }
+    if (dirty) {
+      dirty.textContent = formDirty ? 'Alteracoes nao salvas' : (id ? 'Salva' : 'Nova');
+      dirty.classList.toggle('is-dirty', formDirty);
+    }
   }
 
   function findNote(id) {
@@ -389,8 +467,18 @@
   function renderList() {
     if (!noteList) return;
     var filtered = sortedNotes().filter(noteMatches);
+    var count = document.getElementById('senkoTeamNotesCount');
+    if (count) {
+      count.textContent = filtered.length === notes.length
+        ? notes.length + (notes.length === 1 ? ' nota' : ' notas')
+        : filtered.length + ' de ' + notes.length;
+    }
     if (!filtered.length) {
-      noteList.innerHTML = '<div class="senko-team-notes-empty">Nenhuma nota encontrada.</div>';
+      noteList.innerHTML =
+        '<div class="senko-team-notes-empty">' +
+        '  <strong>Nenhuma nota encontrada</strong>' +
+        '  <span>Tente outro termo ou remova o filtro.</span>' +
+        '</div>';
       return;
     }
 
@@ -421,9 +509,11 @@
 
   function updateGithubButton() {
     var btn = document.getElementById('senkoTeamNotesGithubBtn');
+    var label = document.getElementById('senkoTeamNotesGithubLabel');
     if (!btn) return;
-    btn.classList.toggle('is-configured', hasGithubCredentials());
-    btn.textContent = hasGithubCredentials() ? 'GitHub ok' : 'GitHub';
+    var configured = hasGithubCredentials();
+    btn.classList.toggle('is-configured', configured);
+    if (label) label.textContent = configured ? 'GitHub conectado' : 'Configurar GitHub';
   }
 
   function detectPagesConfig() {
@@ -679,6 +769,8 @@
       selectedId = note.id;
       fillForm(note);
       renderList();
+      formDirty = false;
+      updateEditorButtons();
       setStatus('Nota salva. Arquivo criado/atualizado em ' + filePath + '.', 'ok');
     }).catch(function (error) {
       setStatus(error.message || 'Nao foi possivel salvar no GitHub.', 'error');
@@ -729,12 +821,16 @@
 
   function openModal() {
     createModal();
+    previousFocus = document.activeElement;
     previousBodyOverflow = document.body.style.overflow;
     overlay.classList.add('is-open');
     overlay.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     var button = document.getElementById('senkoTeamNotesBtn');
-    if (button) button.classList.add('is-active');
+    if (button) {
+      button.classList.add('is-active');
+      button.setAttribute('aria-expanded', 'true');
+    }
     updateGithubButton();
     setStatus('Carregando notas...', 'info');
 
@@ -745,6 +841,9 @@
       if (!selectedId) newNote();
       if (notes.length && notes[0]._sample) setStatus('Exemplo local carregado. Para compartilhar, salve no GitHub.', 'info');
       else setStatus('', '');
+      window.setTimeout(function () {
+        if (searchInput) searchInput.focus();
+      }, 0);
     }).catch(function (error) {
       setStatus(error.message || 'Nao foi possivel carregar as notas.', 'error');
     });
@@ -752,11 +851,38 @@
 
   function closeModal() {
     if (!overlay) return;
+    if (!canDiscardChanges()) return;
     overlay.classList.remove('is-open');
     overlay.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = previousBodyOverflow || '';
     var button = document.getElementById('senkoTeamNotesBtn');
-    if (button) button.classList.remove('is-active');
+    if (button) {
+      button.classList.remove('is-active');
+      button.setAttribute('aria-expanded', 'false');
+    }
+    if (previousFocus && typeof previousFocus.focus === 'function') previousFocus.focus();
+  }
+
+  function keepFocusInsideModal(event) {
+    if (event.key !== 'Tab' || !overlay || !overlay.classList.contains('is-open')) return;
+
+    var controls = Array.prototype.slice.call(
+      overlay.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])')
+    ).filter(function (element) {
+      return element.offsetParent !== null;
+    });
+
+    if (!controls.length) return;
+    var first = controls[0];
+    var last = controls[controls.length - 1];
+
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
   }
 
   function initGithubProvider() {
@@ -774,6 +900,7 @@
     initGithubProvider();
     document.addEventListener('keydown', function (event) {
       if (event.key === 'Escape' && overlay && overlay.classList.contains('is-open')) closeModal();
+      keepFocusInsideModal(event);
     });
   }
 
