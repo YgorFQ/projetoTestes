@@ -225,6 +225,7 @@
 
     loadPromise = (async function () {
       loadStyle('styles/col-styles.css?v=20260613-lazy-data');
+      loadStyle('styles/col-layout-editor.css?v=20260730-full-editor');
 
       var firstResources = await Promise.all([
         loadScript('view.js?v=20260613-fast-load'),
@@ -238,7 +239,8 @@
         loadScript('data/col-groups-data.js?v=20260613-fast-load'),
         loadScript('scripts/col-core.js?v=20260613-fast-load'),
         loadScript('scripts/col-script.js?v=20260613-fast-load-2'),
-        loadScript('scripts/col-modals.js?v=20260613-fast-load-2')
+        loadScript('scripts/col-modals.js?v=20260730-full-editor'),
+        loadScript('scripts/col-layout-editor.js?v=20260730-full-editor')
       ]);
 
       var legacyFiles = registerCollectionCatalog(manifest);

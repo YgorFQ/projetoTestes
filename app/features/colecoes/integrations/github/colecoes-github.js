@@ -1206,8 +1206,8 @@ function colGhInjectEditLayoutButton() {
 
   var btn       = document.createElement('button');
   btn.id        = 'colGhEditLayoutBtn';
-  btn.className = 'btn-github';
-  btn.innerHTML = COL_GH_ICON + ' Salvar';
+  btn.className = 'collection-layout-editor-btn collection-layout-editor-primary-btn';
+  btn.textContent = 'Salvar';
   btn.title     = 'Salvar layout editado no repositório GitHub';
   anchor.parentNode.replaceChild(btn, anchor);
 
@@ -1225,22 +1225,34 @@ function colGhInjectEditLayoutButton() {
 
     btn.textContent = 'Salvando…';
     btn.disabled    = true;
+    if (window.SenkoColecoesLayoutEditor) {
+      window.SenkoColecoesLayoutEditor.setStatus('Salvando layout...');
+    }
 
     colGhEditLayout(col.slug, layoutId, data).then(function (ok) {
       if (ok) {
-        btn.innerHTML = COL_GH_ICON + ' Salvo!';
+        btn.textContent = 'Salvo!';
+        if (window.SenkoColecoesLayoutEditor) {
+          window.SenkoColecoesLayoutEditor.setStatus('Layout salvo.');
+        }
         setTimeout(function () {
           if (typeof colCloseEditLayoutModal === 'function') colCloseEditLayoutModal();
-          btn.innerHTML = COL_GH_ICON + ' Salvar';
+          btn.textContent = 'Salvar';
           btn.disabled  = false;
         }, 1200);
       } else {
-        btn.innerHTML = COL_GH_ICON + ' Salvar';
+        btn.textContent = 'Salvar';
         btn.disabled  = false;
+        if (window.SenkoColecoesLayoutEditor) {
+          window.SenkoColecoesLayoutEditor.setStatus('O layout nao foi salvo.');
+        }
       }
     }).catch(function () {
-      btn.innerHTML = COL_GH_ICON + ' Salvar';
+      btn.textContent = 'Salvar';
       btn.disabled  = false;
+      if (window.SenkoColecoesLayoutEditor) {
+        window.SenkoColecoesLayoutEditor.setStatus('Erro ao salvar o layout.');
+      }
     });
   });
 }
@@ -1252,7 +1264,7 @@ function colGhInjectDeleteLayoutButtons() {
 
   var btn       = document.createElement('button');
   btn.id        = 'colGhDelLayoutBtn';
-  btn.className = 'col-btn-delete';
+  btn.className = 'collection-layout-editor-btn collection-layout-editor-danger-btn';
   btn.type      = 'button';
   btn.textContent = 'Excluir';
   btn.title     = 'Excluir layout';

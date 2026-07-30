@@ -1002,123 +1002,37 @@ function colGetAddLayoutFormData() {
 ═══════════════════════════════════════════════════════════════════════ */
 
 function _colBuildEditLayoutModal() {
-  if (document.getElementById('colEditLayoutOverlay')) return;
-
-  var overlay = _colMakeOverlay('colEditLayoutOverlay');
-
-  overlay.innerHTML =
-    '<div class="col-layout-form-modal" id="colEditLayoutModal">' +
-
-      '<div class="col-form-header">' +
-        '<div>' +
-          '<div class="col-modal-category">Editar Layout</div>' +
-          '<h2 class="col-modal-title" id="colEditLayoutTitle"></h2>' +
-        '</div>' +
-        '<div style="display:flex;gap:.5rem;align-items:center;">' +
-          '<span id="colEditLayoutGhAnchor" style="display:none;"></span>' +
-          '<button class="modal-close" id="colEditLayoutClose" title="Fechar">✕</button>' +
-        '</div>' +
-      '</div>' +
-
-      '<input type="hidden" id="colEditLayoutId" />' +
-
-      '<div class="col-form-body" style="padding-bottom:0;flex-shrink:0;">' +
-        '<div class="col-field">' +
-          '<label>Nome <span class="req">*</span></label>' +
-          '<input type="text" id="colEditLayoutName" placeholder="Nome do layout" />' +
-          '<span class="col-field-error" id="colEditLayoutNameErr">⚠ Nome obrigatório</span>' +
-        '</div>' +
-      '</div>' +
-
-      '<div class="col-edit-mode-bar">' +
-        '<button class="col-edit-mode-btn" data-coleditmode="content">Conteúdo</button>' +
-        '<button class="col-edit-mode-btn active" data-coleditmode="preview">Visualizar</button>' +
-      '</div>' +
-
-      '<div class="col-edit-main">' +
-        '<div class="col-edit-panel" id="colEditPanelContent">' +
-          '<textarea class="col-edit-textarea" id="colEditLayoutContent" placeholder="Conteúdo do layout…"></textarea>' +
-        '</div>' +
-        '<div class="col-edit-panel active" id="colEditPanelPreview">' +
-          '<iframe class="col-edit-iframe" id="colEditLayoutPreview" sandbox="allow-scripts"></iframe>' +
-        '</div>' +
-      '</div>' +
-
-      '<div class="col-form-footer">' +
-        '<span id="colEditLayoutDelAnchor"></span>' +
-        '<button class="col-btn-cancel" id="colEditLayoutCancel">Cancelar</button>' +
-      '</div>' +
-
-    '</div>';
-
-  /* Troca de modo */
-  document.querySelectorAll('#colEditLayoutModal .col-edit-mode-btn').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      document.querySelectorAll('#colEditLayoutModal .col-edit-mode-btn').forEach(function (b) { b.classList.remove('active'); });
-      document.querySelectorAll('#colEditLayoutModal .col-edit-panel').forEach(function (p) { p.classList.remove('active'); });
-      this.classList.add('active');
-      var mode = this.dataset.coleditmode;
-      var panels = { content: 'colEditPanelContent', preview: 'colEditPanelPreview' };
-      document.getElementById(panels[mode]).classList.add('active');
-      if (mode === 'preview') {
-        _colRefreshPreview('colEditLayoutPreview',
-          document.getElementById('colEditLayoutContent').value,
-          '');
-      }
-    });
-  });
-
-  _colBindMetadataInput('colEditLayoutName', false);
-  document.getElementById('colEditLayoutName').addEventListener('input', function () {
-    var slug = _colCurrentCollection ? _colCurrentCollection.slug : '';
-    var layoutId = (document.getElementById('colEditLayoutId') || {}).value || '';
-    if (_colLayoutNameExists(slug, this.value, layoutId)) {
-      _colSetFieldIssue('colEditLayoutNameErr', 'Ja existe outro layout com esse nome nesta colecao');
-    } else if (!this.value.trim()) {
-      _colSetFieldIssue('colEditLayoutNameErr', 'Nome obrigatorio');
-    } else {
-      _colSetFieldIssue('colEditLayoutNameErr', '');
-    }
-  });
-  document.getElementById('colEditLayoutClose').addEventListener('click', colCloseEditLayoutModal);
-  document.getElementById('colEditLayoutCancel').addEventListener('click', colCloseEditLayoutModal);
-  _colOverlayClick('colEditLayoutOverlay', 'colEditLayoutModal', colCloseEditLayoutModal);
+  if (window.SenkoColecoesLayoutEditor
+      && typeof window.SenkoColecoesLayoutEditor.ensure === 'function') {
+    return window.SenkoColecoesLayoutEditor.ensure();
+  }
+  throw new Error('Editor de layouts de Colecoes indisponivel.');
 }
 
 function colOpenEditLayoutModal(col, layout) {
   _colBuildEditLayoutModal();
   _colCurrentCollection = col;
   _colCurrentLayout     = layout;
-
-  document.getElementById('colEditLayoutTitle').textContent = layout.name || '';
-  document.getElementById('colEditLayoutId').value      = layout.id   || '';
-  document.getElementById('colEditLayoutName').value    = layout.name || '';
-  /* Mescla css legado + html no campo único (layouts novos terão css vazio) */
-  var mergedContent = (layout.css ? layout.css + '\n' : '') + (layout.html || '');
-  document.getElementById('colEditLayoutContent').value = mergedContent;
-  document.getElementById('colEditLayoutNameErr').style.display = 'none';
-
-  /* Começa no Preview */
-  document.querySelectorAll('#colEditLayoutModal .col-edit-mode-btn').forEach(function (b) { b.classList.remove('active'); });
-  document.querySelectorAll('#colEditLayoutModal .col-edit-panel').forEach(function (p) { p.classList.remove('active'); });
-  document.querySelector('[data-coleditmode="preview"]').classList.add('active');
-  document.getElementById('colEditPanelPreview').classList.add('active');
-
-  _colRefreshPreview('colEditLayoutPreview', mergedContent, '');
-
-  _colShowOverlay('colEditLayoutOverlay');
+  window.SenkoColecoesLayoutEditor.open(col, layout);
 }
 
 function colCloseEditLayoutModal() {
-  _colHideOverlay('colEditLayoutOverlay');
-  if (document.querySelectorAll('.modal-overlay:not(.hidden)').length === 0) {
-    document.body.style.overflow = '';
+  if (window.SenkoColecoesLayoutEditor
+      && typeof window.SenkoColecoesLayoutEditor.close === 'function') {
+    window.SenkoColecoesLayoutEditor.close();
+  } else {
+    _colHideOverlay('colEditLayoutOverlay');
   }
   _colCurrentLayout = null;
 }
 
 /* Lê dados do formulário de edição de layout — usado pelo módulo GitHub */
 function colGetEditLayoutFormData() {
+  if (window.SenkoColecoesLayoutEditor
+      && typeof window.SenkoColecoesLayoutEditor.getData === 'function') {
+    return window.SenkoColecoesLayoutEditor.getData();
+  }
+
   var id      = (document.getElementById('colEditLayoutId')      || {}).value || '';
   var name    = _colReadMetadataInput('colEditLayoutName', false);
   var content = (document.getElementById('colEditLayoutContent') || {}).value || '';
@@ -1229,6 +1143,10 @@ function initColecoesModals() {
     for (var i = 0; i < stack.length; i++) {
       var el = document.getElementById(stack[i]);
       if (el && !el.classList.contains('hidden')) {
+        if (stack[i] === 'colEditLayoutOverlay') {
+          colCloseEditLayoutModal();
+          return;
+        }
         el.classList.add('hidden');
         if (document.querySelectorAll('.modal-overlay:not(.hidden)').length === 0) {
           document.body.style.overflow = '';

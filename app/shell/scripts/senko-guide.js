@@ -283,9 +283,12 @@
             'Motor de colecoes: scripts/col-core.js.',
             'Motor de grupos: scripts/col-groups.js.',
             'Modais: scripts/col-modals.js.',
+            'Editor de layouts completos: scripts/col-layout-editor.js.',
+            'Estilos do editor: styles/col-layout-editor.css.',
             'Dados: data/manifest.js, data/col-groups-data.js e data/collections/.',
             'GitHub: integrations/github/colecoes-github.js.'
-          ]
+          ],
+          note: 'O editor de Colecoes acompanha a experiencia visual da Biblioteca, mas possui codigo, estilos, validacao e persistencia proprios.'
         },
         {
           title: 'Imagens',
@@ -594,6 +597,23 @@
             'Salvar variacao regrava data/variants/[layoutId]/[id].js.'
           ],
           note: 'Se precisar mudar ID, trate como migracao: criar novo arquivo, atualizar manifest, mover referencias e remover o antigo.'
+        },
+        {
+          title: 'Editar layout completo de Colecoes',
+          badge: 'editor',
+          terms: 'editar layout completo colecoes editor html css preview largura responsivo independente',
+          paragraphs: [
+            'Colecoes possui um editor amplo para alterar nome e HTML completo enquanto acompanha o preview ao vivo.',
+            'A interface acompanha o editor da Biblioteca, mas a implementacao permanece integralmente dentro da feature Colecoes.'
+          ],
+          bullets: [
+            'Script: app/features/colecoes/scripts/col-layout-editor.js.',
+            'CSS: app/features/colecoes/styles/col-layout-editor.css.',
+            'A persistencia continua em app/features/colecoes/integrations/github/colecoes-github.js.',
+            'O editor trabalha somente com HTML completo e incorpora CSS legado ao HTML quando necessario.',
+            'Nunca importar o editor ou os estilos da Biblioteca para oferecer esta tela.'
+          ],
+          note: 'Experiencia consistente nao significa dependencia entre features: cada editor continua funcionando se a outra feature for removida.'
         },
         {
           title: 'Editar o HTML Basico',
