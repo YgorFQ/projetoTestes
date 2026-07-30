@@ -66,7 +66,7 @@
        * A view e carregada como codigo da propria feature. Isso evita uma
        * requisicao ao index standalone e deixa a montagem previsivel.
        */
-      await loadScript('scripts/imagens-view.js?v=20260613-direct-view');
+      await loadScript('scripts/imagens-view.js?v=20260710-output-format');
       var content = window.SenkoImagens.createView();
       shadow.appendChild(content);
 
@@ -74,7 +74,7 @@
       await loadScript('vendor/UPNG.min.js');
       await loadScript('vendor/browser-image-compression.js');
       await loadScript('scripts/imagens-utils.js?v=20260607-dom-feature');
-      await loadScript('scripts/compressor.js?v=20260607-dom-feature');
+      await loadScript('scripts/compressor.js?v=20260710-output-format');
       await loadScript('scripts/resizer.js?v=20260607-dom-feature');
       await loadScript('scripts/imagens-app.js?v=20260607-dom-feature');
 

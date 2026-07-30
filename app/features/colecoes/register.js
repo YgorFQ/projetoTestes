@@ -278,6 +278,48 @@
     return panel;
   }
 
+  function prepareColecoesCreation() {
+    /*
+     * A feature é ativada antes de expor seu contexto público. Assim, seus
+     * modais nunca ficam presos em um painel suspenso de outra aba.
+     */
+    if (!window.SenkoShell.switchFeature('colecoes')) {
+      return Promise.reject(new Error('Coleções não está registrada no Senko.'));
+    }
+
+    return loadFeature().then(function () {
+      var api = window.SenkoColecoes;
+      var ready = api &&
+        typeof api.isReady === 'function' &&
+        api.isReady() &&
+        typeof api.openCreateCollection === 'function' &&
+        typeof api.listCollectionsForCreation === 'function' &&
+        typeof api.openCreateLayoutForCollection === 'function';
+
+      if (!ready) {
+        throw new Error('Coleções ainda não terminou de carregar.');
+      }
+      return api;
+    });
+  }
+
+  function getCollectionPickerTargets(api) {
+    /*
+     * Coleções traduz seus próprios campos para o formato neutro do picker.
+     * O shell não precisa saber o que são slug, grupo ou layoutCount.
+     */
+    return api.listCollectionsForCreation().map(function (collection) {
+      var count = Number(collection.layoutCount || 0);
+      var group = collection.group ? ' · ' + collection.group : '';
+      return {
+        id: collection.slug,
+        title: collection.name || collection.slug,
+        meta: collection.slug + group + ' · ' + count + ' layout' + (count === 1 ? '' : 's'),
+        tags: collection.tags || []
+      };
+    });
+  }
+
   window.SenkoShell.registerFeature({
     id: 'colecoes',
     label: 'Coleções',
@@ -288,5 +330,47 @@
         if (window.SenkoColecoes) window.SenkoColecoes.render();
       });
     }
+  });
+
+  /*
+   * Provider oficial de Coleções. A criação rápida apenas apresenta estas
+   * ações; criação, carregamento e persistência continuam dentro da feature.
+   */
+  window.SenkoShell.registerCreateProvider('colecoes', {
+    label: 'Coleções',
+    order: 20,
+    icon: 'collection',
+    prepare: prepareColecoesCreation,
+    actions: [
+      {
+        id: 'collection',
+        label: 'Coleção',
+        icon: 'collection',
+        loadingTitle: 'Carregando Coleções',
+        loadingMessage: 'Preparando o editor de coleção...',
+        run: function (api) {
+          return api.openCreateCollection();
+        }
+      },
+      {
+        id: 'collection-layout',
+        label: 'Layout',
+        icon: 'layout',
+        picker: {
+          kicker: 'Coleções',
+          title: 'Escolha a coleção base',
+          searchLabel: 'Buscar coleção',
+          searchPlaceholder: 'Digite nome, slug, grupo ou tag',
+          confirmLabel: 'Criar layout',
+          emptyMessage: 'Nenhuma coleção encontrada.',
+          loadingTitle: 'Carregando coleções',
+          loadingMessage: 'Preparando a lista de coleções...',
+          list: getCollectionPickerTargets,
+          run: function (api, collectionSlug) {
+            return api.openCreateLayoutForCollection(collectionSlug);
+          }
+        }
+      }
+    ]
   });
 })();

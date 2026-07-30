@@ -1,8 +1,8 @@
 // @ts-nocheck
-ColLib.registerCollectionLayout("carneiro-colecoes",
+ColLib.registerCollectionLayout('carneiro-colecoes',
 {
-  id: "padrao-9",
-  name: "Padrão 9",
+  id: 'padrao-9',
+  name: 'Padrão 9',
   html: `<div class="lp-container">
     <meta charset="UTF-8">
     <style>
@@ -44,7 +44,6 @@ ColLib.registerCollectionLayout("carneiro-colecoes",
     <style>
         .faq-section {
             width: calc(100% - 32px);
-            padding: clamp(1.25rem, 3vw, 2.5rem) 0;
             box-sizing: border-box;
             margin: 0 auto;
             font-family: sans-serif;
@@ -237,7 +236,7 @@ ColLib.registerCollectionLayout("carneiro-colecoes",
                 padding: 24px 20px 0 20px;
                 background: transparent;
                 backdrop-filter: none;
-                text-align: center;
+                text-align: left;
             }
 
             .section-6__title {
@@ -269,221 +268,6 @@ ColLib.registerCollectionLayout("carneiro-colecoes",
 
             .section-6__description {
                 font-size: 1rem;
-            }
-        }
-    </style>
-
-    <style>
-        .section-18 {
-            width: calc(100% - 32px);
-            max-width: 1248px;
-            margin-inline: auto;
-            background: linear-gradient(180deg, #fff, var(--cor-principal-suave));
-            border-radius: 28px;
-            padding: clamp(2rem, 4vw, 3.5rem) clamp(1rem, 3vw, 2rem);
-            box-shadow: 0 14px 38px rgba(135, 0, 34, 0.08);
-            font-family: sans-serif;
-            box-sizing: border-box;
-            padding-top: 0;
-            margin-top: -17px;
-        }
-
-        /* --- Header --- */
-        .section-18__header {
-            text-align: center;
-            margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
-        }
-
-        .section-18__title {
-            font-size: 2rem;
-            line-height: 2rem;
-            color: var(--cor-principal-escura);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .section-18__subtitle {
-            color: var(--cor-texto-suave);
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        /* --- Radio (sr-only) --- */
-        .section-18__radio {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            border: 0;
-        }
-
-        /* --- Grid --- */
-        .section-18__grid {
-            display: grid;
-            grid-template-columns: 1fr 1.2fr 1fr;
-            gap: clamp(1rem, 3vw, 2rem);
-            align-items: center;
-        }
-
-        /* --- Columns --- */
-        .section-18__column {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        /* --- Media (coluna central) --- */
-        .section-18__media {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.25rem;
-        }
-
-        /* --- Frame circular --- */
-        .section-18__frame {
-            width: 100%;
-            max-width: 400px;
-            aspect-ratio: 780 / 740;
-            border-radius: 50%;
-            border: 5px solid var(--cor-principal-media);
-            overflow: hidden;
-            position: relative;
-            background: var(--cor-principal-clara);
-        }
-
-        /* --- Pictures dentro do frame --- */
-        .section-18__picture {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-        }
-
-        .section-18__svg {
-            width: 78%;
-            height: 78%;
-            color: var(--cor-principal);
-        }
-
-        .section-18__svg-fill {
-            fill: var(--cor-principal-clara);
-        }
-
-        .section-18__svg-soft {
-            fill: var(--cor-principal-borda);
-        }
-
-        /* --- Cards --- */
-        .section-18__card {
-            display: block;
-            background: white;
-            padding: clamp(1rem, 2vw, 1.35rem);
-            border-radius: 16px;
-            border: 2px solid var(--cor-principal-borda);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            position: relative;
-            box-sizing: border-box;
-        }
-
-        .section-18__card:hover {
-            background-color: var(--cor-principal-suave);
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(135, 0, 34, 0.12);
-        }
-
-        @media (max-width: 760px) {
-            .section-18__title {
-                display: none;
-            }
-        }
-
-        .section-18__card--center {
-            width: 90%;
-        }
-
-        .section-18__card-title {
-            margin: 0 0 10px 0;
-            font-size: 1.2rem;
-            color: var(--cor-principal-escura);
-            font-weight: 550;
-        }
-
-        .section-18__card-text {
-            margin: 0;
-            font-size: 0.95rem;
-            color: var(--cor-texto-suave);
-            line-height: 1.6;
-        }
-
-        /* --- Focus acessível --- */
-        .section-18__radio:focus-visible+.section-18__card {
-            outline: 3px solid var(--cor-principal-media);
-            outline-offset: 5px;
-        }
-
-        /* ==========================================
-           LÓGICA DE TROCA DE IMAGEM (CSS puro)
-        ========================================== */
-
-        #s18-feat1:checked~.section-18__grid .section-18__picture--1,
-        #s18-feat2:checked~.section-18__grid .section-18__picture--2,
-        #s18-feat3:checked~.section-18__grid .section-18__picture--3 {
-            opacity: 1;
-            z-index: 2;
-        }
-
-        #s18-feat1:checked~.section-18__grid label[for="s18-feat1"],
-        #s18-feat2:checked~.section-18__grid label[for="s18-feat2"],
-        #s18-feat3:checked~.section-18__grid label[for="s18-feat3"] {
-            border-color: var(--cor-principal-media);
-            background-color: var(--cor-principal-clara);
-        }
-
-        /* ==========================================
-           MOBILE — max-width: 1060px
-        ========================================== */
-
-        @media (max-width: 1060px) {
-            .section-18__grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-
-            .section-18__media {
-                grid-row: 1;
-                order: 1;
-                gap: 16px;
-            }
-
-            .section-18__column {
-                order: 2;
-                gap: 16px;
-            }
-
-            .section-18__column--right {
-                order: 3;
-            }
-
-            .section-18__frame {
-                max-width: 320px;
-            }
-
-            /* Garante que o card central fique igual aos demais no mobile */
-            .section-18__card--center {
-                width: 100%;
             }
         }
     </style>
@@ -608,6 +392,9 @@ ColLib.registerCollectionLayout("carneiro-colecoes",
             padding: clamp(1.5rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);
             width: 100%;
             box-sizing: border-box;
+            margin: 0 auto;
+            border-radius: 20px;
+            width: calc(100% - 32px);
         }
 
         .section-15 {
@@ -856,7 +643,7 @@ ColLib.registerCollectionLayout("carneiro-colecoes",
     <style>
         .section-11-container {
             padding-top: 0.5rem;
-            padding-bottom: 2rem;
+            padding-bottom: 1rem;
             padding-left: 1rem;
             padding-right: 1rem;
         }
@@ -978,226 +765,59 @@ ColLib.registerCollectionLayout("carneiro-colecoes",
         }
     </style>
 
-    <style>
-        .section-4-manual__container {
-            width: calc(100% - 32px);
-            max-width: 1248px;
-            margin: 0 auto;
-            height: auto;
-        }
-
-        .section-4-manual__figura {
-            margin: 0;
-        }
-
-        .section-4-manual__link {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            width: 100%;
-        }
-
-        .section-4-manual__imagem {
-            border-radius: 12px;
-            height: auto;
-            object-fit: cover;
-            width: 100%;
-            box-shadow: 0 10px 24px rgba(135, 0, 34, 0.08);
-        }
-
-        .section-4-manual__legenda {
-            font-family: Arial, sans-serif;
-            font-size: 0.75rem;
-            color: var(--cor-texto-suave);
-            margin-top: 0.6rem;
-            text-align: center;
-        }
-
-        @media (min-width: 820px) {
-
-            .section-4-manual__container,
-            .section-4-manual__figura,
-            .section-4-manual__imagem {
-                height: 250px;
-            }
-        }
-    </style>
-
     <!-- ----------------------------------------------------------------------------------------------------------------------------- -->
-    <div class="pdp" id="pdp"> <!-- HTML fica dentro dessa div PDP -->
+    <article class="pdp" id="pdp"> <!-- HTML fica dentro dessa div PDP -->
 
-        <section class="product-header-2" aria-label="Cabeçalho do produto">
-            <header class="product-header__banner-2">
+        <section class="product-header-2" aria-labelledby="product-header-2-title">
+            <div class="product-header__banner-2">
                 <figure style="width:100%;height:100%;margin:0;">
                     <picture>
-                        <source media="(max-width: 320px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/fundo-vermelho-textura-pdp-lorenzetti-advanced-402193-00.jpg?ims=288x">
-                        <source media="(max-width: 375px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/fundo-vermelho-textura-pdp-lorenzetti-advanced-402193-00.jpg?ims=343x">
-                        <source media="(max-width: 425px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/fundo-vermelho-textura-pdp-lorenzetti-advanced-402193-00.jpg?ims=393x">
-                        <source media="(max-width: 768px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/fundo-vermelho-textura-pdp-lorenzetti-advanced-402193-00.jpg?ims=736x">
-                        <source media="(max-width: 1024px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/fundo-vermelho-textura-pdp-lorenzetti-advanced-402193-00.jpg?ims=992x">
-                        <source media="(max-width: 1440px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/fundo-vermelho-textura-pdp-lorenzetti-advanced-402193-00.jpg?ims=1248x">
-                        <img class="product-header__banner-img-2"
+                        <img class="product-header__banner-img-2" loading="eager" decoding="async"
                             src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/fundo-vermelho-textura-pdp-lorenzetti-advanced-402193-00.jpg?ims=1248x"
-                            alt="Banner do produto" loading="eager" decoding="async">
-                    </picture>
+                            alt="">
                 </figure>
-                <div class="product-header__badge-2" role="img" aria-label="Logo da marca">
-                    <img src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/lorenzetti/lorenzetti-logo.png"
-                        alt="Ícone da marca" class="product-header__badge-img-2">
+                <div class="product-header__badge-2">
+                    <img class="product-header__badge-img-2"
+                        src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/lorenzetti/lorenzetti-logo.png"
+                        alt="Logo Lorenzetti">
                 </div>
-            </header>
-            <article class="product-header__body-2">
-                <small class="product-header__brand-2">── lorenzetti ──</small>
-                <h1 class="product-header__title-2">
+            </div>
+            <div class="product-header__body-2">
+                <p class="product-header__brand-2"> lorenzetti </p>
+                <h2 class="product-header__title-2" id="product-header-2-title">
                     <span> Ducha Elétrica Advanced</span>
                     <strong>design integrado, Multi Temperatura</strong>
-                </h1>
+                </h2>
                 <p class="product-header__subtitle-2">
                     Tecnologia de ponta em uma ducha elétrica pensada para conforto, praticidade e visual limpo no
                     banheiro, com cano incorporado, comando multitemperaturas, resistência tipo refil e compatibilidade
                     com aquecedores solares.
                 </p>
-            </article>
+            </div>
         </section>
 
-        <section class="section-6" aria-label="Destaque do produto com texto">
-            <picture>
-                <source media="(max-width: 320px)"
-                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-pressurizada-branca-ambiente-close-4200997-02.jpg?ims=244x">
-                <source media="(max-width: 375px)"
-                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-pressurizada-branca-ambiente-close-4200997-02.jpg?ims=296x">
-                <source media="(max-width: 425px)"
-                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-pressurizada-branca-ambiente-close-4200997-02.jpg?ims=343x">
-                <source media="(max-width: 768px)"
-                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-pressurizada-branca-ambiente-close-4200997-02.jpg?ims=704x">
-                <source media="(max-width: 1024px)"
-                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-pressurizada-branca-ambiente-panoramico-4200997-01.jpg?ims=960x">
-                <source media="(max-width: 1440px)"
-                    srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-pressurizada-branca-ambiente-panoramico-4200997-01.jpg?ims=1216x">
-                <img class="section-6__image"
-                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-pressurizada-branca-ambiente-panoramico-4200997-01.jpg?ims=1216x"
-                    alt="Ducha Elétrica Advanced com design sem fiação aparente e cano incorporado" width="1600"
-                    height="650" fetchpriority="high" loading="lazy" decoding="async">
-            </picture>
+        <section class="section-6" aria-labelledby="section-6-title">
+            <figure class="section-6__figure">
+                <picture>
+                    <source media="(max-width: 760px)"
+                        srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-pressurizada-branca-ambiente-close-4200997-02.jpg?ims=704x">
+                    <img class="section-6__image" width="1600" height="650" fetchpriority="high" loading="lazy"
+                        decoding="async"
+                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-pressurizada-branca-ambiente-panoramico-4200997-01.jpg?ims=1216x"
+                        alt="Ducha Elétrica Advanced com design sem fiação aparente e cano incorporado">
+                </picture>
+            </figure>
             <div class="section-6__content">
-                <h2 class="section-6__title">Banho mais confortável e visual mais limpo</h2>
+                <h2 class="section-6__title" id="section-6-title">Banho mais confortável e visual mais limpo</h2>
                 <p class="section-6__description">Visual limpo, ajuste fácil e banho confortável todos os dias.</p>
             </div>
         </section>
 
-        <section class="section-18">
-
-            <div class="section-18__header" aria-labelledby="s18-title">
-                <h2 class="section-18__title" id="s18-title">Detalhes que valorizam o seu banho</h2>
-            </div>
-
-            <div role="radiogroup" aria-label="Escolha uma característica para visualizar">
-
-                <input type="radio" id="s18-feat1" name="s18-feature" class="section-18__radio" checked>
-                <input type="radio" id="s18-feat2" name="s18-feature" class="section-18__radio">
-                <input type="radio" id="s18-feat3" name="s18-feature" class="section-18__radio">
-
-                <div class="section-18__grid">
-
-                    <!-- Coluna Esquerda -->
-                    <aside class="section-18__column section-18__column--left" aria-label="Design com cano incorporado">
-                        <label for="s18-feat1" class="section-18__card" role="radio" aria-checked="true" tabindex="0">
-                            <h3 class="section-18__card-title">Design sem fiação aparente</h3>
-                            <p class="section-18__card-text">Instalação discreta para quem valoriza acabamento no
-                                banheiro.</p>
-                        </label>
-                    </aside>
-
-                    <!-- Coluna Central: imagem + card do meio -->
-                    <section class="section-18__media" aria-label="Imagem ilustrativa da funcionalidade selecionada">
-
-                        <div class="section-18__frame" aria-live="polite"
-                            aria-label="Imagem da funcionalidade selecionada">
-
-                            <!-- ILUSTRAÇÃO 1 -->
-                            <div class="section-18__picture section-18__picture--1" aria-hidden="true">
-                                <svg class="section-18__svg" viewBox="0 0 220 220" focusable="false">
-                                    <circle class="section-18__svg-fill" cx="110" cy="110" r="92" />
-                                    <path d="M72 78h76a14 14 0 0 1 14 14v42H58V92a14 14 0 0 1 14-14Z" fill="#fff"
-                                        stroke="currentColor" stroke-width="7" stroke-linejoin="round" />
-                                    <path d="M75 78V56h70v22M82 107h56M82 127h40" fill="none" stroke="currentColor"
-                                        stroke-width="7" stroke-linecap="round" />
-                                    <path d="M150 98h20M150 118h20M150 138h20" fill="none" stroke="currentColor"
-                                        stroke-width="6" stroke-linecap="round" />
-                                    <path d="M58 146h104v14a10 10 0 0 1-10 10H68a10 10 0 0 1-10-10Z"
-                                        class="section-18__svg-soft" stroke="currentColor" stroke-width="7"
-                                        stroke-linejoin="round" />
-                                </svg>
-                            </div>
-
-                            <!-- ILUSTRAÇÃO 2 -->
-                            <div class="section-18__picture section-18__picture--2" aria-hidden="true">
-                                <svg class="section-18__svg" viewBox="0 0 220 220" focusable="false">
-                                    <circle class="section-18__svg-fill" cx="110" cy="110" r="92" />
-                                    <path d="M82 52h56v34H82zM82 134h56v34H82z" fill="#fff" stroke="currentColor"
-                                        stroke-width="7" stroke-linejoin="round" />
-                                    <path d="M110 86v48" fill="none" stroke="currentColor" stroke-width="7"
-                                        stroke-linecap="round" />
-                                    <path d="M63 110h94M154 94l17 16-17 16M66 126l-17-16 17-16" fill="none"
-                                        stroke="currentColor" stroke-width="7" stroke-linecap="round"
-                                        stroke-linejoin="round" />
-                                    <path d="M91 65h38M91 151h38" fill="none" stroke="currentColor" stroke-width="5"
-                                        stroke-linecap="round" />
-                                </svg>
-                            </div>
-
-                            <!-- ILUSTRAÇÃO 3 -->
-                            <div class="section-18__picture section-18__picture--3" aria-hidden="true">
-                                <svg class="section-18__svg" viewBox="0 0 220 220" focusable="false">
-                                    <circle class="section-18__svg-fill" cx="110" cy="110" r="92" />
-                                    <path d="M64 74h92a22 22 0 0 1 22 22v16H42V96a22 22 0 0 1 22-22Z" fill="#fff"
-                                        stroke="currentColor" stroke-width="7" stroke-linejoin="round" />
-                                    <path d="M54 128h112" fill="none" stroke="currentColor" stroke-width="7"
-                                        stroke-linecap="round" />
-                                    <path
-                                        d="M66 148v7M88 148v7M110 148v7M132 148v7M154 148v7M77 172v7M99 172v7M121 172v7M143 172v7"
-                                        fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" />
-                                    <path d="M84 59h52" fill="none" stroke="currentColor" stroke-width="7"
-                                        stroke-linecap="round" />
-                                </svg>
-                            </div>
-
-                        </div>
-
-                        <label for="s18-feat2" class="section-18__card section-18__card--center" role="radio"
-                            aria-checked="false" tabindex="0">
-                            <h3 class="section-18__card-title">Resistência de troca rápida</h3>
-                            <p class="section-18__card-text">Troca simples para facilitar a manutenção quando precisar.
-                            </p>
-                        </label>
-
-                    </section>
-
-                    <!-- Coluna Direita -->
-                    <aside class="section-18__column section-18__column--right" aria-label="Grande espalhador de água">
-                        <label for="s18-feat3" class="section-18__card" role="radio" aria-checked="false" tabindex="0">
-                            <h3 class="section-18__card-title">Grande espalhador</h3>
-                            <p class="section-18__card-text">Mais distribuição de água para um banho gostoso e uniforme.
-                            </p>
-                        </label>
-                    </aside>
-
-                </div>
-            </div>
-
-        </section>
-
-        <div class="section-15-container">
+        <section class="section-15-container" aria-labelledby="section-15-title">
             <div class="section-15">
                 <div class="section-15__content">
                     <!-- ══ TÍTULO + DESCRIÇÃO (apague este bloco se não quiser usar) ══ -->
-                    <h2 class="section-15__title">
+                    <h2 class="section-15__title" id="section-15-title">
                         Mais possibilidades para o seu banheiro
                     </h2>
                     <p class="section-15__desc">
@@ -1205,74 +825,60 @@ ColLib.registerCollectionLayout("carneiro-colecoes",
                         quer conforto, apoio de temperatura quando necessário e manutenção simples.
                     </p>
                 </div>
-                <div class="section-15__image-wrapper">
-                    <picture>
-                        <source media="(max-width: 320px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-com-pressurizador-branca-ambiente-4200997_02.jpg?ims=256x">
-                        <source media="(max-width: 375px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-com-pressurizador-branca-ambiente-4200997_02.jpg?ims=311x">
-                        <source media="(max-width: 425px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-com-pressurizador-branca-ambiente-4200997_02.jpg?ims=361x">
-                        <source media="(max-width: 768px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-com-pressurizador-branca-ambiente-4200997_02.jpg?ims=323x">
-                        <source media="(max-width: 1024px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-com-pressurizador-branca-ambiente-4200997_02.jpg?ims=446x">
-                        <source media="(max-width: 1440px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-com-pressurizador-branca-ambiente-4200997_02.jpg?ims=530x">
-                        <img class="section-15__image"
-                            src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-com-pressurizador-branca-ambiente-4200997_02.jpg?ims=530x"
-                            alt="Banheiro com ducha elétrica instalada e acabamento discreto" loading="lazy"
-                            decoding="async">
-                    </picture>
-                </div>
+                <figure class="section-15__image-wrapper">
+                    <img class="section-15__image"
+                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/ducha-eletrica-lorenzetti-advanced-com-pressurizador-branca-ambiente-4200997_02.jpg?ims=530x"
+                        alt="Banheiro com ducha elétrica instalada e acabamento discreto" loading="lazy"
+                        decoding="async">
+                </figure>
             </div>
-        </div>
+        </section>
 
         <section class="section-11" aria-labelledby="section-11-title">
             <div class="section-11-container">
-                <header class="section-11__header">
+                <div class="section-11__header">
                     <h2 class="section-11__title" id="section-11-title">Recursos para um banho prático</h2>
-                </header>
-                <ul class="section-11__grid" role="list">
+                </div>
+                <ul class="section-11__grid">
                     <li class="section-11__item">
-                        <figure class="section-11__figure">
+                        <div class="section-11__figure">
                             <svg class="section-11__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
                                 <path d="M24 6a12 12 0 0 0-7 21.7V36a7 7 0 0 0 14 0v-8.3A12 12 0 0 0 24 6Z" fill="none"
                                     stroke="currentColor" stroke-width="3" stroke-linecap="round" />
                                 <path d="M17 18h14M19 24h10M24 31v8" fill="none" stroke="currentColor" stroke-width="3"
                                     stroke-linecap="round" />
                             </svg>
-                        </figure>
+                        </div>
                         <h3 class="section-11__name">Comando multitemperaturas</h3>
                         <p class="section-11__value">Escolha o ponto ideal do banho e evite desperdício.</p>
                     </li>
                     <li class="section-11__item">
-                        <figure class="section-11__figure">
+                        <div class="section-11__figure">
                             <svg class="section-11__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
                                 <path d="M18 8h12v10H18zM18 30h12v10H18zM24 18v12" fill="none" stroke="currentColor"
                                     stroke-width="3" stroke-linejoin="round" />
                                 <path d="M13 24h22M34 20l4 4-4 4M14 28l-4-4 4-4" fill="none" stroke="currentColor"
                                     stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
-                        </figure>
+                        </div>
                         <h3 class="section-11__name">Resistência tipo refil</h3>
                         <p class="section-11__value">Manutenção rápida, sem complicar a rotina.</p>
                     </li>
                     <li class="section-11__item">
-                        <figure class="section-11__figure">
+                        <div class="section-11__figure">
                             <svg class="section-11__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
                                 <path d="M15 11h18a5 5 0 0 1 5 5v3H10v-3a5 5 0 0 1 5-5Z" fill="none"
                                     stroke="currentColor" stroke-width="3" stroke-linejoin="round" />
                                 <path d="M14 28v1M22 28v1M30 28v1M18 36v1M26 36v1M34 36v1" fill="none"
                                     stroke="currentColor" stroke-width="3" stroke-linecap="round" />
                             </svg>
-                        </figure>
+                        </div>
                         <h3 class="section-11__name">Grande espalhador</h3>
                         <p class="section-11__value">Jato mais amplo para banho confortável.</p>
                     </li>
 
                     <li class="section-11__item">
-                        <figure class="section-11__figure">
+                        <div class="section-11__figure">
                             <svg class="section-11__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
                                 <circle cx="15" cy="15" r="6" fill="none" stroke="currentColor" stroke-width="3" />
                                 <path
@@ -1281,17 +887,17 @@ ColLib.registerCollectionLayout("carneiro-colecoes",
                                 <path d="M28 20h12v18H28zM31 24h6M31 29h6M31 34h6" fill="none" stroke="currentColor"
                                     stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
-                        </figure>
+                        </div>
                         <h3 class="section-11__name">Compatível com aquecedores solares</h3>
                         <p class="section-11__value">Boa opção para casas com sistema solar.</p>
                     </li>
                     <li class="section-11__item">
-                        <figure class="section-11__figure">
+                        <div class="section-11__figure">
                             <svg class="section-11__icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
                                 <path d="M25 4 11 27h11l-1 17 16-26H25z" fill="none" stroke="currentColor"
                                     stroke-width="3" stroke-linejoin="round" />
                             </svg>
-                        </figure>
+                        </div>
                         <h3 class="section-11__name">Opções de potência</h3>
                         <p class="section-11__value">5.500 W em 127 V; 6.400 W ou 7.500 W em 220 V.</p>
                     </li>
@@ -1300,40 +906,14 @@ ColLib.registerCollectionLayout("carneiro-colecoes",
             </div>
         </section>
 
-        <section class="section-4-manual__container" aria-label="Manual de Instruções do Produto">
-            <figure class="section-4-manual__figura">
-                <a href="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/manual.pdf" target="_blank"
-                    rel="noopener noreferrer" download title="Baixar manual de instruções do produto"
-                    class="section-4-manual__link">
-                    <picture>
-                        <source media="(max-width: 320px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/manual-instrucoes-ducha-lorenzetti-advanced-402193-manual.jpg?ims=256x">
-                        <source media="(max-width: 375px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/manual-instrucoes-ducha-lorenzetti-advanced-402193-manual.jpg?ims=311x">
-                        <source media="(max-width: 425px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/manual-instrucoes-ducha-lorenzetti-advanced-402193-manual.jpg?ims=361x">
-                        <source media="(max-width: 768px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/manual-instrucoes-ducha-lorenzetti-advanced-402193-manual.jpg?ims=704x">
-                        <source media="(max-width: 1024px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/manual-instrucoes-ducha-lorenzetti-advanced-402193-manual.jpg?ims=960x">
-                        <source media="(max-width: 1440px)"
-                            srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/manual-instrucoes-ducha-lorenzetti-advanced-402193-manual.jpg?ims=1216x">
-                        <img class="section-4-manual__imagem"
-                            src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/manual-instrucoes-ducha-lorenzetti-advanced-402193-manual.jpg?ims=1216x"
-                            alt="Manual de instruções do produto" width="1200" height="250" fetchpriority="low"
-                            loading="lazy" decoding="async">
-                    </picture>
-                </a>
-                <figcaption class="section-4-manual__legenda">
-                    Consulte o manual para orientações de instalação, uso e manutenção da ducha.
-                </figcaption>
-            </figure>
-        </section>
+        <aside
+            style="color: var(--cor-texto-suave); font-family: sans-serif; font-size: clamp(1rem, 2vw, 1.2rem); text-wrap: pretty; text-align: center; padding: 30px 0;">
+            IMAGENS MERAMENTE ILUSTRATIVAS</aside>
 
         <!-- Área de FAQ -->
         <section class="faq-section" aria-labelledby="faq-section-title">
             <div class="faq-section__header">
-                <h3 class="faq-section__title" id="faq-section-title">Dúvidas frequentes sobre a Ducha Advanced</h3>
+                <h2 class="faq-section__title" id="faq-section-title">Dúvidas frequentes sobre a Ducha Advanced</h2>
                 <p class="faq-section__subtitle">Informações rápidas para ajudar na escolha e no uso do produto.</p>
             </div>
             <ul class="faq-section__list">
@@ -1414,11 +994,7 @@ ColLib.registerCollectionLayout("carneiro-colecoes",
                 </li>
             </ul>
         </section>
-
-        <p
-            style="color: var(--cor-texto-suave); font-family: sans-serif; font-size: clamp(1rem, 2vw, 1.2rem); text-wrap: pretty; text-align: center; padding: 30px 0;">
-            IMAGENS MERAMENTE ILUSTRATIVAS</p>
-    </div>
+    </article>
 </div>`,
   css: ``
 }

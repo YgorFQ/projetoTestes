@@ -1,84 +1,64 @@
 // @ts-nocheck
 SenkoLib.registerLayout(
-{
-  id: "section-14",
-  name: "Section-14",
-  tags: ["Section-14", "14"],
-  html: `<div class="section-14-container">
-  <section class="section-14" aria-labelledby="section14-title">
+  {
+    id: "section-14",
+    name: "Section-14",
+    tags: ["Section-14", "14"],
+    html: `        <section class="section-14" aria-labelledby="section14-title">
+            <div class="section-14__header">
+                <h2 class="section-14__title" id="section14-title">SUB-TÍTULO</h2>
+                <p class="section-14__description">
+                    Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
+                    Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
+                    Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
+                </p>
+            </div>
+            <div class="section-14__body">
+                <div class="section-14__column section-14__column--left">
+                    <div class="section-14__feature">
+                        <img class="section-14__icon" loading="lazy" width="56" height="56"
+                            src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/check2.png"
+                            alt="Ícone de confirmação representando a característica 1">
+                        <h3 class="section-14__feature-title">Característica 1</h3>
+                        <p class="section-14__feature-text">Isso é uma descrição. Isso é uma descrição. Isso é uma
+                            descrição.</p>
+                    </div>
 
-    <header class="section-14__header">
-      <h3 class="section-14__title" id="section14-title">SUB-TÍTULO</h3>
-      <p class="section-14__description">
-        Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
-        Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
-        Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
-      </p>
-    </header>
-
-    <div class="section-14__body">
-
-      <div class="section-14__column section-14__column--left">
-        <article class="section-14__feature">
-          <img
-            class="section-14__icon" loading="lazy"
-            src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/check2.png"
-            width="56" height="56"
-            alt="Ícone de confirmação representando a característica 1"
-          >
-          <h4 class="section-14__feature-title">Característica 1</h4>
-          <p class="section-14__feature-text">Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.</p>
-        </article>
-
-        <article class="section-14__feature">
-          <img
-            class="section-14__icon"
-            src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/check2.png"
-            width="56" height="56"
-            alt="Ícone de confirmação representando a característica 2"
-          >
-          <h4 class="section-14__feature-title">Característica 2</h4>
-          <p class="section-14__feature-text">Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.</p>
-        </article>
-      </div>
-
-      <figure class="section-14__image-wrap">
-        <img
-          class="section-14__image"
-          src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/sessao4.jpg"
-          width="780" height="740"
-          alt="Produto em destaque demonstrando suas principais características de uso no dia a dia"
-        >
-      </figure>
-
-      <div class="section-14__column section-14__column--right">
-        <article class="section-14__feature">
-          <img
-            class="section-14__icon"
-            src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/check2.png"
-            width="56" height="56"
-            alt="Ícone de confirmação representando a característica 3"
-          >
-          <h4 class="section-14__feature-title">Característica 3</h4>
-          <p class="section-14__feature-text">Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.</p>
-        </article>
-
-        <article class="section-14__feature">
-          <img
-            class="section-14__icon"
-            src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/check2.png"
-            width="56" height="56"
-            alt="Ícone de confirmação representando a característica 4"
-          >
-          <h4 class="section-14__feature-title">Característica 4</h4>
-          <p class="section-14__feature-text">Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.</p>
-        </article>
-      </div>
-
-    </div>
-  </section>
-</div>`,
-  css: `  <style>
+                    <div class="section-14__feature">
+                        <img class="section-14__icon" width="56" height="56"
+                            src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/check2.png"
+                            alt="Ícone de confirmação representando a característica 2">
+                        <h3 class="section-14__feature-title">Característica 2</h3>
+                        <p class="section-14__feature-text">Isso é uma descrição. Isso é uma descrição. Isso é uma
+                            descrição.</p>
+                    </div>
+                </div>
+                <figure class="section-14__image-wrap">
+                    <img class="section-14__image" width="780" height="740"
+                        src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/sessao4.jpg"
+                        alt="Produto em destaque demonstrando suas principais características de uso no dia a dia">
+                </figure>
+                <div class="section-14__column section-14__column--right">
+                    <div class="section-14__feature">
+                        <img class="section-14__icon" width="56" height="56"
+                            src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/check2.png"
+                            alt="Ícone de confirmação representando a característica 3">
+                        <h3 class="section-14__feature-title">Característica 3</h3>
+                        <p class="section-14__feature-text">Isso é uma descrição. Isso é uma descrição. Isso é uma
+                            descrição.</p>
+                    </div>
+                    <div class="section-14__feature">
+                        <img class="section-14__icon" width="56" height="56"
+                            src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/check2.png"
+                            alt="Ícone de confirmação representando a característica 4">
+                        <h3 class="section-14__feature-title">Característica 4</h3>
+                        <p class="section-14__feature-text">Isso é uma descrição. Isso é uma descrição. Isso é uma
+                            descrição.</p>
+                    </div>
+                </div>
+            </div>
+        </section>`,
+    css: `  <style>
     /* ── CONTAINER UNIVERSAL ── */
     .section-14-container {
       padding-top: 1.2rem;
@@ -307,5 +287,5 @@ SenkoLib.registerLayout(
       }
     }
   </style>`
-}
+  }
 );

@@ -27,6 +27,7 @@ var state = {
 var _gridRendered = false;
 var _gridRenderTimer = null;
 var _bibliotecaInitialized = false;
+var _bibliotecaReady = false;
 var bibliotecaApi = window.SenkoBiblioteca = window.SenkoBiblioteca || {};
 
 /* ─── Utilitários ─────────────────────────────────── */
@@ -649,13 +650,17 @@ function renderVariantBlocks(variants) {
   var grid = document.getElementById('variantsGrid');
   grid.innerHTML = '';
 
-  if (variants.length === 0) {
+  var sortedVariants = (Array.isArray(variants) ? variants : []).slice().sort(function (a, b) {
+    return naturalCompare((a && a.name) || '', (b && b.name) || '');
+  });
+
+  if (sortedVariants.length === 0) {
     /* Mesmo sem variantes, exibe o card de adicionar */
     grid.appendChild(_makeAddVariantCard());
     return;
   }
 
-  variants.forEach(function (v, i) {
+  sortedVariants.forEach(function (v, i) {
     var block = document.createElement('div');
     block.className = 'variant-block';
     block.dataset.variantName = v.name || '';
@@ -772,10 +777,16 @@ function openNewVariantModal() {
   var parentEl = document.getElementById('newVarParentName');
   if (parentEl && state.currentForVariant) parentEl.textContent = state.currentForVariant.name;
   document.getElementById('newVarOverlay').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
 }
 
 function closeNewVariantModal() {
   document.getElementById('newVarOverlay').classList.add('hidden');
+  var variantsOverlay = document.getElementById('variantsOverlay');
+  if (!variantsOverlay || variantsOverlay.classList.contains('hidden')) {
+    document.body.style.overflow = '';
+    state.currentForVariant = null;
+  }
 }
 
 /*
@@ -1260,8 +1271,51 @@ bibliotecaApi.init = function initBiblioteca() {
     else if (!document.getElementById('addModalOverlay').classList.contains('hidden'))  closeAddModal();
   });
 
+  _bibliotecaReady = true;
 };
 
 bibliotecaApi.render = function renderBiblioteca(force) {
   renderGridIfActive(Boolean(force));
+};
+
+bibliotecaApi.isReady = function isBibliotecaReady() {
+  return _bibliotecaReady;
+};
+
+/*
+ * API pública de criação.
+ *
+ * O register.js da Biblioteca adapta estes métodos ao contrato neutro do
+ * shell. A ferramenta de criação rápida nunca chama funções locais como
+ * openAddModal() ou acessa o estado interno diretamente.
+ */
+bibliotecaApi.openCreateLayout = function openCreateLayoutFromProvider() {
+  openAddModal();
+  return true;
+};
+
+bibliotecaApi.listLayoutsForCreation = function listLayoutsForCreation() {
+  return SenkoLib.getAll().slice().sort(function (left, right) {
+    return String(left.name || left.id || '').localeCompare(String(right.name || right.id || ''), 'pt-BR', {
+      numeric: true,
+      sensitivity: 'base'
+    });
+  }).map(function (layout) {
+    return {
+      id: layout.id,
+      name: layout.name || layout.id,
+      tags: Array.isArray(layout.tags) ? layout.tags.slice(0, 4) : [],
+      variantCount: SenkoLib.getVariants(layout.id).length
+    };
+  });
+};
+
+bibliotecaApi.openCreateVariantForLayout = function openCreateVariantForLayout(layoutId) {
+  var layout = SenkoLib.getAll().find(function (item) {
+    return item.id === layoutId;
+  });
+  if (!layout) return false;
+  state.currentForVariant = layout;
+  openNewVariantModal();
+  return true;
 };

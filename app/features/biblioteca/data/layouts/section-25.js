@@ -1,95 +1,104 @@
 // @ts-nocheck
 SenkoLib.registerLayout(
-{
-  id: "section-25",
-  name: "Section-25",
-  tags: ["Carrossel", "grid"],
-  html: `<section class="section-25" aria-label="Abas de conteúdo sobre o produto">
+    {
+        id: "section-25",
+        name: "Section-25",
+        tags: ["Carrossel", "grid"],
+        html: `        <section class="section-25" aria-label="Abas de conteúdo sobre o produto">
 
-    <input class="section-25__radio" type="radio" name="s25-tabs" id="s25-tab1" checked aria-hidden="true">
-    <input class="section-25__radio" type="radio" name="s25-tabs" id="s25-tab2" aria-hidden="true">
-    <input class="section-25__radio" type="radio" name="s25-tabs" id="s25-tab3" aria-hidden="true">
-    <input class="section-25__radio" type="radio" name="s25-tabs" id="s25-tab4" aria-hidden="true">
+            <input class="section-25__radio" id="s25-tab1" type="radio" name="s25-tabs" aria-label="Mostrar aba Origem"
+                checked>
+            <input class="section-25__radio" id="s25-tab2" type="radio" name="s25-tabs"
+                aria-label="Mostrar aba Processo">
+            <input class="section-25__radio" id="s25-tab3" type="radio" name="s25-tabs"
+                aria-label="Mostrar aba Envelhecimento">
+            <input class="section-25__radio" id="s25-tab4" type="radio" name="s25-tabs"
+                aria-label="Mostrar aba Perfil Sensorial">
 
-    <div class="section-25-container">
+            <div class="section-25-container">
+                <div class="section-25__nav" role="group" aria-label="Seções do produto">
+                    <label class="section-25__tab-label" for="s25-tab1">Origem</label>
+                    <label class="section-25__tab-label" for="s25-tab2">Processo</label>
+                    <label class="section-25__tab-label" for="s25-tab3">Envelhecimento</label>
+                    <label class="section-25__tab-label" for="s25-tab4">Perfil Sensorial</label>
+                </div>
 
-        <nav class="section-25__nav" role="tablist" aria-label="Seções do produto">
-            <label class="section-25__tab-label" for="s25-tab1" role="tab">Origem</label>
-            <label class="section-25__tab-label" for="s25-tab2" role="tab">Processo</label>
-            <label class="section-25__tab-label" for="s25-tab3" role="tab">Envelhecimento</label>
-            <label class="section-25__tab-label" for="s25-tab4" role="tab">Perfil Sensorial</label>
-        </nav>
+                <div class="section-25__panels">
+                    <div class="section-25__panel section-25__panel--1" role="group" aria-label="Origem">
+                        <div class="section-25__split">
+                            <figure class="section-25__figure">
+                                <img class="section-25__image" width="800" height="600" loading="lazy"
+                                    src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64"
+                                    alt="Barris de carvalho enfileirados em adega escura — local de origem do Domecq">
+                            </figure>
+                            <div class="section-25__body">
+                                <h2 class="section-25__title">Tradição brasileira<br>que atravessa gerações</h2>
+                                <p class="section-25__description">Produzido no Brasil pela Pernod Ricard Brasil, em
+                                    Resende, RJ, o Domecq Coquetel Composto é elaborado com ingredientes selecionados
+                                    que garantem seu aroma frutado e sabor inigualável. Uma receita clássica, feita para
+                                    momentos que merecem ser celebrados.</p>
+                                <span class="section-25__location"></span>
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="section-25__panels">
+                    <div class="section-25__panel section-25__panel--2" role="group" aria-label="Processo">
+                        <div class="section-25__split section-25__split--reverse">
+                            <figure class="section-25__figure">
+                                <img class="section-25__image" width="800" height="600" loading="lazy"
+                                    src="https://images.unsplash.com/photo-1504674900247-0877df9cc836"
+                                    alt="Mesa com ingredientes e utensílios do processo artesanal de destilação">
+                            </figure>
+                            <div class="section-25__body">
+                                <h2 class="section-25__title">Destilação artesanal<br>com técnica centenária</h2>
+                                <p class="section-25__description">Cada lote é produzido com controle rigoroso de
+                                    temperatura e tempo de fermentação. O processo combina métodos tradicionais herdados
+                                    de mestres destiladores com padrões modernos de qualidade que garantem consistência
+                                    e pureza em cada garrafa.</p>
+                                <span class="section-25__location"></span>
+                            </div>
+                        </div>
+                    </div>
 
-            <article class="section-25__panel section-25__panel--1" role="tabpanel" aria-label="Origem">
-                <div class="section-25__split">
-                    <figure class="section-25__figure">
-                        <picture>
-                            <source srcset="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&q=80" media="(min-width: 768px)">
-                            <img class="section-25__image" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" alt="Barris de carvalho enfileirados em adega escura — local de origem do Domecq" width="800" height="600" loading="lazy">
-                        </picture>
-                    </figure>
-                    <div class="section-25__body">
-                        <h2 class="section-25__title">Tradição brasileira<br>que atravessa gerações</h2>
-                        <p class="section-25__description">Produzido no Brasil pela Pernod Ricard Brasil, em Resende – RJ, o Domecq Coquetel Composto é elaborado com ingredientes selecionados que garantem seu aroma frutado e sabor inigualável. Uma receita clássica, feita para momentos que merecem ser celebrados.</p>
-                        <span class="section-25__location" aria-label="Localização: Resende, RJ, Brasil"></span>
+                    <div class="section-25__panel section-25__panel--3" role="group" aria-label="Envelhecimento">
+                        <div class="section-25__split">
+                            <figure class="section-25__figure">
+                                <img class="section-25__image" width="800" height="600" loading="lazy"
+                                    src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3"
+                                    alt="Taça com destilado âmbar iluminado — resultado do envelhecimento em barris de carvalho">
+                            </figure>
+                            <div class="section-25__body">
+                                <h2 class="section-25__title">Envelhecido em carvalho<br>para sabor complexo</h2>
+                                <p class="section-25__description">O descanso em barris de carvalho americano confere ao
+                                    Domecq notas amadeiradas, caramelo e baunilha que equilibram a doçura natural da
+                                    bebida. O tempo de maturação é cuidadosamente monitorado para atingir o ponto exato
+                                    de harmonia entre força e suavidade.</p>
+                                <span class="section-25__location"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-25__panel section-25__panel--4" role="group" aria-label="Perfil Sensorial">
+                        <div class="section-25__split section-25__split--reverse">
+                            <figure class="section-25__figure">
+                                <img class="section-25__image" width="800" height="600" loading="lazy"
+                                    src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=400&q=80"
+                                    alt="Prato gourmet com ingredientes aromáticos que representam o perfil sensorial do produto">
+                            </figure>
+                            <div class="section-25__body">
+                                <h2 class="section-25__title">Aroma frutado,<br>sabor inigualável</h2>
+                                <p class="section-25__description">No nariz, notas de frutas tropicais, especiarias
+                                    suaves e um toque de mel. Na boca, a entrada é redonda e envolvente, com final longo
+                                    e persistente. Um perfil sensorial equilibrado que agrada tanto apreciadores
+                                    experientes quanto quem descobre o mundo dos destilados pela primeira vez.</p>
+                                <span class="section-25__location"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </article>
-
-            <article class="section-25__panel section-25__panel--2" role="tabpanel" aria-label="Processo">
-                <div class="section-25__split section-25__split--reverse">
-                    <figure class="section-25__figure">
-                        <picture>
-                            <source srcset="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=700&q=80" media="(min-width: 768px)">
-                            <img class="section-25__image" src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80" alt="Mesa com ingredientes e utensílios do processo artesanal de destilação" width="800" height="600" loading="lazy">
-                        </picture>
-                    </figure>
-                    <div class="section-25__body">
-                        <h2 class="section-25__title">Destilação artesanal<br>com técnica centenária</h2>
-                        <p class="section-25__description">Cada lote é produzido com controle rigoroso de temperatura e tempo de fermentação. O processo combina métodos tradicionais herdados de mestres destiladores com padrões modernos de qualidade que garantem consistência e pureza em cada garrafa.</p>
-                        <span class="section-25__location" aria-label="Processo realizado em Resende, RJ"></span>
-                    </div>
-                </div>
-            </article>
-
-            <article class="section-25__panel section-25__panel--3" role="tabpanel" aria-label="Envelhecimento">
-                <div class="section-25__split">
-                    <figure class="section-25__figure">
-                        <picture>
-                            <source srcset="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=700&q=80" media="(min-width: 768px)">
-                            <img class="section-25__image" src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&q=80" alt="Taça com destilado âmbar iluminado — resultado do envelhecimento em barris de carvalho" width="800" height="600" loading="lazy">
-                        </picture>
-                    </figure>
-                    <div class="section-25__body">
-                        <h2 class="section-25__title">Envelhecido em carvalho<br>para sabor complexo</h2>
-                        <p class="section-25__description">O descanso em barris de carvalho americano confere ao Domecq notas amadeiradas, caramelo e baunilha que equilibram a doçura natural da bebida. O tempo de maturação é cuidadosamente monitorado para atingir o ponto exato de harmonia entre força e suavidade.</p>
-                        <span class="section-25__location" aria-label="Envelhecimento em adega própria em Resende, RJ"></span>
-                    </div>
-                </div>
-            </article>
-
-            <article class="section-25__panel section-25__panel--4" role="tabpanel" aria-label="Perfil Sensorial">
-                <div class="section-25__split section-25__split--reverse">
-                    <figure class="section-25__figure">
-                        <picture>
-                            <source srcset="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=700&q=80" media="(min-width: 768px)">
-                            <img class="section-25__image" src="https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=400&q=80" alt="Prato gourmet com ingredientes aromáticos que representam o perfil sensorial do produto" width="800" height="600" loading="lazy">
-                        </picture>
-                    </figure>
-                    <div class="section-25__body">
-                        <h2 class="section-25__title">Aroma frutado,<br>sabor inigualável</h2>
-                        <p class="section-25__description">No nariz, notas de frutas tropicais, especiarias suaves e um toque de mel. Na boca, a entrada é redonda e envolvente, com final longo e persistente. Um perfil sensorial equilibrado que agrada tanto apreciadores experientes quanto quem descobre o mundo dos destilados pela primeira vez.</p>
-                        <span class="section-25__location" aria-label="Avaliação sensorial certificada — Resende, RJ"></span>
-                    </div>
-                </div>
-            </article>
-
-        </div>
-    </div>
-</section>`,
-  css: `<style>
+            </div>
+        </section>`,
+        css: `<style>
     .section-25 {
         --s25-color-brand: #7b1d2e;
         --s25-color-bg: #faf7f2;
@@ -288,5 +297,5 @@ SenkoLib.registerLayout(
         }
     }
 </style>`
-}
+    }
 );

@@ -40,6 +40,7 @@
 var GH_CONFIG_KEY = 'senkolib_github_config';
 var GH_LAYOUTS_DIR = 'app/features/biblioteca/data/layouts';
 var GH_BIBLIOTECA_MANIFEST_PATH = 'app/features/biblioteca/data/manifest.js';
+var GH_COPY_BASE_TEMPLATE_PATH = 'app/features/biblioteca/scripts/copy-base-template.js';
 
 var GITHUB_CONFIG = (function () {
   var hostname = window.location.hostname;
@@ -992,13 +993,12 @@ function initSenkoBibliotecaGithubV2() {
   if (initSenkoBibliotecaGithubV2.initialized) return;
   initSenkoBibliotecaGithubV2.initialized = true;
 
-  /* â”€â”€â”€ SÃ³ executa no GitHub Pages â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-     Em qualquer outro ambiente (localhost, Live Server,
-     servidor externo, file://) este mÃ³dulo inteiro fica
-     inativo â€” nenhum botÃ£o, engrenagem ou elemento GitHub
-     Ã© criado na interface.
-  â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-  if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;
+  /*
+   * A interface GitHub precisa existir em qualquer ambiente em que o Senko
+   * possa ser aberto. No GitHub Pages, owner e repositorio sao detectados pela
+   * URL; em localhost, Live Server ou file://, o usuario informa esses dados
+   * pelo modal de configuracao. As operacoes continuam bloqueadas sem token.
+   */
 
   var style = document.createElement('style');
   style.textContent = [
@@ -1383,7 +1383,7 @@ function initSenkoBibliotecaGithubV2() {
     var ghEditBtn = document.createElement('button');
     ghEditBtn.id        = 'ghSaveLayoutBtn';
     ghEditBtn.className = 'btn-github';
-    ghEditBtn.innerHTML = GH_ICON + ' GitHub';
+    ghEditBtn.innerHTML = GH_ICON + ' Salvar';
     ghEditBtn.title     = 'Salvar diretamente no repositÃ³rio GitHub';
     saveToFileAnchor.parentNode.replaceChild(ghEditBtn, saveToFileAnchor);
 
@@ -1404,15 +1404,15 @@ function initSenkoBibliotecaGithubV2() {
           ghEditBtn.innerHTML  = GH_ICON + ' Salvo!';
           setTimeout(function () {
             if (typeof closeEditModal === 'function') closeEditModal();
-            ghEditBtn.innerHTML  = GH_ICON + ' GitHub';
+            ghEditBtn.innerHTML  = GH_ICON + ' Salvar';
             ghEditBtn.disabled   = false;
           }, 1200);
         } else {
-          ghEditBtn.innerHTML = GH_ICON + ' GitHub';
+          ghEditBtn.innerHTML = GH_ICON + ' Salvar';
           ghEditBtn.disabled  = false;
         }
       }).catch(function () {
-        ghEditBtn.innerHTML = GH_ICON + ' GitHub';
+        ghEditBtn.innerHTML = GH_ICON + ' Salvar';
         ghEditBtn.disabled  = false;
       });
     });
@@ -1429,7 +1429,7 @@ function initSenkoBibliotecaGithubV2() {
     var ghNewBtn = document.createElement('button');
     ghNewBtn.id        = 'ghSaveNewLayoutBtn';
     ghNewBtn.className = 'btn-github';
-    ghNewBtn.innerHTML = GH_ICON + ' GitHub';
+    ghNewBtn.innerHTML = GH_ICON + ' Salvar';
     ghNewBtn.title     = 'Salvar novo layout em arquivo individual no reposit?rio GitHub';
 
     var ghGroup = document.createElement('div');
@@ -1457,15 +1457,15 @@ function initSenkoBibliotecaGithubV2() {
           ghNewBtn.innerHTML = GH_ICON + ' Salvo!';
           setTimeout(function () {
             if (typeof closeAddModal === 'function') closeAddModal();
-            ghNewBtn.innerHTML = GH_ICON + ' GitHub';
+            ghNewBtn.innerHTML = GH_ICON + ' Salvar';
             ghNewBtn.disabled  = false;
           }, 1200);
         } else {
-          ghNewBtn.innerHTML = GH_ICON + ' GitHub';
+          ghNewBtn.innerHTML = GH_ICON + ' Salvar';
           ghNewBtn.disabled  = false;
         }
       }).catch(function () {
-        ghNewBtn.innerHTML = GH_ICON + ' GitHub';
+        ghNewBtn.innerHTML = GH_ICON + ' Salvar';
         ghNewBtn.disabled  = false;
       });
     });
@@ -1480,5 +1480,20 @@ window.SenkoBibliotecaGithubV2 = {
   },
   openConfig: function () {
     if (ghOpenConfigModalHandler) ghOpenConfigModalHandler();
+  },
+  saveCopyBaseTemplate: function (content) {
+    if (!ghEnsureToken()) return Promise.resolve(false);
+
+    return githubGetFile(GH_COPY_BASE_TEMPLATE_PATH).then(function (fileInfo) {
+      return githubPutFile(
+        GH_COPY_BASE_TEMPLATE_PATH,
+        content,
+        fileInfo.sha,
+        '[Biblioteca] update basic HTML template'
+      );
+    }).then(function (result) {
+      ghStartDeployWatch(GH_COPY_BASE_TEMPLATE_PATH);
+      return result;
+    });
   }
 };

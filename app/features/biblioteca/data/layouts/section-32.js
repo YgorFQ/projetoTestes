@@ -1,53 +1,26 @@
 // @ts-nocheck
 SenkoLib.registerLayout(
-{
-  id: "section-32",
-  name: "section-32",
-  tags: ["section-32", "32", "imagem", "hero", "32.11"],
-  html: `<section class="section-32__container" aria-label="Destaque visual do produto">
-  <figure class="section-32__groupimage-section">
-    <picture>
-      <source
-        media="(max-width: 430px)"
-        srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/kit-fixacao-telha-precon-tubozan-parafusos-autobrocantes-10-unidades-410376-02.jpg?ims=430x">
-
-      <source
-        media="(max-width: 768px)"
-        srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/kit-fixacao-telha-precon-tubozan-parafusos-autobrocantes-10-unidades-410376-02.jpg?ims=768x">
-
-      <source
-        media="(max-width: 1024px)"
-        srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/kit-fixacao-telha-precon-tubozan-parafusos-autobrocantes-10-unidades-410376-02.jpg?ims=1024x">
-
-      <source
-        media="(max-width: 1280px)"
-        srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/kit-fixacao-telha-precon-tubozan-parafusos-autobrocantes-10-unidades-410376-02.jpg?ims=1238x">
-
-      <source
-        media="(max-width: 1440px)"
-        srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/kit-fixacao-telha-precon-tubozan-parafusos-autobrocantes-10-unidades-410376-02.jpg?ims=1440x">
-
-      <source
-        media="(min-width: 1441px)"
-        srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/kit-fixacao-telha-precon-tubozan-parafusos-autobrocantes-10-unidades-410376-02.jpg">
-
-      <img
-        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/kit-fixacao-telha-precon-tubozan-parafusos-autobrocantes-10-unidades-410376-02.jpg"
-        alt="Kit de fixação para telha Precon Tubozan com parafusos autobrocantes em embalagem"
-        style="border-radius: 30px;" width="1600"height="865" loading="eager" decoding="async" fetchpriority="high"> <!-- todos os que vierem depois do primeiro, devem ter loading="lazy" e fetchpriority="low" -->
-    </picture>
-
-    <figcaption
-      class="section-32__grouptext-overlay left grouptext-overlay-Background"
-      style="top: 50%; left: 25%; max-width: 40%;">
-      <h2><strong>FIXAÇÃO PRECON PARA TELHA</strong></h2>
-      <p>
-        O kit Precon Tubozan é de fixação para telha, com 10 parafusos metálicos autobrocantes e tampa de acabamento.
-      </p>
-    </figcaption>
-  </figure>
-</section>`,
-  css: `<style>
+  {
+    id: "section-32",
+    name: "section-32",
+    tags: ["section-32", "32", "imagem", "hero", "32.11"],
+    html: `        <section class="section-32__container" aria-label="Destaque visual do produto">
+            <figure class="section-32__groupimage-section">
+                <img style="border-radius: 30px;" width="1600" height="865" loading="eager" decoding="async"
+                    fetchpriority="low"
+                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/kit-fixacao-telha-precon-tubozan-parafusos-autobrocantes-10-unidades-410376-02.jpg"
+                    alt="Kit de fixação para telha Precon Tubozan com parafusos autobrocantes em embalagem">
+                <figcaption class="section-32__grouptext-overlay left grouptext-overlay-Background"
+                    style="top: 50%; left: 25%; max-width: 40%;">
+                    <h2><strong>FIXAÇÃO PRECON PARA TELHA</strong></h2>
+                    <p>
+                        O kit Precon Tubozan é de fixação para telha, com 10 parafusos metálicos autobrocantes e tampa
+                        de acabamento.
+                    </p>
+                </figcaption>
+            </figure>
+        </section>`,
+    css: `<style>
   .section-32__container {
     width: 100%;
     max-width: 1600px;
@@ -170,5 +143,5 @@ SenkoLib.registerLayout(
     }
   }
 </style>`
-}
+  }
 );

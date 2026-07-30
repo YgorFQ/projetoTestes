@@ -680,7 +680,7 @@ function ghvInjectNewVariantButton() {
   var btn       = document.createElement('button');
   btn.id        = 'ghvSaveVariantBtn';
   btn.className = 'btn-github';
-  btn.innerHTML = GH_ICON + ' GitHub';
+  btn.innerHTML = GH_ICON + ' Salvar';
   btn.title     = 'Criar variante diretamente no repositório GitHub';
 
   /* Substitui o span âncora pelo botão */
@@ -732,15 +732,15 @@ function ghvInjectNewVariantButton() {
             if (typeof updateVariantsCount === 'function') updateVariantsCount(state.currentForVariant.id);
           }
           renderGrid();
-          btn.innerHTML = GH_ICON + ' GitHub';
+          btn.innerHTML = GH_ICON + ' Salvar';
           btn.disabled  = false;
         }, 1200);
       } else {
-        btn.innerHTML = GH_ICON + ' GitHub';
+        btn.innerHTML = GH_ICON + ' Salvar';
         btn.disabled  = false;
       }
     }).catch(function () {
-      btn.innerHTML = GH_ICON + ' GitHub';
+      btn.innerHTML = GH_ICON + ' Salvar';
       btn.disabled  = false;
     });
   });
@@ -763,7 +763,7 @@ function ghvInjectEditVariantButton() {
   var btn       = document.createElement('button');
   btn.id        = 'ghvSaveEditVarBtn';
   btn.className = 'btn-github';
-  btn.innerHTML = GH_ICON + ' GitHub';
+  btn.innerHTML = GH_ICON + ' Salvar';
   btn.title     = 'Salvar variante editada no repositório GitHub';
 
   /* Substitui o span âncora pelo botão */
@@ -814,15 +814,15 @@ function ghvInjectEditVariantButton() {
         btn.innerHTML = GH_ICON + ' Salvo!';
         setTimeout(function () {
           if (typeof closeEditVariantModal === 'function') closeEditVariantModal();
-          btn.innerHTML = GH_ICON + ' GitHub';
+          btn.innerHTML = GH_ICON + ' Salvar';
           btn.disabled  = false;
         }, 1200);
       } else {
-        btn.innerHTML = GH_ICON + ' GitHub';
+        btn.innerHTML = GH_ICON + ' Salvar';
         btn.disabled  = false;
       }
     }).catch(function () {
-      btn.innerHTML = GH_ICON + ' GitHub';
+      btn.innerHTML = GH_ICON + ' Salvar';
       btn.disabled  = false;
     });
   });
@@ -908,13 +908,15 @@ function ghvInjectStyles() {
 
 
 /* ═══════════════════════════════════════════════════════════════════════
-   INICIALIZAÇÃO — só ativa no GitHub Pages
+   INICIALIZAÇÃO — ativa em ambiente publicado e local
 ═══════════════════════════════════════════════════════════════════════ */
 function initSenkoBibliotecaGithubVariants() {
   if (initSenkoBibliotecaGithubVariants.initialized) return;
   initSenkoBibliotecaGithubVariants.initialized = true;
-  if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;
-
+  /*
+   * Os botoes devem ser montados mesmo sem credenciais. A validacao do token
+   * acontece somente quando o usuario solicita uma operacao persistente.
+   */
   ghvInjectStyles();
   ghvCreateDeleteModal();
   ghvInjectNewVariantButton();

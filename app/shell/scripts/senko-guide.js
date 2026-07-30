@@ -1,9 +1,10 @@
 (function () {
   /*
-   * Senko Guide - prototipo de guia interno do projeto.
+   * Senko Guide - guia oficial e global do projeto.
    *
-   * Este modulo nao registra uma feature no shell porque ele nao e uma aba.
-   * Ele e uma janela global de ajuda aberta pelo botao de caderno no header.
+   * Este modulo pertence ao shell porque nao representa uma aba nem uma regra
+   * de negocio de uma feature. Ele controla a janela de ajuda aberta pelo
+   * botao de livro no header e apenas usa APIs publicas para criar atalhos.
    *
    * REGRA DE MANUTENCAO:
    * - Este guia e prioridade maxima. Toda alteracao em arquitetura, feature,
@@ -12,11 +13,6 @@
    * - Se uma IA estiver alterando o projeto, ela deve considerar este arquivo
    *   parte obrigatoria da mudanca sempre que o comportamento documentado mudar.
    */
-  var currentScript = document.currentScript;
-  var baseUrl = currentScript && currentScript.src
-    ? new URL('./', currentScript.src).href
-    : new URL('app/prototype/senko-guide/', document.baseURI).href;
-
   var activeCategory = 'overview';
   var overlay;
   var searchInput;
@@ -44,7 +40,10 @@
             'Colecoes organiza grupos de layouts.',
             'Imagens comprime e redimensiona arquivos.',
             'Sources gera picture, source e ims.',
-            'Preview e uma area beta para testes.'
+            'Preview e uma area beta para testes.',
+            'Criacao rapida e a entrada oficial para iniciar criacoes em qualquer aba.',
+            'Notas da equipe e um prototipo para guardar prompts, regras, guias e padroes em arquivos proprios.',
+            'No fluxo atual, Biblioteca cria layouts e variacoes; Colecoes cria colecoes e layouts dentro de uma colecao existente.'
           ]
         },
         {
@@ -180,10 +179,10 @@
           ],
           bullets: [
             'index.html -> carrega tokens, componentes, shell e register.js das areas disponiveis.',
-            'app/shell -> cria topo, abas, tema, botao GitHub e raiz neutra das features.',
+            'app/shell -> cria topo, abas, tema, botoes globais, criacao rapida, Senko Guide e raiz neutra das features.',
             'app/shared -> fornece cores, fontes, componentes neutros e assets globais.',
             'app/features -> guarda features finais, cada uma com seus arquivos proprios.',
-            'app/prototype -> guarda ideias beta, como Preview e este Guia.',
+            'app/prototype -> guarda somente ideias beta, como Preview e Notas da equipe.',
             'integrations/github -> fica dentro da feature dona daquela integracao.'
           ],
           note: 'Analogia: index e a porta de entrada, shell e a recepcao, shared e o almoxarifado, features sao as salas de trabalho.'
@@ -196,7 +195,7 @@
             'Antes de alterar qualquer coisa, descubra quem e o dono do comportamento.'
           ],
           bullets: [
-            'Shell: navegacao, tema, header, raiz das features e ponte para providers de GitHub.',
+            'Shell: navegacao, tema, header, raiz das features e registros de providers de GitHub e criacao.',
             'Shared: tokens, componentes neutros e assets realmente globais.',
             'Biblioteca: layouts, variantes, preview de layouts e GitHub da Biblioteca.',
             'Colecoes: colecoes, grupos, layouts dentro de colecoes e GitHub de Colecoes.',
@@ -253,31 +252,38 @@
         {
           title: 'Biblioteca',
           badge: 'layouts',
-          terms: 'biblioteca layout variacao variante senkolib register variants',
+          terms: 'biblioteca layout variacao variante senkolib register variants layout-editor editor oficial id manifest html basico copy base',
           paragraphs: [
             'A Biblioteca guarda layouts e variantes de layouts.',
-            'Os layouts ficam em data/layouts e as variantes ficam em data/variants.'
+            'Os layouts ficam em arquivos JS individuais dentro de data/layouts e as variantes ficam em arquivos JS individuais dentro de data/variants/[layoutId].'
           ],
           bullets: [
             'Motor: scripts/senkolib-core.js.',
             'UI: scripts/script.js.',
+            'Editor oficial: scripts/layout-editor.js.',
+            'Editor do HTML Basico: scripts/copy-base-editor.js.',
+            'Template do HTML Basico: scripts/copy-base-template.js.',
             'Dados: data/manifest.js, data/layouts, data/variants.',
+            'Estilos do editor: styles/layout-editor.css.',
+            'Estilos do editor do HTML Basico: styles/copy-base-editor.css.',
             'GitHub: integrations/github/.'
-          ]
+          ],
+          note: 'O editor oficial nao fica mais em prototype. Ele pertence a Biblioteca e nao deve oferecer campo editavel para o ID tecnico.'
         },
         {
           title: 'Colecoes',
           badge: 'grupos',
-          terms: 'colecoes grupos layout colecao collib colgroups manifest',
+          terms: 'colecoes grupos layout colecao collib colgroups manifest collection layouts individuais',
           paragraphs: [
             'Colecoes organiza layouts dentro de colecoes e grupos.',
-            'Os grupos sao cadastro proprio e nao devem ser apagados so porque ficaram vazios.'
+            'Os grupos sao cadastro proprio e nao devem ser apagados so porque ficaram vazios.',
+            'Cada colecao tem um arquivo de metadados em data/collections/[slug]/collection.js e cada layout da colecao fica em data/collections/[slug]/layouts/[id].js.'
           ],
           bullets: [
             'Motor de colecoes: scripts/col-core.js.',
             'Motor de grupos: scripts/col-groups.js.',
             'Modais: scripts/col-modals.js.',
-            'Dados: data/manifest.js e data/col-groups-data.js.',
+            'Dados: data/manifest.js, data/col-groups-data.js e data/collections/.',
             'GitHub: integrations/github/colecoes-github.js.'
           ]
         },
@@ -312,12 +318,56 @@
           ]
         },
         {
-          title: 'Preview beta',
-          badge: 'beta',
-          terms: 'preview beta prototype gamer teste prototipo',
+          title: 'Criacao rapida',
+          badge: 'oficial',
+          terms: 'criacao rapida quick create provider registerCreateProvider shell layout variacao colecao',
           paragraphs: [
-            'O Preview fica em app/prototype porque ainda e uma area beta.',
+            'A criacao rapida e uma ferramenta oficial do shell aberta pelo botao laranja de mais.',
+            'Ela apresenta providers registrados pelas features sem conhecer seus dados ou modais internos.'
+          ],
+          bullets: [
+            'Controlador: app/shell/scripts/senko-quick-create.js.',
+            'Estilos: app/shell/styles/senko-quick-create.css.',
+            'Registro neutro: SenkoShell.registerCreateProvider().',
+            'Biblioteca registra Layout e Variacao em app/features/biblioteca/register.js.',
+            'Colecoes registra Colecao e Layout em app/features/colecoes/register.js.',
+            'A feature e ativada antes de abrir seu modal para evitar uma janela presa em painel suspenso.',
+            'Validacao e GitHub continuam pertencendo a feature que cria o item.'
+          ],
+          note: 'O modal global escolhe o destino; o formulario final continua sendo o modal oficial da feature.'
+        },
+        {
+          title: 'Senko Guide',
+          badge: 'oficial',
+          terms: 'senko guide guia oficial shell ajuda documentacao modal busca categorias',
+          paragraphs: [
+            'O Senko Guide e a documentacao oficial e pesquisavel do projeto.',
+            'Ele pertence ao shell porque pode ser aberto em qualquer aba e nao controla dados de nenhuma feature.'
+          ],
+          bullets: [
+            'Controlador: app/shell/scripts/senko-guide.js.',
+            'Estilos: app/shell/styles/senko-guide.css.',
+            'Botao global: #senkoGuideBtn no header do index.html.',
+            'API publica: SenkoGuide.open() e SenkoGuide.close().',
+            'Atalhos para features usam somente SenkoShell.switchFeature().',
+            'Toda mudanca relevante no projeto precisa revisar este guia.'
+          ],
+          note: 'Ser oficial nao transforma o Guide em feature: ele continua sendo uma ferramenta global do shell.'
+        },
+        {
+          title: 'Areas beta',
+          badge: 'beta',
+          terms: 'preview beta prototype gamer teste prototipo notas equipe team notes',
+          paragraphs: [
+            'O Preview e Notas da equipe ficam em app/prototype porque ainda sao areas especiais fora das features principais.',
             'Tudo que ainda esta em teste deve comecar em prototype antes de virar feature final.'
+          ],
+          bullets: [
+            'Notas da equipe: app/prototype/team-notes/.',
+            'Cada nota criada pelo Team Notes deve virar um arquivo proprio em app/prototype/team-notes/data/notes e entrar no manifest.js.',
+            'Preview: app/prototype/gamer-preview/.',
+            'Senko Guide nao e mais prototipo; ele fica em app/shell/.',
+            'Editor de layout da Biblioteca nao e mais prototipo; ele fica em app/features/biblioteca/.'
           ]
         }
       ]
@@ -338,8 +388,12 @@
             'Colecoes: feature principal, deve permanecer estavel e independente.',
             'Imagens: feature independente, mas merece revisao cuidadosa quando houver reforma interna.',
             'Sources: feature independente, mas merece revisao cuidadosa quando houver reforma interna.',
+            'Criacao rapida: ferramenta oficial do shell com providers registrados pelas features.',
+            'Notas da equipe: prototipo beta com arquivos individuais e salvamento via GitHub.',
             'Preview: prototipo beta em app/prototype.',
-            'Guia: prototipo global, mas com prioridade maxima de manutencao.'
+            'Senko Guide: ferramenta oficial do shell e prioridade maxima de manutencao.',
+            'Editor da Biblioteca: oficial, integrado em app/features/biblioteca/scripts/layout-editor.js.',
+            'Editor do HTML Basico: oficial, integrado em app/features/biblioteca/scripts/copy-base-editor.js.'
           ]
         },
         {
@@ -354,6 +408,7 @@
             'Garantir register.js, view.js, scripts, styles e dados separados.',
             'Remover dependencia escondida de outra feature.',
             'Registrar no index.html.',
+            'Remover a versao antiga de app/prototype quando o fluxo virar oficial.',
             'Atualizar este guia antes de considerar a migracao concluida.'
           ]
         }
@@ -375,19 +430,21 @@
             'Config: senkolib_github_config.',
             'Token: senkolib_github_token.',
             'Em GitHub Pages, owner e repo detectados pela URL devem ter prioridade sobre configuracao antiga do navegador.',
+            'Em localhost, Live Server ou file://, os botoes de salvar continuam visiveis e owner/repo sao informados pelo botao global de GitHub.',
+            'Sem repositorio ou token validos, a interface abre a configuracao e nao envia alteracoes.',
             'Token classic precisa de escopo repo.',
             'Token fine-grained precisa de Contents read/write.'
           ]
         },
         {
-          title: 'Botao global, logica separada',
+          title: 'Botoes globais, logica separada',
           badge: 'shell',
-          terms: 'botao global github provider registerGithubProvider independencia',
+          terms: 'botao global github criacao rapida provider registerGithubProvider registerCreateProvider independencia',
           paragraphs: [
-            'O botao de GitHub fica no shell porque e um controle global.',
-            'Mesmo assim, cada feature registra seu proprio provider e usa sua propria logica.'
+            'Os botoes de GitHub e criacao rapida ficam no shell porque sao controles globais.',
+            'Mesmo assim, cada feature registra seus providers e continua dona de sua propria logica.'
           ],
-          note: 'Analogia: o botao global e uma tomada. Biblioteca e Colecoes usam a tomada, mas cada uma tem seu proprio motor.'
+          note: 'Analogia: o shell oferece as tomadas. Biblioteca e Colecoes conectam seus proprios motores por contratos publicos.'
         },
         {
           title: 'Como salvar no GitHub',
@@ -452,16 +509,17 @@
         {
           title: 'Adicionar layout na Biblioteca',
           badge: 'biblioteca',
-          terms: 'adicionar layout biblioteca arquivo individual layouts001 manifest senkolib register registerLayout',
+          terms: 'adicionar layout biblioteca arquivo individual manifest senkolib register registerLayout sintaxe duplicado',
           paragraphs: [
             'Layouts manuais entram em data/layouts e precisam estar no manifest.',
             'Cada layout deve ficar em um arquivo proprio e registrar com SenkoLib.registerLayout({...}).'
           ],
           bullets: [
-            'Editar ou criar arquivo em app/features/biblioteca/data/layouts.',
+            'Criar arquivo em app/features/biblioteca/data/layouts/[id].js.',
             'Formato novo: registrar com SenkoLib.registerLayout({...}).',
             'O save GitHub valida o JS final antes de enviar e recusa erro de sintaxe.',
             'Atualizar app/features/biblioteca/data/manifest.js com o objeto do arquivo individual.',
+            'Nunca envolver SenkoLib.registerLayout(...) duas vezes no mesmo arquivo.',
             'Testar se aparece no grid.',
             'Testar abrir, copiar, editar e criar variante.'
           ]
@@ -476,10 +534,11 @@
           ],
           bullets: [
             'Conferir qual layout e dono da variante.',
-            'Criar ou editar o arquivo em app/features/biblioteca/data/variants.',
+            'Criar ou editar o arquivo em app/features/biblioteca/data/variants/[layoutId]/[id-da-variacao].js.',
             'Formato novo: registrar com SenkoLib.registerVariantFile(layoutId, {...}).',
             'Garantir que o manifest aponta para o arquivo individual da variante.',
             'Bloquear nome repetido ao criar e ao editar.',
+            'As variantes aparecem em ordem alfabetica/natural pelo nome, sem reordenar o manifest.',
             'Testar abrir o layout, selecionar variante, editar, salvar e recarregar.'
           ]
         },
@@ -509,10 +568,48 @@
           ],
           bullets: [
             'Editar apenas arquivos de app/features/colecoes.',
+            'Criar arquivo em app/features/colecoes/data/collections/[slug]/layouts/[id].js.',
             'Formato novo: registrar com ColLib.registerCollectionLayout(slug, {...}).',
+            'Atualizar a lista layouts da colecao dentro do manifest.',
             'Garantir nome unico dentro da colecao.',
+            'Os layouts aparecem em ordem alfabetica/natural pelo nome dentro da colecao, sem reordenar o manifest.',
             'Nao importar funcoes internas da Biblioteca.',
             'Testar criar, editar, excluir e recarregar a colecao.'
+          ]
+        },
+        {
+          title: 'Editar layout ou variacao',
+          badge: 'editor',
+          terms: 'editar layout variacao editor oficial layout-editor id gerado tags preview salvar excluir',
+          paragraphs: [
+            'O editor oficial da Biblioteca fica dentro da propria feature e substitui os modais antigos.',
+            'Ele edita nome, tags, HTML, CSS e preview, mas nao deve editar o ID tecnico.'
+          ],
+          bullets: [
+            'Script: app/features/biblioteca/scripts/layout-editor.js.',
+            'CSS: app/features/biblioteca/styles/layout-editor.css.',
+            'Campo editavel: nome do layout ou nome da variacao.',
+            'Campo nao editavel: ID gerado.',
+            'Salvar layout regrava data/layouts/[id].js.',
+            'Salvar variacao regrava data/variants/[layoutId]/[id].js.'
+          ],
+          note: 'Se precisar mudar ID, trate como migracao: criar novo arquivo, atualizar manifest, mover referencias e remover o antigo.'
+        },
+        {
+          title: 'Editar o HTML Basico',
+          badge: 'biblioteca',
+          terms: 'editar html basico copy base template github botao lapis',
+          paragraphs: [
+            'O editor do HTML Basico e uma ferramenta oficial da Biblioteca.',
+            'Ele altera o conteudo copiado pelo botao HTML Basico e persiste a nova versao no GitHub.'
+          ],
+          bullets: [
+            'Botao e modal: app/features/biblioteca/view.js.',
+            'Comportamento: app/features/biblioteca/scripts/copy-base-editor.js.',
+            'Template persistido: app/features/biblioteca/scripts/copy-base-template.js.',
+            'Estilos: app/features/biblioteca/styles/copy-base-editor.css.',
+            'Persistencia: app/features/biblioteca/integrations/github/senko-github-v2.js.',
+            'Apos salvar, copy-base.js recebe o novo HTML em memoria sem exigir recarga.'
           ]
         },
         {
@@ -610,9 +707,85 @@
             'O arquivo pode existir na pasta, mas a feature so carrega o que esta no manifest.'
           ],
           bullets: [
-            'Biblioteca: verificar data/manifest.js.',
-            'Colecoes: verificar data/manifest.js.',
-            'Variantes: verificar lista variants no manifest da Biblioteca.'
+            'Layout da Biblioteca: verificar SenkoBibliotecaManifest.layouts.',
+            'Variante da Biblioteca: verificar SenkoBibliotecaManifest.variants.',
+            'Colecao: verificar SenkoColecoesManifest.collections.',
+            'Layout de colecao: verificar SenkoColecoesManifest.collections[].layouts.',
+            'Conferir se o caminho do manifest bate exatamente com a pasta real.'
+          ]
+        },
+        {
+          title: 'Mensagem: nao encontrado ao editar',
+          badge: '404 local',
+          terms: 'nao encontrado editar colecao layout de colecao manifest collection layoutId slug caminho',
+          paragraphs: [
+            'Quando uma colecao ou layout de colecao aparece no catalogo, mas falha ao editar, quase sempre o caminho do manifest nao leva ao arquivo completo.'
+          ],
+          bullets: [
+            'Conferir se collection.js existe em data/collections/[slug]/collection.js.',
+            'Conferir se o file da colecao no manifest aponta para collections/[slug]/collection.js.',
+            'Conferir se o layout esta listado em layouts no manifest da colecao.',
+            'Conferir se o arquivo existe em collections/[slug]/layouts/[id].js.',
+            'Conferir se o id do arquivo e igual ao id usado no manifest.'
+          ]
+        },
+        {
+          title: 'Layout novo nao aparece na Biblioteca',
+          badge: 'biblioteca',
+          terms: 'layout novo nao aparece biblioteca registerLayout manifest id duplicado sintaxe',
+          paragraphs: [
+            'Se o layout foi criado, mas nao aparece no grid, valide primeiro o arquivo individual e depois o manifest.'
+          ],
+          bullets: [
+            'O arquivo deve usar SenkoLib.registerLayout({...}).',
+            'Nao pode existir SenkoLib.registerLayout( duplicado no mesmo arquivo.',
+            'O arquivo deve estar em SenkoBibliotecaManifest.layouts.',
+            'O id do arquivo e o id do manifest precisam ser iguais.',
+            'Nao pode existir outro layout com nome visualmente equivalente.'
+          ]
+        },
+        {
+          title: 'Variante nova nao aparece',
+          badge: 'variante',
+          terms: 'variante variacao nova nao aparece registerVariantFile layoutId manifest',
+          paragraphs: [
+            'Variante so aparece quando o arquivo individual esta registrado no layout pai correto e listado no manifest.'
+          ],
+          bullets: [
+            'O arquivo deve usar SenkoLib.registerVariantFile(layoutId, {...}).',
+            'O layoutId deve ser o ID tecnico do layout pai.',
+            'O caminho deve seguir variants/[layoutId]/[id-da-variacao].js.',
+            'A entrada precisa estar em SenkoBibliotecaManifest.variants.',
+            'Nao pode existir outra variante com o mesmo nome dentro do layout.'
+          ]
+        },
+        {
+          title: 'Erro de sintaxe com registro duplicado',
+          badge: 'sintaxe',
+          terms: 'erro sintaxe duplicidade duplicado registerLayout duas vezes parenteses',
+          paragraphs: [
+            'O arquivo de layout ou variante deve chamar o registro apenas uma vez.'
+          ],
+          bullets: [
+            'Errado: SenkoLib.registerLayout(SenkoLib.registerLayout({...}););',
+            'Correto: SenkoLib.registerLayout({...});',
+            'A mesma regra vale para SenkoLib.registerVariantFile(...).',
+            'Se isso acontecer, corrigir o arquivo antes de atualizar o manifest.'
+          ]
+        },
+        {
+          title: 'Botao de salvar nao aparece',
+          badge: 'interface',
+          terms: 'botao salvar nao aparece github localhost live server file modal layout variacao colecao',
+          paragraphs: [
+            'Os controles de salvar devem aparecer no GitHub Pages, localhost, Live Server e file://.',
+            'A ausencia de credenciais deve abrir a configuracao quando necessario, nunca remover o botao da interface.'
+          ],
+          bullets: [
+            'Conferir se a integracao GitHub da feature foi carregada e inicializada.',
+            'Conferir se o modal manteve a ancora usada para injetar o controle.',
+            'Um arquivo opcional de variante ausente deve gerar erro no console sem bloquear editores ou integracoes.',
+            'Conferir se todos os caminhos listados no manifest existem na pasta de dados.'
           ]
         },
         {
@@ -797,6 +970,10 @@
             'Token do GitHub nunca entra no codigo.',
             'Nao permitir nomes duplicados.',
             'Grupos de Colecoes nao devem ser apagados automaticamente.',
+            'Cada layout, variacao, colecao e layout de colecao novo deve ter seu proprio arquivo JS.',
+            'Todo arquivo de dados novo precisa de entrada no manifest da feature.',
+            'ID tecnico nao deve ser editado como campo comum.',
+            'Ordenacao alfabetica deve acontecer na renderizacao, sem reescrever manifest so para ordenar.',
             'Toda alteracao precisa ser testada em mais de uma aba.',
             'Toda alteracao relevante precisa atualizar este guia.'
           ]
@@ -815,6 +992,9 @@
             'Nao fazer o shell conhecer detalhes como layouts, variantes ou grupos.',
             'Nao salvar token do GitHub no codigo.',
             'Nao deixar duas colecoes, layouts, variantes ou layouts de colecao com o mesmo nome.',
+            'Nao voltar layout, variacao ou layout de colecao novo para arquivos grandes com arrays de objetos.',
+            'Nao editar ID gerado pelo editor como se fosse nome de exibicao.',
+            'Nao deixar tela oficial dentro de prototype depois que virou fluxo oficial.',
             'Nao finalizar mudanca sem atualizar o guia quando o comportamento documentado mudou.'
           ]
         },
@@ -839,22 +1019,6 @@
       ]
     }
   ];
-
-  function guideUrl(path) {
-    var absoluteUrl = new URL(path, baseUrl).href;
-    return window.SenkoFreshAssets ? window.SenkoFreshAssets.url(absoluteUrl) : absoluteUrl;
-  }
-
-  function loadStyle() {
-    var href = guideUrl('styles.css');
-    if (document.querySelector('link[data-senko-guide-style="' + href + '"]')) return;
-
-    var link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = href;
-    link.dataset.senkoGuideStyle = href;
-    document.head.appendChild(link);
-  }
 
   function escapeHtml(value) {
     return String(value == null ? '' : value)
@@ -1071,11 +1235,13 @@
       '<section class="senko-guide-modal" role="dialog" aria-modal="true" aria-labelledby="senkoGuideTitle">' +
       '  <header class="senko-guide-head">' +
       '    <div class="senko-guide-title">' +
-      '      <div class="senko-guide-kicker">Guia interno</div>' +
+      '      <div class="senko-guide-kicker">Guia oficial</div>' +
       '      <h2 id="senkoGuideTitle">Documentacao do SenkoLib</h2>' +
       '      <p>Arquitetura, guias rapidos, regras e erros comuns do projeto.</p>' +
       '    </div>' +
-      '    <button class="senko-modal-close modal-close senko-guide-close" id="senkoGuideCloseBtn" type="button" title="Fechar" aria-label="Fechar">x</button>' +
+      '    <button class="senko-modal-close modal-close senko-guide-close" id="senkoGuideCloseBtn" type="button" title="Fechar" aria-label="Fechar">' +
+      '      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
+      '    </button>' +
       '  </header>' +
       '  <div class="senko-guide-searchbar">' +
       '    <label class="senko-guide-search-wrap">' +
@@ -1111,7 +1277,14 @@
 
   function openGuide() {
     createModal();
-    previousBodyOverflow = document.body.style.overflow;
+    /*
+     * A API publica pode ser chamada mais de uma vez. Guardamos o overflow
+     * original somente na transicao de fechado para aberto para nao perder o
+     * estado real da pagina.
+     */
+    if (overlay.hidden) {
+      previousBodyOverflow = document.body.style.overflow;
+    }
     overlay.hidden = false;
     document.body.style.overflow = 'hidden';
     var button = document.getElementById('senkoGuideBtn');
@@ -1139,12 +1312,19 @@
   }
 
   function initGuide() {
-    loadStyle();
     bindButton();
     document.addEventListener('keydown', function (event) {
       if (event.key === 'Escape' && overlay && !overlay.hidden) closeGuide();
     });
   }
+
+  /*
+   * A API oficial permite que outras ferramentas globais abram ou fechem o
+   * guia sem conhecer sua estrutura HTML. O conteudo interno permanece privado.
+   */
+  window.SenkoGuide = window.SenkoGuide || {};
+  window.SenkoGuide.open = openGuide;
+  window.SenkoGuide.close = closeGuide;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initGuide);

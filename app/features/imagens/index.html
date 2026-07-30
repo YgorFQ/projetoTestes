@@ -84,6 +84,18 @@
               </select>
             </div>
 
+            <div class="control-section-label">Saida</div>
+
+            <div class="control-group">
+              <span class="field-label">Tipo de arquivo</span>
+              <div class="segmented segmented--format">
+                <button class="segment is-active" type="button" data-output-format="original">Original</button>
+                <button class="segment" type="button" data-output-format="webp">WebP</button>
+                <button class="segment" type="button" data-output-format="jpg">JPG</button>
+                <button class="segment" type="button" data-output-format="png">PNG</button>
+              </div>
+            </div>
+
             <div class="actions actions--stack">
               <button class="btn btn-primary" id="btn-compress" disabled>Comprimir</button>
               <button class="btn btn-ghost" id="btn-sort-images" disabled>Ordenar A-Z</button>
@@ -182,7 +194,7 @@
   <script src="vendor/UPNG.min.js"></script>
   <script src="vendor/browser-image-compression.js"></script>
   <script src="scripts/imagens-utils.js?v=20260607-independent"></script>
-  <script src="scripts/compressor.js?v=20260529-firefox-download"></script>
+  <script src="scripts/compressor.js?v=20260710-output-format"></script>
   <script src="scripts/resizer.js"></script>
   <script src="scripts/imagens-app.js"></script>
 </body>

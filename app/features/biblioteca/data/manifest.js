@@ -82,19 +82,19 @@ window.SenkoBibliotecaManifest = {
       "name": "Section-16"
     },
     {
-      "file": "layouts/carrossel-com-nav.js",
-      "id": "carrossel-com-nav",
-      "name": "Section 17"
+      "file": "layouts/section-17.js",
+      "id": "section-17",
+      "name": "Section-17"
     },
     {
       "file": "layouts/section-21.js",
       "id": "section-21",
-      "name": "Section-18"
+      "name": "Section-21"
     },
     {
-      "file": "layouts/section-19-carrossel-grid.js",
-      "id": "section-19-carrossel-grid",
-      "name": "Section-19 (Carrossel Grid)"
+      "file": "layouts/section-19.js",
+      "id": "section-19",
+      "name": "Section-19"
     },
     {
       "file": "layouts/section-20.js",
@@ -140,15 +140,29 @@ window.SenkoBibliotecaManifest = {
       "file": "layouts/section-33.js",
       "id": "section-33",
       "name": "Section-33"
+    },
+    {
+      "file": "layouts/section-3.js",
+      "id": "section-3",
+      "name": "Section-3"
+    },
+    {
+      "file": "layouts/section-8.js",
+      "id": "section-8",
+      "name": "Section-8"
+    },
+    {
+      "file": "layouts/section-26.js",
+      "id": "section-26",
+      "name": "Section-26"
+    },
+    {
+      "file": "layouts/section-28.js",
+      "id": "section-28",
+      "name": "Section-28"
     }
   ],
   "variants": [
-    {
-      "file": "variants/carrossel-com-nav/navemcolumn.js",
-      "layoutId": "carrossel-com-nav",
-      "id": "navemcolumn",
-      "name": "navemcolumn"
-    },
     {
       "file": "variants/section-1/variacao1.js",
       "layoutId": "section-1",

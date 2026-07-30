@@ -10,7 +10,7 @@ window.SenkoColecoesManifest = {
         "Responsivo",
         "adaptativos"
       ],
-      "layoutCount": 25,
+      "layoutCount": 30,
       "layouts": [
         {
           "file": "collections/carneiro-colecoes/layouts/padrao1.js",
@@ -136,6 +136,31 @@ window.SenkoColecoesManifest = {
           "file": "collections/carneiro-colecoes/layouts/variacao-25.js",
           "id": "variacao-25",
           "name": "Variação 25"
+        },
+        {
+          "file": "collections/carneiro-colecoes/layouts/variacao-26.js",
+          "id": "variacao-26",
+          "name": "Variaçao 26"
+        },
+        {
+          "file": "collections/carneiro-colecoes/layouts/variacao-27.js",
+          "id": "variacao-27",
+          "name": "Variação 27"
+        },
+        {
+          "file": "collections/carneiro-colecoes/layouts/variao-28.js",
+          "id": "variao-28",
+          "name": "Variao 28"
+        },
+        {
+          "file": "collections/carneiro-colecoes/layouts/variacao-29.js",
+          "id": "variacao-29",
+          "name": "Variação 29"
+        },
+        {
+          "file": "collections/carneiro-colecoes/layouts/variacao-30.js",
+          "id": "variacao-30",
+          "name": "Variação 30"
         }
       ]
     },
@@ -235,6 +260,41 @@ window.SenkoColecoesManifest = {
           "file": "collections/franca/layouts/padrao-2.js",
           "id": "padrao-2",
           "name": "padrão 2"
+        }
+      ]
+    },
+    {
+      "file": "collections/maicon-colecoes/collection.js",
+      "slug": "maicon-colecoes",
+      "name": "Maicon Coleções",
+      "group": "maicon",
+      "tags": [],
+      "layoutCount": 5,
+      "layouts": [
+        {
+          "file": "collections/maicon-colecoes/layouts/padrao-1.js",
+          "id": "padrao-1",
+          "name": "padrão 1"
+        },
+        {
+          "file": "collections/maicon-colecoes/layouts/padrao-2.js",
+          "id": "padrao-2",
+          "name": "padrão 2"
+        },
+        {
+          "file": "collections/maicon-colecoes/layouts/padrao-3.js",
+          "id": "padrao-3",
+          "name": "padrão 3"
+        },
+        {
+          "file": "collections/maicon-colecoes/layouts/padrao-4.js",
+          "id": "padrao-4",
+          "name": "padrão 4"
+        },
+        {
+          "file": "collections/maicon-colecoes/layouts/padrao-5.js",
+          "id": "padrao-5",
+          "name": "padrão 5"
         }
       ]
     }

@@ -1,73 +1,73 @@
 // @ts-nocheck
 SenkoLib.registerLayout(
-{
-  id: "section-9",
-  name: "Section-9",
-  tags: ["Section 9", "9", "grid"],
-  html: `<section id="faq-section" aria-labelledby="faq-section-title">
-    <div id="faq-section__header">
-        <h2 id="faq-section__title" id="faq-section-title">Título Principal</h2>
-        <p id="faq-section__subtitle">Sub-título</p>
-    </div>
-    <ul id="faq-section__list">
-        <li id="faq-section__item">
-            <details id="faq-section__item">
-                <summary>
-                    <h3 id="faq-section__q-text">Pergunta</h3>
-                    <span id="faq-section__icon" aria-hidden="true"></span>
-                </summary>
-                <div id="faq-section__a-inner">
-                    <p id="faq-section__a-text">Resposta</p>
-                </div>
-            </details>
-        </li>
-        <li id="faq-section__item">
-            <details id="faq-section__item">
-                <summary>
-                    <h3 id="faq-section__q-text">Pergunta</h3>
-                    <span id="faq-section__icon" aria-hidden="true"></span>
-                </summary>
-                <div id="faq-section__a-inner">
-                    <p id="faq-section__a-text">Resposta</p>
-                </div>
-            </details>
-        </li>
-        <li id="faq-section__item">
-            <details id="faq-section__item">
-                <summary>
-                    <h3 id="faq-section__q-text">Pergunta</h3>
-                    <span id="faq-section__icon" aria-hidden="true"></span>
-                </summary>
-                <div id="faq-section__a-inner">
-                    <p id="faq-section__a-text">Resposta</p>
-                </div>
-            </details>
-        </li>
-        <li id="faq-section__item">
-            <details id="faq-section__item">
-                <summary>
-                    <h3 id="faq-section__q-text">Pergunta</h3>
-                    <span id="faq-section__icon" aria-hidden="true"></span>
-                </summary>
-                <div id="faq-section__a-inner">
-                    <p id="faq-section__a-text">Resposta</p>
-                </div>
-            </details>
-        </li>
-        <li id="faq-section__item">
-            <details id="faq-section__item">
-                <summary>
-                    <h3 id="faq-section__q-text">Pergunta</h3>
-                    <span id="faq-section__icon" aria-hidden="true"></span>
-                </summary>
-                <div id="faq-section__a-inner">
-                    <p id="faq-section__a-text">Resposta</p>
-                </div>
-            </details>
-        </li>
-    </ul>
-</section>`,
-  css: `<style>
+    {
+        id: "section-9",
+        name: "Section-9",
+        tags: ["Section 9", "9", "grid"],
+        html: `        <section id="faq-section" aria-label="Perguntas frequentes">
+            <div id="faq-section__header">
+                <h2 id="faq-section__title" id="faq-section-title">Título Principal</h2>
+                <p id="faq-section__subtitle">Sub-título</p>
+            </div>
+            <ul id="faq-section__list">
+                <li id="faq-section__item">
+                    <details id="faq-section__item">
+                        <summary>
+                            <h3 id="faq-section__q-text">Pergunta</h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text">Resposta</p>
+                        </div>
+                    </details>
+                </li>
+                <li id="faq-section__item">
+                    <details id="faq-section__item">
+                        <summary>
+                            <h3 id="faq-section__q-text">Pergunta</h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text">Resposta</p>
+                        </div>
+                    </details>
+                </li>
+                <li id="faq-section__item">
+                    <details id="faq-section__item">
+                        <summary>
+                            <h3 id="faq-section__q-text">Pergunta</h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text">Resposta</p>
+                        </div>
+                    </details>
+                </li>
+                <li id="faq-section__item">
+                    <details id="faq-section__item">
+                        <summary>
+                            <h3 id="faq-section__q-text">Pergunta</h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text">Resposta</p>
+                        </div>
+                    </details>
+                </li>
+                <li id="faq-section__item">
+                    <details id="faq-section__item">
+                        <summary>
+                            <h3 id="faq-section__q-text">Pergunta</h3>
+                            <span id="faq-section__icon" aria-hidden="true"></span>
+                        </summary>
+                        <div id="faq-section__a-inner">
+                            <p id="faq-section__a-text">Resposta</p>
+                        </div>
+                    </details>
+                </li>
+            </ul>
+        </section>`,
+        css: `<style>
     /*inicio-area-de-faq*/
     #faq-section {
         width: 100%;
@@ -197,5 +197,5 @@ SenkoLib.registerLayout(
     }
     /*final-area-de-faq*/
 </style>`
-}
+    }
 );

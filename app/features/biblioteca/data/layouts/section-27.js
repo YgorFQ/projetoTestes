@@ -1,65 +1,61 @@
 // @ts-nocheck
 SenkoLib.registerLayout(
-{
-  id: "section-27",
-  name: "Section-27",
-  tags: ["grid", "21", "split", "carrossel", "animado"],
-  html: `<section class="section-27-container" aria-label="Estilo e detalhes da Havaianas Top Senses Areia/Areia">
-    <article class="section-27" aria-labelledby="section-21-title">
-        <div class="section-27__content">
-            <h2 class="section-27__title" id="section-21-title">
-                Versatilidade que simplifica o visual
-            </h2>
-            <p class="section-27__text">
-                Tom areia, conforto de borracha e visual clássico para usar sem pensar duas vezes.
-            </p>
-        </div>
-        <input class="section-27__control" type="radio" name="section-21-carousel" id="section-21-slide-1"
-            checked="" aria-label="Mostrar primeira imagem">
-        <input class="section-27__control" type="radio" name="section-21-carousel" id="section-21-slide-2"
-            aria-label="Mostrar próxima imagem">
-        <input class="section-27__control" type="radio" name="section-21-carousel" id="section-21-slide-3"
-            aria-label="Mostrar última imagem">
-        <div class="section-27__gallery" aria-label="Espaços para imagens em recorte diagonal">
-            <div class="section-27__viewport">
-                <div class="section-27__track">
-                    <figure class="section-27__panel section-27__panel--first">
-                        <img class="section-27__image"
-                            src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-mao-exibindo-produto-1225195-1225196-1225197-1225198-1225199-05-3.webp"
-                            alt="Imagem ilustrativa das tiras texturizadas da Havaianas Top Senses Areia/Areia" width="420"
-                            height="320" loading="lazy" decoding="async">
-                    </figure>
-                    <figure class="section-27__panel section-27__panel--middle">
-                        <img class="section-27__image"
-                            src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-mao-exibindo-produto-1225195-1225196-1225197-1225198-1225199-05-2.webp"
-                            alt="Imagem ilustrativa do solado macio da Havaianas Top Senses Areia/Areia" width="420" height="320"
-                            loading="lazy" decoding="async">
-                    </figure>
-                    <figure class="section-27__panel section-27__panel--last">
-                        <img class="section-27__image"
-                            src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-modelo-shopping-lifestyle-1225195-1225196-1225197-1225198-1225199-05-1.webp"
-                            alt="Imagem lateral ilustrativa da Havaianas Top Senses Areia/Areia" width="420" height="320"
-                            loading="lazy" decoding="async">
-                    </figure>
+    {
+        id: "section-27",
+        name: "Section-27",
+        tags: ["grid", "21", "split", "carrossel", "animado"],
+        html: `        <section class="section-27-container" aria-labelledby="section-21-title">
+            <div class="section-27">
+                <div class="section-27__content">
+                    <h2 class="section-27__title" id="section-21-title">
+                        Versatilidade que simplifica o visual
+                    </h2>
+                    <p class="section-27__text">
+                        Tom areia, conforto de borracha e visual clássico para usar sem pensar duas vezes.
+                    </p>
+                </div>
+                <input class="section-27__control" id="section-21-slide-1" type="radio" name="section-21-carousel"
+                    checked="" aria-label="Mostrar primeira imagem">
+                <input class="section-27__control" id="section-21-slide-2" type="radio" name="section-21-carousel"
+                    aria-label="Mostrar próxima imagem">
+                <input class="section-27__control" id="section-21-slide-3" type="radio" name="section-21-carousel"
+                    aria-label="Mostrar última imagem">
+                <div class="section-27__gallery" role="group" aria-label="Espaços para imagens em recorte diagonal">
+                    <div class="section-27__viewport">
+                        <div class="section-27__track">
+                            <figure class="section-27__panel section-27__panel--first">
+                                <img class="section-27__image" width="420" height="320" loading="lazy" decoding="async"
+                                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-mao-exibindo-produto-1225195-1225196-1225197-1225198-1225199-05-3.webp"
+                                    alt="Imagem ilustrativa das tiras texturizadas da Havaianas Top Senses Areia/Areia">
+                            </figure>
+                            <figure class="section-27__panel section-27__panel--middle">
+                                <img class="section-27__image" width="420" height="320" loading="lazy" decoding="async"
+                                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-mao-exibindo-produto-1225195-1225196-1225197-1225198-1225199-05-2.webp"
+                                    alt="Imagem ilustrativa do solado macio da Havaianas Top Senses Areia/Areia">
+                            </figure>
+                            <figure class="section-27__panel section-27__panel--last">
+                                <img class="section-27__image" width="420" height="320" loading="lazy" decoding="async"
+                                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-modelo-shopping-lifestyle-1225195-1225196-1225197-1225198-1225199-05-1.webp"
+                                    alt="Imagem lateral ilustrativa da Havaianas Top Senses Areia/Areia">
+                            </figure>
+                        </div>
+                    </div>
+                    <div class="section-27__arrows" role="navigation" aria-label="Controles das imagens em destaque">
+                        <label class="section-27__arrow section-27__arrow--right section-27__arrow--next-1"
+                            for="section-21-slide-2" aria-label="Mostrar próxima imagem">›</label>
+                        <label class="section-27__arrow section-27__arrow--left section-27__arrow--prev-2"
+                            for="section-21-slide-1" aria-label="Mostrar imagem anterior">‹</label>
+                        <label class="section-27__arrow section-27__arrow--right section-27__arrow--next-2"
+                            for="section-21-slide-3" aria-label="Mostrar próxima imagem">›</label>
+                        <label class="section-27__arrow section-27__arrow--left section-27__arrow--prev-3"
+                            for="section-21-slide-2" aria-label="Mostrar imagem anterior">‹</label>
+                        <label class="section-27__arrow section-27__arrow--left section-27__arrow--prev-3-tablet"
+                            for="section-21-slide-1" aria-label="Mostrar imagem anterior">‹</label>
+                    </div>
                 </div>
             </div>
-            <nav class="section-27__arrows" aria-label="Controles das imagens em destaque">
-                <label class="section-27__arrow section-27__arrow--right section-27__arrow--next-1"
-                    for="section-21-slide-2" role="button" aria-label="Ver próxima imagem">›</label>
-                <label class="section-27__arrow section-27__arrow--left section-27__arrow--prev-2"
-                    for="section-21-slide-1" role="button" aria-label="Ver imagem anterior">‹</label>
-                <label class="section-27__arrow section-27__arrow--right section-27__arrow--next-2"
-                    for="section-21-slide-3" role="button" aria-label="Ver próxima imagem">›</label>
-                <label class="section-27__arrow section-27__arrow--left section-27__arrow--prev-3"
-                    for="section-21-slide-2" role="button" aria-label="Ver imagem anterior">‹</label>
-                <label class="section-27__arrow section-27__arrow--left section-27__arrow--prev-3-tablet"
-                    for="section-21-slide-1" role="button"
-                    aria-label="Voltar para as primeiras imagens">‹</label>
-            </nav>
-        </div>
-    </article>
-</section>`,
-  css: `<style>
+        </section>`,
+        css: `<style>
     .section-27 {
         width: 100%;
         min-height: 280px;
@@ -496,5 +492,5 @@ SenkoLib.registerLayout(
         }
     }
 </style>`
-}
+    }
 );

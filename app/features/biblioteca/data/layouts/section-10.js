@@ -1,28 +1,30 @@
 // @ts-nocheck
 SenkoLib.registerLayout(
-{
-  id: "section-10",
-  name: "Section-10",
-  tags: ["grid", "10", "carrossel", "animado"],
-  html: `        <section aria-label="Grid de especificações do produto" style="background-color: #6e0c2a08;">
-            <div class="section-10 section-10--carousel-mobile" aria-labelledby="section-10-title">
+    {
+        id: "section-10",
+        name: "Section-10",
+        tags: ["grid", "10", "carrossel", "animado"],
+        html: `        <section aria-labelledby="section-10-title" style="background-color: #6e0c2a08;">
+            <div class="section-10 section-10--carousel-mobile">
                 <h2 class="section-10__title" id="section-10-title">
                     Detalhes que fazem diferença no uso
                 </h2>
-                <input class="section-10__control" type="radio" name="section-10-carousel" id="section-10-slide-1"
-                    checked="">
-                <input class="section-10__control" type="radio" name="section-10-carousel" id="section-10-slide-2">
-                <input class="section-10__control" type="radio" name="section-10-carousel" id="section-10-slide-3">
-                <input class="section-10__control" type="radio" name="section-10-carousel" id="section-10-slide-4">
+                <input class="section-10__control" id="section-10-slide-1" type="radio" name="section-10-carousel"
+                    aria-label="Mostrar detalhe 1 do produto" checked="">
+                <input class="section-10__control" id="section-10-slide-2" type="radio" name="section-10-carousel"
+                    aria-label="Mostrar detalhe 2 do produto">
+                <input class="section-10__control" id="section-10-slide-3" type="radio" name="section-10-carousel"
+                    aria-label="Mostrar detalhe 3 do produto">
+                <input class="section-10__control" id="section-10-slide-4" type="radio" name="section-10-carousel"
+                    aria-label="Mostrar detalhe 4 do produto">
                 <div class="section-10__viewport">
                     <ul class="section-10__track">
                         <li class="section-10__item">
                             <figure class="section-10__card">
                                 <div class="section-10__media">
-                                    <img class="section-10__image"
+                                    <img class="section-10__image" loading="lazy" decoding="async"
                                         src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-detalhe-tiras-textura-1225195-1225196-1225197-1225198-1225199-03-1.webp"
-                                        alt="Detalhe ilustrativo das tiras texturizadas da Havaianas Top Senses Areia/Areia"
-                                        loading="lazy" decoding="async">
+                                        alt="Detalhe ilustrativo das tiras texturizadas da Havaianas Top Senses Areia/Areia">
                                 </div>
                                 <figcaption>
                                     <h3 class="section-10__card-title">
@@ -37,10 +39,9 @@ SenkoLib.registerLayout(
                         <li class="section-10__item">
                             <figure class="section-10__card">
                                 <div class="section-10__media">
-                                    <img class="section-10__image"
+                                    <img class="section-10__image" loading="lazy" decoding="async"
                                         src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-detalhe-solado-inferior-1225195-1225196-1225197-1225198-1225199-03-2.webp"
-                                        alt="Detalhe ilustrativo do solado da Havaianas Top Senses Areia/Areia" loading="lazy"
-                                        decoding="async">
+                                        alt="Detalhe ilustrativo do solado da Havaianas Top Senses Areia/Areia">
                                 </div>
                                 <figcaption>
                                     <h3 class="section-10__card-title">
@@ -55,10 +56,9 @@ SenkoLib.registerLayout(
                         <li class="section-10__item">
                             <figure class="section-10__card">
                                 <div class="section-10__media">
-                                    <img class="section-10__image"
+                                    <img class="section-10__image" loading="lazy" decoding="async"
                                         src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-modelo-passarela-madeira-lifestyle-1225195-1225196-1225197-1225198-1225199-03-3.webp"
-                                        alt="Imagem ilustrativa da cor neutra da Havaianas Top Senses Areia/Areia" loading="lazy"
-                                        decoding="async">
+                                        alt="Imagem ilustrativa da cor neutra da Havaianas Top Senses Areia/Areia">
                                 </div>
                                 <figcaption>
                                     <h3 class="section-10__card-title">
@@ -73,10 +73,9 @@ SenkoLib.registerLayout(
                         <li class="section-10__item">
                             <figure class="section-10__card">
                                 <div class="section-10__media">
-                                    <img class="section-10__image"
+                                    <img class="section-10__image" loading="lazy" decoding="async"
                                         src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-elegance-amaranto-detalhe-logotipo-relevo-1225195-1225196-1225197-1225198-1225199-03-4.webp"
-                                        alt="Detalhe ilustrativo da Havaianas Top Senses Areia/Areia fácil de limpar" loading="lazy"
-                                        decoding="async">
+                                        alt="Detalhe ilustrativo da Havaianas Top Senses Areia/Areia fácil de limpar">
                                 </div>
                                 <figcaption>
                                     <h3 class="section-10__card-title">
@@ -91,14 +90,18 @@ SenkoLib.registerLayout(
                     </ul>
                 </div>
                 <nav class="section-10__controls">
-                    <label class="section-10__button section-10__button--1" for="section-10-slide-1">1</label>
-                    <label class="section-10__button section-10__button--2" for="section-10-slide-2">2</label>
-                    <label class="section-10__button section-10__button--3" for="section-10-slide-3">3</label>
-                    <label class="section-10__button section-10__button--4" for="section-10-slide-4">4</label>
+                    <label class="section-10__button section-10__button--1" for="section-10-slide-1"
+                        aria-label="Mostrar detalhe 1 do produto">1</label>
+                    <label class="section-10__button section-10__button--2" for="section-10-slide-2"
+                        aria-label="Mostrar detalhe 2 do produto">2</label>
+                    <label class="section-10__button section-10__button--3" for="section-10-slide-3"
+                        aria-label="Mostrar detalhe 3 do produto">3</label>
+                    <label class="section-10__button section-10__button--4" for="section-10-slide-4"
+                        aria-label="Mostrar detalhe 4 do produto">4</label>
                 </nav>
             </div>
         </section>`,
-  css: `    <style>
+        css: `    <style>
         .section-10-container {
             padding-top: 28px;
             padding-bottom: 36px;
@@ -377,5 +380,5 @@ SenkoLib.registerLayout(
             }
         }
     </style>`
-}
+    }
 );

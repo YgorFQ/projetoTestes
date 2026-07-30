@@ -1,78 +1,78 @@
 // @ts-nocheck
 SenkoLib.registerLayout(
-{
-  id: "section-19-carrossel-grid",
-  name: "Section-19 (Carrossel Grid)",
-  tags: ["carrossel", "grid", "section 19", "19"],
-  html: `<input class="section-19__radio" type="radio" name="slide-19" id="s19-1" checked>
-<input class="section-19__radio" type="radio" name="slide-19" id="s19-2">
-<input class="section-19__radio" type="radio" name="slide-19" id="s19-3">
-<div class="section-19">
-    <section class="section-19__wrap" aria-label="Carrossel de aplicações do produto">
-        <header class="section-19__header">
-            <h3 class="section-19__title">Aplicações do Cabo Flexível Corfio 4,0 mm²</h3>
-        </header>
-
-        <div class="section-19__track" role="list">
-            <article class="section-19__card" role="listitem">
-                <img class="section-19__card-img"
-                    src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/megatron/404517_04-2.png"
-                    alt="Interior de uma obra em andamento com paredes de gesso cruas, tubulações expostas e luz do sol iluminando a poeira no ar"
-                    width="310" height="220" loading="lazy">
-                <div class="section-19__card-body">
-                    <h4 class="section-19__card-title">Instalações Comerciais e Industriais</h4>
-                    <p class="section-19__card-desc">Indicado para circuitos de distribuição de energia em
-                        comércios, galpões, áreas técnicas e ambientes industriais, conforme o projeto elétrico</p>
+    {
+        id: "section-19",
+        name: "Section-19",
+        tags: ["carrossel", "grid", "section 19", "19"],
+        html: `        <section class="section-19" aria-label="Carrossel de aplicações do produto">
+            <input class="section-19__radio" id="s19-1" type="radio" name="slide-19" aria-label="Mostrar aplicação 1"
+                checked>
+            <input class="section-19__radio" id="s19-2" type="radio" name="slide-19" aria-label="Mostrar aplicação 2">
+            <input class="section-19__radio" id="s19-3" type="radio" name="slide-19" aria-label="Mostrar aplicação 3">
+            <!--Caso o carrossel não esteja funcionando, coloque esses input acima de "<section class="section-19" aria-label="Carrossel de aplicações do produto">" e não dentro-->
+            <div class="div-19__wrap">
+                <div class="section-19__header">
+                    <h2 class="section-19__title">Aplicações do Cabo Flexível Corfio 4,0 mm²</h2>
                 </div>
-            </article>
 
-            <article class="section-19__card" role="listitem">
-                <img class="section-19__card-img"
-                    src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/megatron/404517_04-1.png"
-                    alt="Imagem propositalmente desfocada de uma recepção moderna, bem iluminada e com poltronas dispostas perto de janelas grandes"
-                    width="310" height="220" loading="lazy">
-                <div class="section-19__card-body">
-                    <h4 class="section-19__card-title">Redes Residenciais e Prediais</h4>
-                    <p class="section-19__card-desc">Aplicável em casas e prédios residenciais para circuitos
-                        que exigem seção nominal de 4,0 mm² e condutor flexível de cobre</p>
+                <div class="section-19__track">
+                    <figure class="section-19__card">
+                        <img class="section-19__card-img" width="310" height="220" loading="lazy"
+                            src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/megatron/404517_04-2.png"
+                            alt="Interior de uma obra em andamento com paredes de gesso cruas, tubulações expostas e luz do sol iluminando a poeira no ar">
+                        <figcaption class="section-19__card-body">
+                            <h4 class="section-19__card-title">Instalações Comerciais e Industriais</h4>
+                            <p class="section-19__card-desc">Indicado para circuitos de distribuição de energia em
+                                comércios, galpões, áreas técnicas e ambientes industriais, conforme o projeto elétrico
+                            </p>
+                        </figcaption>
+                    </figure>
+
+                    <figure class="section-19__card">
+                        <img class="section-19__card-img" width="310" height="220" loading="lazy"
+                            src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/megatron/404517_04-1.png"
+                            alt="Imagem propositalmente desfocada de uma recepção moderna, bem iluminada e com poltronas dispostas perto de janelas grandes">
+                        <figcaption class="section-19__card-body">
+                            <h4 class="section-19__card-title">Redes Residenciais e Prediais</h4>
+                            <p class="section-19__card-desc">Aplicável em casas e prédios residenciais para circuitos
+                                que exigem seção nominal de 4,0 mm² e condutor flexível de cobre</p>
+                        </figcaption>
+                    </figure>
+
+                    <figure class="section-19__card">
+                        <img class="section-19__card-img" width="310" height="220" loading="lazy"
+                            src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/cabo-flexivel-corfio-aplicacao-cozinha-lifestyle-4203793-21.jpg"
+                            alt="Ambiente de cozinha residencial com foco em balcão, sugerindo aplicação de cabos elétricos Corfio">
+                        <figcaption class="section-19__card-body">
+                            <h4 class="section-19__card-title">Cozinhas, Áreas de Serviço e Circuitos Específicos</h4>
+                            <p class="section-19__card-desc">Pode atender circuitos específicos quando o projeto exigir
+                                seção de 4,0 mm², respeitando carga, distância e método de instalação</p>
+                        </figcaption>
+                    </figure>
                 </div>
-            </article>
 
-            <article class="section-19__card" role="listitem">
-                <img class="section-19__card-img"
-                    src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/cabo-flexivel-corfio-aplicacao-cozinha-lifestyle-4203793-21.jpg"
-                    alt="Ambiente de cozinha residencial com foco em balcão, sugerindo aplicação de cabos elétricos Corfio"
-                    width="310" height="220" loading="lazy">
-                <div class="section-19__card-body">
-                    <h4 class="section-19__card-title">Cozinhas, Áreas de Serviço e Circuitos Específicos</h4>
-                    <p class="section-19__card-desc">Pode atender circuitos específicos quando o projeto exigir
-                        seção de 4,0 mm², respeitando carga, distância e método de instalação</p>
+                <div class="section-19__nav" role="navigation" aria-label="Navegação do carrossel">
+                    <div class="section-19__btn-slot section-19__btn--prev">
+                        <span class="section-19__btn-disabled" aria-hidden="true">&#8592;</span>
+                        <label for="s19-1" aria-label="Voltar para o slide 1">&#8592;</label>
+                        <label for="s19-2" aria-label="Voltar para o slide 2">&#8592;</label>
+                    </div>
+
+                    <div class="section-19__dots">
+                        <label class="section-19__dot" for="s19-1" aria-label="Ir para o slide 1"></label>
+                        <label class="section-19__dot" for="s19-2" aria-label="Ir para o slide 2"></label>
+                        <label class="section-19__dot" for="s19-3" aria-label="Ir para o slide 3"></label>
+                    </div>
+
+                    <div class="section-19__btn-slot section-19__btn--next">
+                        <label for="s19-2" aria-label="Avançar para o slide 2">&#8594;</label>
+                        <label for="s19-3" aria-label="Avançar para o slide 3">&#8594;</label>
+                        <span class="section-19__btn-disabled" aria-hidden="true">&#8594;</span>
+                    </div>
                 </div>
-            </article>
-        </div>
-
-        <nav class="section-19__nav" aria-label="Navegação do carrossel">
-            <div class="section-19__btn-slot section-19__btn--prev">
-                <span class="section-19__btn-disabled" aria-hidden="true">&#8592;</span>
-                <label for="s19-1" aria-label="Slide anterior">&#8592;</label>
-                <label for="s19-2" aria-label="Slide anterior">&#8592;</label>
             </div>
-
-            <div class="section-19__dots" role="tablist" aria-label="Slides">
-                <label class="section-19__dot" for="s19-1" role="tab" aria-label="Ir para slide 1"></label>
-                <label class="section-19__dot" for="s19-2" role="tab" aria-label="Ir para slide 2"></label>
-                <label class="section-19__dot" for="s19-3" role="tab" aria-label="Ir para slide 3"></label>
-            </div>
-
-            <div class="section-19__btn-slot section-19__btn--next">
-                <label for="s19-2" aria-label="Próximo slide">&#8594;</label>
-                <label for="s19-3" aria-label="Próximo slide">&#8594;</label>
-                <span class="section-19__btn-disabled" aria-hidden="true">&#8594;</span>
-            </div>
-        </nav>
-    </section>
-</div>`,
-  css: `<style>
+        </section>`,
+        css: `<style>
     /* ── Tokens do section-19 ── */
     .section-19 {
         font-family: system-ui, sans-serif;
@@ -426,5 +426,5 @@ SenkoLib.registerLayout(
         }
     }
 </style>`
-}
+    }
 );

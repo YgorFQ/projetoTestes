@@ -7,10 +7,35 @@ A ideia é que qualquer pessoa consiga entender:
 - o que o projeto faz;
 - como abrir e testar;
 - onde cada coisa fica;
+- qual é o modelo atual de arquivos da Biblioteca e das Coleções;
 - como uma feature entra no app;
 - como os dados são carregados;
 - como funciona a integração com GitHub;
 - quais regras não podem ser quebradas.
+
+## Atualização Importante Do Modelo Atual
+
+O SenkoLib não usa mais a ideia antiga de "sintaxe" com vários itens dentro do mesmo bloco de registro.
+
+A regra atual é:
+
+- cada layout da Biblioteca fica em seu próprio arquivo JS;
+- cada variação da Biblioteca fica em seu próprio arquivo JS;
+- cada coleção fica em seu próprio arquivo JS de metadados;
+- cada layout dentro de uma coleção fica em seu próprio arquivo JS;
+- os manifests são os catálogos que dizem quais arquivos devem ser carregados.
+
+Isso foi decidido para evitar erros difíceis de editar, como registro duplicado, parênteses sobrando, bloco quebrado e item salvo no GitHub mas não carregado pelo site.
+
+Na prática:
+
+- o arquivo do item guarda o conteúdo real;
+- o manifest aponta para esse arquivo;
+- a interface carrega o manifest primeiro;
+- depois carrega somente os arquivos listados;
+- ao salvar no GitHub, a integração precisa atualizar o arquivo do item e o manifest correspondente.
+
+Se um layout, variação, coleção ou layout de coleção existe na pasta, mas não aparece no app, a primeira suspeita deve ser o manifest.
 
 
 ## 1. O Que É O SenkoLib
@@ -161,7 +186,11 @@ Arquivos principais:
 
 ```text
 app/shell/scripts/senko-shell.js
+app/shell/scripts/senko-quick-create.js
+app/shell/scripts/senko-guide.js
 app/shell/styles/styles.css
+app/shell/styles/senko-quick-create.css
+app/shell/styles/senko-guide.css
 ```
 
 O shell controla:
@@ -170,10 +199,16 @@ O shell controla:
 - troca de abas;
 - aba ativa;
 - botão global de GitHub;
+- criação rápida oficial;
+- Senko Guide oficial;
 - logo que volta para a primeira feature;
 - estado vazio, caso nenhuma feature carregue.
 
 O shell não deve importar código interno de uma feature.
+
+O Senko Guide é uma ferramenta global do shell, não uma aba. Ele pode ser
+aberto em qualquer feature pelo botão do cabeçalho e expõe apenas
+`SenkoGuide.open()` e `SenkoGuide.close()` como API pública.
 
 
 ### app/shared/
@@ -248,9 +283,30 @@ Atualmente existe:
 
 ```text
 app/prototype/gamer-preview/
+app/prototype/team-notes/
 ```
 
-O Preview ainda é beta, por isso fica em `prototype`.
+O Preview e Notas da equipe ainda são áreas experimentais, por isso ficam em `prototype`.
+
+O Senko Guide já é oficial e fica em:
+
+```text
+app/shell/scripts/senko-guide.js
+app/shell/styles/senko-guide.css
+```
+
+Importante:
+
+O editor oficial de layouts e variações da Biblioteca não fica mais em `prototype`.
+
+Ele foi integrado na própria feature:
+
+```text
+app/features/biblioteca/scripts/layout-editor.js
+app/features/biblioteca/styles/layout-editor.css
+```
+
+Se uma tela deixa de ser protótipo, ela deve sair de `prototype` e passar a morar dentro da feature que realmente usa aquela tela.
 
 
 ## 6. Como O Projeto Carrega
@@ -347,15 +403,24 @@ No SenkoLib, o manifest diz:
 
 "Esses são os arquivos de dados que essa feature deve carregar."
 
-Exemplo da Biblioteca:
+Exemplo atual da Biblioteca:
 
 ```js
 window.SenkoBibliotecaManifest = {
   layouts: [
-    'layouts/layouts001.js'
+    {
+      file: 'layouts/section-1.js',
+      id: 'section-1',
+      name: 'Section 1'
+    }
   ],
   variants: [
-    'variants/section-1.js'
+    {
+      file: 'variants/section-1/variacao-1.js',
+      layoutId: 'section-1',
+      id: 'variacao-1',
+      name: 'variacao-1'
+    }
   ]
 };
 ```
@@ -366,12 +431,19 @@ Exemplo de Coleções:
 window.SenkoColecoesManifest = {
   collections: [
     {
-      file: 'colecao-joel.js',
+      file: 'collections/colecao-joel/collection.js',
       slug: 'colecao-joel',
       name: 'Coleção Joel',
       group: 'joel',
       tags: ['Responsivo'],
-      layoutCount: 2
+      layoutCount: 2,
+      layouts: [
+        {
+          file: 'collections/colecao-joel/layouts/padrao-1.js',
+          id: 'padrao-1',
+          name: 'Padrão 1'
+        }
+      ]
     }
   ]
 };
@@ -380,6 +452,10 @@ window.SenkoColecoesManifest = {
 Se criar um arquivo novo manualmente, precisa atualizar o manifest da feature.
 
 Se o GitHub criar o arquivo, a integração deve atualizar o manifest automaticamente.
+
+Regra prática:
+
+Arquivo sem manifest é arquivo invisível para o app.
 
 
 ## 10. Por Que O Manifest É JavaScript E Não JSON
@@ -463,14 +539,22 @@ SenkoLib
 
 Funções principais:
 
-- `SenkoLib.register(arr)`: registra layouts.
+- `SenkoLib.register(arr)`: registra layouts no formato antigo, mantido apenas para compatibilidade.
+- `SenkoLib.registerLayout(obj)`: registra um layout individual.
 - `SenkoLib.getAll()`: retorna todos os layouts.
 - `SenkoLib.updateLayout(id, patch)`: atualiza layout em memória.
-- `SenkoLib.registerVariant(layoutName, arr)`: registra variantes.
+- `SenkoLib.registerVariant(layoutName, arr)`: registra variantes no formato antigo, mantido apenas para compatibilidade.
+- `SenkoLib.registerVariantFile(layoutName, obj)`: registra uma variação individual.
 - `SenkoLib.getVariants(layoutName)`: retorna variantes de um layout.
 - `SenkoLib.updateVariant(layoutName, variant, patch)`: edita variante em memória.
 - `SenkoLib.hasLayoutName(name, exceptId)`: verifica nome duplicado de layout.
 - `SenkoLib.hasVariantName(layoutName, name, exceptVariant)`: verifica nome duplicado de variante.
+
+Regra atual:
+
+Use `registerLayout` para layouts novos e `registerVariantFile` para variações novas.
+
+`register` e `registerVariant` continuam existindo apenas para não quebrar arquivos antigos durante a migração.
 
 
 ### 11.3 Dados De Layout
@@ -484,16 +568,16 @@ app/features/biblioteca/data/layouts/
 Um arquivo de layout chama:
 
 ```js
-SenkoLib.register([
-  {
-    id: 'section-1',
-    name: 'Section 1',
-    category: '...',
-    tags: ['...'],
-    html: `...`,
-    css: `...`
-  }
-]);
+// @ts-nocheck
+SenkoLib.registerLayout(
+{
+  id: 'section-1',
+  name: 'Section 1',
+  tags: ['hero', 'imagem'],
+  html: `...`,
+  css: `...`
+}
+);
 ```
 
 O layout precisa ter:
@@ -504,33 +588,88 @@ O layout precisa ter:
 - `css`: código CSS;
 - opcionalmente categoria e tags.
 
+O `id` é técnico e não deve ser editado pela interface.
+
+Quando um layout já existe, o editor oficial mostra campo para editar o nome, tags, HTML e CSS, mas não oferece edição direta do ID. O ID define o nome lógico do arquivo, as referências no manifest e o vínculo das variações.
+
+Se precisar renomear ID, isso deve ser tratado como migração controlada: criar novo arquivo, atualizar manifest, mover variações e remover o antigo.
+
 
 ### 11.4 Dados De Variantes
 
 As variantes ficam em:
 
 ```text
-app/features/biblioteca/data/variants/
+app/features/biblioteca/data/variants/[id-do-layout]/
 ```
 
 Um arquivo de variante chama:
 
 ```js
-SenkoLib.registerVariant('section-1', [
-  {
-    name: 'Variação 1',
-    html: `...`,
-    css: `...`
-  }
-]);
+// @ts-nocheck
+SenkoLib.registerVariantFile('section-1',
+{
+  id: 'variacao-1',
+  name: 'variacao-1',
+  html: `...`,
+  css: `...`
+}
+);
 ```
 
 Cada variante pertence a um layout.
 
 Não pode existir variante com nome repetido dentro do mesmo layout.
 
+O arquivo da variação também precisa aparecer em:
 
-### 11.5 Regras De Nome Na Biblioteca
+```text
+app/features/biblioteca/data/manifest.js
+```
+
+Exemplo:
+
+```js
+{
+  file: 'variants/section-1/variacao-1.js',
+  layoutId: 'section-1',
+  id: 'variacao-1',
+  name: 'variacao-1'
+}
+```
+
+As variações são exibidas em ordem alfabética/natural pelo nome. Essa ordenação acontece só na tela; ela não reescreve a ordem salva no manifest.
+
+
+### 11.5 Editor Oficial De Layouts E Variações
+
+O editor oficial da Biblioteca fica dentro da própria feature:
+
+```text
+app/features/biblioteca/scripts/layout-editor.js
+app/features/biblioteca/styles/layout-editor.css
+```
+
+Ele substitui os modais antigos de edição de layout e variação.
+
+Responsabilidades do editor:
+
+- editar nome do layout ou da variação;
+- editar tags do layout;
+- editar HTML;
+- editar CSS;
+- mostrar preview em larguras diferentes;
+- salvar no GitHub quando a integração estiver disponível;
+- excluir layout ou variação usando os fluxos oficiais.
+
+Regra importante:
+
+O editor nunca deve oferecer campo editável para o ID gerado.
+
+O ID é ligação técnica entre arquivo, manifest, layout pai e variações. Alterar esse valor como se fosse um campo comum causa item não encontrado, arquivo órfão ou variação desconectada.
+
+
+### 11.6 Regras De Nome Na Biblioteca
 
 Não pode repetir:
 
@@ -552,7 +691,7 @@ Esses nomes podem ser tratados como equivalentes, dependendo da normalização.
 A ideia é evitar duplicatas que parecem diferentes, mas significam a mesma coisa.
 
 
-### 11.6 GitHub Da Biblioteca
+### 11.7 GitHub Da Biblioteca
 
 Pasta:
 
@@ -578,6 +717,27 @@ Responsabilidades:
 - editar variante;
 - excluir variante;
 - atualizar manifest da Biblioteca quando necessário.
+
+No modelo atual, criar ou editar não significa mais procurar um objeto dentro de um grande arquivo de sintaxe.
+
+O fluxo correto é:
+
+```text
+Layout:
+data/layouts/[id].js
+
+Variação:
+data/variants/[layoutId]/[id-da-variacao].js
+
+Catálogo:
+data/manifest.js
+```
+
+Ao criar um layout ou variação, a integração cria o arquivo individual e registra a entrada no manifest.
+
+Ao editar, ela encontra o arquivo pelo manifest e regrava o arquivo individual.
+
+Ao excluir, ela remove o arquivo individual e tira a entrada do manifest.
 
 Importante:
 
@@ -715,30 +875,52 @@ Funções principais:
 
 ### 12.5 Dados De Coleções
 
-Cada coleção fica em:
+Cada coleção fica em uma pasta própria:
 
 ```text
-app/features/colecoes/data/[slug].js
+app/features/colecoes/data/collections/[slug]/
 ```
 
-Um arquivo de coleção chama:
+O arquivo principal da coleção guarda somente metadados:
+
+```text
+app/features/colecoes/data/collections/[slug]/collection.js
+```
+
+Um arquivo `collection.js` chama:
 
 ```js
-ColLib.register({
+// @ts-nocheck
+ColLib.registerCollection({
   slug: 'colecao-joel',
   name: 'Coleção Joel',
   group: 'joel',
   tags: ['Responsivo'],
-  layouts: [
-    {
-      id: 'layout-1',
-      name: 'Layout 1',
-      html: `...`,
-      css: `...`
-    }
-  ]
+  layouts: []
 });
 ```
+
+Os layouts da coleção ficam em arquivos individuais:
+
+```text
+app/features/colecoes/data/collections/[slug]/layouts/[id-do-layout].js
+```
+
+Um arquivo de layout de coleção chama:
+
+```js
+// @ts-nocheck
+ColLib.registerCollectionLayout('colecao-joel', {
+  id: 'layout-1',
+  name: 'Layout 1',
+  html: `...`,
+  css: `...`
+});
+```
+
+Isso evita que uma coleção grande vire um arquivo difícil de editar.
+
+Também evita que um erro de sintaxe em um layout quebre o arquivo inteiro da coleção.
 
 
 ### 12.6 Manifest De Coleções
@@ -758,6 +940,30 @@ Analogia:
 É como ver a capa de um livro na estante sem abrir o livro inteiro.
 
 Quando o usuário abre ou edita a coleção, o arquivo completo é carregado.
+
+No modelo atual, o manifest de Coleções também lista os layouts individuais de cada coleção:
+
+```js
+{
+  file: 'collections/colecao-joel/collection.js',
+  slug: 'colecao-joel',
+  name: 'Coleção Joel',
+  group: 'joel',
+  tags: ['Responsivo'],
+  layoutCount: 1,
+  layouts: [
+    {
+      file: 'collections/colecao-joel/layouts/layout-1.js',
+      id: 'layout-1',
+      name: 'Layout 1'
+    }
+  ]
+}
+```
+
+Se o layout existe na pasta, mas não aparece dentro da coleção, verificar se ele está listado em `layouts` no manifest.
+
+Os layouts dentro de uma coleção são exibidos em ordem alfabética/natural pelo nome. Essa ordenação é visual e não altera a ordem salva no manifest.
 
 
 ### 12.7 Regras De Nome Em Coleções
@@ -1019,25 +1225,39 @@ Depois que cards estão prontos, o usuário pode:
 Ao gerar final, a ferramenta tenta substituir as imagens originais pelo `<picture>` gerado.
 
 
-## 15. Preview Beta
+## 15. Protótipos
 
 Pasta:
 
 ```text
-app/prototype/gamer-preview/
+app/prototype/
 ```
 
 É uma área experimental.
 
-Ela fica em `prototype` porque ainda não deve ser tratada como feature totalmente final.
+Tudo que está em `prototype` ainda não deve ser tratado como feature final.
 
-Arquivos principais:
+Protótipos atuais:
 
 ```text
-register.js
-view.js
-script.js
-styles.css
+app/prototype/gamer-preview/
+app/prototype/team-notes/
+```
+
+Regra:
+
+Quando um protótipo vira parte oficial do sistema, ele deve sair de `prototype` e ser integrado na feature responsável.
+
+Foi isso que aconteceu com o editor de layouts e variações da Biblioteca e
+com o Senko Guide.
+
+Ele saiu da ideia de protótipo e passou a morar em:
+
+```text
+app/features/biblioteca/scripts/layout-editor.js
+app/features/biblioteca/styles/layout-editor.css
+app/shell/scripts/senko-guide.js
+app/shell/styles/senko-guide.css
 ```
 
 
@@ -1402,13 +1622,26 @@ Uma feature nova deve:
 
 Passos:
 
-1. Criar ou editar um arquivo em:
+1. Criar um arquivo próprio para o layout em:
 
 ```text
-app/features/biblioteca/data/layouts/
+app/features/biblioteca/data/layouts/[id-do-layout].js
 ```
 
-2. Adicionar o layout em `SenkoLib.register([...])`.
+2. Registrar o layout com:
+
+```js
+// @ts-nocheck
+SenkoLib.registerLayout(
+{
+  id: 'id-do-layout',
+  name: 'Nome do Layout',
+  tags: ['tag-1', 'tag-2'],
+  html: `...`,
+  css: `...`
+}
+);
+```
 
 3. Conferir se o arquivo está listado em:
 
@@ -1416,54 +1649,107 @@ app/features/biblioteca/data/layouts/
 app/features/biblioteca/data/manifest.js
 ```
 
-4. Abrir a Biblioteca.
+4. A entrada do manifest deve apontar para o arquivo:
 
-5. Ver se o layout aparece.
+```js
+{
+  file: 'layouts/id-do-layout.js',
+  id: 'id-do-layout',
+  name: 'Nome do Layout'
+}
+```
 
-6. Testar abrir, copiar, editar e criar variante.
+5. Abrir a Biblioteca.
+
+6. Ver se o layout aparece.
+
+7. Testar abrir, copiar, editar e criar variante.
+
+Nunca envolver `SenkoLib.registerLayout(...)` duas vezes.
+
+Errado:
+
+```js
+SenkoLib.registerLayout(
+SenkoLib.registerLayout(
+{
+  id: 'teste',
+  name: 'teste',
+  html: `...`,
+  css: `...`
+}
+);
+);
+```
+
+Esse formato quebra a sintaxe do arquivo.
 
 
 ## 32. Como Adicionar Uma Variante Manualmente
 
 Passos:
 
-1. Criar ou editar arquivo em:
+1. Criar uma pasta para o layout, se ainda não existir:
 
 ```text
-app/features/biblioteca/data/variants/
+app/features/biblioteca/data/variants/[id-do-layout]/
 ```
 
-2. Usar:
+2. Criar o arquivo da variação:
+
+```text
+app/features/biblioteca/data/variants/[id-do-layout]/[id-da-variacao].js
+```
+
+3. Registrar com:
 
 ```js
-SenkoLib.registerVariant('id-do-layout', [
-  {
-    name: 'Nome da variação',
-    html: `...`,
-    css: `...`
-  }
-]);
+// @ts-nocheck
+SenkoLib.registerVariantFile('id-do-layout',
+{
+  id: 'id-da-variacao',
+  name: 'id-da-variacao',
+  html: `...`,
+  css: `...`
+}
+);
 ```
 
-3. Adicionar o arquivo no `variants` do manifest.
+4. Adicionar o arquivo no `variants` do manifest:
 
-4. Testar no modal de variantes.
+```js
+{
+  file: 'variants/id-do-layout/id-da-variacao.js',
+  layoutId: 'id-do-layout',
+  id: 'id-da-variacao',
+  name: 'id-da-variacao'
+}
+```
+
+5. Testar no modal de variantes.
 
 
 ## 33. Como Adicionar Uma Coleção Manualmente
 
 Passos:
 
-1. Criar arquivo:
+1. Criar a pasta da coleção:
 
 ```text
-app/features/colecoes/data/nome-da-colecao.js
+app/features/colecoes/data/collections/nome-da-colecao/
 ```
 
-2. Registrar com:
+2. Criar o arquivo principal:
+
+```text
+app/features/colecoes/data/collections/nome-da-colecao/collection.js
+```
+
+3. Registrar com:
 
 ```js
-ColLib.register({
+// @ts-nocheck
+ColLib.registerCollection({
   slug: 'nome-da-colecao',
   name: 'Nome da Coleção',
   group: 'grupo',
@@ -1472,19 +1758,55 @@ ColLib.register({
 });
 ```
 
-3. Atualizar:
+4. Atualizar:
 
 ```text
 app/features/colecoes/data/manifest.js
 ```
 
-4. Conferir se o grupo existe em:
+5. A entrada deve usar o caminho atual:
+
+```js
+{
+  file: 'collections/nome-da-colecao/collection.js',
+  slug: 'nome-da-colecao',
+  name: 'Nome da Coleção',
+  group: 'grupo',
+  tags: [],
+  layoutCount: 0,
+  layouts: []
+}
+```
+
+6. Conferir se o grupo existe em:
 
 ```text
 app/features/colecoes/data/col-groups-data.js
 ```
 
-5. Testar a aba Coleções.
+7. Testar a aba Coleções.
+
+Para adicionar layout dentro da coleção:
+
+1. Criar o arquivo:
+
+```text
+app/features/colecoes/data/collections/nome-da-colecao/layouts/id-do-layout.js
+```
+
+2. Registrar com:
+
+```js
+// @ts-nocheck
+ColLib.registerCollectionLayout('nome-da-colecao', {
+  id: 'id-do-layout',
+  name: 'Nome do Layout',
+  html: `...`,
+  css: `...`
+});
+```
+
+3. Adicionar esse layout na lista `layouts` da coleção dentro do manifest.
 
 
 ## 34. Como Adicionar Um Grupo Manualmente
@@ -1581,6 +1903,103 @@ Lembre:
 Manifest é o índice.
 
 Se não está no índice, a feature pode não carregar.
+
+No modelo atual, isso vale para:
+
+- layout da Biblioteca em `SenkoBibliotecaManifest.layouts`;
+- variação da Biblioteca em `SenkoBibliotecaManifest.variants`;
+- coleção em `SenkoColecoesManifest.collections`;
+- layout de coleção dentro de `SenkoColecoesManifest.collections[].layouts`.
+
+Também conferir se o caminho do manifest bate exatamente com a pasta real.
+
+Exemplo correto para layout de coleção:
+
+```text
+collections/carneiro-colecoes/layouts/padrao1.js
+```
+
+Exemplo errado:
+
+```text
+carneiro-colecoes/padrao1.js
+```
+
+
+### Aparece "não encontrado" ao editar coleção ou layout de coleção
+
+Provável causa:
+
+O app encontrou o card no catálogo, mas não conseguiu carregar o arquivo completo pelo caminho do manifest.
+
+Verificar:
+
+- se `collection.js` existe na pasta da coleção;
+- se o `file` da coleção no manifest aponta para `collections/[slug]/collection.js`;
+- se o layout está listado em `layouts` no manifest da coleção;
+- se o arquivo do layout existe em `collections/[slug]/layouts/[id].js`;
+- se o `id` do layout no arquivo é igual ao `id` usado no manifest.
+
+Se o erro for no GitHub, conferir também se a constante de caminho da integração aponta para:
+
+```text
+app/features/colecoes/data/manifest.js
+```
+
+
+### Layout novo foi criado, mas não aparece na Biblioteca
+
+Verificar:
+
+- se o arquivo usa `SenkoLib.registerLayout(...)`;
+- se não existe `SenkoLib.registerLayout(` duplicado dentro do mesmo arquivo;
+- se o arquivo está listado em `SenkoBibliotecaManifest.layouts`;
+- se o `id` do arquivo e o `id` do manifest são iguais;
+- se não existe outro layout com nome visualmente equivalente.
+
+
+### Variante nova foi criada, mas não aparece
+
+Verificar:
+
+- se o arquivo usa `SenkoLib.registerVariantFile(layoutId, {...})`;
+- se o `layoutId` é o ID técnico do layout pai;
+- se o arquivo está listado em `SenkoBibliotecaManifest.variants`;
+- se o caminho segue `variants/[layoutId]/[id-da-variacao].js`;
+- se não existe outra variação com o mesmo nome dentro do layout.
+
+
+### Erro de sintaxe com registro duplicado
+
+O arquivo de layout ou variação deve chamar o registro apenas uma vez.
+
+Errado:
+
+```js
+SenkoLib.registerLayout(
+SenkoLib.registerLayout(
+{
+  id: 'teste',
+  name: 'teste',
+  html: `...`,
+  css: `...`
+}
+);
+);
+```
+
+Correto:
+
+```js
+SenkoLib.registerLayout(
+{
+  id: 'teste',
+  name: 'teste',
+  html: `...`,
+  css: `...`
+}
+);
+```
 
 
 ### Alterei CSS/JS, mas o navegador mostra antigo
@@ -1757,7 +2176,23 @@ Objeto que uma feature registra no shell para informar:
 
 11. Grupos de Coleções não devem ser apagados automaticamente só porque ficaram vazios.
 
-12. Toda alteração deve ser testada em mais de uma aba.
+12. Layouts novos da Biblioteca devem usar `SenkoLib.registerLayout(...)`.
+
+13. Variações novas da Biblioteca devem usar `SenkoLib.registerVariantFile(...)`.
+
+14. Coleções novas devem usar `ColLib.registerCollection(...)`.
+
+15. Layouts novos dentro de coleções devem usar `ColLib.registerCollectionLayout(...)`.
+
+16. Cada layout, variação, coleção e layout de coleção deve ter seu próprio arquivo JS.
+
+17. O manifest da feature deve ser atualizado sempre que um arquivo de dados for criado, renomeado ou excluído.
+
+18. ID técnico não deve ser tratado como campo comum de edição.
+
+19. Ordenação alfabética de cards deve acontecer na renderização, sem reescrever o manifest apenas para ordenar.
+
+20. Toda alteração deve ser testada em mais de uma aba.
 
 
 ## 40. Roteiro Para Explicar O Projeto A Outra Pessoa
@@ -1802,4 +2237,3 @@ GitHub = integração opcional por feature
 Frase principal:
 
 O SenkoLib deve funcionar como um conjunto de ferramentas independentes dentro de uma mesma interface.
-

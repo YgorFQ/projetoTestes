@@ -1,77 +1,77 @@
 // @ts-nocheck
 SenkoLib.registerLayout(
 {
-  id: "section-24",
-  name: "Section-24",
-  tags: ["split", "adaptativo", "24"],
-  html: `<section class="section-24" aria-labelledby="section-24-title">
-    <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-1"
-        aria-label="Mostrar imagem de visão geral" checked>
-    <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-2"
-        aria-label="Mostrar imagem de detalhe">
-    <input class="section-24__input" type="radio" name="section-24-view" id="section-24-view-3"
-        aria-label="Mostrar imagem de uso">
+    id: 'section-24',
+    name: 'Section-24',
+    tags: ['split', 'adaptativo', '24'],
+    html: `        <section class="section-24" aria-label="Destaques visuais alternáveis do produto">
+            <input class="section-24__input" id="section-24-view-1" type="radio" name="section-24-view"
+                aria-label="Mostrar imagem de visão geral" checked>
+            <input class="section-24__input" id="section-24-view-2" type="radio" name="section-24-view"
+                aria-label="Mostrar imagem de detalhe">
+            <input class="section-24__input" id="section-24-view-3" type="radio" name="section-24-view"
+                aria-label="Mostrar imagem de uso">
 
-    <article class="section-24__container">
-        <section class="section-24__content" aria-labelledby="section-24-title">
-            <nav class="section-24__options" aria-label="Escolha a imagem exibida">
-                <label class="section-24__button section-24__button--one" for="section-24-view-1">
-                    <span class="section-24__button-title">26 dentes fixos</span>
-                    <span class="section-24__button-text">Recolhe folhas, grama solta e resíduos leves com mais
-                        praticidade.</span>
-                </label>
+            <div class="section-24__container">
+                <div class="section-24__content">
+                    <div class="section-24__options" role="group" aria-label="Escolha a imagem exibida">
+                        <label class="section-24__button section-24__button--one" for="section-24-view-1">
+                            <span class="section-24__button-title">26 dentes fixos</span>
+                            <!--rever qual título eu uso aqui-->
+                            <span class="section-24__button-text">Recolhe folhas, grama solta e resíduos leves com mais
+                                praticidade.</span>
+                        </label>
 
-                <label class="section-24__button section-24__button--two" for="section-24-view-2">
-                    <span class="section-24__button-title">Plástico resistente</span>
-                    <span class="section-24__button-text">Polipropileno de alta resistência, leve para usar e feito para
-                        durar.</span>
-                </label>
+                        <label class="section-24__button section-24__button--two" for="section-24-view-2">
+                            <span class="section-24__button-title">Plástico resistente</span>
+                            <span class="section-24__button-text">Polipropileno de alta resistência, leve para usar e
+                                feito para
+                                durar.</span>
+                        </label>
 
-                <label class="section-24__button section-24__button--three" for="section-24-view-3">
-                    <span class="section-24__button-title">Cabo de 120 cm</span>
-                    <span class="section-24__button-text">Madeira renovável com acabamento envernizado e toque mais
-                        liso.</span>
-                </label>
-            </nav>
-        </section>
-
-        <figure class="section-24__visual" aria-label="Imagens alternáveis do produto">
-            <div class="section-24__frame">
-                <!-- IMG 1-->
-                <div class="section-24__panel section-24__panel--one">
-                    <img class="section-24__image"
-                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-uso-gramado-509702-03.webp"
-                        width="1200" height="900" loading="lazy" alt="Imagem de visão geral do produto"
-                        decoding="async">
+                        <label class="section-24__button section-24__button--three" for="section-24-view-3">
+                            <span class="section-24__button-title">Cabo de 120 cm</span>
+                            <span class="section-24__button-text">Madeira renovável com acabamento envernizado e toque
+                                mais
+                                liso.</span>
+                        </label>
+                    </div>
                 </div>
-                <!-- IMG 2-->
-                <div class="section-24__panel section-24__panel--two">
-                    <img class="section-24__image"
-                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-conjunto-ferramentas-509702-02.webp"
-                        width="1200" height="900" loading="lazy" alt="Imagem aproximada do acabamento do produto"
-                        decoding="async">
-                </div>
-                <!-- IMG 3-->
-                <div class="section-24__panel section-24__panel--three">
-                    <img class="section-24__image"
-                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-lifestyle-509702-01.webp"
-                        width="1200" height="900" loading="lazy" alt="Imagem do produto em contexto de uso"
-                        decoding="async">
-                </div>
+
+                <figure class="section-24__visual" aria-label="Imagens alternáveis do produto">
+                    <div class="section-24__frame">
+                        <!-- IMG 1-->
+                        <div class="section-24__panel section-24__panel--one">
+                            <img class="section-24__image" width="1200" height="900" loading="lazy" decoding="async"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-uso-gramado-509702-03.webp"
+                                alt="Imagem de visão geral do produto">
+                        </div>
+                        <!-- IMG 2-->
+                        <div class="section-24__panel section-24__panel--two">
+                            <img class="section-24__image" width="1200" height="900" loading="lazy" decoding="async"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-conjunto-ferramentas-509702-02.webp"
+                                alt="Imagem aproximada do acabamento do produto">
+                        </div>
+                        <!-- IMG 3-->
+                        <div class="section-24__panel section-24__panel--three">
+                            <img class="section-24__image" width="1200" height="900" loading="lazy" decoding="async"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/vassoura-jardim-tramontina-plastica-laranja-cabo-madeira-lifestyle-509702-01.webp"
+                                alt="Imagem do produto em contexto de uso">
+                        </div>
+                    </div>
+
+                    <figcaption class="section-24__caption">
+                        <span class="section-24__message section-24__message--one">Mais alcance sobre folhas e resíduos
+                            leves.</span>
+                        <span class="section-24__message section-24__message--two">Leveza e resistência para a rotina do
+                            jardim.</span>
+                        <span class="section-24__message section-24__message--three">Cabo longo, toque liso e acabamento
+                            envernizado.</span>
+                    </figcaption>
+                </figure>
             </div>
-
-            <figcaption class="section-24__caption">
-                <span class="section-24__message section-24__message--one">Mais alcance sobre folhas e resíduos
-                    leves.</span>
-                <span class="section-24__message section-24__message--two">Leveza e resistência para a rotina do
-                    jardim.</span>
-                <span class="section-24__message section-24__message--three">Cabo longo, toque liso e acabamento
-                    envernizado.</span>
-            </figcaption>
-        </figure>
-    </article>
-</section>`,
-  css: `<style>
+        </section>`,
+    css: `<style>
     * {
         margin: 0;
         padding: 0;
@@ -361,7 +361,7 @@ SenkoLib.registerLayout(
     @media (min-width: 992px) {
 
         .section-24__container {
-            grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
             gap: 3rem;
         }
 

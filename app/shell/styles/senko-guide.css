@@ -1,5 +1,5 @@
 /*
- * Senko Guide - prototipo de janela de documentacao.
+ * Senko Guide - janela oficial de documentacao do shell.
  *
  * Este CSS pertence somente ao guia. Ele usa os tokens globais do SenkoLib,
  * mas nao interfere nas features e nao depende do CSS interno de nenhuma delas.
@@ -87,6 +87,12 @@
   width: 34px;
   height: 34px;
   flex: 0 0 34px;
+}
+
+.senko-guide-close svg {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
 .senko-guide-searchbar {

@@ -1,6 +1,6 @@
 # SenkoLib - Regras Para Manutencao
 
-O guia interno em `app/prototype/senko-guide` e prioridade maxima.
+O guia oficial em `app/shell/scripts/senko-guide.js` e prioridade maxima.
 
 Sempre que uma mudanca alterar arquitetura, feature, fluxo de dados, GitHub,
 estilos globais, validacoes, mensagens de erro, pastas ou responsabilidades,

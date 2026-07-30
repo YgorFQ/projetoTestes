@@ -22,6 +22,15 @@
       </div>
 
       <div class="feature-toolbar-actions">
+        <button class="copy-base-edit-btn" id="copyBaseEditBtn" type="button" title="Editar HTML básico"
+          aria-label="Editar HTML básico" aria-haspopup="dialog">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"
+            aria-hidden="true">
+            <path d="M12 20h9" />
+            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z" />
+          </svg>
+        </button>
+
         <button class="btn-copyall" id="copyAllBtn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
             <rect x="9" y="9" width="13" height="13" rx="2" />
@@ -47,6 +56,40 @@
       <p>Nenhum layout encontrado para <strong id="noResultsQuery"></strong></p>
     </div>
   </main>
+
+  <!-- MODAL EDITAR HTML BASICO -->
+  <div class="copy-base-editor-overlay" id="copyBaseEditorOverlay" hidden>
+    <div class="copy-base-editor-modal" role="dialog" aria-modal="true" aria-labelledby="copyBaseEditorTitle">
+      <div class="copy-base-editor-header">
+        <div>
+          <span class="copy-base-editor-category">Biblioteca</span>
+          <h2 id="copyBaseEditorTitle">Editar HTML básico</h2>
+        </div>
+        <button class="copy-base-editor-close" id="copyBaseEditorClose" type="button" title="Fechar"
+          aria-label="Fechar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="copy-base-editor-body">
+        <label for="copyBaseEditorTextarea">HTML básico</label>
+        <textarea id="copyBaseEditorTextarea" spellcheck="false"></textarea>
+      </div>
+      <div class="copy-base-editor-footer">
+        <span class="copy-base-editor-status" id="copyBaseEditorStatus" role="status" aria-live="polite"></span>
+        <div class="copy-base-editor-actions">
+          <button class="copy-base-editor-cancel" id="copyBaseEditorCancel" type="button">Cancelar</button>
+          <button class="copy-base-editor-save" id="copyBaseEditorSave" type="button">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483v-1.89c-2.782.605-3.369-1.18-3.369-1.18-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855v2.747c0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2Z" />
+            </svg>
+            <span>Salvar no GitHub</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL ADICIONAR -->
   <div class="modal-overlay hidden" id="addModalOverlay">

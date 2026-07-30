@@ -1,29 +1,30 @@
 // @ts-nocheck
 SenkoLib.registerLayout(
-{
-  id: "section-13",
-  name: "Section-13",
-  tags: ["13", "celular", "section-13"],
-  html: `    <div class="section-13-container">
-      <section class="section-13" aria-label="Demonstração em vídeo do produto">
-        <figure class="section-13__phone-wrap">
-          <div class="section-13__phone" role="img" aria-label="Celular exibindo vídeo do produto">
-            <div class="section-13__notch" aria-hidden="true"></div>
-            <!-- Tela -->
-            <div class="section-13__screen">
-              <video class="section-13__video" src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/risque/Lollapalooza.mov" autoplay muted loop playsinline loading="lazy"
-                aria-label="Demonstração em vídeo do produto"></video>
+  {
+    id: "section-13",
+    name: "Section-13",
+    tags: ["13", "celular", "section-13"],
+    html: `        <section class="section-13-container">
+            <div class="section-13" role="group" aria-label="Demonstração em vídeo do produto">
+                <figure class="section-13__phone-wrap">
+                    <div class="section-13__phone">
+                        <div class="section-13__notch" aria-hidden="true"></div>
+                        <div class="section-13__screen">
+                            <video class="section-13__video" autoplay muted loop playsinline loading="lazy"
+                                aria-label="Demonstração em vídeo do produto"
+                                src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/risque/Lollapalooza.mov"></video>
+                        </div>
+                    </div>
+                    <figcaption class="section-13__caption">
+                        <p class="section-13__caption-title">Veja em ação</p>
+                        <p class="section-13__caption-desc">Acompanhe como o produto funciona na prática em um vídeo
+                            demonstrativo.
+                        </p>
+                    </figcaption>
+                </figure>
             </div>
-          </div>
-          <figcaption class="section-13__caption">
-            <p class="section-13__caption-title">Veja em ação</p>
-            <p class="section-13__caption-desc">Acompanhe como o produto funciona na prática em um vídeo demonstrativo.
-            </p>
-          </figcaption>
-        </figure>
-      </section>
-    </div>`,
-  css: `  <style>
+        </section>`,
+    css: `  <style>
     /* ── CONTAINER UNIVERSAL ─────────────────────────── */
     .section-13-container {
       padding-top: 20px;
@@ -181,5 +182,5 @@ SenkoLib.registerLayout(
       }
     }
   </style>`
-}
+  }
 );

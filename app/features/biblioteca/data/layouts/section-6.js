@@ -1,25 +1,25 @@
 // @ts-nocheck
 SenkoLib.registerLayout(
-{
-  id: "section-6",
-  name: "Section-6",
-  tags: ["Section 6", "Hero", "6"],
-  html: `    <section class="section-6" aria-label="Destaque do produto com texto">
-      <picture>
-        <source media="(max-width: 760px)"
-          srcset="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/section-49-2.png"
-          width="780" height="400">
-        <img class="section-6__image"
-          src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/section-49-1.png"
-          alt="Caderno Funny Cat com estampa de gatinhos, capa colorida e espiral" width="1600" height="650"
-          loading="lazy" fetchpriority="high" decoding="async">
-      </picture>
-      <div class="section-6__content">
-        <h2 class="section-6__title">Caderno Funny Cat</h2>
-        <p class="section-6__description">Organize seus estudos com fofura e estilo!</p>
-      </div>
-    </section>`,
-  css: `    <style>
+    {
+        id: "section-6",
+        name: "Section-6",
+        tags: ["Section 6", "Hero", "6"],
+        html: `        <section class="section-6">
+            <picture>
+                <source media="(max-width: 760px)"
+                    srcset="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/section-49-2.png"
+                    width="780" height="450">
+                <img class="section-6__image" width="1600" height="650" loading="lazy" fetchpriority="low"
+                    decoding="async"
+                    src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/section-49-1.png"
+                    alt="TEXTO ALT">
+            </picture>
+            <div class="section-6__content">
+                <h2 class="section-6__title">Caderno Funny Cat</h2>
+                <p class="section-6__description">Organize seus estudos com fofura e estilo!</p>
+            </div>
+        </section>`,
+        css: `    <style>
         /* ===== HERO SECTION — VARIÁVEIS ===== */
         .section-6 {
             --pos-y: 50%;
@@ -120,5 +120,5 @@ SenkoLib.registerLayout(
             }
         }
     </style>`
-}
+    }
 );

@@ -406,3 +406,68 @@ colFeatureApi.init = function initColecoes() {
 colFeatureApi.render = function renderColecoes() {
   colRenderGrid();
 };
+
+colFeatureApi.isReady = function isColecoesReady() {
+  return colFeatureInitialized
+    && typeof ColLib !== 'undefined'
+    && typeof colOpenCreateModal === 'function'
+    && typeof colOpenAddLayoutModal === 'function';
+};
+
+/*
+ * API pública de criação.
+ *
+ * Coleções mantém a responsabilidade por validar, carregar e abrir seus
+ * próprios modais. O shell recebe apenas estes métodos por meio do provider.
+ */
+colFeatureApi.openCreateCollection = function openCreateCollectionFromProvider() {
+  if (typeof colOpenCreateModal !== 'function') return false;
+  colOpenCreateModal();
+  return true;
+};
+
+colFeatureApi.listCollectionsForCreation = function listCollectionsForCreation() {
+  if (typeof ColLib === 'undefined') return [];
+
+  return ColLib.getAll().slice().sort(function (left, right) {
+    return String(left.name || left.slug || '').localeCompare(String(right.name || right.slug || ''), 'pt-BR', {
+      numeric: true,
+      sensitivity: 'base'
+    });
+  }).map(function (collection) {
+    var group = collection.group && typeof ColGroups !== 'undefined'
+      ? ColGroups.getBySlug(collection.group)
+      : null;
+    var layoutCount = collection._senkoLazy
+      ? Number(collection.layoutCount || 0)
+      : (Array.isArray(collection.layouts) ? collection.layouts.length : 0);
+
+    return {
+      slug: collection.slug,
+      name: collection.name || collection.slug,
+      group: group ? group.name : '',
+      tags: Array.isArray(collection.tags) ? collection.tags.slice(0, 4) : [],
+      layoutCount: layoutCount
+    };
+  });
+};
+
+colFeatureApi.openCreateLayoutForCollection = function openCreateLayoutForCollectionFromProvider(slug) {
+  if (typeof ColLib === 'undefined' || typeof colOpenAddLayoutModal !== 'function') return Promise.resolve(false);
+
+  var collection = ColLib.getBySlug(slug);
+  if (!collection) return Promise.resolve(false);
+
+  var openLoadedCollection = function (loadedCollection) {
+    if (!loadedCollection) return false;
+    colOpenAddLayoutModal(loadedCollection);
+    return true;
+  };
+
+  var loader = window.SenkoColecoesData;
+  if (collection._senkoLazy && loader && typeof loader.ensureLoaded === 'function') {
+    return loader.ensureLoaded(collection.slug).then(openLoadedCollection);
+  }
+
+  return Promise.resolve(openLoadedCollection(collection));
+};

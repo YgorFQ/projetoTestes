@@ -1,38 +1,25 @@
 // @ts-nocheck
 SenkoLib.registerLayout(
-{
-  id: "section-4",
-  name: "Section-4 (Manual de Instrução)",
-  tags: ["Section-4", "4", "Section 4", "manual de instrução", "responsivo", "acessível"],
-  html: `<section class="section-4-manual__container" aria-label="Manual de Instruções do Produto">
-  <figure class="section-4-manual__figura" >
-    <a href="https://static1.efacil.com.br/wcsstore/AuroraStorefrontAssetStore/PDP/philips-walita/2209713-manual.pdf"
-      target="_blank" rel="noopener noreferrer" aria-label="Abrir manual de instruções do produto em PDF em nova aba"
-      class="section-4-manual__link">
-      <picture style="width:100%; height:100%; margin:0;">
-             <source media="(max-width: 430px)" 
-              srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/manual-banner.jpg?ims=430x">
-      
-              <source media="(max-width: 768px)" 
-              srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/manual-banner.jpg?ims=768x">
+  {
+    id: "section-4",
+    name: "Section-4 (Manual de Instrução)",
+    tags: ["Section-4", "4", "Section 4", "manual de instrução", "responsivo", "acessível"],
+    html: `        <section class="section-4-manual__container">
+            <figure class="section-4-manual__figura">
+                <a class="section-4-manual__link" target="_blank" rel="noopener noreferrer"
+                    href="https://static1.efacil.com.br/wcsstore/AuroraStorefrontAssetStore/PDP/philips-walita/2209713-manual.pdf">
+                    <img class="section-4-manual__imagem" width="1200" height="250" loading="lazy" decoding="async"
+                        fetchpriority="low"
+                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/manual-banner.jpg"
+                        alt="Banner com ícone de caderno e texto Manual de Instruções" />
 
-              <source media="(max-width: 1024px)" 
-              srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/manual-banner.jpg?ims=1024x">
-      
-              <source media="(max-width: 1200px)" 
-              srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/manual-banner.jpg?ims=1200x">
-      <img
-        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/manual-banner.jpg"
-        class="section-4-manual__imagem" width="1200" height="250" loading="lazy" decoding="async" fetchpriority="low"  alt=""/>
-        
-    </picture>
-    </a>
-    <figcaption class="section-4-manual__legenda">
-      Manual de Instruções — abrir PDF em nova aba
-    </figcaption>
-  </figure>
-</section>`,
-  css: `<style>
+                </a>
+                <figcaption class="section-4-manual__legenda">
+                    Manual de Instruções — abrir PDF em nova aba
+                </figcaption>
+            </figure>
+        </section>`,
+    css: `<style>
   .section-4-manual__container {
     width: 100%;
     margin: 0 auto;
@@ -80,5 +67,5 @@ SenkoLib.registerLayout(
     }
   }
 </style>`
-}
+  }
 );

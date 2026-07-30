@@ -4,8 +4,8 @@
 
   REGRA DE MANUTENCAO DO GUIA:
   - Toda alteracao de arquitetura, feature, fluxo, erro conhecido, GitHub,
-    estilos globais ou regra de dados deve atualizar tambem o guia interno em
-    app/prototype/senko-guide.
+    estilos globais ou regra de dados deve atualizar tambem o guia oficial em
+    app/shell/scripts/senko-guide.js.
   - O guia e prioridade maxima para manutencao: se o codigo mudou e o guia
     ficou desatualizado, a mudanca ainda nao esta completa.
 
@@ -89,6 +89,8 @@
     SenkoFreshAssets.writeStyle('app/shared/styles/senko-tokens.css');
     SenkoFreshAssets.writeStyle('app/shared/styles/senko-components.css');
     SenkoFreshAssets.writeStyle('app/shell/styles/styles.css');
+    SenkoFreshAssets.writeStyle('app/shell/styles/senko-quick-create.css');
+    SenkoFreshAssets.writeStyle('app/shell/styles/senko-guide.css');
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -109,6 +111,22 @@
       </div>
       <div class="header-actions">
         <!-- Controles globais do shell: independem das views das features. -->
+        <button class="senko-global-create-trigger" id="senkoGlobalCreateBtn" title="Criação rápida"
+          aria-label="Abrir criação rápida" aria-haspopup="dialog" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+            <path d="M12 5v14" />
+            <path d="M5 12h14" />
+          </svg>
+        </button>
+        <button class="senko-team-notes-trigger" id="senkoTeamNotesBtn" title="Notas da equipe"
+          aria-label="Abrir notas da equipe" aria-haspopup="dialog" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" aria-hidden="true">
+            <path d="M5 4h11l3 3v13H5z" />
+            <path d="M16 4v4h4" />
+            <path d="M8 11h8" />
+            <path d="M8 15h6" />
+          </svg>
+        </button>
         <a href="https://maiconsantossilvah-dot.github.io/Criador-de-FAQ/" target="_blank"
           rel="noopener noreferrer">
           <button class="theme-toggle github-config-toggle" id="senkoForLayoutLab" title="Ir para o LayoutLab"
@@ -151,7 +169,9 @@
 
   <script>
     SenkoFreshAssets.writeScript('app/shell/scripts/senko-shell.js');
-    SenkoFreshAssets.writeScript('app/prototype/senko-guide/register.js');
+    SenkoFreshAssets.writeScript('app/shell/scripts/senko-quick-create.js');
+    SenkoFreshAssets.writeScript('app/shell/scripts/senko-guide.js');
+    SenkoFreshAssets.writeScript('app/prototype/team-notes/register.js');
     SenkoFreshAssets.writeScript('app/features/biblioteca/register.js');
     SenkoFreshAssets.writeScript('app/features/colecoes/register.js');
     SenkoFreshAssets.writeScript('app/features/imagens/scripts/register.js');

@@ -1,197 +1,254 @@
 // @ts-nocheck
 SenkoLib.registerLayout(
-{
-  id: "section-23",
-  name: "Section-23",
-  tags: ["stories", "23", "section-23", "responsivo", "acessivel"],
-  html: `<section class="lp-stories lp-stories--groups-3" aria-label="Stories visuais e representativos do produto">
-      <span class="lp-stories__target" id="lp-story-produto-1" aria-hidden="true"></span>
-      <span class="lp-stories__target" id="lp-story-produto-2" aria-hidden="true"></span>
-      <span class="lp-stories__target" id="lp-story-uso-1" aria-hidden="true"></span>
-      <span class="lp-stories__target" id="lp-story-uso-2" aria-hidden="true"></span>
-      <span class="lp-stories__target" id="lp-story-detalhes-1" aria-hidden="true"></span>
-      <span class="lp-stories__target" id="lp-story-detalhes-2" aria-hidden="true"></span>
+  {
+    id: "section-23",
+    name: "Section-23",
+    tags: ["stories", "23", "section-23", "responsivo", "acessivel"],
+    html: `        <section class="lp-stories lp-stories--groups-3" aria-label="Stories visuais e representativos do produto">
+            <span class="lp-stories__target" id="lp-story-produto-1" aria-hidden="true"></span>
+            <span class="lp-stories__target" id="lp-story-produto-2" aria-hidden="true"></span>
+            <span class="lp-stories__target" id="lp-story-uso-1" aria-hidden="true"></span>
+            <span class="lp-stories__target" id="lp-story-uso-2" aria-hidden="true"></span>
+            <span class="lp-stories__target" id="lp-story-detalhes-1" aria-hidden="true"></span>
+            <span class="lp-stories__target" id="lp-story-detalhes-2" aria-hidden="true"></span>
 
-      <nav class="lp-stories__options" aria-label="Containers de stories">
-        <a class="lp-stories__option lp-stories__option--produto" href="#lp-story-produto-1" aria-label="Abrir container Pra quem ama o mar, slide 1 de 2">
-          <span class="lp-stories__ring" aria-hidden="true">
-            <img class="lp-stories__thumb" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-estudio-1225024-02.webp" alt="Miniatura de Pra quem ama o mar" width="400" height="400" loading="lazy">
-          </span>
-          <span class="lp-stories__name">Pra quem ama o mar</span>
-        </a>
-        <a class="lp-stories__option lp-stories__option--uso" href="#lp-story-uso-1" aria-label="Abrir container Estilo e Conforto, slide 1 de 2">
-          <span class="lp-stories__ring" aria-hidden="true">
-            <img class="lp-stories__thumb" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-rua-cafe-1225024-04.webp" alt="Miniatura de Estilo e Conforto" width="400" height="400" loading="lazy">
-          </span>
-          <span class="lp-stories__name">Estilo e Conforto</span>
-        </a>
-        <a class="lp-stories__option lp-stories__option--detalhes" href="#lp-story-detalhes-1" aria-label="Abrir container Sempre com voce, slide 1 de 2">
-          <span class="lp-stories__ring" aria-hidden="true">
-            <img class="lp-stories__thumb" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-deck-praia-1225024-06.webp" alt="Miniatura de Sempre com voce" width="400" height="400" loading="lazy">
-          </span>
-          <span class="lp-stories__name">Sempre com voce</span>
-        </a>
-      </nav>
+            <div class="lp-stories__options" role="navigation" aria-label="Containers de stories">
+                <a class="lp-stories__option lp-stories__option--produto"
+                    aria-label="Abrir container Pra quem ama o mar, slide 1 de 2" href="#lp-story-produto-1">
+                    <span class="lp-stories__ring" aria-hidden="true">
+                        <img class="lp-stories__thumb" width="400" height="400" loading="lazy"
+                            src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-estudio-1225024-02.webp"
+                            alt="Miniatura de Pra quem ama o mar">
+                    </span>
+                    <span class="lp-stories__name">Pra quem ama o mar</span>
+                </a>
+                <a class="lp-stories__option lp-stories__option--uso"
+                    aria-label="Abrir container Estilo e Conforto, slide 1 de 2" href="#lp-story-uso-1">
+                    <span class="lp-stories__ring" aria-hidden="true">
+                        <img class="lp-stories__thumb" width="400" height="400" loading="lazy"
+                            src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-rua-cafe-1225024-04.webp"
+                            alt="Miniatura de Estilo e Conforto">
+                    </span>
+                    <span class="lp-stories__name">Estilo e Conforto</span>
+                </a>
+                <a class="lp-stories__option lp-stories__option--detalhes"
+                    aria-label="Abrir container Sempre com voce, slide 1 de 2" href="#lp-story-detalhes-1">
+                    <span class="lp-stories__ring" aria-hidden="true">
+                        <img class="lp-stories__thumb" width="400" height="400" loading="lazy"
+                            src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-deck-praia-1225024-06.webp"
+                            alt="Miniatura de Sempre com voce">
+                    </span>
+                    <span class="lp-stories__name">Sempre com voce</span>
+                </a>
+            </div>
 
-      <div class="lp-stories__panels" aria-live="polite">
-        <article class="lp-stories__panel panel-produto-1 is-default" aria-labelledby="lp-story-produto-1-title" aria-describedby="lp-story-produto-1-caption">
-          <div class="lp-stories__viewer">
-            <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-1" aria-label="Progresso do container Pra quem ama o mar"></div>
-            <header class="lp-stories__topbar" aria-label="Identificação do container Pra quem ama o mar">
-              <img class="lp-stories__avatar" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp" alt="Logo dos stories" width="400" height="400" loading="lazy">
-              <h3 class="lp-stories__title" id="lp-story-produto-1-title">Pra quem ama o mar</h3>
-              <span class="lp-stories__step">1/2</span>
-            </header>
-            <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
-              <div class="lp-stories__media">
-                <picture class="lp-stories__picture">
-                  <source media="(max-width: 499px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-estudio-1225024-02.webp?ims=400x">
-                  <source media="(min-width: 992px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-estudio-1225024-02.webp?ims=960x">
-                  <source media="(min-width: 500px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-estudio-1225024-02.webp?ims=430x">
-                  <img class="lp-stories__image" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-estudio-1225024-02.webp?ims=960x" alt="Havaianas Top Nautical branco e marinho nos pes em estudio com fundo claro" width="1080" height="1920" loading="lazy">
-                </picture>
-              </div>
-              <figcaption class="lp-stories__caption is-top" id="lp-story-produto-1-caption">Listras classicas para quem e do mar.</figcaption>
-            </figure>
-            <nav class="lp-stories__nav" aria-label="Navegar slides do container Pra quem ama o mar">
-              <a class="lp-stories__arrow prev" href="#lp-story-detalhes-2" aria-label="Slide anterior de Pra quem ama o mar"><span aria-hidden="true">&lsaquo;</span></a>
-              <a class="lp-stories__arrow next" href="#lp-story-produto-2" aria-label="Proximo slide de Pra quem ama o mar"><span aria-hidden="true">&rsaquo;</span></a>
-            </nav>
-          </div>
-        </article>
+            <div class="lp-stories__panels" role="group" aria-live="polite">
+                <div class="lp-stories__panel panel-produto-1 is-default" role="group"
+                    aria-labelledby="lp-story-produto-1-title" aria-describedby="lp-story-produto-1-caption">
+                    <div class="lp-stories__viewer">
+                        <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-1">
+                        </div>
+                        <div class="lp-stories__topbar" role="group"
+                            aria-label="Identificação do container Pra quem ama o mar">
+                            <img class="lp-stories__avatar" width="400" height="400" loading="lazy"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp"
+                                alt="Logo dos stories">
+                            <h3 class="lp-stories__title" id="lp-story-produto-1-title">Pra quem ama o mar</h3>
+                            <span class="lp-stories__step">1/2</span>
+                        </div>
+                        <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
+                            <div class="lp-stories__media">
+                                <div class="lp-stories__picture">
+                                    <img class="lp-stories__image" width="1080" height="1920" loading="lazy"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-estudio-1225024-02.webp"
+                                        alt="Havaianas Top Nautical branco e marinho nos pes em estudio com fundo claro">
+                                </div>
+                            </div>
+                            <figcaption class="lp-stories__caption is-top" id="lp-story-produto-1-caption">Listras
+                                classicas para quem e do mar.</figcaption>
+                        </figure>
+                        <div class="lp-stories__nav" role="navigation"
+                            aria-label="Navegar slides do container Pra quem ama o mar">
+                            <a class="lp-stories__arrow prev" aria-label="Slide anterior de Pra quem ama o mar"
+                                href="#lp-story-detalhes-2"><span aria-hidden="true">&lsaquo;</span></a>
+                            <a class="lp-stories__arrow next" aria-label="Proximo slide de Pra quem ama o mar"
+                                href="#lp-story-produto-2"><span aria-hidden="true">&rsaquo;</span></a>
+                        </div>
+                    </div>
+                </div>
 
-        <article class="lp-stories__panel panel-produto-2" aria-labelledby="lp-story-produto-2-title" aria-describedby="lp-story-produto-2-caption">
-          <div class="lp-stories__viewer">
-            <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-2" aria-label="Progresso do container Pra quem ama o mar"></div>
-            <header class="lp-stories__topbar" aria-label="Identificação do container Pra quem ama o mar">
-              <img class="lp-stories__avatar" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp" alt="Logo dos stories" width="400" height="400" loading="lazy">
-              <h3 class="lp-stories__title" id="lp-story-produto-2-title">Pra quem ama o mar</h3>
-              <span class="lp-stories__step">2/2</span>
-            </header>
-            <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
-              <div class="lp-stories__media">
-                <picture class="lp-stories__picture">
-                  <source media="(max-width: 499px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-estudio-1225024-03.webp?ims=400x">
-                  <source media="(min-width: 992px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-estudio-1225024-03.webp?ims=960x">
-                  <source media="(min-width: 500px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-estudio-1225024-03.webp?ims=430x">
-                  <img class="lp-stories__image" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-estudio-1225024-03.webp?ims=960x" alt="Havaianas Top Nautical marinho e branco nos pes em estudio de moda" width="1080" height="1920" loading="lazy">
-                </picture>
-              </div>
-              <figcaption class="lp-stories__caption is-top" id="lp-story-produto-2-caption">Top Nautical no pe, leveza no dia.</figcaption>
-            </figure>
-            <nav class="lp-stories__nav" aria-label="Navegar slides do container Pra quem ama o mar">
-              <a class="lp-stories__arrow prev" href="#lp-story-produto-1" aria-label="Slide anterior de Pra quem ama o mar"><span aria-hidden="true">&lsaquo;</span></a>
-              <a class="lp-stories__arrow next" href="#lp-story-uso-1" aria-label="Proximo slide de Pra quem ama o mar"><span aria-hidden="true">&rsaquo;</span></a>
-            </nav>
-          </div>
-        </article>
+                <div class="lp-stories__panel panel-produto-2" role="group" aria-labelledby="lp-story-produto-2-title"
+                    aria-describedby="lp-story-produto-2-caption">
+                    <div class="lp-stories__viewer">
+                        <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-2">
+                        </div>
+                        <div class="lp-stories__topbar" role="group"
+                            aria-label="Identificação do container Pra quem ama o mar">
+                            <img class="lp-stories__avatar" width="400" height="400" loading="lazy"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp"
+                                alt="Logo dos stories">
+                            <h3 class="lp-stories__title" id="lp-story-produto-2-title">Pra quem ama o mar</h3>
+                            <span class="lp-stories__step">2/2</span>
+                        </div>
+                        <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
+                            <div class="lp-stories__media">
+                                <div class="lp-stories__picture">
+                                    <img class="lp-stories__image" width="1080" height="1920" loading="lazy"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-estudio-1225024-03.webp"
+                                        alt="Havaianas Top Nautical marinho e branco nos pes em estudio de moda">
+                                </div>
+                            </div>
+                            <figcaption class="lp-stories__caption is-top" id="lp-story-produto-2-caption">Top Nautical
+                                no pe, leveza no dia.</figcaption>
+                        </figure>
+                        <div class="lp-stories__nav" role="navigation"
+                            aria-label="Navegar slides do container Pra quem ama o mar">
+                            <a class="lp-stories__arrow prev" aria-label="Slide anterior de Pra quem ama o mar"
+                                href="#lp-story-produto-1"><span aria-hidden="true">&lsaquo;</span></a>
+                            <a class="lp-stories__arrow next" aria-label="Proximo slide de Pra quem ama o mar"
+                                href="#lp-story-uso-1"><span aria-hidden="true">&rsaquo;</span></a>
+                        </div>
+                    </div>
+                </div>
 
-        <article class="lp-stories__panel panel-uso-1" aria-labelledby="lp-story-uso-1-title" aria-describedby="lp-story-uso-1-caption">
-          <div class="lp-stories__viewer">
-            <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-1" aria-label="Progresso do container Estilo e Conforto"></div>
-            <header class="lp-stories__topbar" aria-label="Identificação do container Estilo e Conforto">
-              <img class="lp-stories__avatar" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp" alt="Logo dos stories" width="400" height="400" loading="lazy">
-              <h3 class="lp-stories__title" id="lp-story-uso-1-title">Estilo e Conforto</h3>
-              <span class="lp-stories__step">1/2</span>
-            </header>
-            <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
-              <div class="lp-stories__media">
-                <picture class="lp-stories__picture">
-                  <source media="(max-width: 499px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-rua-cafe-1225024-04.webp?ims=400x">
-                  <source media="(min-width: 992px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-rua-cafe-1225024-04.webp?ims=960x">
-                  <source media="(min-width: 500px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-rua-cafe-1225024-04.webp?ims=430x">
-                  <img class="lp-stories__image" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-rua-cafe-1225024-04.webp?ims=960x" alt="Havaianas Top Nautical branco e marinho nos pes em calcada com cafe ao fundo" width="1080" height="1920" loading="lazy">
-                </picture>
-              </div>
-              <figcaption class="lp-stories__caption is-top" id="lp-story-uso-1-caption">Estilo atemporal para sair leve.</figcaption>
-            </figure>
-            <nav class="lp-stories__nav" aria-label="Navegar slides do container Estilo e Conforto">
-              <a class="lp-stories__arrow prev" href="#lp-story-produto-2" aria-label="Slide anterior de Estilo e Conforto"><span aria-hidden="true">&lsaquo;</span></a>
-              <a class="lp-stories__arrow next" href="#lp-story-uso-2" aria-label="Proximo slide de Estilo e Conforto"><span aria-hidden="true">&rsaquo;</span></a>
-            </nav>
-          </div>
-        </article>
+                <div class="lp-stories__panel panel-uso-1" role="group" aria-labelledby="lp-story-uso-1-title"
+                    aria-describedby="lp-story-uso-1-caption">
+                    <div class="lp-stories__viewer">
+                        <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-1">
+                        </div>
+                        <div class="lp-stories__topbar" role="group"
+                            aria-label="Identificação do container Estilo e Conforto">
+                            <img class="lp-stories__avatar" width="400" height="400" loading="lazy"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp"
+                                alt="Logo dos stories">
+                            <h3 class="lp-stories__title" id="lp-story-uso-1-title">Estilo e Conforto</h3>
+                            <span class="lp-stories__step">1/2</span>
+                        </div>
+                        <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
+                            <div class="lp-stories__media">
+                                <div class="lp-stories__picture">
+                                    <img class="lp-stories__image" width="1080" height="1920" loading="lazy"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-rua-cafe-1225024-04.webp"
+                                        alt="Havaianas Top Nautical branco e marinho nos pes em calcada com cafe ao fundo">
+                                </div>
+                            </div>
+                            <figcaption class="lp-stories__caption is-top" id="lp-story-uso-1-caption">Estilo atemporal
+                                para sair leve.</figcaption>
+                        </figure>
+                        <div class="lp-stories__nav" role="navigation"
+                            aria-label="Navegar slides do container Estilo e Conforto">
+                            <a class="lp-stories__arrow prev" aria-label="Slide anterior de Estilo e Conforto"
+                                href="#lp-story-produto-2"><span aria-hidden="true">&lsaquo;</span></a>
+                            <a class="lp-stories__arrow next" aria-label="Proximo slide de Estilo e Conforto"
+                                href="#lp-story-uso-2"><span aria-hidden="true">&rsaquo;</span></a>
+                        </div>
+                    </div>
+                </div>
 
-        <article class="lp-stories__panel panel-uso-2" aria-labelledby="lp-story-uso-2-title" aria-describedby="lp-story-uso-2-caption">
-          <div class="lp-stories__viewer">
-            <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-2" aria-label="Progresso do container Estilo e Conforto"></div>
-            <header class="lp-stories__topbar" aria-label="Identificação do container Estilo e Conforto">
-              <img class="lp-stories__avatar" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp" alt="Logo dos stories" width="400" height="400" loading="lazy">
-              <h3 class="lp-stories__title" id="lp-story-uso-2-title">Estilo e Conforto</h3>
-              <span class="lp-stories__step">2/2</span>
-            </header>
-            <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
-              <div class="lp-stories__media">
-                <picture class="lp-stories__picture">
-                  <source media="(max-width: 499px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-piscina-1225024-05.webp?ims=400x">
-                  <source media="(min-width: 992px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-piscina-1225024-05.webp?ims=960x">
-                  <source media="(min-width: 500px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-piscina-1225024-05.webp?ims=430x">
-                  <img class="lp-stories__image" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-piscina-1225024-05.webp?ims=960x" alt="Havaianas Top Nautical marinho e branco nos pes a beira da piscina" width="1080" height="1920" loading="lazy">
-                </picture>
-              </div>
-              <figcaption class="lp-stories__caption is-top" id="lp-story-uso-2-caption">Solado 100% borracha, pronto para dias de piscina.</figcaption>
-            </figure>
-            <nav class="lp-stories__nav" aria-label="Navegar slides do container Estilo e Conforto">
-              <a class="lp-stories__arrow prev" href="#lp-story-uso-1" aria-label="Slide anterior de Estilo e Conforto"><span aria-hidden="true">&lsaquo;</span></a>
-              <a class="lp-stories__arrow next" href="#lp-story-detalhes-1" aria-label="Proximo slide de Estilo e Conforto"><span aria-hidden="true">&rsaquo;</span></a>
-            </nav>
-          </div>
-        </article>
+                <div class="lp-stories__panel panel-uso-2" role="group" aria-labelledby="lp-story-uso-2-title"
+                    aria-describedby="lp-story-uso-2-caption">
+                    <div class="lp-stories__viewer">
+                        <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-2">
+                        </div>
+                        <div class="lp-stories__topbar" role="group"
+                            aria-label="Identificação do container Estilo e Conforto">
+                            <img class="lp-stories__avatar" width="400" height="400" loading="lazy"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp"
+                                alt="Logo dos stories">
+                            <h3 class="lp-stories__title" id="lp-story-uso-2-title">Estilo e Conforto</h3>
+                            <span class="lp-stories__step">2/2</span>
+                        </div>
+                        <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
+                            <div class="lp-stories__media">
+                                <div class="lp-stories__picture">
+                                    <img class="lp-stories__image" width="1080" height="1920" loading="lazy"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-piscina-1225024-05.webp"
+                                        alt="Havaianas Top Nautical marinho e branco nos pes a beira da piscina">
+                                </div>
+                            </div>
+                            <figcaption class="lp-stories__caption is-top" id="lp-story-uso-2-caption">Solado 100%
+                                borracha, pronto para dias de piscina.</figcaption>
+                        </figure>
+                        <div class="lp-stories__nav" role="navigation"
+                            aria-label="Navegar slides do container Estilo e Conforto">
+                            <a class="lp-stories__arrow prev" aria-label="Slide anterior de Estilo e Conforto"
+                                href="#lp-story-uso-1"><span aria-hidden="true">&lsaquo;</span></a>
+                            <a class="lp-stories__arrow next" aria-label="Proximo slide de Estilo e Conforto"
+                                href="#lp-story-detalhes-1"><span aria-hidden="true">&rsaquo;</span></a>
+                        </div>
+                    </div>
+                </div>
 
-        <article class="lp-stories__panel panel-detalhes-1" aria-labelledby="lp-story-detalhes-1-title" aria-describedby="lp-story-detalhes-1-caption">
-          <div class="lp-stories__viewer">
-            <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-1" aria-label="Progresso do container Sempre com voce"></div>
-            <header class="lp-stories__topbar" aria-label="Identificação do container Sempre com voce">
-              <img class="lp-stories__avatar" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp" alt="Logo dos stories" width="400" height="400" loading="lazy">
-              <h3 class="lp-stories__title" id="lp-story-detalhes-1-title">Sempre com voce</h3>
-              <span class="lp-stories__step">1/2</span>
-            </header>
-            <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
-              <div class="lp-stories__media">
-                <picture class="lp-stories__picture">
-                  <source media="(max-width: 499px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-deck-praia-1225024-06.webp?ims=400x">
-                  <source media="(min-width: 992px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-deck-praia-1225024-06.webp?ims=960x">
-                  <source media="(min-width: 500px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-deck-praia-1225024-06.webp?ims=430x">
-                  <img class="lp-stories__image" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-deck-praia-1225024-06.webp?ims=960x" alt="Havaianas Top Nautical branco e marinho nos pes sobre deck de madeira na praia" width="1080" height="1920" loading="lazy">
-                </picture>
-              </div>
-              <figcaption class="lp-stories__caption is-top" id="lp-story-detalhes-1-caption">Do calcadao ao mar em cada passo.</figcaption>
-            </figure>
-            <nav class="lp-stories__nav" aria-label="Navegar slides do container Sempre com voce">
-              <a class="lp-stories__arrow prev" href="#lp-story-uso-2" aria-label="Slide anterior de Sempre com voce"><span aria-hidden="true">&lsaquo;</span></a>
-              <a class="lp-stories__arrow next" href="#lp-story-detalhes-2" aria-label="Proximo slide de Sempre com voce"><span aria-hidden="true">&rsaquo;</span></a>
-            </nav>
-          </div>
-        </article>
+                <div class="lp-stories__panel panel-detalhes-1" role="group" aria-labelledby="lp-story-detalhes-1-title"
+                    aria-describedby="lp-story-detalhes-1-caption">
+                    <div class="lp-stories__viewer">
+                        <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-1">
+                        </div>
+                        <div class="lp-stories__topbar" role="group"
+                            aria-label="Identificação do container Sempre com voce">
+                            <img class="lp-stories__avatar" width="400" height="400" loading="lazy"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp"
+                                alt="Logo dos stories">
+                            <h3 class="lp-stories__title" id="lp-story-detalhes-1-title">Sempre com voce</h3>
+                            <span class="lp-stories__step">1/2</span>
+                        </div>
+                        <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
+                            <div class="lp-stories__media">
+                                <div class="lp-stories__picture">
+                                    <img class="lp-stories__image" width="1080" height="1920" loading="lazy"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-branco-marinho-deck-praia-1225024-06.webp"
+                                        alt="Havaianas Top Nautical branco e marinho nos pes sobre deck de madeira na praia">
+                                </div>
+                            </div>
+                            <figcaption class="lp-stories__caption is-top" id="lp-story-detalhes-1-caption">Do calcadao
+                                ao mar em cada passo.</figcaption>
+                        </figure>
+                        <div class="lp-stories__nav" role="navigation"
+                            aria-label="Navegar slides do container Sempre com voce">
+                            <a class="lp-stories__arrow prev" aria-label="Slide anterior de Sempre com voce"
+                                href="#lp-story-uso-2"><span aria-hidden="true">&lsaquo;</span></a>
+                            <a class="lp-stories__arrow next" aria-label="Proximo slide de Sempre com voce"
+                                href="#lp-story-detalhes-2"><span aria-hidden="true">&rsaquo;</span></a>
+                        </div>
+                    </div>
+                </div>
 
-        <article class="lp-stories__panel panel-detalhes-2" aria-labelledby="lp-story-detalhes-2-title" aria-describedby="lp-story-detalhes-2-caption">
-          <div class="lp-stories__viewer">
-            <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-2" aria-label="Progresso do container Sempre com voce"></div>
-            <header class="lp-stories__topbar" aria-label="Identificação do container Sempre com voce">
-              <img class="lp-stories__avatar" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp" alt="Logo dos stories" width="400" height="400" loading="lazy">
-              <h3 class="lp-stories__title" id="lp-story-detalhes-2-title">Sempre com voce</h3>
-              <span class="lp-stories__step">2/2</span>
-            </header>
-            <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
-              <div class="lp-stories__media">
-                <picture class="lp-stories__picture">
-                  <source media="(max-width: 499px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-praia-ondas-1225024-07.webp?ims=400x">
-                  <source media="(min-width: 992px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-praia-ondas-1225024-07.webp?ims=960x">
-                  <source media="(min-width: 500px)" srcset="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-praia-ondas-1225024-07.webp?ims=430x">
-                  <img class="lp-stories__image" src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-praia-ondas-1225024-07.webp?ims=960x" alt="Havaianas Top Nautical marinho e branco nos pes na areia com ondas do mar" width="1080" height="1920" loading="lazy">
-                </picture>
-              </div>
-              <figcaption class="lp-stories__caption is-top" id="lp-story-detalhes-2-caption">Na areia, pertinho do mar.</figcaption>
-            </figure>
-            <nav class="lp-stories__nav" aria-label="Navegar slides do container Sempre com voce">
-              <a class="lp-stories__arrow prev" href="#lp-story-detalhes-1" aria-label="Slide anterior de Sempre com voce"><span aria-hidden="true">&lsaquo;</span></a>
-              <a class="lp-stories__arrow next" href="#lp-story-produto-1" aria-label="Proximo slide de Sempre com voce"><span aria-hidden="true">&rsaquo;</span></a>
-            </nav>
-          </div>
-        </article>
-      </div>
-    </section>`,
-  css: `<style>
+                <div class="lp-stories__panel panel-detalhes-2" role="group" aria-labelledby="lp-story-detalhes-2-title"
+                    aria-describedby="lp-story-detalhes-2-caption">
+                    <div class="lp-stories__viewer">
+                        <div class="lp-stories__progress lp-stories__progress--slides-2 lp-stories__progress--index-2">
+                        </div>
+                        <div class="lp-stories__topbar" role="group"
+                            aria-label="Identificação do container Sempre com voce">
+                            <img class="lp-stories__avatar" width="400" height="400" loading="lazy"
+                                src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/logo-havaianas.webp"
+                                alt="Logo dos stories">
+                            <h3 class="lp-stories__title" id="lp-story-detalhes-2-title">Sempre com voce</h3>
+                            <span class="lp-stories__step">2/2</span>
+                        </div>
+                        <figure class="lp-stories__figure lp-stories__figure--focus-bottom">
+                            <div class="lp-stories__media">
+                                <div class="lp-stories__picture">
+                                    <img class="lp-stories__image" width="1080" height="1920" loading="lazy"
+                                        src="https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/chinelo-havaianas-top-nautical-listrado-marinho-branco-praia-ondas-1225024-07.webp"
+                                        alt="Havaianas Top Nautical marinho e branco nos pes na areia com ondas do mar">
+                                </div>
+                            </div>
+                            <figcaption class="lp-stories__caption is-top" id="lp-story-detalhes-2-caption">Na areia,
+                                pertinho do mar.</figcaption>
+                        </figure>
+                        <div class="lp-stories__nav" role="navigation"
+                            aria-label="Navegar slides do container Sempre com voce">
+                            <a class="lp-stories__arrow prev" aria-label="Slide anterior de Sempre com voce"
+                                href="#lp-story-detalhes-1"><span aria-hidden="true">&lsaquo;</span></a>
+                            <a class="lp-stories__arrow next" aria-label="Proximo slide de Sempre com voce"
+                                href="#lp-story-produto-1"><span aria-hidden="true">&rsaquo;</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>`,
+    css: `<style>
   /* Guia rapido de midias:
      - Slide/story: proporcao 9:16. Recomendado 1080x1920 px. Minimo seguro 860x1530 px.
      - Poster de video: use a mesma proporcao do slide, preferencialmente 1080x1920 px.
@@ -630,5 +687,5 @@ SenkoLib.registerLayout(
     --story-caption-bg-end: rgba(2, 6, 23, 0.46);
   }
 </style>`
-}
+  }
 );

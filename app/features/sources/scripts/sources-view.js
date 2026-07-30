@@ -35,7 +35,7 @@
 
                 <div class="control-group source-options__wide">
                   <label class="field-label" for="source-breakpoints">Breakpoints analisados</label>
-                  <input class="text-input" id="source-breakpoints" type="text" inputmode="numeric" value="320, 375, 425, 768, 1024, 1440" placeholder="Ex: 320, 375, 425, 768, 1024, 1440">
+                  <input class="text-input" id="source-breakpoints" type="text" inputmode="numeric" value="320, 375, 425, 768, 1024" placeholder="Ex: 320, 375, 425, 768, 1024">
                 </div>
 
                 <div class="control-group">

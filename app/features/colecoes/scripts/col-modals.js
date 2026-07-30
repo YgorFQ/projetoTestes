@@ -179,6 +179,44 @@ function _colReadMetadataTags(inputId) {
     .filter(Boolean);
 }
 
+function _colNaturalCompare(a, b) {
+  function tokenize(value) {
+    var text = String(value || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
+    var parts = [];
+    var re = /(\d+)|([^\d]+)/g;
+    var match;
+    while ((match = re.exec(text)) !== null) {
+      parts.push(match[1] !== undefined ? parseInt(match[1], 10) : match[2].trim());
+    }
+    return parts.filter(function (part) { return part !== ''; });
+  }
+
+  var aParts = tokenize(a);
+  var bParts = tokenize(b);
+  var len = Math.max(aParts.length, bParts.length);
+  for (var i = 0; i < len; i++) {
+    var ap = aParts[i] !== undefined ? aParts[i] : '';
+    var bp = bParts[i] !== undefined ? bParts[i] : '';
+    var aIsNumber = typeof ap === 'number';
+    var bIsNumber = typeof bp === 'number';
+
+    if (aIsNumber && bIsNumber) {
+      if (ap !== bp) return ap - bp;
+    } else if (aIsNumber) {
+      return -1;
+    } else if (bIsNumber) {
+      return 1;
+    } else {
+      var cmp = ap.localeCompare(bp, 'pt-BR', { sensitivity: 'base' });
+      if (cmp !== 0) return cmp;
+    }
+  }
+  return 0;
+}
+
 function _colCopyToClipboard(text, button, restoredHtml) {
   function markCopied() {
     if (!button) return;
@@ -330,7 +368,9 @@ function _colRenderLayoutsGrid(col) {
   if (!grid) return;
   grid.innerHTML = '';
 
-  var layouts = col.layouts || [];
+  var layouts = (Array.isArray(col.layouts) ? col.layouts : []).slice().sort(function (a, b) {
+    return _colNaturalCompare((a && a.name) || '', (b && b.name) || '');
+  });
 
   layouts.forEach(function (layout, i) {
     var block = document.createElement('div');

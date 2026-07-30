@@ -50,6 +50,21 @@ Se criar novos dados manualmente:
 - Atualizar o data/manifest.js da feature.
 - O manifest funciona como um indice dos arquivos que aquela feature deve carregar.
 
+Modelo atual dos dados:
+- Cada layout da Biblioteca fica em um arquivo JS proprio.
+- Cada variacao da Biblioteca fica em um arquivo JS proprio.
+- Cada colecao fica em um arquivo JS proprio de metadados.
+- Cada layout dentro de uma colecao fica em um arquivo JS proprio.
+- O manifest aponta para esses arquivos; se o arquivo nao estiver no manifest, ele nao aparece no app.
+
+Registros atuais:
+- Layout da Biblioteca: SenkoLib.registerLayout({...})
+- Variacao da Biblioteca: SenkoLib.registerVariantFile('layout-id', {...})
+- Colecao: ColLib.registerCollection({...})
+- Layout de colecao: ColLib.registerCollectionLayout('slug-da-colecao', {...})
+
+Os registros antigos com arrays existem apenas por compatibilidade e nao devem ser usados para itens novos.
+
 Se criar uma feature nova:
 - Criar a pasta da feature.
 - Criar seu register.js.
@@ -77,6 +92,12 @@ Todas as janelas devem seguir o padrao visual do SenkoLib, usando os estilos e t
 Integracoes externas, como GitHub, devem ter logica separada por feature.
 
 Configuracoes globais, como token e repositorio do GitHub, podem ser compartilhadas, mas a logica de uso deve continuar dentro de cada feature.
+
+O editor oficial de layouts e variacoes da Biblioteca fica dentro da propria Biblioteca, em scripts/layout-editor.js e styles/layout-editor.css. Ele nao deve voltar para prototype.
+
+O ID tecnico de layout, variacao, colecao ou layout de colecao nao deve ser editado como campo comum. Ele liga arquivo, manifest e memoria do app.
+
+Ordenacao alfabetica de layouts e variacoes deve acontecer na exibicao, sem reordenar o manifest apenas por visual.
 
 Ao remover uma feature, as outras devem continuar funcionando normalmente.
 

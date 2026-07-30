@@ -4,7 +4,7 @@
    *
    * REGRA DE MANUTENCAO DO GUIA:
    * - Toda alteracao relevante no projeto deve atualizar o guia interno em
-   *   app/prototype/senko-guide.
+   *   app/shell/scripts/senko-guide.js.
    * - Se uma IA ou outra pessoa mexer no shell, em features, GitHub, estilos,
    *   dados ou erros conhecidos, ela tambem precisa revisar o guia.
    * - O guia e prioridade maxima: codigo atualizado com guia desatualizado
@@ -15,11 +15,13 @@
    * - Cada feature se registra chamando SenkoShell.registerFeature().
    * - Se uma feature for removida, a unica consequencia aceitavel e a aba
    *   dela desaparecer. O shell escolhe a primeira feature disponivel.
-   * - O topo do shell tem apenas navegacao e tema.
-   * - Busca, adicionar e acoes extras ficam dentro da propria feature.
+   * - O topo pode ter controles realmente globais, como tema, GitHub e
+   *   criacao rapida, desde que usem contratos registrados pelas features.
+   * - Busca, formulários e regras de criação ficam dentro da própria feature.
    */
   var features = [];
   var githubProviders = {};
+  var createProviders = {};
   var isReady = false;
   var activeFeatureId = null;
   var storageKey = 'senkolib_active_tab';
@@ -244,6 +246,68 @@
     refreshGithubButton();
   }
 
+  function isValidCreateAction(action) {
+    /*
+     * Uma ação pode abrir algo diretamente por `run` ou solicitar uma
+     * seleção por `picker`. O shell valida apenas esse contrato estrutural;
+     * nomes de campos, dados e modais continuam pertencendo à feature.
+     */
+    if (!action || !action.id || !action.label) return false;
+    if (typeof action.run === 'function') return true;
+    return Boolean(
+      action.picker &&
+      typeof action.picker.list === 'function' &&
+      typeof action.picker.run === 'function'
+    );
+  }
+
+  function registerCreateProvider(featureId, provider) {
+    /*
+     * Provedores de criação seguem a mesma fronteira dos provedores GitHub:
+     * o shell guarda callbacks públicos, mas nunca importa scripts internos
+     * nem conhece as regras de Biblioteca, Coleções ou futuras features.
+     *
+     * Contrato esperado:
+     * - label, order e icon descrevem o cartão principal;
+     * - prepare() carrega/ativa a feature e devolve seu contexto público;
+     * - actions[] contém ações diretas ou ações com picker.
+     */
+    if (!featureId || !provider || !provider.label ||
+        typeof provider.prepare !== 'function' ||
+        !Array.isArray(provider.actions)) {
+      return false;
+    }
+
+    var validActions = provider.actions.filter(isValidCreateAction);
+    if (!validActions.length) return false;
+
+    createProviders[featureId] = {
+      id: featureId,
+      label: provider.label,
+      order: Number.isFinite(provider.order) ? provider.order : 100,
+      icon: provider.icon || 'layout',
+      prepare: provider.prepare,
+      actions: validActions
+    };
+    return true;
+  }
+
+  function listCreateProviders() {
+    /*
+     * A cópia ordenada evita que a ferramenta global dependa da ordem em
+     * que os register.js foram baixados pelo navegador.
+     */
+    return Object.keys(createProviders).map(function (id) {
+      return createProviders[id];
+    }).sort(function (left, right) {
+      return left.order - right.order;
+    });
+  }
+
+  function getCreateProvider(featureId) {
+    return createProviders[featureId] || null;
+  }
+
   function switchFeature(id) {
     var feature = findFeature(id);
     if (!feature) return false;
@@ -325,6 +389,9 @@
   window.SenkoShell = {
     registerFeature: registerFeature,
     registerGithubProvider: registerGithubProvider,
+    registerCreateProvider: registerCreateProvider,
+    listCreateProviders: listCreateProviders,
+    getCreateProvider: getCreateProvider,
     refreshGithubButton: refreshGithubButton,
     switchFeature: switchFeature,
     getFeatureRoot: getFeatureRoot,

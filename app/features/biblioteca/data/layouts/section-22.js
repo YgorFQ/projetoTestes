@@ -1,73 +1,69 @@
 // @ts-nocheck
 SenkoLib.registerLayout(
-{
-  id: "section-22",
-  name: "section-22",
-  tags: ["tabela", "responsivo", "acessível"],
-  html: `<footer aria-label="Informações complementares e produtos Relacionados">
-  <p class="p__end">
-    <strong>Imagens Meramente Ilustrativas</strong>
-  </p>
-  <section class="table-container-custom" aria-label="tabela contendo produtos relacionados e citados dentre deste conteúdo">
-    <table class="table-design-custom" aria-describedby="table-desc">
-      <caption id="table-desc" class="sr-only" style="text-align:left; padding: 0 0 8px; font-weight:600;">
-        Produtos Havaianas Kids Color disponíveis
-      </caption>
-      <thead class="table-head-custom">
-        <tr class="table-tr-custom">
-          <th class="table-text-custom table-th-custom" style="background-color: #fb373c; border-radius: 10px 0 0 0;" scope="col">SKU
-          </th>
-          <th class="table-text-custom table-th-custom" style="background-color: #fb373c; border-radius: 0 10px 0 0;" scope="col">TÍTULO
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="table-tr-custom">
-          <td class="table-text-custom table-td-custom-title">1224878</td>
-          <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR BRANCO 23/4</td>
-        </tr>
-        <tr class="table-tr-custom">
-          <td class="table-text-custom table-td-custom-title">1224879</td>
-          <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR BRANCO 25/6</td>
-        </tr>
-        <tr class="table-tr-custom">
-          <td class="table-text-custom table-td-custom-title">1224881</td>
-          <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR BRANCO 27/8</td>
-        </tr>
-        <tr class="table-tr-custom">
-          <td class="table-text-custom table-td-custom-title">1224882</td>
-          <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR BRANCO 29/0</td>
-        </tr>
-        <tr class="table-tr-custom">
-          <td class="table-text-custom table-td-custom-title">1224883</td>
-          <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR BRANCO 31/2</td>
-        </tr>
-        <tr class="table-tr-custom">
-          <td class="table-text-custom table-td-custom-title">1224884</td>
-          <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR PRETO 23/4</td>
-        </tr>
-        <tr class="table-tr-custom">
-          <td class="table-text-custom table-td-custom-title">1224885</td>
-          <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR PRETO 25/6</td>
-        </tr>
-        <tr class="table-tr-custom">
-          <td class="table-text-custom table-td-custom-title">1224886</td>
-          <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR PRETO 27/8</td>
-        </tr>
-        <tr class="table-tr-custom">
-          <td class="table-text-custom table-td-custom-title">1224887</td>
-          <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR PRETO 29/0</td>
-        </tr>
-        <tr class="table-tr-custom">
-          <td class="table-text-custom table-td-custom-title">1224888</td>
-          <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR PRETO 31/2</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-</footer>
-`,
-  css: `<style>
+  {
+    id: "section-22",
+    name: "section-22",
+    tags: ["tabela", "responsivo", "acessível"],
+    html: `        <section class="table-container-custom" aria-label="Tabela de produtos relacionados citados neste conteúdo">
+            <table class="table-design-custom" aria-describedby="table-desc">
+                <caption class="sr-only" id="table-desc" style="text-align:left; padding: 0 0 8px; font-weight:600;">
+                    Produtos ***
+                </caption>
+                <thead class="table-head-custom">
+                    <tr class="table-tr-custom">
+                        <th class="table-text-custom table-th-custom"
+                            style="background-color: #fb373c; border-radius: 10px 0 0 0;" scope="col">SKU
+                        </th>
+                        <th class="table-text-custom table-th-custom"
+                            style="background-color: #fb373c; border-radius: 0 10px 0 0;" scope="col">TÍTULO
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-tr-custom">
+                        <td class="table-text-custom table-td-custom-title">1224878</td>
+                        <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR BRANCO 23/4</td>
+                    </tr>
+                    <tr class="table-tr-custom">
+                        <td class="table-text-custom table-td-custom-title">1224879</td>
+                        <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR BRANCO 25/6</td>
+                    </tr>
+                    <tr class="table-tr-custom">
+                        <td class="table-text-custom table-td-custom-title">1224881</td>
+                        <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR BRANCO 27/8</td>
+                    </tr>
+                    <tr class="table-tr-custom">
+                        <td class="table-text-custom table-td-custom-title">1224882</td>
+                        <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR BRANCO 29/0</td>
+                    </tr>
+                    <tr class="table-tr-custom">
+                        <td class="table-text-custom table-td-custom-title">1224883</td>
+                        <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR BRANCO 31/2</td>
+                    </tr>
+                    <tr class="table-tr-custom">
+                        <td class="table-text-custom table-td-custom-title">1224884</td>
+                        <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR PRETO 23/4</td>
+                    </tr>
+                    <tr class="table-tr-custom">
+                        <td class="table-text-custom table-td-custom-title">1224885</td>
+                        <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR PRETO 25/6</td>
+                    </tr>
+                    <tr class="table-tr-custom">
+                        <td class="table-text-custom table-td-custom-title">1224886</td>
+                        <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR PRETO 27/8</td>
+                    </tr>
+                    <tr class="table-tr-custom">
+                        <td class="table-text-custom table-td-custom-title">1224887</td>
+                        <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR PRETO 29/0</td>
+                    </tr>
+                    <tr class="table-tr-custom">
+                        <td class="table-text-custom table-td-custom-title">1224888</td>
+                        <td class="table-text-custom table-td-custom-sub">HAVAIANAS KIDS COLOR PRETO 31/2</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>`,
+    css: `<style>
   .sr-only {
     position: absolute;
     width: 1px;
@@ -174,5 +170,5 @@ SenkoLib.registerLayout(
     }
   }
 </style>`
-}
+  }
 );

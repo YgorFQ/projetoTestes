@@ -412,7 +412,11 @@ var TRASH_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 function initSenkoBibliotecaGithubDelete() {
   if (initSenkoBibliotecaGithubDelete.initialized) return;
   initSenkoBibliotecaGithubDelete.initialized = true;
-  if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;
+  /*
+   * O editor oficial tambem funciona localmente. Montamos a confirmacao de
+   * exclusao em todos os ambientes e deixamos a verificacao de token impedir
+   * qualquer chamada remota sem configuracao.
+   */
   ghInjectDeleteStyles();
   ghCreateDeleteModal();
 

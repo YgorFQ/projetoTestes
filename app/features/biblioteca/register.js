@@ -101,21 +101,34 @@
       var run = function () {
         var variants = getManifestFiles(manifest.variants);
         var variantLoads = variants.map(function (path) {
-          return loadScript('data/' + path);
+          /*
+           * Um arquivo de dado ausente nao pode impedir que editores e
+           * integracoes sejam carregados. A falha fica identificada no
+           * console e as demais variantes continuam disponiveis.
+           */
+          return loadScript('data/' + path).catch(function (error) {
+            console.error('[Biblioteca] Variante ignorada (' + path + '):', error);
+            return null;
+          });
         });
 
-        Promise.all(variantLoads).then(function () {
+        var variantsReady = Promise.all(variantLoads).then(function () {
           if (window.SenkoBiblioteca) window.SenkoBiblioteca.render(true);
+        });
 
-          return loadScript('integrations/github/senko-github-v2.js?v=20260614-token-feedback');
-        }).then(function () {
+        /*
+         * GitHub carrega em paralelo aos dados opcionais. Assim, criar,
+         * editar, salvar e excluir continuam acessiveis mesmo quando uma
+         * variante catalogada estiver temporariamente indisponivel.
+         */
+        var githubReady = loadScript('integrations/github/senko-github-v2.js?v=20260730-local-controls').then(function () {
           if (window.SenkoBibliotecaGithubV2) {
             window.SenkoBibliotecaGithubV2.init();
           }
 
           return Promise.all([
-            loadScript('integrations/github/senko-github-variants.js?v=20260614-token-feedback'),
-            loadScript('integrations/github/senko-github-delete.js?v=20260614-token-feedback')
+            loadScript('integrations/github/senko-github-variants.js?v=20260730-local-controls'),
+            loadScript('integrations/github/senko-github-delete.js?v=20260730-local-controls')
           ]);
         }).then(function () {
           if (window.SenkoBibliotecaGithubVariants) {
@@ -124,6 +137,9 @@
           if (window.SenkoBibliotecaGithubDelete) {
             window.SenkoBibliotecaGithubDelete.init();
           }
+        });
+
+        Promise.all([variantsReady, githubReady]).then(function () {
           resolve();
         }).catch(function (error) {
           /*
@@ -147,6 +163,7 @@
     loadPromise = (async function () {
       loadStyle('styles/biblioteca.css?v=20260613-library-scroll');
       loadStyle('styles/layout-editor.css?v=20260613-official-editor');
+      loadStyle('styles/copy-base-editor.css?v=20260723-official-editor');
 
       var initialResources = await Promise.all([
         loadScript('view.js?v=20260613-fast-load'),
@@ -166,8 +183,11 @@
           });
         })),
         loadScript('scripts/layout-editor.js?v=20260613-official-editor'),
+        loadScript('scripts/copy-base-editor.js?v=20260723-official-editor'),
         loadScript('scripts/script.js?v=20260613-eager-previews'),
-        loadScript('scripts/copy-base.js?v=20260613-fast-load-2')
+        loadScript('scripts/copy-base-template.js?v=20260723-copy-base-editor').then(function () {
+          return loadScript('scripts/copy-base.js?v=20260723-copy-base-editor');
+        })
       ]);
 
       if (!window.SenkoBiblioteca || typeof window.SenkoBiblioteca.init !== 'function') {
@@ -176,6 +196,9 @@
 
       window.SenkoBiblioteca.init();
       if (window.SenkoBibliotecaCopyBase) window.SenkoBibliotecaCopyBase.init();
+      if (window.SenkoBibliotecaCopyBaseEditor) {
+        window.SenkoBibliotecaCopyBaseEditor.init();
+      }
       loadSecondaryModules(manifest);
 
       return panel;
@@ -207,6 +230,49 @@
     return panel;
   }
 
+  function prepareBibliotecaCreation() {
+    /*
+     * A criação rápida pode ser aberta a partir de qualquer aba. Antes de
+     * entregar a API pública, a Biblioteca se torna ativa e conclui seu
+     * carregamento sob demanda. Nenhum polling é necessário porque o próprio
+     * register.js é o dono da Promise de inicialização.
+     */
+    if (!window.SenkoShell.switchFeature('biblioteca')) {
+      return Promise.reject(new Error('A Biblioteca não está registrada no Senko.'));
+    }
+
+    return loadFeature().then(function () {
+      var api = window.SenkoBiblioteca;
+      var ready = api &&
+        typeof api.isReady === 'function' &&
+        api.isReady() &&
+        typeof api.openCreateLayout === 'function' &&
+        typeof api.listLayoutsForCreation === 'function' &&
+        typeof api.openCreateVariantForLayout === 'function';
+
+      if (!ready) {
+        throw new Error('A Biblioteca ainda não terminou de carregar.');
+      }
+      return api;
+    });
+  }
+
+  function getVariantPickerTargets(api) {
+    /*
+     * O picker global recebe um formato neutro. A conversão fica aqui para
+     * que o shell não precise conhecer id, tags ou contagem de variantes.
+     */
+    return api.listLayoutsForCreation().map(function (layout) {
+      var count = Number(layout.variantCount || 0);
+      return {
+        id: layout.id,
+        title: layout.name || layout.id,
+        meta: layout.id + ' · ' + count + (count === 1 ? ' variação' : ' variações'),
+        tags: layout.tags || []
+      };
+    });
+  }
+
   window.SenkoShell.registerFeature({
     id: 'biblioteca',
     label: 'Biblioteca',
@@ -217,5 +283,49 @@
         if (window.SenkoBiblioteca) window.SenkoBiblioteca.render();
       });
     }
+  });
+
+  /*
+   * Provider oficial da criação rápida.
+   *
+   * A ferramenta global conhece apenas os dados abaixo. Os callbacks ainda
+   * executam dentro da Biblioteca, preservando validação, modal e estado.
+   */
+  window.SenkoShell.registerCreateProvider('biblioteca', {
+    label: 'Biblioteca',
+    order: 10,
+    icon: 'library',
+    prepare: prepareBibliotecaCreation,
+    actions: [
+      {
+        id: 'layout',
+        label: 'Layout',
+        icon: 'layout',
+        loadingTitle: 'Carregando Biblioteca',
+        loadingMessage: 'Preparando o editor de layout...',
+        run: function (api) {
+          return api.openCreateLayout();
+        }
+      },
+      {
+        id: 'variant',
+        label: 'Variação',
+        icon: 'variant',
+        picker: {
+          kicker: 'Variação',
+          title: 'Escolha o layout base',
+          searchLabel: 'Buscar layout',
+          searchPlaceholder: 'Digite nome, id ou tag',
+          confirmLabel: 'Criar variação',
+          emptyMessage: 'Nenhum layout encontrado.',
+          loadingTitle: 'Carregando layouts',
+          loadingMessage: 'Preparando a Biblioteca...',
+          list: getVariantPickerTargets,
+          run: function (api, layoutId) {
+            return api.openCreateVariantForLayout(layoutId);
+          }
+        }
+      }
+    ]
   });
 })();

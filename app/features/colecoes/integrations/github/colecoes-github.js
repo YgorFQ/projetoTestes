@@ -1030,7 +1030,7 @@ function colGhInjectCreateButton() {
   var btn       = document.createElement('button');
   btn.id        = 'colGhCreateBtn';
   btn.className = 'btn-github';
-  btn.innerHTML = COL_GH_ICON + ' GitHub';
+  btn.innerHTML = COL_GH_ICON + ' Salvar';
   btn.title     = 'Criar coleção direto no repositório GitHub';
   anchor.parentNode.replaceChild(btn, anchor);
 
@@ -1048,15 +1048,15 @@ function colGhInjectCreateButton() {
         btn.innerHTML = COL_GH_ICON + ' Criado!';
         setTimeout(function () {
           if (typeof colCloseCreateModal === 'function') colCloseCreateModal();
-          btn.innerHTML = COL_GH_ICON + ' GitHub';
+          btn.innerHTML = COL_GH_ICON + ' Salvar';
           btn.disabled  = false;
         }, 1200);
       } else {
-        btn.innerHTML = COL_GH_ICON + ' GitHub';
+        btn.innerHTML = COL_GH_ICON + ' Salvar';
         btn.disabled  = false;
       }
     }).catch(function () {
-      btn.innerHTML = COL_GH_ICON + ' GitHub';
+      btn.innerHTML = COL_GH_ICON + ' Salvar';
       btn.disabled  = false;
     });
   });
@@ -1071,7 +1071,7 @@ function colGhInjectEditButton() {
   var btn       = document.createElement('button');
   btn.id        = 'colGhEditBtn';
   btn.className = 'btn-github';
-  btn.innerHTML = COL_GH_ICON + ' GitHub';
+  btn.innerHTML = COL_GH_ICON + ' Salvar';
   btn.title     = 'Salvar metadados no repositório GitHub';
   anchor.parentNode.replaceChild(btn, anchor);
 
@@ -1089,15 +1089,15 @@ function colGhInjectEditButton() {
         btn.innerHTML = COL_GH_ICON + ' Salvo!';
         setTimeout(function () {
           if (typeof colCloseEditModal === 'function') colCloseEditModal();
-          btn.innerHTML = COL_GH_ICON + ' GitHub';
+          btn.innerHTML = COL_GH_ICON + ' Salvar';
           btn.disabled  = false;
         }, 1200);
       } else {
-        btn.innerHTML = COL_GH_ICON + ' GitHub';
+        btn.innerHTML = COL_GH_ICON + ' Salvar';
         btn.disabled  = false;
       }
     }).catch(function () {
-      btn.innerHTML = COL_GH_ICON + ' GitHub';
+      btn.innerHTML = COL_GH_ICON + ' Salvar';
       btn.disabled  = false;
     });
   });
@@ -1159,7 +1159,7 @@ function colGhInjectAddLayoutButton() {
   var btn       = document.createElement('button');
   btn.id        = 'colGhAddLayoutBtn';
   btn.className = 'btn-github';
-  btn.innerHTML = COL_GH_ICON + ' GitHub';
+  btn.innerHTML = COL_GH_ICON + ' Salvar';
   btn.title     = 'Adicionar layout ao arquivo da coleção no GitHub';
   anchor.parentNode.replaceChild(btn, anchor);
 
@@ -1184,15 +1184,15 @@ function colGhInjectAddLayoutButton() {
         btn.innerHTML = COL_GH_ICON + ' Salvo!';
         setTimeout(function () {
           if (typeof colCloseAddLayoutModal === 'function') colCloseAddLayoutModal();
-          btn.innerHTML = COL_GH_ICON + ' GitHub';
+          btn.innerHTML = COL_GH_ICON + ' Salvar';
           btn.disabled  = false;
         }, 1200);
       } else {
-        btn.innerHTML = COL_GH_ICON + ' GitHub';
+        btn.innerHTML = COL_GH_ICON + ' Salvar';
         btn.disabled  = false;
       }
     }).catch(function () {
-      btn.innerHTML = COL_GH_ICON + ' GitHub';
+      btn.innerHTML = COL_GH_ICON + ' Salvar';
       btn.disabled  = false;
     });
   });
@@ -1207,7 +1207,7 @@ function colGhInjectEditLayoutButton() {
   var btn       = document.createElement('button');
   btn.id        = 'colGhEditLayoutBtn';
   btn.className = 'btn-github';
-  btn.innerHTML = COL_GH_ICON + ' GitHub';
+  btn.innerHTML = COL_GH_ICON + ' Salvar';
   btn.title     = 'Salvar layout editado no repositório GitHub';
   anchor.parentNode.replaceChild(btn, anchor);
 
@@ -1231,15 +1231,15 @@ function colGhInjectEditLayoutButton() {
         btn.innerHTML = COL_GH_ICON + ' Salvo!';
         setTimeout(function () {
           if (typeof colCloseEditLayoutModal === 'function') colCloseEditLayoutModal();
-          btn.innerHTML = COL_GH_ICON + ' GitHub';
+          btn.innerHTML = COL_GH_ICON + ' Salvar';
           btn.disabled  = false;
         }, 1200);
       } else {
-        btn.innerHTML = COL_GH_ICON + ' GitHub';
+        btn.innerHTML = COL_GH_ICON + ' Salvar';
         btn.disabled  = false;
       }
     }).catch(function () {
-      btn.innerHTML = COL_GH_ICON + ' GitHub';
+      btn.innerHTML = COL_GH_ICON + ' Salvar';
       btn.disabled  = false;
     });
   });
@@ -1317,14 +1317,17 @@ function colGhObserveModals() {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
-   INICIALIZAÇÃO — só ativa no GitHub Pages
+   INICIALIZAÇÃO — ativa em ambiente publicado e local
 ═══════════════════════════════════════════════════════════════════════ */
 
 function initSenkoColecoesGithub() {
   if (initSenkoColecoesGithub.initialized) return;
   initSenkoColecoesGithub.initialized = true;
-  if (!window.location.hostname.match(/^[^.]+\.github\.io$/i)) return;
-
+  /*
+   * Colecoes pode ser usada por GitHub Pages, localhost, Live Server ou
+   * file://. Os controles sempre aparecem; owner, repositorio e token sao
+   * exigidos apenas quando uma operacao tenta persistir dados.
+   */
   colGithubRegisterShellProvider();
   colGhObserveModals();
 

@@ -1,26 +1,27 @@
 // @ts-nocheck
 SenkoLib.registerLayout(
-{
-  id: "section-16",
-  name: "Section-16",
-  tags: ["Alerta", "Ingredientes"],
-  html: `    <section class="section-ingredients" aria-labelledby="ingredients-title">
-      <div class="section-ingredients__inner">
-        <h2 class="section-ingredients__title" id="ingredients-title">Ingredientes</h2>
-        <p class="section-ingredients__text">
-          Sal, pimenta-do-reino preta, coentro, cominho, orégano, cúrcuma, pimenta-calabresa, fécula de mandioca e
-          antiumectante dióxido de silício.
-        </p>
-        <div class="section-ingredients__alert" role="alert" aria-live="polite">
-          <span class="section-ingredients__alert-icon" aria-hidden="true">⚠️</span>
-          <p class="section-ingredients__alert-text">
-            <strong>Informação sobre alérgenos</strong>
-            Contém glúten. Pode conter trigo, aveia e macadâmia. Embalagem com 24 unidades de 40g.
-          </p>
-        </div>
-      </div>
-    </section>`,
-  css: `  <style>
+  {
+    id: "section-16",
+    name: "Section-16",
+    tags: ["Alerta", "Ingredientes"],
+    html: `        <section class="section-ingredients" aria-labelledby="ingredients-title">
+            <div class="section-ingredients__inner">
+                <h2 class="section-ingredients__title" id="ingredients-title">Ingredientes</h2>
+                <p class="section-ingredients__text">
+                    Sal, pimenta-do-reino preta, coentro, cominho, orégano, cúrcuma, pimenta-calabresa, fécula de
+                    mandioca e
+                    antiumectante dióxido de silício.
+                </p>
+                <aside class="section-ingredients__alert" role="note" aria-label="Informação sobre alérgenos">
+                    <span class="section-ingredients__alert-icon" aria-hidden="true">⚠️</span>
+                    <p class="section-ingredients__alert-text">
+                        <strong>Informação sobre alérgenos</strong>
+                        Contém glúten. Pode conter trigo, aveia e macadâmia. Embalagem com 24 unidades de 40g.
+                    </p>
+                </aside>
+            </div>
+        </section>`,
+    css: `  <style>
     .section-ingredients {
       width: 100%;
       background-color: #fff8f0;
@@ -82,5 +83,5 @@ SenkoLib.registerLayout(
       }
     }
   </style>`
-}
+  }
 );

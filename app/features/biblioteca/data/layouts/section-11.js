@@ -1,27 +1,30 @@
 // @ts-nocheck
 SenkoLib.registerLayout(
-{
-  id: "section-11",
-  name: "Section-11",
-  tags: ["Section 11", "11", "grid"],
-  html: `        <section class="section-11" aria-labelledby="section-11-title">
+    {
+        id: "section-11",
+        name: "Section-11",
+        tags: ["Section 11", "11", "grid"],
+        html: `        <section class="section-11" aria-labelledby="section-11-title">
             <div class="section-11-container">
-                <header class="section-11__header">
-                    <h2 class="section-11__title" id="section-11-title">Diferenciais que garantem uma instalação superior</h2>
-                </header>
-                <ul class="section-11__grid" role="list">
+                <div class="section-11__header">
+                    <h2 class="section-11__title" id="section-11-title">Diferenciais que garantem uma instalação
+                        superior</h2>
+                </div>
+                <ul class="section-11__grid">
                     <li class="section-11__item">
-                        <figure class="section-11__figure">
-                            <img class="section-11__image" src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/corfio/4203786_03-1.png" alt="Ícone de formato universitário"
-                                width="74" height="74" loading="lazy">
-                        </figure>
+                        <div class="section-11__figure">
+                            <img class="section-11__image" width="74" height="74" loading="lazy"
+                                src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/corfio/4203786_03-1.png"
+                                alt="Ícone de formato universitário">
+                        </div>
                         <h3 class="section-11__name">Flexibilidade Classe 4/5</h3>
-                        <p class="section-11__value">Cobre de têmpera mole que desliza facilmente pelos eletrodutos, economizando tempo e esforço na instalação</p>
+                        <p class="section-11__value">Cobre de têmpera mole que desliza facilmente pelos eletrodutos,
+                            economizando tempo e esforço na instalação</p>
                     </li>
                 </ul>
             </div>
         </section>`,
-  css: `    <style>
+        css: `    <style>
         .section-11-container {
             padding-bottom: 3rem;
             padding-left: 1rem;
@@ -140,5 +143,5 @@ SenkoLib.registerLayout(
             line-height: 1.4;
         }
     </style>`
-}
+    }
 );

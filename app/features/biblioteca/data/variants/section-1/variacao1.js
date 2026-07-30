@@ -3,32 +3,30 @@ SenkoLib.registerVariantFile("section-1",
 {
   id: "variacao1",
   name: "variacao1",
-  html: `<section class="product-header-2" aria-label="Cabeçalho do produto">
-  <header class="product-header__banner-2">
-    <figure style="width:100%;height:100%;margin:0;">
-      <img
-        src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/header.jpg"
-        alt="Banner do produto" class="product-header__banner-img-2" loading="eager">
-    </figure>
-    <div class="product-header__badge-2" role="img" aria-label="Logo da marca">
-      <img
-        src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo.png"
-        alt="Ícone da marca" class="product-header__badge-img-2">
-    </div>
-  </header>
-  <article class="product-header__body-2">
-    <small class="product-header__brand-2"> Marca </small>
-    <h2 class="product-header__title-2">
-      <span>TÍTULO DO PRODUTO GAMER</span>
-      <strong>Nome, Modelo e Diferencial</strong>
-    </h2>
-    <p class="product-header__subtitle-2">
-      Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
-      Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
-      Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
-    </p>
-  </article>
-</section>`,
+  html: `        <section class="product-header-2" aria-label="Cabeçalho do produto">
+            <div class="product-header__banner-2">
+                <figure style="width:100%;height:100%;margin:0;">
+                    <img src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/header.jpg"
+                        alt="Banner do produto" class="product-header__banner-img-2" loading="eager">
+                </figure>
+                <div class="product-header__badge-2" role="img" aria-label="Logo da marca">
+                    <img src="https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/logo.png"
+                        alt="Ícone da marca" class="product-header__badge-img-2">
+                </div>
+            </div>
+            <div class="product-header__body-2">
+                <small class="product-header__brand-2"> Marca </small>
+                <h2 class="product-header__title-2">
+                    <span>TÍTULO DO PRODUTO GAMER</span>
+                    <strong>Nome, Modelo e Diferencial</strong>
+                </h2>
+                <p class="product-header__subtitle-2">
+                    Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
+                    Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
+                    Isso é uma descrição. Isso é uma descrição. Isso é uma descrição.
+                </p>
+            </div>
+        </section>`,
   css: `<style>
   * {
     margin: 0;
@@ -93,7 +91,7 @@ SenkoLib.registerVariantFile("section-1",
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: calc(var(--badge-size) / 2 + 1.8rem) 0.3rem 2.5rem;
+    padding: calc(var(--badge-size) / 2 + 1.8rem) 0.3rem 1.1rem;
     text-align: center;
   }
 
@@ -137,8 +135,9 @@ SenkoLib.registerVariantFile("section-1",
 
   @media (max-width: 470px) {
     .product-header__subtitle-2 {
-      text-align: justify;
       font-size: clamp(0.9rem, 2vw, 1.1rem);
+      max-width: 95%;
+      margin: 1.25rem auto 0;
     }
   }
 </style>`
