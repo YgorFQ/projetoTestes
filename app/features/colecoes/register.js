@@ -237,6 +237,7 @@
 
       await Promise.all([
         loadScript('data/col-groups-data.js?v=20260613-fast-load'),
+        loadScript('data/firebase-repository.js?v=20260730-firebase-foundation'),
         loadScript('scripts/col-core.js?v=20260613-fast-load'),
         loadScript('scripts/col-script.js?v=20260613-fast-load-2'),
         loadScript('scripts/col-modals.js?v=20260730-full-editor'),

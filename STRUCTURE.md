@@ -3,6 +3,13 @@
 ```text
 SenkoLib/
 |-- app/
+|   |-- infrastructure/
+|   |   `-- firebase/
+|   |       |-- firebase-config.js       - liga/desliga e identifica o projeto Firebase
+|   |       |-- senko-firebase.js        - Auth, Firestore, Functions, Storage e presenca
+|   |       |-- senko-firebase-ui.js     - login, conta e exportacao GitHub global
+|   |       `-- senko-firebase.css       - interface global de autenticacao
+|   |
 |   |-- shell/
 |   |   |-- scripts/
 |   |   |   |-- senko-shell.js           - registra features, providers e monta as abas
@@ -68,6 +75,13 @@ SenkoLib/
 |       |-- scripts/                     - utilitarios usados por mais de uma feature
 |       `-- styles/                      - tokens/componentes visuais compartilhados
 |
+|-- functions/                           - backend Firebase e exportador GitHub
+|-- tools/build-legacy-snapshot.js       - converte dados JS para snapshot de migracao
+|-- firebase.json                        - regras, emuladores, hosting e Functions
+|-- firestore.rules                     - leitura por membro; escrita somente pelo backend
+|-- database.rules.json                 - regras da presenca colaborativa
+|-- storage.rules                       - regras de arquivos
+|-- FIREBASE_SETUP.md                   - configuracao passo a passo para iniciantes
 |-- index.html                           - ponto de entrada do SenkoLib
 |-- sw.js                                - desativa cache local em HTTP/HTTPS
 `-- settings.json                        - configuracoes locais do Live Server
@@ -76,6 +90,12 @@ SenkoLib/
 ## Regras da organizacao
 
 - `shell` controla o aplicativo como um todo: aba ativa, registro de features e layout da casca.
+- `app/infrastructure/firebase` concentra servicos globais sem conhecer regras internas das features.
+- Biblioteca e Colecoes possuem seus proprios `data/firebase-repository.js`; o shell nao acessa seus documentos.
+- Com Firebase ativado, o navegador le dados e chama Functions para escrever. As regras bloqueiam escrita direta.
+- Realtime Database guarda somente presenca de editores; conteudo fica no Firestore.
+- GitHub passa a receber snapshots globais pela Function, manualmente ou a cada 30 minutos.
+- Com `enabled: false`, o modo legado por manifestos e integracoes GitHub continua disponivel durante a transicao.
 - A criacao rapida e uma ferramenta oficial do shell e descobre opcoes por `registerCreateProvider`.
 - O Senko Guide e uma ferramenta oficial do shell, aberta pelo header e exposta pela API `SenkoGuide.open()`/`close()`.
 - Cada feature registrada como provider continua dona de seu carregamento, modal, validacao e persistencia.

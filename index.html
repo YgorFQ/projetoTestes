@@ -91,6 +91,7 @@
     SenkoFreshAssets.writeStyle('app/shell/styles/styles.css');
     SenkoFreshAssets.writeStyle('app/shell/styles/senko-quick-create.css');
     SenkoFreshAssets.writeStyle('app/shell/styles/senko-guide.css');
+    SenkoFreshAssets.writeStyle('app/infrastructure/firebase/senko-firebase.css');
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -167,6 +168,9 @@
   <div id="senkoFeatureRoot"></div>
 
   <script>
+    SenkoFreshAssets.writeScript('app/infrastructure/firebase/firebase-config.js');
+    SenkoFreshAssets.writeScript('app/infrastructure/firebase/senko-firebase.js');
+    SenkoFreshAssets.writeScript('app/infrastructure/firebase/senko-firebase-ui.js');
     SenkoFreshAssets.writeScript('app/shell/scripts/senko-shell.js');
     SenkoFreshAssets.writeScript('app/shell/scripts/senko-quick-create.js');
     SenkoFreshAssets.writeScript('app/shell/scripts/senko-guide.js');

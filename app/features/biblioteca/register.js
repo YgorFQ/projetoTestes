@@ -168,9 +168,10 @@
       var initialResources = await Promise.all([
         loadScript('view.js?v=20260613-fast-load'),
         loadScript('scripts/senkolib-core.js?v=20260613-fast-load'),
+        loadScript('data/firebase-repository.js?v=20260730-firebase-foundation'),
         loadManifest()
       ]);
-      var manifest = initialResources[2];
+      var manifest = initialResources[3];
       var content = window.SenkoBiblioteca.createView();
       panel.replaceChildren(content);
 

@@ -21,6 +21,7 @@
    */
   var features = [];
   var githubProviders = {};
+  var globalGithubExporter = null;
   var createProviders = {};
   var isReady = false;
   var activeFeatureId = null;
@@ -203,6 +204,19 @@
     var button = document.getElementById('senkoGithubConfigBtn');
     if (!button) return;
 
+    if (globalGithubExporter) {
+      var exporterAvailable = typeof globalGithubExporter.isAvailable !== 'function'
+        || globalGithubExporter.isAvailable();
+      button.hidden = false;
+      button.disabled = !exporterAvailable;
+      button.classList.toggle('gh-config-active', exporterAvailable);
+      button.title = exporterAvailable
+        ? (globalGithubExporter.label || 'Salvar backup no GitHub')
+        : 'Entre no SenkoLib para salvar o backup no GitHub';
+      button.setAttribute('aria-label', button.title);
+      return;
+    }
+
     var provider = getGithubProviderForActiveFeature();
     if (!provider) {
       button.hidden = true;
@@ -227,12 +241,38 @@
 
     button.dataset.senkoShellBound = '1';
     button.addEventListener('click', function () {
+      if (globalGithubExporter && typeof globalGithubExporter.run === 'function') {
+        var deployDot = document.getElementById('ghDeployDot');
+        button.disabled = true;
+        if (deployDot) deployDot.hidden = false;
+
+        Promise.resolve(globalGithubExporter.run()).catch(function (error) {
+          console.error('[SenkoShell] Falha ao exportar para o GitHub:', error);
+        }).finally(function () {
+          if (deployDot) deployDot.hidden = true;
+          refreshGithubButton();
+        });
+        return;
+      }
+
       var provider = getGithubProviderForActiveFeature();
       if (!provider || typeof provider.openConfig !== 'function') return;
       provider.openConfig();
     });
 
     refreshGithubButton();
+  }
+
+  function registerGlobalGithubExporter(exporter) {
+    /*
+     * O shell conhece somente o comando global. Credenciais, formato do
+     * snapshot e regras de exportacao pertencem a infraestrutura Firebase.
+     */
+    if (!exporter || typeof exporter.run !== 'function') return false;
+    globalGithubExporter = exporter;
+    bindGithubButton();
+    refreshGithubButton();
+    return true;
   }
 
   function registerGithubProvider(featureId, provider) {
@@ -389,6 +429,7 @@
   window.SenkoShell = {
     registerFeature: registerFeature,
     registerGithubProvider: registerGithubProvider,
+    registerGlobalGithubExporter: registerGlobalGithubExporter,
     registerCreateProvider: registerCreateProvider,
     listCreateProviders: listCreateProviders,
     getCreateProvider: getCreateProvider,

@@ -420,6 +420,88 @@
       ]
     },
     {
+      id: 'firebase',
+      label: 'Firebase',
+      items: [
+        {
+          title: 'Transicao para Firebase',
+          badge: 'dados',
+          terms: 'firebase firestore transicao legado enabled config banco principal',
+          paragraphs: [
+            'Firebase sera a fonte principal de Biblioteca e Colecoes. Durante a migracao, o modo antigo continua disponivel com enabled false.',
+            'A configuracao fica em app/infrastructure/firebase/firebase-config.js e o passo a passo completo fica em FIREBASE_SETUP.md.'
+          ],
+          bullets: [
+            'Firestore guarda conteudo, metadados e revisoes.',
+            'Cloud Functions valida nomes, conflitos, exclusoes e exportacoes.',
+            'Realtime Database guarda somente quem esta presente em um editor.',
+            'Storage recebera imagens e conteudos que ultrapassarem o limite definido.',
+            'O navegador nunca recebe credencial administrativa nem chave privada do GitHub.'
+          ]
+        },
+        {
+          title: 'Salvar e atualizar outras pessoas',
+          badge: 'tempo real',
+          terms: 'salvar ao vivo realtime listener revisao conflito rascunho outra pessoa',
+          paragraphs: [
+            'Digitar no editor altera somente o rascunho local. O Firebase recebe conteudo apenas quando a pessoa usa Salvar.',
+            'Depois do save, listeners atualizam quem esta observando. Um editor com rascunho proprio recebe aviso e nao e sobrescrito.'
+          ],
+          bullets: [
+            'Cada save cria uma revisao imutavel.',
+            'baseRevisionId detecta se outra pessoa salvou antes.',
+            'Visualizadores podem receber a nova versao imediatamente.',
+            'Editores com alteracoes locais precisam comparar ou recarregar antes de salvar.'
+          ]
+        },
+        {
+          title: 'Membros e seguranca',
+          badge: 'acesso',
+          terms: 'membro login google uid permissao rules convidar',
+          paragraphs: [
+            'Todas as pessoas cadastradas como membros podem criar, editar e excluir conteudo.',
+            'Entrar com Google nao concede acesso sozinho: o UID precisa existir em workspaces/senkolib/members.'
+          ],
+          bullets: [
+            'Firestore Rules libera leitura apenas para membros.',
+            'Escritas de conteudo passam pelas Cloud Functions.',
+            'O primeiro membro real e cadastrado manualmente no Console.',
+            'Nos emuladores, o primeiro usuario local e cadastrado automaticamente.'
+          ]
+        },
+        {
+          title: 'Migracao dos arquivos atuais',
+          badge: 'importar',
+          terms: 'migracao snapshot legacy manifest importar service account',
+          paragraphs: [
+            'A migracao e uma operacao unica: os arquivos JS atuais viram um snapshot validado e depois documentos do Firestore.',
+            'O extrator nao modifica os arquivos originais e o importador recusa sobrescrever um workspace preenchido sem --force.'
+          ],
+          bullets: [
+            'Gerar: npm run migration:build.',
+            'Saida: migration-output/senkolib-legacy.json.',
+            'Importar: npm --prefix functions run migrate:legacy.',
+            'Chave administrativa deve ficar fora do repositorio e ser revogada depois.'
+          ]
+        },
+        {
+          title: 'Ambientes e emuladores',
+          badge: 'local',
+          terms: 'ambiente desenvolvimento producao emulator localhost java',
+          paragraphs: [
+            'Emuladores sao copias locais de Auth, Firestore, Functions, Realtime Database, Storage e Hosting.',
+            'Eles permitem testar login, regras e salvamento sem alterar dados reais.'
+          ],
+          bullets: [
+            'useEmulators true funciona somente em localhost.',
+            'Interface local: http://127.0.0.1:4000/.',
+            'Aplicativo local: http://127.0.0.1:5000/.',
+            'O computador precisa de JDK 21 para iniciar os emuladores.'
+          ]
+        }
+      ]
+    },
+    {
       id: 'github',
       label: 'GitHub',
       items: [
@@ -428,17 +510,16 @@
           badge: 'token',
           terms: 'github token owner repo branch localstorage config',
           paragraphs: [
-            'A configuracao do GitHub e global porque owner, repo e token pertencem ao projeto.',
-            'O token fica salvo no localStorage do navegador, nunca no codigo-fonte.'
+            'No modo Firebase, GitHub e um backup global: o navegador chama uma Function e nunca recebe token ou chave privada.',
+            'As configuracoes antigas em localStorage continuam apenas durante a transicao com Firebase desativado.'
           ],
           bullets: [
-            'Config: senkolib_github_config.',
-            'Token: senkolib_github_token.',
-            'Em GitHub Pages, owner e repo detectados pela URL devem ter prioridade sobre configuracao antiga do navegador.',
-            'Em localhost, Live Server ou file://, os botoes de salvar continuam visiveis e owner/repo sao informados pelo botao global de GitHub.',
-            'Sem repositorio ou token validos, a interface abre a configuracao e nao envia alteracoes.',
-            'Token classic precisa de escopo repo.',
-            'Token fine-grained precisa de Contents read/write.'
+            'Botao global: cria snapshot manual do workspace.',
+            'Agendamento: verifica mudancas a cada 30 minutos.',
+            'Autenticacao do servidor: GitHub App com Contents read/write.',
+            'Chave privada: Secret Manager das Cloud Functions.',
+            'Formato exportado: JSON em senkolib-data/.',
+            'Modo legado: senkolib_github_config e senkolib_github_token continuam temporariamente compativeis.'
           ]
         },
         {
@@ -456,16 +537,15 @@
           badge: 'api',
           terms: 'github contents api get put delete sha salvar excluir manifest',
           paragraphs: [
-            'As integracoes usam a GitHub Contents API.',
-            'Antes de salvar, a feature busca o arquivo atual, pega o SHA e envia o novo conteudo.'
+            'No modo Firebase, o botao pede a uma Cloud Function que leia uma versao consistente do workspace e crie um unico commit.',
+            'O GitHub nao participa de criar, editar ou excluir dentro do SenkoLib.'
           ],
           bullets: [
-            'Criar/editar: GET do arquivo, monta conteudo, PUT com SHA.',
-            'Excluir: GET do arquivo, DELETE com SHA.',
-            'Se criar arquivo novo, atualiza o manifest da feature.',
-            'Quando o manifest aponta para arquivo individual, Biblioteca e Colecoes salvam esse arquivo direto e nao procuram marcador.',
-            'Itens antigos sem arquivo individual ainda usam os marcadores como fallback temporario.',
-            'Se o token falhar, a operacao deve parar e mostrar erro.'
+            'Exportacao manual: qualquer membro pode usar o botao global.',
+            'Exportacao automatica: scheduledGithubExport roda a cada 30 minutos.',
+            'Sem mudanca em dataVersion, o agendamento nao cria commit vazio.',
+            'O historico Git preserva snapshots anteriores mesmo quando um item e excluido.',
+            'As integracoes Contents API por feature permanecem somente no modo legado ate a migracao terminar.'
           ]
         }
       ]

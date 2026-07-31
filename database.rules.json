@@ -1,0 +1,30 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "presenceAccess": {
+      "$workspaceId": {
+        "$uid": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": false
+        }
+      }
+    },
+    "presence": {
+      "$workspaceId": {
+        "$resourceType": {
+          "$resourceId": {
+            ".read": "auth != null && root.child('presenceAccess').child($workspaceId).child(auth.uid).val() === true",
+            "$uid": {
+              "$sessionId": {
+                ".write": "auth != null && auth.uid === $uid && root.child('presenceAccess').child($workspaceId).child(auth.uid).val() === true",
+                ".validate": "newData.val() === null || (newData.hasChildren(['displayName', 'joinedAt']) && newData.child('displayName').isString())"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
