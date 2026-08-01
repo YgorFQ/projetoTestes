@@ -529,6 +529,7 @@ function openAddModal() {
   overlay.classList.remove('hidden');
   document.body.style.overflow = 'hidden';
   overlay.scrollTop = 0;
+  updateGeneratedCode();
 }
 
 function closeAddModal() {
@@ -778,6 +779,7 @@ function openNewVariantModal() {
   if (parentEl && state.currentForVariant) parentEl.textContent = state.currentForVariant.name;
   document.getElementById('newVarOverlay').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
+  updateNewVarCode();
 }
 
 function closeNewVariantModal() {
@@ -1137,7 +1139,125 @@ function updateEditCode() {
     '    html: `' + safeHtml + '`,\n' +
     '    css: `'  + safeCss  + '`\n' +
     '}\n' +
-    ');';
+      ');';
+}
+
+function senkoFirebaseCreationError(error, fallback) {
+  var code = String(error && error.code || '').replace('functions/', '');
+  if (code === 'already-exists') return 'Ja existe outro item com esse nome.';
+  if (code === 'permission-denied' || code === 'unauthenticated') {
+    return 'Sua conta nao tem permissao para criar este conteudo.';
+  }
+  return error && error.message ? error.message : fallback;
+}
+
+function senkoSetCreationButtonState(button, busy, text) {
+  if (!button) return;
+  button.disabled = Boolean(busy);
+  if (text) button.textContent = text;
+}
+
+function senkoCreateFirebaseButton(anchorId, label) {
+  var anchor = document.getElementById(anchorId);
+  if (!anchor) return null;
+
+  var button = document.createElement('button');
+  button.id = anchorId;
+  button.type = 'button';
+  button.className = 'btn btn-primary';
+  button.textContent = label;
+  button.disabled = true;
+  anchor.parentNode.replaceChild(button, anchor);
+  return button;
+}
+
+function senkoInitFirebaseCreationControls() {
+  var firebaseEnabled = Boolean(
+    window.SenkoFirebase &&
+    window.SenkoFirebase.isEnabled &&
+    window.SenkoFirebase.isEnabled()
+  );
+  if (!firebaseEnabled) return;
+
+  var repository = window.SenkoBibliotecaFirebase;
+  if (!repository) {
+    console.error('[Biblioteca] Repositorio Firebase indisponivel para criacao.');
+    return;
+  }
+
+  var layoutButton = senkoCreateFirebaseButton('copyGeneratedBtn', 'Salvar layout');
+  var variantButton = senkoCreateFirebaseButton('newVarCopyBtn', 'Salvar variacao');
+
+  if (layoutButton) {
+    layoutButton.addEventListener('click', function () {
+      updateGeneratedCode();
+      if (layoutButton.disabled) return;
+
+      var name = senkoGetMetadataInputValue('addName', false).trim();
+      var legacyId = document.getElementById('addId').value.trim().toLowerCase();
+      var tags = senkoParseMetadataTags(senkoGetMetadataInputValue('addTags', true));
+      var html = document.getElementById('addHtml').value;
+      var css = document.getElementById('addCss').value;
+
+      senkoSetCreationButtonState(layoutButton, true, 'Salvando...');
+      repository.saveLayout({
+        id: null,
+        legacyId: legacyId || null,
+        name: name,
+        tags: tags,
+        html: html,
+        css: css,
+        baseRevisionId: null
+      }).then(function () {
+        senkoSetCreationButtonState(layoutButton, false, 'Layout salvo');
+        setTimeout(function () {
+          closeAddModal();
+          senkoSetCreationButtonState(layoutButton, false, 'Salvar layout');
+        }, 400);
+      }).catch(function (error) {
+        var message = senkoFirebaseCreationError(error, 'Erro ao criar o layout.');
+        senkoSetCreationButtonState(layoutButton, false, 'Salvar layout');
+        alert(message);
+      });
+    });
+  }
+
+  if (variantButton) {
+    variantButton.addEventListener('click', function () {
+      updateNewVarCode();
+      if (variantButton.disabled) return;
+
+      var parent = state.currentForVariant;
+      var name = senkoSyncIdentifierInput('newVarName', false);
+      var html = document.getElementById('newVarHtml').value;
+      var css = document.getElementById('newVarCss').value;
+      if (!parent) {
+        alert('Escolha o layout pai antes de criar a variacao.');
+        return;
+      }
+
+      senkoSetCreationButtonState(variantButton, true, 'Salvando...');
+      repository.saveVariant(parent.id, {
+        id: null,
+        legacyId: name || null,
+        name: name,
+        html: html,
+        css: css,
+        baseRevisionId: null
+      }).then(function () {
+        senkoSetCreationButtonState(variantButton, false, 'Variacao salva');
+        setTimeout(function () {
+          closeNewVariantModal();
+          closeVariantsModal();
+          senkoSetCreationButtonState(variantButton, false, 'Salvar variacao');
+        }, 400);
+      }).catch(function (error) {
+        var message = senkoFirebaseCreationError(error, 'Erro ao criar a variacao.');
+        senkoSetCreationButtonState(variantButton, false, 'Salvar variacao');
+        alert(message);
+      });
+    });
+  }
 }
 
 /*
@@ -1160,6 +1280,7 @@ bibliotecaApi.init = function initBiblioteca() {
   senkoBindMetadataInput('editTags', true);
   senkoBindVariantNameInput('newVarName');
   senkoBindVariantNameInput('editVarName');
+  senkoInitFirebaseCreationControls();
 
   renderGridIfActive(false);
 

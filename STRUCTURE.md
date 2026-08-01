@@ -95,7 +95,7 @@ SenkoLib/
 - Com Firebase ativado, o navegador le dados e chama Functions para escrever. As regras bloqueiam escrita direta.
 - Realtime Database guarda somente presenca de editores; conteudo fica no Firestore.
 - GitHub passa a receber snapshots globais pela Function, manualmente ou a cada 30 minutos.
-- Com `enabled: false`, o modo legado por manifestos e integracoes GitHub continua disponivel durante a transicao.
+- Em localhost, Firebase e emuladores sao ativados automaticamente; fora dele, o modo legado continua disponivel durante a transicao.
 - A criacao rapida e uma ferramenta oficial do shell e descobre opcoes por `registerCreateProvider`.
 - O Senko Guide e uma ferramenta oficial do shell, aberta pelo header e exposta pela API `SenkoGuide.open()`/`close()`.
 - Cada feature registrada como provider continua dona de seu carregamento, modal, validacao e persistencia.

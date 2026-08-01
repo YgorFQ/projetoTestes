@@ -131,6 +131,33 @@ var SenkoLib = (function () {
     registerLayout: function (layout) {
       return _registerLayout(layout);
     },
+    replaceLayouts: function (layouts) {
+      _layouts.splice.apply(
+        _layouts,
+        [0, _layouts.length].concat(Array.isArray(layouts) ? layouts : [])
+      );
+    },
+    replaceVariants: function (variants) {
+      var grouped = {};
+
+      (Array.isArray(variants) ? variants : []).forEach(function (variant) {
+        var key = String(variant && variant.layoutId || '').toLowerCase();
+        if (!key) return;
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push(variant);
+      });
+
+      Object.keys(_variants).forEach(function (key) {
+        if (!grouped[key]) _variants[key].splice(0);
+      });
+      Object.keys(grouped).forEach(function (key) {
+        if (!_variants[key]) _variants[key] = [];
+        _variants[key].splice.apply(
+          _variants[key],
+          [0, _variants[key].length].concat(grouped[key])
+        );
+      });
+    },
     getAll: function () {
       return _layouts;
     },

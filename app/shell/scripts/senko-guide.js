@@ -428,11 +428,12 @@
           badge: 'dados',
           terms: 'firebase firestore transicao legado enabled config banco principal',
           paragraphs: [
-            'Firebase sera a fonte principal de Biblioteca e Colecoes. Durante a migracao, o modo antigo continua disponivel com enabled false.',
+            'Firebase sera a fonte principal de Biblioteca e Colecoes. Durante a migracao, localhost usa os emuladores e os demais enderecos continuam no modo antigo.',
             'A configuracao fica em app/infrastructure/firebase/firebase-config.js e o passo a passo completo fica em FIREBASE_SETUP.md.'
           ],
           bullets: [
             'Firestore guarda conteudo, metadados e revisoes.',
+            'Variantes e layouts de colecao sao observados nas subcolecoes de cada documento pai.',
             'Cloud Functions valida nomes, conflitos, exclusoes e exportacoes.',
             'Realtime Database guarda somente quem esta presente em um editor.',
             'Storage recebera imagens e conteudos que ultrapassarem o limite definido.',
@@ -450,6 +451,8 @@
           bullets: [
             'Cada save cria uma revisao imutavel.',
             'baseRevisionId detecta se outra pessoa salvou antes.',
+            'O editor oficial da Biblioteca salva layouts e variacoes pelas Cloud Functions.',
+            'Novos layouts e variacoes recebem IDs de documento gerados pelo Firestore.',
             'Visualizadores podem receber a nova versao imediatamente.',
             'Editores com alteracoes locais precisam comparar ou recarregar antes de salvar.'
           ]
@@ -480,7 +483,8 @@
           bullets: [
             'Gerar: npm run migration:build.',
             'Saida: migration-output/senkolib-legacy.json.',
-            'Importar: npm --prefix functions run migrate:legacy.',
+            'No emulador, defina FIRESTORE_EMULATOR_HOST antes de importar.',
+            'Importar: npm --prefix functions run migrate:legacy -- --allow-warnings.',
             'Chave administrativa deve ficar fora do repositorio e ser revogada depois.'
           ]
         },

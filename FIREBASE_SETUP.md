@@ -14,9 +14,9 @@ o modo Firebase no SenkoLib antes de concluir a importacao inicial.
 - Emuladores para testar sem tocar nos dados reais.
 - Extrator e importador dos arquivos antigos.
 
-Enquanto `enabled: false` estiver em
-`app/infrastructure/firebase/firebase-config.js`, o SenkoLib continua no modo
-antigo e nada tenta acessar Firebase.
+Na fase atual, `firebase-config.js` ativa Firebase e emuladores somente em
+`localhost` ou `127.0.0.1`. Em qualquer outro endereco, o SenkoLib continua no
+modo antigo e nao acessa os dados reais.
 
 ## Parte 1 - Criar o projeto no Console
 
@@ -40,7 +40,8 @@ O Project ID nao pode ser alterado depois.
 5. O Console mostrara um objeto chamado `firebaseConfig`.
 6. Abra `app/infrastructure/firebase/firebase-config.js`.
 7. Copie somente os valores para dentro da propriedade `firebase`.
-8. Mantenha `enabled: false` por enquanto.
+8. Mantenha a ativacao restrita ao localhost enquanto a migracao estiver sendo
+   validada.
 
 Exemplo apenas de formato:
 
@@ -115,8 +116,8 @@ npm install
 npm --prefix functions install
 ```
 
-Os emuladores exigem Java. Este computador ainda nao possui Java instalado.
-Instale JDK 21:
+Os emuladores exigem Java. Instale JDK 21 quando `java -version` ainda nao
+funcionar:
 
 ```powershell
 winget install Microsoft.OpenJDK.21
@@ -145,22 +146,20 @@ npx firebase-tools use SEU_PROJECT_ID
 ## Parte 5 - Testar localmente sem usar producao
 
 1. Em `firebase-config.js`, preencha os dados Web.
-2. Defina `enabled: true`.
-3. Defina `useEmulators: true`.
-4. Execute:
+2. Confirme que `enabled` e `useEmulators` usam a verificacao `isLocalhost`.
+3. Execute:
 
 ```powershell
 npm run firebase:emulators
 ```
 
-5. Abra http://127.0.0.1:5000/.
-6. Clique em **Entrar com Google**.
-7. O emulador mostra uma tela de login simulada; nenhum login real e enviado.
-8. O primeiro usuario local vira membro automaticamente.
-9. A interface dos emuladores fica em http://127.0.0.1:4000/.
+4. Abra http://127.0.0.1:5000/.
+5. Clique em **Entrar com Google**.
+6. O emulador mostra uma tela de login simulada; nenhum login real e enviado.
+7. O primeiro usuario local vira membro automaticamente.
+8. A interface dos emuladores fica em http://127.0.0.1:4000/.
 
-Para voltar ao modo antigo, use `enabled: false`. Para testar o Firebase real,
-use `useEmulators: false`.
+Fora de localhost, o modo antigo permanece ativo ate o corte de producao.
 
 ## Parte 6 - Publicar regras e Functions basicas
 
@@ -215,6 +214,17 @@ migration-output/senkolib-legacy.json
 
 O extrator valida quantidades e informa layouts ou variantes orfas. O snapshot
 nao entra no Git porque a pasta esta no `.gitignore`.
+
+Para importar no Firestore Emulator:
+
+```powershell
+$env:SENKO_FIREBASE_PROJECT_ID='senkolibtestes'
+$env:FIRESTORE_EMULATOR_HOST='127.0.0.1:8080'
+npm --prefix functions run migrate:legacy -- --allow-warnings
+```
+
+O importador local nao usa chave administrativa. `--allow-warnings` preserva
+os itens validos e registra quantos itens orfaos foram ignorados.
 
 Para importar em producao:
 

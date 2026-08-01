@@ -17,6 +17,19 @@
   var collectionFilesBySlug = {};
   var collectionLayoutFilesBySlug = {};
   var collectionLoadPromises = {};
+  var firebaseSyncPromise;
+  var firebaseCollections = [];
+  var firebaseLayouts = [];
+  var firebaseLayoutsUnsubscribe;
+  var firebaseCollectionSignature = '';
+
+  function usesFirebaseData() {
+    return Boolean(
+      window.SenkoFirebase &&
+      window.SenkoFirebase.isEnabled &&
+      window.SenkoFirebase.isEnabled()
+    );
+  }
 
   function featureUrl(path) {
     var absoluteUrl = new URL(path, featureBaseUrl).href;
@@ -220,6 +233,79 @@
     return githubLoadPromise;
   }
 
+  function applyFirebaseSnapshot() {
+    if (typeof ColLib === 'undefined' || typeof ColLib.replaceAll !== 'function') return;
+
+    var layoutsByCollection = {};
+    firebaseLayouts.forEach(function (layout) {
+      var collectionId = String(layout.collectionId || '').toLowerCase();
+      if (!collectionId) return;
+      if (!layoutsByCollection[collectionId]) layoutsByCollection[collectionId] = [];
+      layoutsByCollection[collectionId].push(layout);
+    });
+
+    var collections = firebaseCollections.map(function (collection) {
+      var layouts = layoutsByCollection[collection.slug] || [];
+      return Object.assign({}, collection, {
+        layouts: layouts,
+        layoutCount: layouts.length,
+        _senkoLazy: false
+      });
+    });
+
+    ColLib.replaceAll(collections);
+    if (window.SenkoColecoes) window.SenkoColecoes.render();
+  }
+
+  function startFirebaseSync() {
+    if (firebaseSyncPromise || !usesFirebaseData()) return firebaseSyncPromise;
+
+    firebaseSyncPromise = window.SenkoFirebase.whenAuthorized().then(function () {
+      var repository = window.SenkoColecoesFirebase;
+      if (!repository) {
+        throw new Error('Repositorio Firebase de Colecoes indisponivel.');
+      }
+
+      function syncLayoutListeners(collections) {
+        var collectionIds = collections.map(function (collection) {
+          return collection.slug;
+        }).filter(Boolean).sort();
+        var signature = collectionIds.join('|');
+        if (signature === firebaseCollectionSignature) return;
+
+        firebaseCollectionSignature = signature;
+        if (typeof firebaseLayoutsUnsubscribe === 'function') {
+          firebaseLayoutsUnsubscribe();
+        }
+        firebaseLayoutsUnsubscribe = repository.watchLayoutsForCollections(
+          collectionIds,
+          function (layouts) {
+            firebaseLayouts = layouts;
+            applyFirebaseSnapshot();
+          },
+          function (error) {
+            console.error('[Colecoes] Falha ao sincronizar layouts:', error);
+          }
+        );
+      }
+
+      repository.watchCollections(function (collections) {
+        firebaseCollections = collections;
+        syncLayoutListeners(collections);
+        applyFirebaseSnapshot();
+      }, function (error) {
+        console.error('[Colecoes] Falha ao sincronizar colecoes:', error);
+      });
+
+      return true;
+    }).catch(function (error) {
+      console.error('[Colecoes] Firebase indisponivel:', error);
+      return false;
+    });
+
+    return firebaseSyncPromise;
+  }
+
   async function loadFeature() {
     if (loadPromise) return loadPromise;
 
@@ -237,17 +323,19 @@
 
       await Promise.all([
         loadScript('data/col-groups-data.js?v=20260613-fast-load'),
-        loadScript('data/firebase-repository.js?v=20260730-firebase-foundation'),
+        loadScript('data/firebase-repository.js?v=20260730-parent-listeners'),
         loadScript('scripts/col-core.js?v=20260613-fast-load'),
         loadScript('scripts/col-script.js?v=20260613-fast-load-2'),
         loadScript('scripts/col-modals.js?v=20260730-full-editor'),
         loadScript('scripts/col-layout-editor.js?v=20260730-full-editor')
       ]);
 
-      var legacyFiles = registerCollectionCatalog(manifest);
-      await Promise.all(legacyFiles.map(function (file) {
-        return loadScript('data/' + file);
-      }));
+      if (!usesFirebaseData()) {
+        var legacyFiles = registerCollectionCatalog(manifest);
+        await Promise.all(legacyFiles.map(function (file) {
+          return loadScript('data/' + file);
+        }));
+      }
 
       if (!window.SenkoColecoes || typeof window.SenkoColecoes.init !== 'function') {
         throw new Error('Inicializador de Colecoes indisponivel');
@@ -255,8 +343,11 @@
 
       window.SenkoColecoes.init();
       if (window.SenkoColecoesModals) window.SenkoColecoesModals.init();
-      loadGithubIntegration();
-      prefetchCollectionData();
+      if (usesFirebaseData()) startFirebaseSync();
+      else {
+        loadGithubIntegration();
+        prefetchCollectionData();
+      }
       return panel;
     })().catch(function (error) {
       console.error(error);

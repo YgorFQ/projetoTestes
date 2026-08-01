@@ -18,6 +18,18 @@
   var panel;
   var loadPromise;
   var secondaryLoadPromise;
+  var firebaseSyncPromise;
+  var firebaseUnsubscribers = [];
+  var firebaseVariantUnsubscribe;
+  var firebaseVariantLayoutSignature = '';
+
+  function usesFirebaseData() {
+    return Boolean(
+      window.SenkoFirebase &&
+      window.SenkoFirebase.isEnabled &&
+      window.SenkoFirebase.isEnabled()
+    );
+  }
 
   function featureUrl(path) {
     var absoluteUrl = new URL(path, featureBaseUrl).href;
@@ -157,6 +169,81 @@
     return secondaryLoadPromise;
   }
 
+  function notifyStaleEditor(kind, documents) {
+    if (!window.SenkoLayoutEditor || !window.SenkoLayoutEditor.isOpen()) return;
+    var current = window.SenkoLayoutEditor.getCurrentData();
+    if (!current || current.mode !== kind) return;
+
+    var currentItem = kind === 'variant' ? current.variant : current.layout;
+    var resourceId = kind === 'variant'
+      ? currentItem && currentItem.id
+      : current.id;
+    var remote = documents.find(function (item) {
+      return item.id === resourceId &&
+        (kind !== 'variant' || item.layoutId === current.id);
+    });
+
+    if (!remote || !currentItem || !currentItem._firebaseRevisionId) return;
+    if (remote._firebaseRevisionId === currentItem._firebaseRevisionId) return;
+
+    if (window.SenkoLayoutEditor.notifyRemoteChange) {
+      window.SenkoLayoutEditor.notifyRemoteChange(
+        'Outra pessoa salvou uma versao mais recente. Seu rascunho foi preservado.'
+      );
+    }
+  }
+
+  function startFirebaseSync() {
+    if (firebaseSyncPromise || !usesFirebaseData()) return firebaseSyncPromise;
+
+    firebaseSyncPromise = window.SenkoFirebase.whenAuthorized().then(function () {
+      var repository = window.SenkoBibliotecaFirebase;
+      if (!repository || !window.SenkoLib) {
+        throw new Error('Repositorio Firebase da Biblioteca indisponivel.');
+      }
+
+      function syncVariantListeners(layouts) {
+        var layoutIds = layouts.map(function (layout) {
+          return layout.id;
+        }).filter(Boolean).sort();
+        var signature = layoutIds.join('|');
+        if (signature === firebaseVariantLayoutSignature) return;
+
+        firebaseVariantLayoutSignature = signature;
+        if (typeof firebaseVariantUnsubscribe === 'function') {
+          firebaseVariantUnsubscribe();
+        }
+        firebaseVariantUnsubscribe = repository.watchVariantsForLayouts(
+          layoutIds,
+          function (variants) {
+            notifyStaleEditor('variant', variants);
+            SenkoLib.replaceVariants(variants);
+            if (window.SenkoBiblioteca) window.SenkoBiblioteca.render(true);
+          },
+          function (error) {
+            console.error('[Biblioteca] Falha ao sincronizar variantes:', error);
+          }
+        );
+      }
+
+      firebaseUnsubscribers.push(repository.watchLayouts(function (layouts) {
+        notifyStaleEditor('layout', layouts);
+        SenkoLib.replaceLayouts(layouts);
+        syncVariantListeners(layouts);
+        if (window.SenkoBiblioteca) window.SenkoBiblioteca.render(true);
+      }, function (error) {
+        console.error('[Biblioteca] Falha ao sincronizar layouts:', error);
+      }));
+
+      return true;
+    }).catch(function (error) {
+      console.error('[Biblioteca] Firebase indisponivel:', error);
+      return false;
+    });
+
+    return firebaseSyncPromise;
+  }
+
   async function loadFeature() {
     if (loadPromise) return loadPromise;
 
@@ -168,7 +255,7 @@
       var initialResources = await Promise.all([
         loadScript('view.js?v=20260613-fast-load'),
         loadScript('scripts/senkolib-core.js?v=20260613-fast-load'),
-        loadScript('data/firebase-repository.js?v=20260730-firebase-foundation'),
+        loadScript('data/firebase-repository.js?v=20260730-parent-listeners'),
         loadManifest()
       ]);
       var manifest = initialResources[3];
@@ -176,16 +263,19 @@
       panel.replaceChildren(content);
 
       var layouts = getManifestFiles(manifest.layouts);
+      var layoutDataReady = usesFirebaseData()
+        ? Promise.resolve()
+        : Promise.all(layouts.map(function (path) {
+            return loadScript('data/' + path).catch(function (error) {
+              console.error('[Biblioteca] Layout nao carregado:', path, error);
+              return false;
+            });
+          }));
       await Promise.all([
-        Promise.all(layouts.map(function (path) {
-          return loadScript('data/' + path).catch(function (error) {
-            console.error('[Biblioteca] Layout nao carregado:', path, error);
-            return false;
-          });
-        })),
-        loadScript('scripts/layout-editor.js?v=20260613-official-editor'),
+        layoutDataReady,
+        loadScript('scripts/layout-editor.js?v=20260730-firebase-save-required'),
         loadScript('scripts/copy-base-editor.js?v=20260723-official-editor'),
-        loadScript('scripts/script.js?v=20260613-eager-previews'),
+        loadScript('scripts/script.js?v=20260730-firebase-create'),
         loadScript('scripts/copy-base-template.js?v=20260723-copy-base-editor').then(function () {
           return loadScript('scripts/copy-base.js?v=20260723-copy-base-editor');
         })
@@ -200,7 +290,8 @@
       if (window.SenkoBibliotecaCopyBaseEditor) {
         window.SenkoBibliotecaCopyBaseEditor.init();
       }
-      loadSecondaryModules(manifest);
+      if (usesFirebaseData()) startFirebaseSync();
+      else loadSecondaryModules(manifest);
 
       return panel;
     })().catch(function (error) {

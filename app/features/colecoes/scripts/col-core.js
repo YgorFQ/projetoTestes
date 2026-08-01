@@ -168,6 +168,13 @@ var ColLib = (function () {
       return _registerCollection(obj);
     },
 
+    replaceAll: function (collections) {
+      _collections.splice.apply(
+        _collections,
+        [0, _collections.length].concat(Array.isArray(collections) ? collections : [])
+      );
+    },
+
     /* ─────────────────────────────────────────────────────────────────
        getAll()
        Retorna cópia superficial do array para leitura.

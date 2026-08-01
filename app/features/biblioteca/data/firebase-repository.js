@@ -37,25 +37,73 @@
     );
   }
 
-  function watchVariants(callback, onError) {
-    var workspaceId = window.SenkoFirebase.getWorkspaceId();
-    return window.SenkoFirebase.listenCollectionGroup(
-      'variants',
-      {
-        where: [['workspaceId', '==', workspaceId]],
-        orderBy: [['nameKey', 'asc']]
-      },
-      function (documents, changes) {
-        callback(documents.filter(function (item) {
-          return !item.deleting && item.kind === 'libraryVariant';
-        }).map(function (item) {
-          return Object.assign(mapContent(item), {
-            layoutId: item.parentId
+  function watchVariantsForLayouts(layoutIds, callback, onError) {
+    var ids = Array.from(new Set((layoutIds || []).filter(Boolean))).sort();
+    var variantsByLayout = {};
+    var pendingLayouts = ids.length;
+    var unsubscribers = [];
+    var stopped = false;
+
+    function publishWhenReady() {
+      if (stopped || pendingLayouts > 0) return;
+
+      var variants = [];
+      ids.forEach(function (layoutId) {
+        variants = variants.concat(variantsByLayout[layoutId] || []);
+      });
+      variants.sort(function (left, right) {
+        return String(left.name || '').localeCompare(String(right.name || ''), 'pt-BR', {
+          numeric: true,
+          sensitivity: 'base'
+        });
+      });
+      callback(variants, []);
+    }
+
+    if (!ids.length) {
+      callback([], []);
+      return function () {};
+    }
+
+    ids.forEach(function (layoutId) {
+      var receivedInitialSnapshot = false;
+      variantsByLayout[layoutId] = [];
+
+      unsubscribers.push(window.SenkoFirebase.listenCollection(
+        workspacePath('bibliotecaLayouts/' + layoutId + '/variants'),
+        { orderBy: [['nameKey', 'asc']] },
+        function (documents) {
+          variantsByLayout[layoutId] = documents.filter(function (item) {
+            return !item.deleting && item.kind === 'libraryVariant';
+          }).map(function (item) {
+            return Object.assign(mapContent(item), {
+              layoutId: layoutId
+            });
           });
-        }), changes);
-      },
-      onError
-    );
+
+          if (!receivedInitialSnapshot) {
+            receivedInitialSnapshot = true;
+            pendingLayouts -= 1;
+          }
+          publishWhenReady();
+        },
+        function (error) {
+          if (!receivedInitialSnapshot) {
+            receivedInitialSnapshot = true;
+            pendingLayouts -= 1;
+          }
+          if (onError) onError(error);
+          publishWhenReady();
+        }
+      ));
+    });
+
+    return function () {
+      stopped = true;
+      unsubscribers.forEach(function (unsubscribe) {
+        if (typeof unsubscribe === 'function') unsubscribe();
+      });
+    };
   }
 
   function saveLayout(layout) {
@@ -120,7 +168,7 @@
   window.SenkoBibliotecaFirebase = {
     isActive: firebaseReady,
     watchLayouts: watchLayouts,
-    watchVariants: watchVariants,
+    watchVariantsForLayouts: watchVariantsForLayouts,
     saveLayout: saveLayout,
     saveVariant: saveVariant,
     deleteLayout: deleteLayout,
@@ -128,4 +176,3 @@
     enterEditor: enterEditor
   };
 })();
-

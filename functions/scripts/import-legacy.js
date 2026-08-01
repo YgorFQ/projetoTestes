@@ -15,23 +15,26 @@ const snapshotPath = path.join(
   'senkolib-legacy.json'
 );
 const projectId = process.env.SENKO_FIREBASE_PROJECT_ID;
+const usingEmulator = Boolean(process.env.FIRESTORE_EMULATOR_HOST);
 const allowWarnings = process.argv.includes('--allow-warnings');
 const force = process.argv.includes('--force');
 
 if (!projectId) {
   throw new Error('Defina SENKO_FIREBASE_PROJECT_ID antes de importar.');
 }
-if (!process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+if (!usingEmulator && !process.env.GOOGLE_APPLICATION_CREDENTIALS) {
   throw new Error('Defina GOOGLE_APPLICATION_CREDENTIALS com o caminho da chave administrativa.');
 }
 if (!fs.existsSync(snapshotPath)) {
   throw new Error('Crie o snapshot primeiro com: npm run migration:build');
 }
 
-initializeApp({
-  credential: applicationDefault(),
-  projectId
-});
+initializeApp(usingEmulator
+  ? { projectId }
+  : {
+      credential: applicationDefault(),
+      projectId
+    });
 
 const db = getFirestore();
 
@@ -128,6 +131,12 @@ function queueVersionedDocument(writer, reference, data) {
 async function main() {
   const snapshot = JSON.parse(fs.readFileSync(snapshotPath, 'utf8'));
   const workspaceId = String(snapshot.workspaceId || 'senkolib');
+  const importCounts = {
+    ...snapshot.counts,
+    bibliotecaVariants: (snapshot.bibliotecaLayouts || [])
+      .reduce((total, layout) => total + (layout.variants || []).length, 0),
+    skippedOrphanVariants: (snapshot.orphanVariants || []).length
+  };
 
   if (snapshot.warnings.length && !allowWarnings) {
     throw new Error(
@@ -155,7 +164,8 @@ async function main() {
     schemaVersion: 1,
     dataVersion: 1,
     migratedAt: FieldValue.serverTimestamp(),
-    migrationCounts: snapshot.counts
+    migrationCounts: importCounts,
+    migrationWarnings: snapshot.warnings || []
   }, { merge: true });
 
   for (const group of snapshot.groups || []) {
@@ -253,11 +263,10 @@ async function main() {
   }
 
   await writer.close();
-  console.log('Importacao concluida:', snapshot.counts);
+  console.log('Importacao concluida:', importCounts);
 }
 
 main().catch((error) => {
   console.error(error.message || error);
   process.exitCode = 1;
 });
-

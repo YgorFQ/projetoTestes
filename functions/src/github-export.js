@@ -1,11 +1,10 @@
 const crypto = require('node:crypto');
 const { getFirestore, Timestamp, GeoPoint } = require('firebase-admin/firestore');
 const { HttpsError } = require('firebase-functions/v2/https');
-const { defineSecret } = require('firebase-functions/params');
 const { requireMember } = require('./content');
 
 const db = getFirestore();
-const GITHUB_PRIVATE_KEY = defineSecret('GITHUB_PRIVATE_KEY');
+const GITHUB_PRIVATE_KEY = 'GITHUB_PRIVATE_KEY';
 
 function base64Url(value) {
   return Buffer.from(value)
@@ -250,7 +249,7 @@ function readSettings() {
     branch: process.env.GITHUB_BRANCH || 'main',
     appId: process.env.GITHUB_APP_ID,
     installationId: process.env.GITHUB_INSTALLATION_ID,
-    privateKey: GITHUB_PRIVATE_KEY.value()
+    privateKey: process.env.GITHUB_PRIVATE_KEY
   };
 
   const missing = Object.entries(settings)

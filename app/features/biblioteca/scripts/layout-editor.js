@@ -151,6 +151,57 @@
     });
   }
 
+  function getFirebaseRepository() {
+    var repository = window.SenkoBibliotecaFirebase;
+    var firebaseEnabled = Boolean(
+      window.SenkoFirebase &&
+      window.SenkoFirebase.isEnabled &&
+      window.SenkoFirebase.isEnabled()
+    );
+    return firebaseEnabled && repository
+      ? repository
+      : null;
+  }
+
+  function requiresFirebaseRepository() {
+    return Boolean(
+      window.SenkoFirebase &&
+      window.SenkoFirebase.isEnabled &&
+      window.SenkoFirebase.isEnabled()
+    );
+  }
+
+  function getSaveErrorMessage(error, fallback) {
+    var code = String(error && error.code || '').replace('functions/', '');
+    if (code === 'aborted') {
+      return 'Outra pessoa salvou uma versao mais recente. Seu rascunho foi preservado.';
+    }
+    if (code === 'already-exists') {
+      return 'Ja existe outro item com esse nome.';
+    }
+    if (code === 'permission-denied' || code === 'unauthenticated') {
+      return 'Sua conta nao tem permissao para salvar este conteudo.';
+    }
+    return error && error.message ? error.message : fallback;
+  }
+
+  function finishFirebaseSave(target, result, successMessage) {
+    if (target && result) {
+      target._firebaseRevisionId = result.revisionId || target._firebaseRevisionId || null;
+      target._firebaseVersion = Number(result.version || target._firebaseVersion || 0);
+    }
+    setBusy(false);
+    setStatus(successMessage);
+    setTimeout(closeEditor, 500);
+  }
+
+  function handleFirebaseFailure(error, fallback) {
+    var message = getSaveErrorMessage(error, fallback);
+    setBusy(false);
+    setStatus(message);
+    alert(message);
+  }
+
   function clampWidth(value) {
     var num = Number(value);
     if (!Number.isFinite(num)) num = 1200;
@@ -400,6 +451,30 @@
     setBusy(true);
     setStatus('Salvando layout...');
 
+    var firebaseRepository = getFirebaseRepository();
+    if (firebaseRepository) {
+      firebaseRepository.saveLayout({
+        id: data.id,
+        legacyId: data.layout && data.layout.legacyId,
+        name: data.name,
+        tags: data.tags,
+        html: data.html,
+        css: data.css,
+        baseRevisionId: data.layout && data.layout._firebaseRevisionId
+          ? data.layout._firebaseRevisionId
+          : null
+      }).then(function (result) {
+        finishFirebaseSave(data.layout, result, 'Layout salvo no Firebase.');
+      }).catch(function (error) {
+        handleFirebaseFailure(error, 'Erro ao salvar o layout.');
+      });
+      return;
+    }
+    if (requiresFirebaseRepository()) {
+      handleFirebaseFailure(null, 'O repositorio Firebase da Biblioteca nao carregou.');
+      return;
+    }
+
     if (typeof githubSaveLayout === 'function') {
       githubSaveLayout(data.id, objectCode).then(function (result) {
         setBusy(false);
@@ -449,6 +524,29 @@
     setBusy(true);
     setStatus('Salvando variacao...');
 
+    var firebaseRepository = getFirebaseRepository();
+    if (firebaseRepository) {
+      firebaseRepository.saveVariant(data.id, {
+        id: data.variant && data.variant.id,
+        legacyId: data.variant && data.variant.legacyId,
+        name: data.name,
+        html: data.html,
+        css: data.css,
+        baseRevisionId: data.variant && data.variant._firebaseRevisionId
+          ? data.variant._firebaseRevisionId
+          : null
+      }).then(function (result) {
+        finishFirebaseSave(data.variant, result, 'Variacao salva no Firebase.');
+      }).catch(function (error) {
+        handleFirebaseFailure(error, 'Erro ao salvar a variacao.');
+      });
+      return;
+    }
+    if (requiresFirebaseRepository()) {
+      handleFirebaseFailure(null, 'O repositorio Firebase da Biblioteca nao carregou.');
+      return;
+    }
+
     if (typeof githubSaveVariant === 'function') {
       githubSaveVariant(data.id, originalName, data.name, objectCode).then(function (result) {
         setBusy(false);
@@ -495,6 +593,37 @@
 
   function deleteCurrent() {
     var data = getCurrentData();
+    var firebaseRepository = getFirebaseRepository();
+
+    if (firebaseRepository) {
+      var itemLabel = editorState.mode === 'variant' ? 'esta variacao' : 'este layout';
+      if (!confirm('Excluir ' + itemLabel + '?')) return;
+
+      setBusy(true);
+      setStatus(editorState.mode === 'variant'
+        ? 'Excluindo variacao...'
+        : 'Excluindo layout...');
+
+      var deletion = editorState.mode === 'variant'
+        ? firebaseRepository.deleteVariant(data.id, data.variant)
+        : firebaseRepository.deleteLayout(data.layout);
+
+      deletion.then(function () {
+        setBusy(false);
+        setStatus(editorState.mode === 'variant'
+          ? 'Variacao excluida.'
+          : 'Layout excluido.');
+        closeEditor();
+      }).catch(function (error) {
+        handleFirebaseFailure(error, 'Erro ao excluir o conteudo.');
+      });
+      return;
+    }
+    if (requiresFirebaseRepository()) {
+      handleFirebaseFailure(null, 'O repositorio Firebase da Biblioteca nao carregou.');
+      return;
+    }
+
     if (editorState.mode === 'variant') {
       if (typeof ghEnsureToken === 'function' && !ghEnsureToken()) return;
       if (typeof ghvOpenDeleteModal === 'function') {
@@ -672,6 +801,9 @@
     openVariant: openVariant,
     close: closeEditor,
     isOpen: isOpen,
+    notifyRemoteChange: function (message) {
+      setStatus(message || 'Existe uma versao mais recente no Firebase.');
+    },
     getCurrentData: getCurrentData,
     buildLayoutObjectCode: function () { return buildLayoutObjectCode(getCurrentData()); },
     buildVariantObjectCode: function () { return buildVariantObjectCode(getCurrentData()); }
