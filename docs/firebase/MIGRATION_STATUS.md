@@ -136,11 +136,13 @@ nao possui warnings.
 
 ## Proximo passo recomendado
 
-1. Validar o modo somente leitura por Live Server com Firebase indisponivel.
-2. Criar um backup real para publicar o bundle gerado pelo novo exportador.
-3. Abrir o GitHub Pages anonimo e comparar as contagens.
-4. Entrar com membro autorizado e confirmar a troca para dados ao vivo.
-5. Manter os arquivos legados ate a regressao completa terminar.
+1. Usar uma segunda conta para testar o fluxo completo em `Acessos`: solicitar,
+   aprovar como editor, promover para admin e remover.
+2. Confirmar que o admin consegue gerenciar apenas editores e que o editor nao
+   enxerga a feature administrativa.
+3. Validar atualizacao ao vivo, presenca e conflito em dois computadores ou
+   perfis de navegador.
+4. Manter os arquivos legados ate a regressao completa terminar.
 
 ## Observacao sobre GitHub Pages
 
@@ -170,3 +172,4 @@ Adicione novas rodadas sem apagar as anteriores.
 | 2026-08-15 | Live Server publico | alteracoes locais | Aprovado | Sem login: 34 layouts, 11 variacoes, 5 colecoes, 48 layouts internos e 5 grupos pelo bundle; escrita bloqueada, copia e preview mantidos; desktop e 390x844 sem overflow |
 | 2026-08-15 | GitHub Pages publico | 0f64f44 | Aprovado | Pagina anonima exibiu selo Somente leitura, 34 layouts e 5 colecoes; login disponivel e controles de criacao, edicao e backup bloqueados |
 | 2026-08-15 | Firestore Emulator e producao | alteracoes locais | Aprovado | Solicitacoes de acesso passaram nas regras: conta grava apenas o proprio UID, incrementa tentativas e nao lista terceiros; regras publicadas em `senkolibtestes` |
+| 2026-08-15 | Emuladores e GitHub Pages | e3c929d | Aprovado | Regras de owner/admin/editor passaram nos testes automatizados; gestao de acessos foi publicada e permanece invisivel para visitantes anonimos, que continuam no backup somente leitura |
