@@ -27,7 +27,8 @@ O corte Firebase original continua marcado por tag Git.
 - Digitar nao grava; somente **Salvar** envia conteudo.
 - Saves aparecem para outros computadores por listeners.
 - Conflitos usam revisao ou versao e nunca sobrescrevem silenciosamente.
-- Todos os membros atuais podem criar, editar e excluir.
+- Todos os cargos atuais podem criar, editar e excluir conteudo.
+- Proprietarios gerenciam todos os cargos; admins gerenciam somente editores.
 - Exclusao e direta, sem lixeira de produto.
 - Presenca mostra pessoas no mesmo item.
 
@@ -37,6 +38,8 @@ O corte Firebase original continua marcado por tag Git.
 - [x] Emuladores de Auth, Firestore, Functions, Realtime, Storage e Hosting.
 - [x] Login e verificacao do documento de membro.
 - [x] Registro seguro de contas autenticadas sem acesso em `accessRequests`.
+- [x] Papeis `owner`, `admin` e `editor` protegidos por Security Rules.
+- [x] Feature independente para solicitacoes, membros e atividade.
 - [x] Bootstrap de membro somente no emulador.
 - [x] Firestore como fonte local da Biblioteca e Colecoes.
 - [x] Gravacoes diretas com transacoes no SDK Web.
@@ -122,9 +125,9 @@ nao possui warnings.
 
 ## Melhorias posteriores
 
-- [ ] Painel administrativo para membros, permissoes e logs.
-- [ ] Papeis de leitor, editor e administrador, se necessarios.
-- [ ] Backend seguro para administrar membros sem Console.
+- [x] Painel administrativo para membros, permissoes e logs.
+- [x] Papeis de proprietario, admin e editor.
+- [ ] Backend para integrar papeis do Google Cloud IAM, somente se esse requisito surgir.
 - [ ] Tela de historico e restauracao de revisoes.
 - [ ] Politica de retencao de revisoes e backups.
 - [ ] Indicador visual da data do ultimo backup.

@@ -442,7 +442,7 @@
             'Storage recebera imagens e conteudos que ultrapassarem o limite definido.',
             'O navegador nunca recebe credencial administrativa nem chave privada do GitHub; o backup usa o token individual de quem clicou.',
             'SenkoDataMode alterna entre firebase, static e unavailable sem misturar as regras internas das features.',
-            'Uma conta autenticada sem acesso registra a propria solicitacao em workspaces/senkolib/accessRequests; somente o Console Firebase pode listar todas.'
+            'Uma conta autenticada sem acesso registra a propria solicitacao em workspaces/senkolib/accessRequests; proprietarios e admins podem listar pela feature Acessos.'
           ]
         },
         {
@@ -488,13 +488,15 @@
           badge: 'acesso',
           terms: 'membro login google uid permissao rules convidar',
           paragraphs: [
-            'Todas as pessoas cadastradas como membros podem criar, editar e excluir conteudo.',
+            'Owner, admin e editor podem criar, editar e excluir conteudo.',
             'Entrar com Google nao concede acesso sozinho: o UID precisa existir em workspaces/senkolib/members.'
           ],
           bullets: [
-            'Firestore Rules libera leitura e escrita valida apenas para membros.',
-            'O frontend nao pode criar ou alterar documentos de members.',
-            'O primeiro membro real e cadastrado manualmente no Console.',
+            'Firestore Rules libera conteudo para membros e repete as restricoes administrativas de cada cargo.',
+            'A feature Acessos altera members por transacoes protegidas; editores continuam bloqueados.',
+            'Owner gerencia qualquer cargo; admin aprova e remove somente editores; editor nao convida pessoas.',
+            'A feature Acessos mostra solicitacoes, membros e atividade somente para owner/admin.',
+            'O primeiro owner e cadastrado por procedimento administrativo; os proximos cargos usam a interface.',
             'Nos emuladores, o primeiro usuario local e cadastrado automaticamente.'
           ]
         },

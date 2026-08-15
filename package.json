@@ -12,7 +12,8 @@
     "migration:build": "node tools/build-legacy-snapshot.js",
     "backup:build-static": "node tools/build-static-backup.js",
     "test:static-backup": "node tests/static-backup-builder.test.js",
-    "test:firestore-rules": "firebase emulators:exec --only firestore --project senkolib-rules-test \"node tests/firestore-client-writes.test.js\""
+    "test:firestore-rules": "firebase emulators:exec --only firestore --project senkolib-rules-test \"node tests/firestore-client-writes.test.js\"",
+    "test:database-rules": "firebase emulators:exec --only database --project senkolib-database-rules-test \"node tests/database-member-management.test.js\""
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^5.0.0",

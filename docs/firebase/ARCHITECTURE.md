@@ -24,8 +24,8 @@ GitHub Actions.
 - HTML e CSS usam revisao imutavel por save.
 - Colecoes e grupos usam contador de versao.
 - Um save desatualizado falha com `aborted`; nunca ha sobrescrita silenciosa.
-- Todos os documentos em `members` representam editores confiaveis e possuem
-  as mesmas permissoes de conteudo.
+- Todos os documentos em `members` podem alterar conteudo. O campo `role`
+  separa governanca em `owner`, `admin` e `editor`.
 - Exclusao e definitiva no Firebase. A recuperacao depende de revisoes ou de
   um backup GitHub anterior.
 - O backup GitHub e manual. Nenhum temporizador de 30 minutos existe.
@@ -40,7 +40,7 @@ GitHub Actions.
 | --- | --- | --- |
 | Firebase Authentication | Identificar a conta Google | Conceder acesso sem um documento de membro |
 | Cloud Firestore | Guardar conteudo, metadados, revisoes e logs de backup | Guardar rascunhos a cada tecla |
-| Firestore Security Rules | Autorizar membros e validar o formato das escritas | Administrar membros pelo frontend |
+| Firestore Security Rules | Autorizar conteudo, cargos e formato das escritas | Confiar somente nos controles visuais |
 | Realtime Database | Guardar presenca temporaria dos editores | Guardar layouts ou colecoes |
 | Cloud Storage | Reserva para uma necessidade futura de arquivos | Guardar o conteudo atual sem fluxo definido |
 | Firebase Hosting | Servir o aplicativo | Ser banco de dados |
@@ -67,6 +67,7 @@ depende dessas Functions.
 | `app/features/biblioteca/data/static-repository.js` | Adaptador somente leitura da Biblioteca |
 | `app/features/colecoes/data/firebase-repository.js` | Adaptador Firebase de Colecoes e grupos |
 | `app/features/colecoes/data/static-repository.js` | Adaptador somente leitura de Colecoes e grupos |
+| `app/features/access/` | Solicitacoes, membros, cargos e atividade administrativa |
 | `firestore.rules` | Autoridade de seguranca para leituras e escritas |
 | `database.rules.json` | Permissoes de presenca |
 | `storage.rules` | Bloqueio atual de uploads |
@@ -96,12 +97,30 @@ desfaz nem impede um save que ja ocorreu no Firestore.
 2. `senko-firebase.js` importa o SDK modular e inicializa os produtos.
 3. `SenkoDataMode` disponibiliza imediatamente o snapshot como `static`.
 4. Em localhost, os SDKs apontam para os emuladores.
-5. `onAuthStateChanged` observa o login e confere o documento de membro.
+5. `onAuthStateChanged` observa o login e acompanha o documento de membro.
 6. Somente um membro existente muda o Firebase para `ready`.
 7. `SenkoDataMode` muda para `firebase` e as features substituem o snapshot
    por listeners ao vivo.
 8. Ao sair da conta ou perder a inicializacao Firebase, as features voltam ao
    snapshot estatico e bloqueiam comandos de escrita.
+
+O cargo tambem e acompanhado em tempo real. Promover ou remover uma pessoa
+atualiza a disponibilidade da feature `Acessos` sem exigir novo login.
+
+## Cargos
+
+| Cargo | Conteudo | Pessoas |
+| --- | --- | --- |
+| `owner` | Cria, edita, exclui e faz backup | Aprova qualquer cargo, altera cargos e remove outros membros |
+| `admin` | Cria, edita, exclui e faz backup | Aprova, sincroniza e remove somente editores |
+| `editor` | Cria, edita, exclui e faz backup | Nao lista solicitacoes nem membros |
+
+Um proprietario nao pode alterar ou remover a propria conta. Para transferir o
+cargo, primeiro promove outra pessoa; o novo proprietario pode rebaixar o
+anterior. Isso impede que o aplicativo fique sem proprietario.
+
+`owner` do SenkoLib nao e o papel Owner do Google Cloud IAM. Acesso ao Console
+Firebase continua sendo concedido separadamente pelo Console.
 
 Estados esperados:
 
@@ -249,12 +268,13 @@ presence/{workspace}/{resourceType}/{resourceId}/{uid}/{sessionId}
 
 Cada aba possui um `sessionId`. `onDisconnect().remove()` limpa a sessao quando
 a conexao cai. `presenceAccess/{workspace}/{uid} = true` autoriza o Realtime
-Database.
+Database. `memberManagers/{workspace}/{uid}` guarda somente `owner` ou `admin`
+para autorizar a sincronizacao de `presenceAccess` pela tela administrativa.
 
-No emulador, uma Function local cria esse acesso. Em producao Spark, o acesso
-de presenca precisa ser cadastrado administrativamente junto do membro. Se ele
-nao existir, CRUD e listeners do Firestore continuam funcionando; somente o
-indicador de pessoas no editor fica indisponivel.
+No emulador, uma Function local cria o primeiro acesso. Em producao Spark, a
+feature `Acessos` grava Firestore e Realtime Database ao aprovar, promover ou
+remover uma pessoa. As duas gravacoes nao sao uma transacao unica; se a segunda
+falhar, a tela mostra aviso e oferece **Sincronizar**.
 
 ## Fluxo do backup
 

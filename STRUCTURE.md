@@ -55,6 +55,12 @@ SenkoLib/
 |   |   |   |-- integrations/github/      - integracao GitHub exclusiva de Colecoes
 |   |   |   `-- styles/                  - estilos exclusivos da feature
 |   |   |
+|   |   |-- access/
+|   |   |   |-- register.js              - registra a aba para owner/admin
+|   |   |   |-- data/firebase-repository.js - transacoes administrativas
+|   |   |   |-- scripts/access.js        - solicitacoes, membros e atividade
+|   |   |   `-- styles/access.css        - interface administrativa responsiva
+|   |   |
 |   |   |-- imagens/
 |   |   |   |-- index.html               - entrada standalone para testar a feature isolada
 |   |   |   |-- scripts/register.js      - registra e monta a feature no shell
@@ -112,6 +118,7 @@ SenkoLib/
 - Biblioteca e Colecoes possuem repositorios Firebase e estatico proprios; o shell nao acessa seus documentos.
 - Com Firebase ativado, o navegador usa transacoes do SDK Web e as regras validam cada escrita.
 - Realtime Database guarda somente presenca de editores; conteudo fica no Firestore.
+- A feature Acessos aparece somente para `owner` e `admin`; regras repetem as restricoes de cargo.
 - GitHub recebe snapshot tecnico e bundle publico somente quando um membro aciona o botao manual.
 - Sem uma sessao Firebase `ready`, o ultimo backup aparece em modo somente leitura.
 - Um Live Server simples suporta o modo publico; `file://` nao e requisito.

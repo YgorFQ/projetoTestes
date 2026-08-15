@@ -61,7 +61,20 @@ Depois, abra o Console e confira o horario das regras.
 
 ## Adicionar um membro
 
-Todos os membros atuais sao editores completos.
+Fluxo normal, sem CMD:
+
+1. A pessoa tenta entrar com Google.
+2. Um proprietario ou admin abre **Acessos > Solicitacoes**.
+3. Admins aprovam como editor. Proprietarios escolhem editor, admin ou
+   proprietario.
+4. A pessoa recebe acesso automaticamente; sair e entrar novamente nao e
+   obrigatorio.
+
+O botao grava o membro no Firestore, registra a atividade e sincroniza
+`presenceAccess` no Realtime Database. Um aviso amarelo indica que e necessario
+usar **Sincronizar** no membro.
+
+Fluxo de emergencia pelo Console:
 
 1. A pessoa tenta entrar com Google uma vez.
 2. No Console Firebase, abra **Firestore Database > Dados > workspaces >
@@ -69,12 +82,15 @@ Todos os membros atuais sao editores completos.
 3. Abra o documento da pessoa e copie `uid`, `email` e `displayName`.
 4. Como alternativa, o UID tambem aparece em **Authentication > Users**.
 5. Crie `workspaces/senkolib/members/{uid}` no Firestore.
-6. Preencha `uid`, `email`, `displayName` e `joinedAt`.
+6. Preencha `uid`, `email`, `displayName`, `role`, `joinedAt`, `updatedAt` e
+   `updatedBy`. Datas sao timestamps; `role` e `owner`, `admin` ou `editor`.
 7. Crie `presenceAccess/senkolib/{uid} = true` no Realtime Database.
-8. A pessoa entra novamente.
+8. Para owner/admin, crie tambem `memberManagers/senkolib/{uid}` com o cargo.
+9. A pessoa entra novamente.
 
-O frontend nao pode editar `members` nem `presenceAccess`.
-Ele registra apenas a propria solicitacao pendente e nao pode listar as demais.
+Editores nao podem editar `members`, listar solicitacoes ou alterar
+`presenceAccess`. Security Rules permitem essas operacoes somente aos cargos
+administrativos correspondentes.
 
 Alternativa pelo Firebase CLI, depois que o usuario ja apareceu em
 Authentication:
@@ -83,17 +99,23 @@ Authentication:
 npm --prefix functions run member:add:cli-auth -- `
   --uid UID_COPIADO `
   --email email@exemplo.com `
-  --name "Nome da pessoa"
+  --name "Nome da pessoa" `
+  --role editor
 ```
 
-Esse comando cria o documento em `members` e tambem libera
-`presenceAccess/senkolib/{uid}` no Realtime Database. Ele usa a conta logada em
+Esse comando cria o documento em `members`, libera `presenceAccess` e, para
+owner/admin, cria `memberManagers`. Ele usa a conta logada em
 `npx firebase-tools login`; nao exige chave JSON administrativa.
 
 ## Remover um membro
 
+Use **Acessos > Membros > Remover**. Proprietarios removem qualquer outra
+pessoa; admins removem somente editores.
+
+Em emergencia:
+
 1. Apague `workspaces/senkolib/members/{uid}`.
-2. Apague `presenceAccess/senkolib/{uid}`.
+2. Apague `presenceAccess/senkolib/{uid}` e `memberManagers/senkolib/{uid}`.
 3. Desative ou exclua a conta em Authentication quando necessario.
 4. Peça a revogacao do token GitHub individual, se a pessoa possuia um.
 5. Confira sessoes de presenca antigas.

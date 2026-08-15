@@ -45,8 +45,15 @@
     return features.find(function (feature) { return feature.id === id; });
   }
 
+  function isFeatureAvailable(feature) {
+    if (!feature || typeof feature.isAvailable !== 'function') return Boolean(feature);
+    try { return Boolean(feature.isAvailable()); } catch (error) { return false; }
+  }
+
   function orderedFeatures() {
-    return features.slice().sort(function (left, right) { return left.order - right.order; });
+    return features.filter(isFeatureAvailable).sort(function (left, right) {
+      return left.order - right.order;
+    });
   }
 
   function getFeatureRoot() {
@@ -350,7 +357,7 @@
 
   function switchFeature(id) {
     var feature = findFeature(id);
-    if (!feature) return false;
+    if (!feature || !isFeatureAvailable(feature)) return false;
 
     activeFeatureId = id;
     saveFeature(id);
@@ -376,11 +383,11 @@
      */
     try {
       var requestedFeature = new URLSearchParams(window.location.search).get('feature');
-      if (requestedFeature && findFeature(requestedFeature)) return requestedFeature;
+      if (requestedFeature && isFeatureAvailable(findFeature(requestedFeature))) return requestedFeature;
     } catch (error) {}
 
     var savedFeature = readSavedFeature();
-    if (savedFeature && findFeature(savedFeature)) return savedFeature;
+    if (savedFeature && isFeatureAvailable(findFeature(savedFeature))) return savedFeature;
     var first = orderedFeatures()[0];
     return first ? first.id : null;
   }
@@ -400,6 +407,28 @@
     } else {
       setPanelVisibility(feature, feature.id === activeFeatureId);
     }
+  }
+
+  function refreshFeatures() {
+    if (!isReady) return;
+    renderTabs();
+
+    var active = findFeature(activeFeatureId);
+    if (!isFeatureAvailable(active)) {
+      var first = orderedFeatures()[0];
+      if (first) switchFeature(first.id);
+      else {
+        activeFeatureId = null;
+        features.forEach(function (feature) { setPanelVisibility(feature, false); });
+        setEmptyState(true);
+      }
+      return;
+    }
+
+    features.forEach(function (feature) {
+      setPanelVisibility(feature, feature.id === activeFeatureId);
+    });
+    updateTabs();
   }
 
   function bindLogoHome() {
@@ -434,6 +463,7 @@
     listCreateProviders: listCreateProviders,
     getCreateProvider: getCreateProvider,
     refreshGithubButton: refreshGithubButton,
+    refreshFeatures: refreshFeatures,
     switchFeature: switchFeature,
     getFeatureRoot: getFeatureRoot,
     getActiveFeatureId: function () { return activeFeatureId; }

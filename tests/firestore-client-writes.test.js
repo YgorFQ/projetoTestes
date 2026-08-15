@@ -11,6 +11,8 @@ const firestore = require('firebase/firestore');
 const PROJECT_ID = 'senkolib-rules-test';
 const WORKSPACE_ID = 'senkolib';
 const MEMBER_UID = 'member-1';
+const OWNER_UID = 'owner-1';
+const ADMIN_UID = 'admin-1';
 const OUTSIDER_UID = 'outsider';
 
 async function seed(testEnvironment) {
@@ -26,7 +28,35 @@ async function seed(testEnvironment) {
       {
         uid: MEMBER_UID,
         email: 'member@example.com',
-        displayName: 'Membro de teste'
+        displayName: 'Membro de teste',
+        role: 'editor',
+        joinedAt: new Date(),
+        updatedAt: new Date(),
+        updatedBy: OWNER_UID
+      }
+    );
+    await firestore.setDoc(
+      firestore.doc(db, `workspaces/${WORKSPACE_ID}/members/${OWNER_UID}`),
+      {
+        uid: OWNER_UID,
+        email: 'owner@example.com',
+        displayName: 'Proprietario de teste',
+        role: 'owner',
+        joinedAt: new Date(),
+        updatedAt: new Date(),
+        updatedBy: OWNER_UID
+      }
+    );
+    await firestore.setDoc(
+      firestore.doc(db, `workspaces/${WORKSPACE_ID}/members/${ADMIN_UID}`),
+      {
+        uid: ADMIN_UID,
+        email: 'admin@example.com',
+        displayName: 'Admin de teste',
+        role: 'admin',
+        joinedAt: new Date(),
+        updatedAt: new Date(),
+        updatedBy: OWNER_UID
       }
     );
   });
@@ -244,6 +274,12 @@ async function main() {
     const outsiderDb = testEnvironment.authenticatedContext(OUTSIDER_UID, {
       email: 'outsider@example.com'
     }).firestore();
+    const ownerDb = testEnvironment.authenticatedContext(OWNER_UID, {
+      email: 'owner@example.com'
+    }).firestore();
+    const adminDb = testEnvironment.authenticatedContext(ADMIN_UID, {
+      email: 'admin@example.com'
+    }).firestore();
     const writes = loadClientWriter(memberDb);
 
     const group = await writes.saveGroup({
@@ -426,6 +462,91 @@ async function main() {
       outsiderDb,
       `workspaces/${WORKSPACE_ID}/accessRequests`
     )));
+    await assertFails(firestore.getDocs(firestore.collection(
+      memberDb,
+      `workspaces/${WORKSPACE_ID}/accessRequests`
+    )));
+    assert.equal((await firestore.getDocs(firestore.collection(
+      adminDb,
+      `workspaces/${WORKSPACE_ID}/accessRequests`
+    ))).size, 1);
+
+    const approvedMemberRef = firestore.doc(
+      adminDb,
+      `workspaces/${WORKSPACE_ID}/members/${OUTSIDER_UID}`
+    );
+    const adminRequestRef = firestore.doc(
+      adminDb,
+      `workspaces/${WORKSPACE_ID}/accessRequests/${OUTSIDER_UID}`
+    );
+    const approveEventRef = firestore.doc(firestore.collection(
+      adminDb,
+      `workspaces/${WORKSPACE_ID}/memberEvents`
+    ));
+    await firestore.runTransaction(adminDb, async (transaction) => {
+      transaction.set(approvedMemberRef, {
+        uid: OUTSIDER_UID,
+        email: 'outsider@example.com',
+        displayName: 'Pessoa sem acesso',
+        role: 'editor',
+        joinedAt: firestore.serverTimestamp(),
+        updatedAt: firestore.serverTimestamp(),
+        updatedBy: ADMIN_UID
+      });
+      transaction.update(adminRequestRef, {
+        status: 'approved',
+        reviewedAt: firestore.serverTimestamp(),
+        reviewedBy: ADMIN_UID,
+        reviewedRole: 'editor'
+      });
+      transaction.set(approveEventRef, {
+        id: approveEventRef.id,
+        action: 'approve',
+        targetUid: OUTSIDER_UID,
+        targetEmail: 'outsider@example.com',
+        targetRole: 'editor',
+        actorUid: ADMIN_UID,
+        actorName: 'Admin de teste',
+        createdAt: firestore.serverTimestamp()
+      });
+    });
+    assert.equal((await firestore.getDoc(approvedMemberRef)).data().role, 'editor');
+
+    await assertFails(firestore.setDoc(firestore.doc(
+      adminDb,
+      `workspaces/${WORKSPACE_ID}/members/admin-invasor`
+    ), {
+      uid: 'admin-invasor',
+      email: 'admin-invasor@example.com',
+      displayName: 'Admin invasor',
+      role: 'admin',
+      joinedAt: firestore.serverTimestamp(),
+      updatedAt: firestore.serverTimestamp(),
+      updatedBy: ADMIN_UID
+    }));
+
+    await firestore.setDoc(firestore.doc(
+      ownerDb,
+      `workspaces/${WORKSPACE_ID}/members/novo-admin`
+    ), {
+      uid: 'novo-admin',
+      email: 'novo-admin@example.com',
+      displayName: 'Novo admin',
+      role: 'admin',
+      joinedAt: firestore.serverTimestamp(),
+      updatedAt: firestore.serverTimestamp(),
+      updatedBy: OWNER_UID
+    });
+    await assertFails(firestore.setDoc(firestore.doc(
+      ownerDb,
+      `workspaces/${WORKSPACE_ID}/members/${OWNER_UID}`
+    ), {
+      role: 'editor',
+      updatedAt: firestore.serverTimestamp(),
+      updatedBy: OWNER_UID
+    }, { merge: true }));
+    await firestore.deleteDoc(approvedMemberRef);
+    assert.equal((await firestore.getDoc(approvedMemberRef)).exists(), false);
 
     const workspace = await firestore.getDoc(workspaceRef);
     assert.equal(workspace.data().dataVersion, 9);

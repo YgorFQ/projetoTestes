@@ -11,6 +11,19 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/workspaces/$(workspaceId)/members/$(request.auth.uid));
     }
 
+    function currentMember(workspaceId) {
+      return get(/databases/$(database)/documents/workspaces/$(workspaceId)/members/$(request.auth.uid));
+    }
+
+    function isOwner(workspaceId) {
+      return isMember(workspaceId) && currentMember(workspaceId).data.role == 'owner';
+    }
+
+    function isAdmin(workspaceId) {
+      return isMember(workspaceId)
+        && currentMember(workspaceId).data.role in ['owner', 'admin'];
+    }
+
     function validName(value) {
       return value is string && value.size() >= 2 && value.size() <= 160;
     }
@@ -23,7 +36,7 @@ service cloud.firestore {
       return value is list && value.size() <= 40;
     }
 
-    function validAccessRequest(data, workspaceId, requestId) {
+    function validPendingAccessRequest(data, workspaceId, requestId) {
       return data.keys().hasAll([
           'uid', 'workspaceId', 'email', 'displayName', 'status',
           'attemptCount', 'firstAttemptAt', 'lastAttemptAt'
@@ -42,6 +55,71 @@ service cloud.firestore {
         && data.status == 'pending'
         && data.attemptCount is int
         && data.attemptCount >= 1;
+    }
+
+    function validReviewedAccessRequest(data, workspaceId, requestId) {
+      return data.keys().hasAll([
+          'uid', 'workspaceId', 'email', 'displayName', 'status',
+          'attemptCount', 'firstAttemptAt', 'lastAttemptAt',
+          'reviewedAt', 'reviewedBy', 'reviewedRole'
+        ])
+        && data.keys().hasOnly([
+          'uid', 'workspaceId', 'email', 'displayName', 'status',
+          'attemptCount', 'firstAttemptAt', 'lastAttemptAt',
+          'reviewedAt', 'reviewedBy', 'reviewedRole'
+        ])
+        && data.uid == requestId
+        && data.workspaceId == workspaceId
+        && data.email is string
+        && data.email.size() <= 320
+        && data.displayName is string
+        && data.displayName.size() <= 320
+        && data.status in ['approved', 'rejected']
+        && data.attemptCount is int
+        && data.attemptCount >= 1
+        && data.reviewedAt == request.time
+        && data.reviewedBy == request.auth.uid
+        && (
+          (data.status == 'rejected' && data.reviewedRole == null)
+          || (data.status == 'approved' && data.reviewedRole in ['owner', 'admin', 'editor'])
+        );
+    }
+
+    function validMember(data, memberId) {
+      return data.keys().hasAll([
+          'uid', 'email', 'displayName', 'role', 'joinedAt', 'updatedAt', 'updatedBy'
+        ])
+        && data.keys().hasOnly([
+          'uid', 'email', 'displayName', 'role', 'joinedAt', 'updatedAt', 'updatedBy'
+        ])
+        && data.uid == memberId
+        && data.email is string
+        && data.email.size() <= 320
+        && data.displayName is string
+        && data.displayName.size() <= 160
+        && data.role in ['owner', 'admin', 'editor']
+        && data.joinedAt is timestamp
+        && data.updatedAt == request.time
+        && data.updatedBy == request.auth.uid;
+    }
+
+    function validMemberEvent(data, eventId) {
+      return data.keys().hasAll([
+          'id', 'action', 'targetUid', 'targetEmail', 'targetRole',
+          'actorUid', 'actorName', 'createdAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'action', 'targetUid', 'targetEmail', 'targetRole',
+          'actorUid', 'actorName', 'createdAt'
+        ])
+        && data.id == eventId
+        && data.action in ['approve', 'reject', 'role-change', 'remove']
+        && data.targetUid is string
+        && data.targetEmail is string
+        && (data.targetRole == null || data.targetRole in ['owner', 'admin', 'editor'])
+        && data.actorUid == request.auth.uid
+        && data.actorName is string
+        && data.createdAt == request.time;
     }
 
     function dataVersionAdvanced(workspaceId) {
@@ -221,35 +299,77 @@ service cloud.firestore {
       );
 
       match /members/{memberId} {
-        allow get: if signedIn() && request.auth.uid == memberId;
-        allow list: if isMember(workspaceId);
-        allow write: if false;
+        allow get: if signedIn() && (request.auth.uid == memberId || isAdmin(workspaceId));
+        allow list: if isAdmin(workspaceId);
+        allow create: if validMember(request.resource.data, memberId) && (
+          (isOwner(workspaceId) && request.resource.data.role in ['owner', 'admin', 'editor'])
+          || (isAdmin(workspaceId) && request.resource.data.role == 'editor')
+        );
+        allow update: if validMember(request.resource.data, memberId) && (
+          (
+            isOwner(workspaceId)
+            && (request.auth.uid != memberId || request.resource.data.role == resource.data.role)
+          )
+          || (
+            isAdmin(workspaceId)
+            && resource.data.role == 'editor'
+            && request.resource.data.role == 'editor'
+          )
+        );
+        allow delete: if request.auth.uid != memberId && (
+          isOwner(workspaceId)
+          || (isAdmin(workspaceId) && resource.data.role == 'editor')
+        );
       }
 
       match /accessRequests/{requestId} {
-        allow get: if signedIn() && request.auth.uid == requestId;
-        allow list: if false;
+        allow get: if signedIn() && (request.auth.uid == requestId || isAdmin(workspaceId));
+        allow list: if isAdmin(workspaceId);
         allow create: if signedIn()
           && request.auth.uid == requestId
           && !isMember(workspaceId)
-          && validAccessRequest(request.resource.data, workspaceId, requestId)
+          && validPendingAccessRequest(request.resource.data, workspaceId, requestId)
           && request.resource.data.attemptCount == 1
           && request.resource.data.firstAttemptAt == request.time
           && request.resource.data.lastAttemptAt == request.time;
         allow update: if signedIn()
-          && request.auth.uid == requestId
-          && !isMember(workspaceId)
-          && validAccessRequest(request.resource.data, workspaceId, requestId)
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-            'email', 'displayName', 'attemptCount', 'lastAttemptAt'
-          ])
-          && request.resource.data.attemptCount == resource.data.attemptCount + 1
-          && request.resource.data.firstAttemptAt == resource.data.firstAttemptAt
-          && request.resource.data.lastAttemptAt == request.time;
+          && (
+            (
+              request.auth.uid == requestId
+              && !isMember(workspaceId)
+              && validPendingAccessRequest(request.resource.data, workspaceId, requestId)
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+                'email', 'displayName', 'status', 'attemptCount', 'lastAttemptAt',
+                'reviewedAt', 'reviewedBy', 'reviewedRole'
+              ])
+              && request.resource.data.attemptCount == resource.data.attemptCount + 1
+              && request.resource.data.firstAttemptAt == resource.data.firstAttemptAt
+              && request.resource.data.lastAttemptAt == request.time
+            )
+            || (
+              isAdmin(workspaceId)
+              && resource.data.status == 'pending'
+              && validReviewedAccessRequest(request.resource.data, workspaceId, requestId)
+              && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+                'status', 'reviewedAt', 'reviewedBy', 'reviewedRole'
+              ])
+              && (
+                isOwner(workspaceId)
+                || request.resource.data.reviewedRole in [null, 'editor']
+              )
+            )
+          );
         allow delete: if false;
       }
 
+      match /memberEvents/{eventId} {
+        allow read: if isAdmin(workspaceId);
+        allow create: if isAdmin(workspaceId) && validMemberEvent(request.resource.data, eventId);
+        allow update, delete: if false;
+      }
+
       match /groups/{groupId} {
+        allow read: if isMember(workspaceId);
         allow create: if isMember(workspaceId)
           && validGroup(request.resource.data, workspaceId, groupId)
           && request.resource.data.version == 1
@@ -272,6 +392,7 @@ service cloud.firestore {
       }
 
       match /bibliotecaLayouts/{layoutId} {
+        allow read: if isMember(workspaceId);
         allow create: if isMember(workspaceId)
           && validVersionedCreate(workspaceId, layoutId, 'libraryLayout')
           && request.resource.data.parentId == null
@@ -286,6 +407,7 @@ service cloud.firestore {
         allow delete: if isMember(workspaceId) && resource.data.deleting == true;
 
         match /revisions/{revisionId} {
+          allow read: if isMember(workspaceId);
           allow create: if isMember(workspaceId)
             && validRevision(request.resource.data, workspaceId, layoutId, revisionId, 'libraryLayout')
             && getAfter(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)).data.currentRevisionId == revisionId;
@@ -295,6 +417,7 @@ service cloud.firestore {
         }
 
         match /variants/{variantId} {
+          allow read: if isMember(workspaceId);
           allow create: if isMember(workspaceId)
             && validVersionedCreate(workspaceId, variantId, 'libraryVariant')
             && request.resource.data.parentId == layoutId
@@ -313,6 +436,7 @@ service cloud.firestore {
           );
 
           match /revisions/{revisionId} {
+            allow read: if isMember(workspaceId);
             allow create: if isMember(workspaceId)
               && validRevision(request.resource.data, workspaceId, variantId, revisionId, 'libraryVariant')
               && getAfter(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)/variants/$(variantId)).data.currentRevisionId == revisionId;
@@ -326,6 +450,7 @@ service cloud.firestore {
       }
 
       match /collections/{collectionId} {
+        allow read: if isMember(workspaceId);
         allow create: if isMember(workspaceId)
           && validCollection(request.resource.data, workspaceId, collectionId)
           && request.resource.data.version == 1
@@ -363,6 +488,7 @@ service cloud.firestore {
         allow delete: if isMember(workspaceId) && resource.data.deleting == true;
 
         match /layouts/{layoutId} {
+          allow read: if isMember(workspaceId);
           allow create: if isMember(workspaceId)
             && validVersionedCreate(workspaceId, layoutId, 'collectionLayout')
             && request.resource.data.parentId == collectionId
@@ -381,6 +507,7 @@ service cloud.firestore {
           );
 
           match /revisions/{revisionId} {
+            allow read: if isMember(workspaceId);
             allow create: if isMember(workspaceId)
               && validRevision(request.resource.data, workspaceId, layoutId, revisionId, 'collectionLayout')
               && getAfter(/databases/$(database)/documents/workspaces/$(workspaceId)/collections/$(collectionId)/layouts/$(layoutId)).data.currentRevisionId == revisionId;
@@ -394,6 +521,7 @@ service cloud.firestore {
       }
 
       match /nameReservations/{reservationId} {
+        allow read: if isMember(workspaceId);
         allow create, update: if isMember(workspaceId)
           && request.resource.data.keys().hasAll([
             'scope', 'name', 'nameKey', 'resourcePath', 'updatedAt'
@@ -411,6 +539,7 @@ service cloud.firestore {
       }
 
       match /exports/{exportId} {
+        allow read: if isAdmin(workspaceId);
         allow create: if isMember(workspaceId)
           && request.resource.data.keys().hasAll([
             'status', 'triggeredBy', 'triggeredByName', 'startedAt'
@@ -436,8 +565,7 @@ service cloud.firestore {
       }
 
       match /{document=**} {
-        allow read: if isMember(workspaceId);
-        allow write: if false;
+        allow read, write: if false;
       }
     }
 

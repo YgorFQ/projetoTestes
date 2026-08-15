@@ -21,6 +21,11 @@ indicado, em um ambiente de producao controlado.
 - [ ] Usuario real cadastrado como membro consegue ler o workspace.
 - [ ] Remover o documento de membro impede a proxima escrita.
 - [ ] Sair limpa o estado visual e impede novas operacoes.
+- [ ] Proprietario ve a feature Acessos; editor nao ve nem lista seus dados.
+- [ ] Admin aprova e remove editor, mas nao cria admin ou proprietario.
+- [ ] Proprietario promove cargos e nao consegue remover a propria conta.
+- [ ] Aprovacao aparece ao vivo para a conta que aguardava acesso.
+- [ ] Falha de sincronizacao da presenca pode ser reparada pelo botao.
 
 ## Biblioteca
 
@@ -96,6 +101,7 @@ da implementacao administrativa anterior. A interface ainda deve ser conferida.
 - [ ] Alteracao de conteudo sem incremento de `dataVersion` e recusada.
 - [ ] Realtime Database permite escrever apenas a propria sessao.
 - [ ] Realtime Database nega presenca sem `presenceAccess`.
+- [ ] Realtime Database permite owner sincronizar cargos e admin apenas editores.
 - [ ] Storage nega escrita no estado atual.
 - [ ] Nenhuma chave administrativa aparece no frontend ou no Git.
 

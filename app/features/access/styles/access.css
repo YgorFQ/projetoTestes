@@ -1,0 +1,184 @@
+.senko-access-feature {
+  min-height: calc(100vh - 72px);
+  padding: 28px clamp(18px, 4vw, 56px) 56px;
+  color: var(--text);
+  background: var(--bg);
+}
+
+.senko-access-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 1180px;
+  margin: 0 auto 24px;
+}
+
+.senko-access-title h1 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: 0;
+}
+
+.senko-access-title span {
+  display: block;
+  margin-top: 6px;
+  color: var(--text2);
+  font-size: 13px;
+}
+
+.senko-access-tabs {
+  display: inline-grid;
+  grid-template-columns: repeat(3, minmax(112px, 1fr));
+  min-height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.senko-access-tabs button {
+  border: 0;
+  border-right: 1px solid var(--border);
+  padding: 0 14px;
+  color: var(--text2);
+  background: var(--surface);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.senko-access-tabs button:last-child { border-right: 0; }
+.senko-access-tabs button.is-active { color: #fff; background: #c95013; }
+
+.senko-access-tabs b {
+  display: inline-flex;
+  min-width: 20px;
+  justify-content: center;
+  margin-left: 5px;
+  font-size: 11px;
+}
+
+.senko-access-content {
+  max-width: 1180px;
+  margin: 0 auto;
+  border-top: 1px solid var(--border);
+}
+
+.senko-access-list { display: grid; }
+
+.senko-access-row,
+.senko-access-event {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 88px;
+  padding: 16px 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.senko-access-person,
+.senko-access-event > div {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.senko-access-person strong,
+.senko-access-event strong { font-size: 14px; }
+
+.senko-access-person span,
+.senko-access-event span {
+  overflow: hidden;
+  color: var(--text2);
+  font-size: 13px;
+  text-overflow: ellipsis;
+}
+
+.senko-access-person small,
+.senko-access-event small { color: var(--text2); font-size: 11px; }
+
+.senko-access-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.senko-access-controls select {
+  width: 142px;
+  min-height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0 34px 0 11px;
+  color: var(--text);
+  background: var(--surface);
+  font: inherit;
+  font-size: 13px;
+}
+
+.senko-access-btn,
+.senko-access-icon-btn {
+  min-height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0 14px;
+  color: var(--text);
+  background: var(--surface);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.senko-access-icon-btn { width: 38px; padding: 0; font-size: 18px; }
+.senko-access-btn--primary { border-color: #ff6f18; color: #fff; background: #ff6f18; }
+.senko-access-btn--danger { color: #db4b4b; }
+.senko-access-btn:disabled,
+.senko-access-icon-btn:disabled { cursor: wait; opacity: .55; }
+
+.senko-access-role {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.senko-access-role--owner { color: #d89a21; }
+.senko-access-role--admin { color: #4588d8; }
+.senko-access-role--editor { color: var(--text2); }
+
+.senko-access-empty {
+  padding: 56px 4px;
+  color: var(--text2);
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.senko-access-status {
+  min-height: 22px;
+  max-width: 1180px;
+  margin: 14px auto 0;
+  color: var(--text2);
+  font-size: 12px;
+}
+
+.senko-access-status[data-type="success"] { color: #36a66b; }
+.senko-access-status[data-type="warning"] { color: #d89a21; }
+.senko-access-status[data-type="error"] { color: #db4b4b; }
+
+@media (max-width: 760px) {
+  .senko-access-feature { padding: 18px 14px 40px; }
+  .senko-access-header { align-items: stretch; flex-direction: column; }
+  .senko-access-tabs { width: 100%; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .senko-access-tabs button { min-width: 0; padding: 0 6px; font-size: 11px; }
+  .senko-access-row { align-items: stretch; flex-direction: column; gap: 12px; }
+  .senko-access-controls { justify-content: flex-start; flex-wrap: wrap; }
+  .senko-access-controls select { flex: 1 1 130px; }
+  .senko-access-event { align-items: flex-start; flex-direction: column; gap: 6px; }
+}

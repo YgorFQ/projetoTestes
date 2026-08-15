@@ -6,7 +6,17 @@
       "$workspaceId": {
         "$uid": {
           ".read": "auth != null && auth.uid === $uid",
-          ".write": false
+          ".write": "auth != null && (root.child('memberManagers').child($workspaceId).child(auth.uid).val() === 'owner' || (root.child('memberManagers').child($workspaceId).child(auth.uid).val() === 'admin' && !root.child('memberManagers').child($workspaceId).child($uid).exists()))",
+          ".validate": "newData.val() === null || newData.val() === true"
+        }
+      }
+    },
+    "memberManagers": {
+      "$workspaceId": {
+        "$uid": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": "auth != null && root.child('memberManagers').child($workspaceId).child(auth.uid).val() === 'owner' && auth.uid !== $uid",
+          ".validate": "newData.val() === null || newData.val() === 'owner' || newData.val() === 'admin'"
         }
       }
     },
@@ -27,4 +37,3 @@
     }
   }
 }
-

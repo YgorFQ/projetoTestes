@@ -2,6 +2,7 @@
   var config = window.SenkoFirebaseConfig || {};
   var listeners = [];
   var initializedPromise;
+  var memberUnsubscribe;
   var authorizedResolvers = [];
   var services = {};
   var modules = {};
@@ -23,6 +24,11 @@
       error: state.error,
       usingEmulators: state.usingEmulators
     };
+  }
+
+  function normalizeMember(member) {
+    if (!member) return null;
+    return Object.assign({ role: 'editor' }, member);
   }
 
   function publish(patch) {
@@ -132,6 +138,30 @@
     return 'workspaces/' + getWorkspaceId() + (suffix ? '/' + suffix : '');
   }
 
+  function stopMemberListener() {
+    if (typeof memberUnsubscribe === 'function') memberUnsubscribe();
+    memberUnsubscribe = null;
+  }
+
+  function startMemberListener(user, reference) {
+    stopMemberListener();
+    memberUnsubscribe = modules.firestore.onSnapshot(reference, function (snapshot) {
+      if (!state.user || state.user.uid !== user.uid) return;
+      if (!snapshot.exists()) {
+        publish({ status: 'unauthorized', user: user, member: null, error: null });
+        return;
+      }
+      publish({
+        status: 'ready',
+        user: user,
+        member: normalizeMember(Object.assign({ id: snapshot.id }, snapshot.data())),
+        error: null
+      });
+    }, function (error) {
+      console.warn('[SenkoFirebase] Falha ao acompanhar o cargo do membro:', error);
+    });
+  }
+
   function recordAccessRequest(user) {
     var reference = modules.firestore.doc(services.db, accessRequestPath(user.uid));
     return modules.firestore.runTransaction(services.db, function (transaction) {
@@ -170,11 +200,12 @@
           publish({
             status: 'ready',
             user: user,
-            member: Object.assign({
+            member: normalizeMember(Object.assign({
               id: createdMemberSnapshot.id
-            }, createdMemberSnapshot.data()),
+            }, createdMemberSnapshot.data())),
             error: null
           });
+          startMemberListener(user, reference);
           return callFunction('ensurePresenceAccess', {
             workspaceId: getWorkspaceId()
           });
@@ -188,6 +219,7 @@
           member: null,
           error: null
         });
+        startMemberListener(user, reference);
         return recordAccessRequest(user).catch(function (error) {
           console.warn(
             '[SenkoFirebase] Nao foi possivel registrar a solicitacao de acesso:',
@@ -199,9 +231,10 @@
       publish({
         status: 'ready',
         user: user,
-        member: Object.assign({ id: memberSnapshot.id }, memberSnapshot.data()),
+        member: normalizeMember(Object.assign({ id: memberSnapshot.id }, memberSnapshot.data())),
         error: null
       });
+      startMemberListener(user, reference);
 
       /*
        * A Function replica a permissao no Realtime Database. Se as Functions
@@ -247,6 +280,7 @@
       })
       .then(function () {
         modules.auth.onAuthStateChanged(services.auth, function (user) {
+          stopMemberListener();
           if (!user) {
             publish({
               status: 'signed-out',
@@ -452,6 +486,25 @@
     });
   }
 
+  function syncMemberRealtimeAccess(uid, role) {
+    assertReady();
+    var normalizedRole = role == null ? null : String(role);
+    if (normalizedRole !== null && ['owner', 'admin', 'editor'].indexOf(normalizedRole) === -1) {
+      return Promise.reject(new Error('Cargo de membro invalido.'));
+    }
+
+    var workspaceSegment = safePresenceSegment(getWorkspaceId());
+    var uidSegment = safePresenceSegment(uid);
+    var updates = {};
+    updates['presenceAccess/' + workspaceSegment + '/' + uidSegment] = normalizedRole ? true : null;
+    if (state.member && state.member.role === 'owner') {
+      updates['memberManagers/' + workspaceSegment + '/' + uidSegment] =
+        normalizedRole === 'owner' || normalizedRole === 'admin' ? normalizedRole : null;
+    }
+
+    return modules.database.update(modules.database.ref(services.realtime), updates);
+  }
+
   window.SenkoFirebase = {
     initialize: initialize,
     isEnabled: function () { return Boolean(config.enabled); },
@@ -468,7 +521,8 @@
     listenCollection: listenCollection,
     listenCollectionGroup: listenCollectionGroup,
     listenDocument: listenDocument,
-    enterPresence: enterPresence
+    enterPresence: enterPresence,
+    syncMemberRealtimeAccess: syncMemberRealtimeAccess
   };
 
   initialize().catch(function () {});

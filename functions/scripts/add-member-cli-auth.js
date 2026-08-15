@@ -13,7 +13,8 @@ function parseArgs(argv) {
       'https://senkolibtestes-default-rtdb.firebaseio.com',
     uid: '',
     email: '',
-    displayName: ''
+    displayName: '',
+    role: 'editor'
   };
 
   for (let index = 0; index < argv.length; index += 1) {
@@ -24,6 +25,7 @@ function parseArgs(argv) {
     else if (argument === '--uid') options.uid = argv[++index] || '';
     else if (argument === '--email') options.email = argv[++index] || '';
     else if (argument === '--name') options.displayName = argv[++index] || '';
+    else if (argument === '--role') options.role = argv[++index] || '';
     else if (argument === '--help' || argument === '-h') options.help = true;
     else throw new Error(`Argumento desconhecido: ${argument}`);
   }
@@ -33,17 +35,19 @@ function parseArgs(argv) {
 
 function printHelp() {
   console.log(`Uso:
-  node scripts/add-member-cli-auth.js --uid <uid> --email <email> --name <nome>
+  node scripts/add-member-cli-auth.js --uid <uid> --email <email> --name <nome> [--role editor|admin|owner]
 
 Opcoes:
   --workspace <id>      Workspace alvo. Padrao: senkolib
   --project <id>        Projeto Firebase. Padrao: senkolibtestes
   --database-url <url>  URL do Realtime Database
+  --role <cargo>        Cargo inicial. Padrao: editor
   --help                Mostra esta ajuda
 
 Este script usa a conta logada no Firebase CLI para criar:
 - workspaces/{workspace}/members/{uid}
-- presenceAccess/{workspace}/{uid} = true`);
+- presenceAccess/{workspace}/{uid} = true
+- memberManagers/{workspace}/{uid} para owner/admin`);
 }
 
 function cleanSegment(value, label) {
@@ -69,6 +73,11 @@ function validateOptions(options) {
     throw new Error('nome invalido.');
   }
 
+  options.role = String(options.role || '').trim().toLowerCase();
+  if (!['owner', 'admin', 'editor'].includes(options.role)) {
+    throw new Error('role invalido. Use owner, admin ou editor.');
+  }
+
   if (!/^https:\/\/.+\.firebaseio\.com$/i.test(options.databaseUrl)) {
     throw new Error('database-url invalida.');
   }
@@ -79,6 +88,10 @@ function firestoreValue(value) {
   if (typeof value === 'string') return { stringValue: value };
   if (typeof value === 'boolean') return { booleanValue: value };
   throw new Error(`Tipo nao suportado: ${typeof value}`);
+}
+
+function firestoreTimestamp(value) {
+  return { timestampValue: value };
 }
 
 function firestoreFields(data) {
@@ -109,18 +122,22 @@ async function createMember(options) {
     urlPrefix: firestoreOrigin()
   });
   const joinedAt = new Date().toISOString();
+  const fields = firestoreFields({
+    uid: options.uid,
+    email: options.email,
+    displayName: options.displayName,
+    role: options.role,
+    updatedBy: 'firebase-cli'
+  });
+  fields.joinedAt = firestoreTimestamp(joinedAt);
+  fields.updatedAt = firestoreTimestamp(joinedAt);
   await client.post(
     `projects/${options.projectId}/databases/${DATABASE_ID}/documents:commit`,
     {
       writes: [{
         update: {
           name: documentName(options),
-          fields: firestoreFields({
-            uid: options.uid,
-            email: options.email,
-            displayName: options.displayName,
-            joinedAt
-          })
+          fields
         }
       }]
     }
@@ -137,6 +154,13 @@ async function grantPresence(options) {
     `${encodeURIComponent(options.uid)}.json`,
     true
   );
+  const managerPath = `/memberManagers/${encodeURIComponent(options.workspaceId)}/` +
+    `${encodeURIComponent(options.uid)}.json`;
+  if (options.role === 'owner' || options.role === 'admin') {
+    await client.put(managerPath, JSON.stringify(options.role));
+  } else {
+    await client.delete(managerPath);
+  }
 }
 
 async function main() {
@@ -155,6 +179,7 @@ async function main() {
     uid: options.uid,
     email: options.email,
     displayName: options.displayName,
+    role: options.role,
     presenceAccess: true
   }, null, 2));
 }

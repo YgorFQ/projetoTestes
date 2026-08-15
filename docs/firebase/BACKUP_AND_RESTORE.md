@@ -152,7 +152,9 @@ continuam preservando o estado antigo.
 Nao sao exportados:
 
 - membros;
+- solicitacoes em `accessRequests` e atividade em `memberEvents`;
 - `presenceAccess` e sessoes de presenca;
+- `memberManagers`;
 - reservas de nome;
 - logs em `exports`;
 - configuracao Firebase;

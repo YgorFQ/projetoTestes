@@ -17,6 +17,7 @@
 workspaces/{workspaceId}
 |-- members/{uid}
 |-- accessRequests/{uid}
+|-- memberEvents/{eventId}
 |-- groups/{groupId}
 |-- bibliotecaLayouts/{layoutId}
 |   |-- revisions/{revisionId}
@@ -61,11 +62,13 @@ Caminho: `workspaces/{workspaceId}/members/{uid}`
 | `uid` | string | UID do Firebase Authentication |
 | `email` | string | Identificacao administrativa |
 | `displayName` | string | Nome mostrado na interface |
+| `role` | string | `owner`, `admin` ou `editor` |
 | `joinedAt` | timestamp | Entrada no workspace |
-| `localEmulator` | boolean | Indica membro criado automaticamente no emulador |
+| `updatedAt` / `updatedBy` | timestamp/string | Ultima mudanca administrativa |
 
-Atualmente a existencia do documento significa acesso completo. Ainda nao
-existem papeis como leitor, editor ou administrador.
+A existencia do documento libera o CRUD de conteudo. `role` controla somente
+governanca de pessoas: proprietarios gerenciam todos os cargos, admins gerenciam
+editores e editores nao acessam a feature administrativa.
 
 ## Solicitacoes de acesso
 
@@ -73,12 +76,21 @@ Caminho: `workspaces/{workspaceId}/accessRequests/{uid}`
 
 Quando uma conta Google autentica, mas ainda nao existe em `members`, o
 navegador registra `uid`, `email`, `displayName`, `status: pending`,
-`attemptCount`, `firstAttemptAt` e `lastAttemptAt`. A conta pode ler e atualizar
+`attemptCount`, `firstAttemptAt` e `lastAttemptAt`. Uma revisao adiciona
+`reviewedAt`, `reviewedBy` e `reviewedRole`. A conta pode ler e atualizar
 somente o proprio documento; nao pode listar outras solicitacoes. O Console do
 Firebase continua capaz de listar os documentos para administracao do projeto.
 
 Tokens, senhas e credenciais nao sao registrados. A colecao tambem nao entra
 nos backups publicos ou tecnicos do GitHub.
+
+## Atividade de membros
+
+Caminho: `workspaces/{workspaceId}/memberEvents/{eventId}`
+
+Registra `approve`, `reject`, `role-change` e `remove`, com alvo, cargo, ator e
+horario. Somente proprietarios e admins podem criar ou listar eventos. Eventos
+nao podem ser alterados ou excluidos pelo frontend e nao entram no backup.
 
 ## Grupos
 
@@ -185,6 +197,7 @@ entram no snapshot GitHub.
 
 ```text
 presenceAccess/{workspaceId}/{uid} = true
+memberManagers/{workspaceId}/{uid} = "owner" | "admin"
 
 presence/{workspaceId}/{resourceType}/{resourceId}/{uid}/{sessionId}
   displayName: string
@@ -192,10 +205,9 @@ presence/{workspaceId}/{resourceType}/{resourceId}/{uid}/{sessionId}
   joinedAt: server timestamp
 ```
 
-No emulador, `presenceAccess` e escrito pela Function local
-`ensurePresenceAccess`. Em producao Spark, ele e cadastrado
-administrativamente junto do membro. O usuario escreve apenas suas proprias
-sessoes de presenca.
+`memberManagers` autoriza a tela administrativa a sincronizar
+`presenceAccess`. Proprietarios sincronizam qualquer membro; admins somente
+editores. O usuario escreve apenas suas proprias sessoes de presenca.
 
 Tipos atuais de recurso:
 
