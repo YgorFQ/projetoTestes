@@ -22,7 +22,8 @@ SenkoLib/
 |   |   |-- scripts/
 |   |   |   |-- senko-shell.js           - registra features, providers e monta as abas
 |   |   |   |-- senko-quick-create.js    - controla a criacao rapida oficial
-|   |   |   `-- senko-guide.js           - controla o guia oficial e seus atalhos
+|   |   |   |-- senko-guide.js           - controla o guia oficial e seus atalhos
+|   |   |   `-- senko-utility-menu.js    - agrupa as ferramentas globais no menu do header
 |   |   `-- styles/
 |   |       |-- styles.css               - layout do shell: header, abas e raiz das features
 |   |       |-- senko-quick-create.css    - visual do botao e do modal de criacao
@@ -123,6 +124,10 @@ SenkoLib/
 - Sem uma sessao Firebase `ready`, o ultimo backup aparece em modo somente leitura.
 - Um Live Server simples suporta o modo publico; `file://` nao e requisito.
 - A criacao rapida e uma ferramenta oficial do shell e descobre opcoes por `registerCreateProvider`.
+- O menu de ferramentas move os controles globais existentes para um painel;
+  ele preserva IDs, listeners, permissao e estado de cada ferramenta.
+- Avisos de disponibilidade e progresso ficam fora do menu porque precisam
+  permanecer visiveis mesmo quando o painel esta fechado.
 - O Senko Guide e uma ferramenta oficial do shell, aberta pelo header e exposta pela API `SenkoGuide.open()`/`close()`.
 - Cada feature registrada como provider continua dona de seu carregamento, modal, validacao e persistencia.
 - Cada aba com comportamento proprio fica em `app/features/[nome]`.

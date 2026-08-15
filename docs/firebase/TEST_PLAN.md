@@ -27,6 +27,15 @@ indicado, em um ambiente de producao controlado.
 - [ ] Aprovacao aparece ao vivo para a conta que aguardava acesso.
 - [ ] Falha de sincronizacao da presenca pode ser reparada pelo botao.
 
+## Shell e menu de ferramentas
+
+- [x] Header exibe um unico botao de menu para as acoes globais.
+- [x] Menu fecha ao escolher uma acao, clicar fora ou pressionar Escape.
+- [x] Notas abre seu modal original depois de ser movida para o menu.
+- [x] Painel cabe em desktop e em `390x844` sem overflow horizontal.
+- [ ] Membro autorizado ve criacao rapida e backup habilitado no menu.
+- [ ] Proprietario abre conta e Acessos sem regressao de permissao.
+
 ## Biblioteca
 
 - [ ] Lista todos os layouts importados.

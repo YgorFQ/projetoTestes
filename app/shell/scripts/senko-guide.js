@@ -117,9 +117,28 @@
           ],
           bullets: [
             'Arquivo principal: app/shell/scripts/senko-shell.js.',
+            'Menu de ferramentas: app/shell/scripts/senko-utility-menu.js.',
             'Estilo principal: app/shell/styles/styles.css.',
-            'Raiz das features: #senkoFeatureRoot.'
+            'Raiz das features: #senkoFeatureRoot.',
+            'O menu move os controles existentes e preserva IDs, listeners, permissoes e estados.'
           ]
+        },
+        {
+          title: 'Menu de ferramentas',
+          badge: 'teste',
+          terms: 'menu hamburguer ferramentas header botoes globais janela utilitarios',
+          paragraphs: [
+            'O botao de menu no canto superior abre um painel com criacao rapida, notas, LayoutLab, guia, backup, conta e tema quando cada acao esta disponivel.',
+            'O menu nao recria as ferramentas: ele move os elementos que ja existem para preservar integracoes e permissoes.'
+          ],
+          bullets: [
+            'Controlador: app/shell/scripts/senko-utility-menu.js.',
+            'Estilos: bloco senko-utility-menu em app/shell/styles/styles.css.',
+            'Fecha ao escolher uma acao, clicar fora ou pressionar Escape.',
+            'Acoes escondidas ou desabilitadas continuam respeitando o estado original.',
+            'Status do Firebase e progresso de publicacao permanecem visiveis fora do painel.'
+          ],
+          note: 'Este menu esta em teste de experiencia; remover o controlador devolve os botoes ao header sem alterar as ferramentas.'
         },
         {
           title: 'register.js',
@@ -351,7 +370,7 @@
           bullets: [
             'Controlador: app/shell/scripts/senko-guide.js.',
             'Estilos: app/shell/styles/senko-guide.css.',
-            'Botao global: #senkoGuideBtn no header do index.html.',
+            'Botao global: #senkoGuideBtn dentro do menu de ferramentas do header.',
             'API publica: SenkoGuide.open() e SenkoGuide.close().',
             'Atalhos para features usam somente SenkoShell.switchFeature().',
             'Toda mudanca relevante no projeto precisa revisar este guia.'
@@ -368,7 +387,7 @@
           ],
           bullets: [
             'Notas da equipe: app/prototype/team-notes/.',
-            'O acionador de Notas da equipe reutiliza o controle theme-toggle do shell e o painel consome os tokens visuais compartilhados do SenkoLib. A feature mantem classes proprias e nao deve criar uma paleta paralela.',
+            'O acionador de Notas da equipe fica no menu de ferramentas e o painel consome os tokens visuais compartilhados do SenkoLib. A feature mantem classes proprias e nao deve criar uma paleta paralela.',
             'A experiencia de Notas da equipe organiza busca, filtros, lista e editor em areas claras, sinaliza alteracoes nao salvas e pede confirmacao antes de descarta-las.',
             'Cada nota criada pelo Team Notes deve virar um arquivo proprio em app/prototype/team-notes/data/notes e entrar no manifest.js.',
             'Preview: app/prototype/gamer-preview/.',

@@ -40,6 +40,137 @@
   align-items: center;
   gap: .75rem;
   margin-left: auto;
+  position: relative;
+}
+
+.senko-utility-menu[hidden] {
+  display: none;
+}
+
+.senko-utility-menu {
+  position: absolute;
+  top: calc(100% + .7rem);
+  right: 0;
+  z-index: 110;
+  width: min(310px, calc(100vw - 2rem));
+  max-height: min(620px, calc(100vh - 6rem));
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg2);
+  box-shadow: var(--shadow-lg);
+}
+
+.senko-utility-menu-head {
+  padding: .85rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.senko-utility-menu-head strong,
+.senko-utility-menu-head span {
+  display: block;
+}
+
+.senko-utility-menu-head strong {
+  color: var(--text);
+  font-size: .88rem;
+  font-weight: 900;
+}
+
+.senko-utility-menu-head span {
+  margin-top: .1rem;
+  color: var(--text3);
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.senko-utility-menu-items {
+  display: grid;
+  gap: .3rem;
+  padding: .55rem;
+}
+
+.senko-utility-menu-items > a {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.senko-utility-menu-items > a[hidden],
+.senko-utility-menu-items > button[hidden] {
+  display: none;
+}
+
+.senko-utility-menu-items > button,
+.senko-utility-menu-items > a > button {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  height: 44px;
+  justify-content: flex-start;
+  gap: .7rem;
+  padding: 0 .75rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text2);
+  box-shadow: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  transform: none;
+}
+
+.senko-utility-menu-items > button:hover,
+.senko-utility-menu-items > a > button:hover {
+  border-color: var(--border);
+  background: var(--bg3);
+  color: var(--text);
+  box-shadow: none;
+  transform: none;
+}
+
+.senko-utility-menu-items > button:disabled,
+.senko-utility-menu-items > a > button:disabled {
+  cursor: not-allowed;
+  opacity: .45;
+}
+
+.senko-utility-menu-items button > svg,
+.senko-utility-menu-items button > img {
+  flex: 0 0 20px;
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+}
+
+.senko-utility-menu-items .senko-account-toggle img {
+  border-radius: 50%;
+}
+
+.senko-utility-menu-items .senko-team-notes-trigger-label {
+  display: none;
+}
+
+.senko-utility-action-label {
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  font-size: .8rem;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.senko-utility-menu-items #senkoGlobalCreateBtn {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.senko-utility-menu-items #senkoGlobalCreateBtn:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
 }
 
 .search-wrap { position: relative; display: flex; align-items: center; }

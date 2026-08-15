@@ -4,6 +4,9 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const indexSource = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+const releaseMatch = indexSource.match(/<meta name="senko-release" content="([^"]+)"/);
+assert.ok(releaseMatch, 'index.html deve declarar meta[name="senko-release"]');
+const releaseToken = releaseMatch[1];
 const functionOffset = indexSource.indexOf('(function initializeFreshAssets()');
 const scriptStart = indexSource.lastIndexOf('<script>', functionOffset) + '<script>'.length;
 const scriptEnd = indexSource.indexOf('</script>', functionOffset);
@@ -21,7 +24,7 @@ function createFreshAssets(hostname, protocol) {
       baseURI: protocol === 'file:' ? 'file:///senkolib/index.html' : origin + '/projetoTestes/',
       querySelector(selector) {
         return selector === 'meta[name="senko-release"]'
-          ? { content: '2026.08.15.2' }
+          ? { content: releaseToken }
           : null;
       },
       write() {}
@@ -38,7 +41,7 @@ const production = createFreshAssets('ygorfq.github.io', 'https:');
 const codeUrl = new URL(production.url('app/shell/scripts/senko-shell.js'));
 const manifestUrl = new URL(production.url('app/infrastructure/static-backup/manifest.js'));
 
-assert.equal(codeUrl.searchParams.get('_senko_reload'), '2026.08.15.2');
+assert.equal(codeUrl.searchParams.get('_senko_reload'), releaseToken);
 assert.equal(manifestUrl.searchParams.get('_senko_reload'), production.openingToken);
 assert.notEqual(manifestUrl.searchParams.get('_senko_reload'), production.token);
 
