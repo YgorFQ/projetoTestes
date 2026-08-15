@@ -21,7 +21,7 @@ indicado, em um ambiente de producao controlado.
 - [ ] Usuario real cadastrado como membro consegue ler o workspace.
 - [ ] Remover o documento de membro impede a proxima escrita.
 - [ ] Sair limpa o estado visual e impede novas operacoes.
-- [ ] Proprietario ve a feature Acessos; editor nao ve nem lista seus dados.
+- [ ] Proprietario ve Acessos no menu; editor nao ve a acao nem lista seus dados.
 - [ ] Admin aprova e remove editor, mas nao cria admin ou proprietario.
 - [ ] Proprietario promove cargos e nao consegue remover a propria conta.
 - [ ] Aprovacao aparece ao vivo para a conta que aguardava acesso.
@@ -29,12 +29,14 @@ indicado, em um ambiente de producao controlado.
 
 ## Shell e menu de ferramentas
 
-- [x] Header exibe um unico botao de menu para as acoes globais.
+- [x] Header exibe o menu oficial para as acoes globais.
 - [x] Menu fecha ao escolher uma acao, clicar fora ou pressionar Escape.
 - [x] Notas abre seu modal original depois de ser movida para o menu.
 - [x] Painel cabe em desktop e em `390x844` sem overflow horizontal.
-- [ ] Membro autorizado ve criacao rapida e backup habilitado no menu.
-- [ ] Proprietario abre conta e Acessos sem regressao de permissao.
+- [x] Membro autorizado ve criacao rapida fixa a esquerda do menu e backup habilitado dentro dele.
+- [ ] Proprietario abre o modal Acessos; admin tambem abre e editor nao ve a acao.
+- [x] Modal Acessos abre e fecha sem overflow, restaura o foco e cabe em desktop e `390x844`.
+- [x] Modal Acessos fecha tambem pelo fundo e pela tecla Escape.
 
 ## Biblioteca
 

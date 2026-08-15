@@ -246,6 +246,7 @@
     stop();
     var repository = window.SenkoAccessRepository;
     if (!repository || !repository.isManager()) return;
+    setStatus('', '');
     var roleLabelElement = document.getElementById('senkoAccessRoleLabel');
     if (roleLabelElement) {
       roleLabelElement.textContent = repository.isOwner()
@@ -273,7 +274,6 @@
     element.addEventListener('click', handleClick);
     element.addEventListener('change', handleChange);
     switchTab('requests');
-    start();
   }
 
   window.SenkoAccess = {

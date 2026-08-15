@@ -125,10 +125,10 @@
         },
         {
           title: 'Menu de ferramentas',
-          badge: 'teste',
+          badge: 'oficial',
           terms: 'menu hamburguer ferramentas header botoes globais janela utilitarios',
           paragraphs: [
-            'O botao de menu no canto superior abre um painel com criacao rapida, notas, LayoutLab, guia, backup, conta e tema quando cada acao esta disponivel.',
+            'O botao de menu no canto superior abre um painel com notas, LayoutLab, guia, Acessos, backup, conta e tema quando cada acao esta disponivel.',
             'O menu nao recria as ferramentas: ele move os elementos que ja existem para preservar integracoes e permissoes.'
           ],
           bullets: [
@@ -136,9 +136,11 @@
             'Estilos: bloco senko-utility-menu em app/shell/styles/styles.css.',
             'Fecha ao escolher uma acao, clicar fora ou pressionar Escape.',
             'Acoes escondidas ou desabilitadas continuam respeitando o estado original.',
+            'Criacao rapida permanece fixa imediatamente a esquerda do menu.',
+            'Acessos abre como modal global somente para owner e admin.',
             'Status do Firebase e progresso de publicacao permanecem visiveis fora do painel.'
           ],
-          note: 'Este menu esta em teste de experiencia; remover o controlador devolve os botoes ao header sem alterar as ferramentas.'
+          note: 'O menu e parte oficial do shell; novas ferramentas globais devem preservar IDs, listeners e regras de permissao.'
         },
         {
           title: 'register.js',
@@ -462,7 +464,7 @@
             'O navegador nunca recebe credencial administrativa nem chave privada do GitHub; o backup usa o token individual de quem clicou.',
             'SenkoDataMode alterna entre firebase, static e unavailable sem misturar as regras internas das features.',
             'Falhas de cota, internet ou disponibilidade exibem uma faixa persistente no header e mudam a fonte para o ultimo backup somente leitura.',
-            'Uma conta autenticada sem acesso registra a propria solicitacao em workspaces/senkolib/accessRequests; proprietarios e admins podem listar pela feature Acessos.'
+            'Uma conta autenticada sem acesso registra a propria solicitacao em workspaces/senkolib/accessRequests; proprietarios e admins podem listar pelo modal Acessos do menu.'
           ]
         },
         {
@@ -529,9 +531,9 @@
           ],
           bullets: [
             'Firestore Rules libera conteudo para membros e repete as restricoes administrativas de cada cargo.',
-            'A feature Acessos altera members por transacoes protegidas; editores continuam bloqueados.',
+            'O modal Acessos altera members por transacoes protegidas; editores continuam bloqueados.',
             'Owner gerencia qualquer cargo; admin aprova e remove somente editores; editor nao convida pessoas.',
-            'A feature Acessos mostra solicitacoes, membros e atividade somente para owner/admin.',
+            'Acessos fica no menu global e mostra solicitacoes, membros e atividade somente para owner/admin.',
             'O primeiro owner e cadastrado por procedimento administrativo; os proximos cargos usam a interface.',
             'Nos emuladores, o primeiro usuario local e cadastrado automaticamente.'
           ]

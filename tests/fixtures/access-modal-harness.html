@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SenkoLib - teste do modal de acessos</title>
+  <link rel="stylesheet" href="../../app/shared/styles/senko-tokens.css">
+  <link rel="stylesheet" href="../../app/shared/styles/senko-components.css">
+  <link rel="stylesheet" href="../../app/shell/styles/styles.css">
+  <link rel="stylesheet" href="../../app/shell/styles/senko-quick-create.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <img src="../../app/shared/assets/senko.png" class="logo-img" alt="SenkoLib">
+        <span class="logo-text">Senko<strong>Lib</strong></span>
+      </div>
+      <nav class="senko-tab-bar" aria-label="Ferramentas do SenkoLib">
+        <button class="senko-tab-btn active" type="button">Biblioteca</button>
+        <button class="senko-tab-btn" type="button">Colecoes</button>
+      </nav>
+      <div class="header-actions">
+        <button class="senko-global-create-trigger" id="senkoGlobalCreateBtn" title="Criacao rapida" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"></path></svg>
+        </button>
+        <button class="theme-toggle" id="senkoTeamNotesBtn" title="Notas da equipe" type="button">N</button>
+        <button class="theme-toggle" id="senkoGuideBtn" title="Abrir guia do projeto" type="button">G</button>
+        <button class="theme-toggle" id="senkoGithubConfigBtn" title="Configurar GitHub" type="button">B</button>
+        <div id="ghDeployDot" hidden></div>
+        <button class="theme-toggle" id="themeToggleBtn" title="Tema escuro" type="button">T</button>
+      </div>
+    </div>
+  </header>
+
+  <main style="padding: 32px; color: var(--text)">
+    <h1 style="font-size: 24px; letter-spacing: 0">Harness do shell administrativo</h1>
+  </main>
+
+  <script>
+    window.SenkoFreshAssets = { url: function (url) { return url; } };
+    window.SenkoFirebase = {
+      getState: function () {
+        return {
+          status: 'ready',
+          user: { uid: 'owner-1', displayName: 'Proprietario de teste', email: 'owner@senkolib.test' },
+          member: { uid: 'owner-1', role: 'owner' }
+        };
+      },
+      getClientContext: function () {
+        return {
+          user: { uid: 'owner-1', displayName: 'Proprietario de teste', email: 'owner@senkolib.test' },
+          member: { uid: 'owner-1', role: 'owner' },
+          db: {},
+          firestore: {}
+        };
+      },
+      getWorkspacePath: function (path) { return 'workspaces/senkolib/' + path; },
+      listenCollection: function (path, options, callback) {
+        if (/accessRequests$/.test(path)) {
+          callback([{ uid: 'pending-1', email: 'nova@senkolib.test', displayName: 'Nova pessoa', status: 'pending', attemptCount: 2, lastAttemptAt: new Date() }]);
+        } else if (/members$/.test(path)) {
+          callback([
+            { uid: 'owner-1', email: 'owner@senkolib.test', displayName: 'Proprietario de teste', role: 'owner', joinedAt: new Date() },
+            { uid: 'editor-1', email: 'editor@senkolib.test', displayName: 'Editor de teste', role: 'editor', joinedAt: new Date() }
+          ]);
+        } else {
+          callback([{ action: 'approve', targetEmail: 'editor@senkolib.test', targetRole: 'editor', actorName: 'Proprietario de teste', createdAt: new Date() }]);
+        }
+        return function () {};
+      },
+      syncMemberRealtimeAccess: function () { return Promise.resolve(); },
+      onStateChange: function (callback) { callback(this.getState()); return function () {}; }
+    };
+  </script>
+  <script src="../../app/features/access/register.js"></script>
+  <script src="../../app/shell/scripts/senko-utility-menu.js"></script>
+</body>
+</html>

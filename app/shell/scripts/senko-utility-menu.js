@@ -5,10 +5,10 @@
   var observer;
 
   var actionLabels = {
-    senkoGlobalCreateBtn: 'Criacao rapida',
     senkoTeamNotesBtn: 'Notas da equipe',
     senkoForLayoutLab: 'Abrir LayoutLab',
     senkoGuideBtn: 'Guia do projeto',
+    senkoAccessBtn: 'Acessos',
     senkoGithubConfigBtn: 'Backup no GitHub',
     themeToggleBtn: 'Alternar tema'
   };
@@ -68,7 +68,8 @@
 
   function moveActions(headerActions) {
     Array.prototype.slice.call(headerActions.children).forEach(function (node) {
-      if (node === trigger || node === menu || node.id === 'ghDeployDot' ||
+      if (node === trigger || node === menu || node.id === 'senkoGlobalCreateBtn' ||
+          node.id === 'ghDeployDot' ||
           node.classList.contains('senko-data-mode-badge')) return;
       items.appendChild(node);
       ensureActionLabel(node);
@@ -125,6 +126,8 @@
     headerActions.appendChild(trigger);
     headerActions.appendChild(menu);
     moveActions(headerActions);
+    var quickCreate = document.getElementById('senkoGlobalCreateBtn');
+    if (quickCreate) headerActions.insertBefore(quickCreate, trigger);
     observeDynamicActions();
 
     trigger.addEventListener('click', toggleMenu);

@@ -121,6 +121,16 @@ Na Emulator UI:
 7. Rode os casos relacionados de `TEST_PLAN.md`.
 8. Confira `git diff --check` e `git status --short`.
 
+Para validar a integracao oficial entre header, menu e modal administrativo:
+
+```powershell
+npm run test:access-modal
+```
+
+O teste visual com um proprietario simulado fica em
+`tests/fixtures/access-modal-harness.html`. Ele nao acessa Firebase real nem
+altera membros; existe somente para conferir o shell em desktop e mobile.
+
 Para repetir o teste de integracao de grupos com os emuladores abertos:
 
 ```powershell

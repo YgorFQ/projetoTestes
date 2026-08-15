@@ -67,7 +67,7 @@ depende dessas Functions.
 | `app/features/biblioteca/data/static-repository.js` | Adaptador somente leitura da Biblioteca |
 | `app/features/colecoes/data/firebase-repository.js` | Adaptador Firebase de Colecoes e grupos |
 | `app/features/colecoes/data/static-repository.js` | Adaptador somente leitura de Colecoes e grupos |
-| `app/features/access/` | Solicitacoes, membros, cargos e atividade administrativa |
+| `app/features/access/` | Modal global de solicitacoes, membros, cargos e atividade administrativa |
 | `firestore.rules` | Autoridade de seguranca para leituras e escritas |
 | `database.rules.json` | Permissoes de presenca |
 | `storage.rules` | Bloqueio atual de uploads |
@@ -105,7 +105,9 @@ desfaz nem impede um save que ja ocorreu no Firestore.
    snapshot estatico e bloqueiam comandos de escrita.
 
 O cargo tambem e acompanhado em tempo real. Promover ou remover uma pessoa
-atualiza a disponibilidade da feature `Acessos` sem exigir novo login.
+atualiza a disponibilidade da ferramenta global `Acessos` sem exigir novo
+login. Ela aparece no menu para `owner` e `admin` e abre em modal, sem ocupar
+uma aba de conteudo.
 
 ## Cargos
 
@@ -278,8 +280,8 @@ a conexao cai. `presenceAccess/{workspace}/{uid} = true` autoriza o Realtime
 Database. `memberManagers/{workspace}/{uid}` guarda somente `owner` ou `admin`
 para autorizar a sincronizacao de `presenceAccess` pela tela administrativa.
 
-No emulador, uma Function local cria o primeiro acesso. Em producao Spark, a
-feature `Acessos` grava Firestore e Realtime Database ao aprovar, promover ou
+No emulador, uma Function local cria o primeiro acesso. Em producao Spark, o
+modal `Acessos` grava Firestore e Realtime Database ao aprovar, promover ou
 remover uma pessoa. As duas gravacoes nao sao uma transacao unica; se a segunda
 falhar, a tela mostra aviso e oferece **Sincronizar**.
 

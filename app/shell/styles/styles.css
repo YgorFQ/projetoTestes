@@ -161,18 +161,6 @@
   white-space: nowrap;
 }
 
-.senko-utility-menu-items #senkoGlobalCreateBtn {
-  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
-  background: var(--accent-bg);
-  color: var(--accent);
-}
-
-.senko-utility-menu-items #senkoGlobalCreateBtn:hover {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: #fff;
-}
-
 .search-wrap { position: relative; display: flex; align-items: center; }
 
 .senko-tab-bar {

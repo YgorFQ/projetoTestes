@@ -57,10 +57,10 @@ SenkoLib/
 |   |   |   `-- styles/                  - estilos exclusivos da feature
 |   |   |
 |   |   |-- access/
-|   |   |   |-- register.js              - registra a aba para owner/admin
+|   |   |   |-- register.js              - integra o modal global para owner/admin
 |   |   |   |-- data/firebase-repository.js - transacoes administrativas
 |   |   |   |-- scripts/access.js        - solicitacoes, membros e atividade
-|   |   |   `-- styles/access.css        - interface administrativa responsiva
+|   |   |   `-- styles/access.css        - modal administrativo responsivo
 |   |   |
 |   |   |-- imagens/
 |   |   |   |-- index.html               - entrada standalone para testar a feature isolada
@@ -119,11 +119,13 @@ SenkoLib/
 - Biblioteca e Colecoes possuem repositorios Firebase e estatico proprios; o shell nao acessa seus documentos.
 - Com Firebase ativado, o navegador usa transacoes do SDK Web e as regras validam cada escrita.
 - Realtime Database guarda somente presenca de editores; conteudo fica no Firestore.
-- A feature Acessos aparece somente para `owner` e `admin`; regras repetem as restricoes de cargo.
+- A ferramenta global Acessos aparece no menu somente para `owner` e `admin`,
+  abre em modal e repete as restricoes de cargo nas regras.
 - GitHub recebe snapshot tecnico e bundle publico somente quando um membro aciona o botao manual.
 - Sem uma sessao Firebase `ready`, o ultimo backup aparece em modo somente leitura.
 - Um Live Server simples suporta o modo publico; `file://` nao e requisito.
-- A criacao rapida e uma ferramenta oficial do shell e descobre opcoes por `registerCreateProvider`.
+- A criacao rapida e uma ferramenta oficial do shell, fica imediatamente a
+  esquerda do menu e descobre opcoes por `registerCreateProvider`.
 - O menu de ferramentas move os controles globais existentes para um painel;
   ele preserva IDs, listeners, permissao e estado de cada ferramenta.
 - Avisos de disponibilidade e progresso ficam fora do menu porque precisam

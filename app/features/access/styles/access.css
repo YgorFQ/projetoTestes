@@ -1,36 +1,100 @@
+body.senko-access-modal-open {
+  overflow: hidden;
+}
+
+.senko-access-overlay[hidden] {
+  display: none;
+}
+
+.senko-access-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(15, 18, 22, .68);
+  opacity: 0;
+  transition: opacity .16s ease;
+}
+
+.senko-access-overlay.is-open {
+  opacity: 1;
+}
+
 .senko-access-feature {
-  min-height: calc(100vh - 72px);
-  padding: 28px clamp(18px, 4vw, 56px) 56px;
+  display: flex;
+  width: min(1040px, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  min-height: min(620px, calc(100vh - 2rem));
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   color: var(--text);
-  background: var(--bg);
+  background: var(--bg2);
+  box-shadow: 0 24px 72px rgba(0, 0, 0, .3);
+  transform: translateY(8px);
+  transition: transform .16s ease;
+}
+
+.senko-access-overlay.is-open .senko-access-feature {
+  transform: translateY(0);
 }
 
 .senko-access-header {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 20px;
-  max-width: 1180px;
-  margin: 0 auto 24px;
+  padding: 20px 22px 16px;
+  border-bottom: 1px solid var(--border);
 }
 
 .senko-access-title h1 {
   margin: 0;
-  font-size: 28px;
+  font-size: 22px;
   letter-spacing: 0;
 }
 
 .senko-access-title span {
   display: block;
-  margin-top: 6px;
+  margin-top: 3px;
   color: var(--text2);
-  font-size: 13px;
+  font-size: 12px;
+}
+
+.senko-access-close {
+  display: inline-flex;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0;
+  color: var(--text2);
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.senko-access-close:hover {
+  color: var(--text);
+  background: var(--bg3);
+}
+
+.senko-access-close svg {
+  width: 18px;
+  height: 18px;
 }
 
 .senko-access-tabs {
-  display: inline-grid;
+  display: grid;
   grid-template-columns: repeat(3, minmax(112px, 1fr));
-  min-height: 40px;
+  min-height: 44px;
+  margin: 16px 22px 0;
   border: 1px solid var(--border);
   border-radius: 6px;
   overflow: hidden;
@@ -59,8 +123,10 @@
 }
 
 .senko-access-content {
-  max-width: 1180px;
-  margin: 0 auto;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  margin: 16px 22px 0;
   border-top: 1px solid var(--border);
 }
 
@@ -161,9 +227,8 @@
 }
 
 .senko-access-status {
-  min-height: 22px;
-  max-width: 1180px;
-  margin: 14px auto 0;
+  min-height: 39px;
+  padding: 10px 22px 12px;
   color: var(--text2);
   font-size: 12px;
 }
@@ -173,12 +238,30 @@
 .senko-access-status[data-type="error"] { color: #db4b4b; }
 
 @media (max-width: 760px) {
-  .senko-access-feature { padding: 18px 14px 40px; }
-  .senko-access-header { align-items: stretch; flex-direction: column; }
-  .senko-access-tabs { width: 100%; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .senko-access-tabs button { min-width: 0; padding: 0 6px; font-size: 11px; }
+  .senko-access-overlay {
+    align-items: stretch;
+    padding: .5rem;
+  }
+
+  .senko-access-feature {
+    width: 100%;
+    max-height: calc(100vh - 1rem);
+    min-height: 0;
+  }
+
+  .senko-access-header { padding: 16px 14px 12px; }
+  .senko-access-title h1 { font-size: 19px; }
+  .senko-access-tabs { margin: 12px 14px 0; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .senko-access-tabs button { min-width: 0; padding: 0 5px; font-size: 11px; }
+  .senko-access-content { margin: 12px 14px 0; }
   .senko-access-row { align-items: stretch; flex-direction: column; gap: 12px; }
   .senko-access-controls { justify-content: flex-start; flex-wrap: wrap; }
   .senko-access-controls select { flex: 1 1 130px; }
   .senko-access-event { align-items: flex-start; flex-direction: column; gap: 6px; }
+  .senko-access-status { padding-right: 14px; padding-left: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .senko-access-overlay,
+  .senko-access-feature { transition: none; }
 }
