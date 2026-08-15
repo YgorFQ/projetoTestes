@@ -50,11 +50,12 @@ marcado por tag Git.
 - [x] Regras Firestore para membros, schemas, versoes e exclusao.
 - [x] Teste integrado de cliente e regras.
 - [x] Botao global de backup no shell.
-- [x] Janela responsiva de owner, repositorio, branch e token.
+- [x] Janela responsiva com destino GitHub fixo do projeto e token individual.
 - [x] Snapshot consistente com tres tentativas por `dataVersion`.
 - [x] Commit atomico pela Git Data API sem `force`.
 - [x] Remocao no commit de arquivos obsoletos em `senkolib-data/`.
 - [x] Log de exportacao e metadados do ultimo commit no Firestore.
+- [x] Protecao contra `localStorage` antigo enviando backup para outro repositorio.
 - [x] Teste do exportador com API GitHub simulada.
 - [x] Importador de restauracao com `--dry-run` e `--force`.
 - [x] Teste automatizado de restauracao no Firestore Emulator.
@@ -118,9 +119,10 @@ nao possui warnings.
 
 ## Proximo passo recomendado
 
-1. Criar backup GitHub pelo botao apos os testes reais de edicao.
-2. Registrar o SHA desse backup em uma nova rodada de teste.
-3. Iniciar a rodada com segunda conta/perfil quando houver outro membro.
+1. Publicar a correcao do destino fixo do backup no GitHub Pages.
+2. Recarregar a pagina publica e criar um novo backup pelo botao.
+3. Confirmar que o commit aparece em `YgorFQ/projetoTestes`.
+4. Iniciar a rodada com segunda conta/perfil quando houver outro membro.
 
 ## Observacao sobre GitHub Pages
 
@@ -146,3 +148,4 @@ Adicione novas rodadas sem apagar as anteriores.
 | 2026-08-15 | GitHub Pages | 4812d098921a8f960fccba78eca5c36bbcf31065 | Parcial aprovado | Codigo do corte publicado e `firebase-config.js` servido com `enabled: true`; aguardando primeiro membro real para smoke test autenticado |
 | 2026-08-15 | Firebase real | NR6Zez...GfL2 | Aprovado | Primeiro membro real criado no Firestore e `presenceAccess` liberado no Realtime Database |
 | 2026-08-15 | GitHub Pages | c0cef9f | Aprovado | Conta autorizada entrou, Biblioteca carregou, tag em layout persistiu, edicao de layout salvou e Colecoes salvou no Firebase real |
+| 2026-08-15 | GitHub backup | alteracoes locais | Aprovado | Identificado backup enviado para repo errado por configuracao antiga do navegador; destino fixo do projeto passou a prevalecer sobre `localStorage`, com teste automatizado |

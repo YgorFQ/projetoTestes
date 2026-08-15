@@ -527,12 +527,14 @@
           ],
           bullets: [
             'Botao global: le o Firebase e cria um snapshot manual do workspace.',
+            'Destino oficial: owner, repositorio e branch vem de firebase-config.js.',
+            'localStorage antigo nao deve sobrescrever o destino oficial quando githubBackup esta configurado.',
             'Nao existe backup automatico, GitHub Actions ou agendamento de 30 minutos.',
             'Token recomendado: fine-grained, somente no repositorio e Contents read/write.',
             'GitHub App e chave privada nao fazem parte da arquitetura ativa.',
             'Formato exportado: JSON em senkolib-data/.',
-            'A restauracao administrativa existe; o ensaio com um commit real ainda bloqueia o corte de producao.',
-            'As chaves senkolib_github_config e senkolib_github_token sao compartilhadas com o modo legado para compatibilidade.'
+            'A restauracao administrativa existe e deve ser testada primeiro em workspace descartavel.',
+            'A chave senkolib_github_token guarda o token; senkolib_github_config fica apenas como fallback legado.'
           ]
         },
         {
@@ -557,9 +559,10 @@
             'Exportacao manual: qualquer membro que tambem tenha token com acesso ao repositorio pode usar o botao global.',
             'Nao existe exportacao automatica; a equipe e responsavel por acionar o backup.',
             'O token nunca entra no snapshot ou no Firestore.',
+            'A janela mostra o destino fixo do projeto; no fluxo Firebase a pessoa nao escolhe outro repo pelo navegador.',
             'O historico Git preserva snapshots anteriores mesmo quando um item e excluido.',
             'Se dataVersion mudar durante a leitura, o exportador descarta a tentativa e le novamente antes de criar o commit.',
-            'As integracoes Contents API por feature permanecem somente no modo legado ate a migracao terminar.'
+            'As integracoes Contents API por feature permanecem somente no modo legado historico.'
           ]
         },
         {
@@ -925,14 +928,14 @@
           badge: 'token',
           terms: 'github nao salva token owner repo permissao branch erro',
           paragraphs: [
-            'Falhas de GitHub normalmente estao ligadas a token, permissao, repo ou branch.'
+            'Falhas de GitHub normalmente estao ligadas a token, permissao, destino fixo do projeto ou branch.'
           ],
           bullets: [
-            'Verificar owner e repo.',
+            'Verificar owner, repo e branch em firebase-config.js.',
+            'Recarregar a pagina publicada para receber a versao que ignora localStorage antigo.',
             'Verificar se o token existe.',
             'Verificar se o token expirou.',
             'Verificar permissoes de escrita.',
-            'Verificar branch.',
             'Abrir console para ver a mensagem exata.'
           ]
         },
@@ -945,7 +948,7 @@
           ],
           bullets: [
             'Abrir o botao global de GitHub.',
-            'Informar owner, repo, branch e token.',
+            'Informar somente o token quando o destino fixo do projeto ja estiver configurado.',
             'No modo Firebase, confirmar se SenkoGithubBackup foi carregado antes de senko-firebase-ui.js.',
             'A operacao deve parar com erro claro, sem afetar saves no Firebase.'
           ]
@@ -960,7 +963,7 @@
           bullets: [
             'Preferir token fine-grained; nao compartilhar token classic entre a equipe.',
             'O fine-grained token precisa de Contents read/write somente no repositorio certo.',
-            'Conferir se owner e repo apontam para o projeto correto.',
+            'Conferir se firebase-config.js aponta para o projeto correto.',
             'Conferir se a branch existe.'
           ]
         },

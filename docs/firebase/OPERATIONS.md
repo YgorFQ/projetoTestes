@@ -2,17 +2,18 @@
 
 ## Estado atual
 
-O aplicativo usa Firebase somente em localhost. Regras, indices e importacao
-real ainda precisam de corte controlado. Consulte `MIGRATION_STATUS.md` antes
-de qualquer deploy.
+O aplicativo usa Firebase real no GitHub Pages e Firebase Emulator em
+localhost. Regras, indices, dados iniciais, primeiro membro real e smoke test
+de producao ja foram concluidos. Consulte `MIGRATION_STATUS.md` antes de
+alterar regras, importar dados ou publicar novo corte.
 
 ## Ambientes
 
 | Ambiente | Firebase | Dados | Finalidade |
 | --- | --- | --- | --- |
 | `127.0.0.1` / `localhost` | Emuladores | Descartaveis | Desenvolvimento e teste |
-| Projeto `senkolibtestes` | Servicos reais | Migracao controlada | Homologacao inicial |
-| Host publico atual | Firebase desativado | Arquivos legados | Aplicacao anterior ao corte |
+| Projeto `senkolibtestes` | Servicos reais | Conteudo principal | Producao atual |
+| GitHub Pages | Firebase real | Conteudo do Firestore | Aplicacao publica |
 
 Nao use o projeto real como substituto do emulador durante desenvolvimento.
 
@@ -170,31 +171,25 @@ operacao falhar depois da limpeza.
 
 ## Ativar o frontend em producao
 
-Hoje:
-
-```js
-enabled: isLocalhost,
-useEmulators: isLocalhost
-```
-
-No corte:
+Estado atual:
 
 ```js
 enabled: true,
 useEmulators: isLocalhost
 ```
 
-Essa mudanca so pode ocorrer depois de:
+Para rollback temporario do frontend, sem apagar dados do Firestore:
 
-- regras publicadas;
-- dados importados;
-- membros e presenca cadastrados;
-- dominio autorizado no Authentication;
-- backup real criado e restaurado em teste;
-- regressao com duas contas;
-- rollback pronto.
+```js
+enabled: isLocalhost,
+useEmulators: isLocalhost
+```
 
-## Ordem recomendada do corte
+Use esse rollback apenas quando for intencional congelar o Firebase no host
+publico. Se ja existirem saves reais no Firestore, voltar ao modo legado pode
+criar duas fontes divergentes.
+
+## Ordem historica do corte
 
 1. Congelar edicoes no modo legado.
 2. Gerar snapshot final.

@@ -34,15 +34,16 @@ afetado junto com o codigo.
 ## Estado resumido
 
 - Em localhost, Firebase e emuladores sao usados automaticamente.
-- Fora de localhost, o modo legado ainda permanece ativo.
+- No GitHub Pages, Firebase real e a fonte principal depois do corte.
 - Biblioteca e Colecoes ja possuem adaptadores Firebase.
 - Firestore guarda conteudo; Realtime Database guarda presenca.
 - Membros escrevem pelo SDK Web; Security Rules validam identidade, schema,
   versoes e limites no servidor.
 - O botao global cria backup manual com token GitHub individual. Nao existe
   agendamento, GitHub Actions ou Function de producao nesse fluxo.
-- Exportador e restauracao existem; ainda falta o ensaio ponta a ponta usando
-  um commit real antes do corte de producao.
+- Exportador e restauracao existem; backups novos devem ser verificados em
+  commits reais e restaurados primeiro em workspace descartavel quando forem
+  usados para recuperacao.
 
 Consulte [MIGRATION_STATUS.md](firebase/MIGRATION_STATUS.md) antes de continuar
 a implementacao.

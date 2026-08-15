@@ -1,8 +1,8 @@
 # Plano de testes Firebase
 
-Este plano e a definicao minima de qualidade antes do corte de producao. Cada
-linha deve ser testada no emulador e, quando indicado, em um ambiente de
-producao controlado.
+Este plano e a definicao minima de qualidade para regressao Firebase,
+manutencao e novos cortes. Cada linha deve ser testada no emulador e, quando
+indicado, em um ambiente de producao controlado.
 
 ## Preparacao
 

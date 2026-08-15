@@ -232,15 +232,21 @@ sequenceDiagram
 ```
 
 O token fica em `localStorage` do navegador que o configurou. Ele nunca entra
-no repositorio, Firebase ou snapshot. Use um fine-grained personal access token
+no repositorio, Firebase ou snapshot. O destino oficial do commit vem de
+`app/infrastructure/firebase/firebase-config.js`; configuracao antiga no
+`localStorage` nao pode mandar o snapshot para outro repositorio quando
+`githubBackup` esta definido. Use um fine-grained personal access token
 limitado a `YgorFQ/projetoTestes` e permissao `Contents: Read and write`.
 
-## Modo legado durante a transicao
+## Ambientes apos o corte
 
-Atualmente `firebase-config.js` ativa Firebase somente em localhost:
+Atualmente `firebase-config.js` deixa Firebase ativo em producao e separa
+somente o uso de emuladores:
 
-- `localhost` e `127.0.0.1`: Firebase e emuladores;
-- outros hosts: Firebase desligado e comportamento legado ainda disponivel.
+- `localhost` e `127.0.0.1`: Firebase ativo usando emuladores;
+- GitHub Pages e outros hosts autorizados: Firebase ativo no projeto real;
+- modo legado fica apenas como fallback historico de codigo, nao como fonte
+  principal de producao.
 
-Antes do corte real, publique regras e dados, cadastre membros e altere a
-ativacao de producao. Consulte `MIGRATION_STATUS.md` e `OPERATIONS.md`.
+Qualquer novo ambiente publico precisa ser adicionado aos dominios autorizados
+do Firebase Authentication antes do login funcionar.

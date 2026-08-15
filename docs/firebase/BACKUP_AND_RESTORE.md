@@ -10,9 +10,8 @@ O backup atual e exclusivamente manual. Nao existe GitHub Actions, agendamento
 de 30 minutos nem Cloud Function de producao.
 
 Importante: o commit de backup nao alimenta a tela publica do GitHub Pages. A
-pagina usa Firebase somente depois do corte de producao; antes disso ela segue
-carregando os arquivos legados da aplicacao. `senkolib-data/` e uma copia para
-restauracao, auditoria e emergencia.
+pagina publica le o Firestore depois do corte de producao. `senkolib-data/` e
+uma copia para restauracao, auditoria e emergencia.
 
 ## Quem pode fazer backup
 
@@ -29,7 +28,7 @@ nao concede acesso ao Firebase.
 O botao com o simbolo do GitHub fica no topo do shell. Ao clicar:
 
 1. abre a janela **Backup no GitHub**;
-2. mostra owner, repositorio e branch configurados;
+2. mostra owner, repositorio e branch configurados pelo projeto;
 3. solicita o token pessoal daquele navegador;
 4. le um snapshot consistente do Firestore;
 5. envia os arquivos alterados juntos em uma tree pela Git Data API;
@@ -69,13 +68,18 @@ No SenkoLib:
 
 1. Entre com a conta Google autorizada.
 2. Clique no botao GitHub do topo.
-3. Confira `YgorFQ`, `projetoTestes` e `main`.
+3. Confira o destino fixo `YgorFQ`, `projetoTestes` e `main`.
 4. Cole o token em **Token pessoal**.
 5. Clique em **Fazer backup**.
 6. Aguarde a mensagem `Backup salvo no GitHub`.
 
-Owner, repositorio, branch e token ficam em `localStorage` somente naquele
-perfil de navegador. Limpar os dados do site exige configurar novamente.
+O destino oficial do backup vem de
+`app/infrastructure/firebase/firebase-config.js`. Quando esse destino existe,
+valores antigos em `localStorage` nao podem sobrescrever owner, repositorio ou
+branch. O `localStorage` guarda o token pessoal daquele navegador e mantem a
+configuracao de destino apenas como fallback para ambientes antigos ou testes
+sem `githubBackup` configurado. Limpar os dados do site exige colar o token de
+novo.
 
 ## Seguranca do token
 
@@ -186,8 +190,9 @@ No Firestore, `workspaces/senkolib/exports/{id}` deve ficar com
 `status: failed` e uma mensagem curta.
 
 Se o commit aparecer no GitHub, mas o GitHub Pages nao mostrar um layout novo,
-isso nao indica falha do backup. Confira `app/infrastructure/firebase/firebase-config.js`:
-com `enabled: isLocalhost`, a pagina publica ainda esta no modo legado.
+isso nao indica falha do backup. Depois do corte, a pagina publica le o
+Firestore; `senkolib-data/` e somente uma copia externa para restauracao,
+auditoria e emergencia.
 
 ## Erros comuns do backup
 
@@ -214,8 +219,16 @@ rede e a disponibilidade do GitHub antes de tentar novamente.
 
 ### `GitHub recusou o backup (404)`
 
-Owner, repositorio ou branch esta incorreto. Um repositorio privado tambem
-pode retornar 404 quando o token nao possui acesso.
+O destino fixo em `firebase-config.js` ou a branch esta incorreto. Um
+repositorio privado tambem pode retornar 404 quando o token nao possui acesso.
+
+### Backup apareceu em outro repositorio
+
+Isso pode acontecer em uma versao antiga da pagina que ainda aceitava
+`senkolib_github_config` salvo no navegador como prioridade. Na arquitetura
+atual, o projeto tem prioridade sobre `localStorage`. Recarregue a pagina
+depois de publicar a correcao e confirme que a janela mostra
+`YgorFQ/projetoTestes/main` como destino fixo.
 
 ### Erro ao atualizar a referencia
 

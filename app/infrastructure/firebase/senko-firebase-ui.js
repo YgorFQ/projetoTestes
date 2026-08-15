@@ -122,6 +122,7 @@
         '      <label>Repositorio<input name="repo" autocomplete="off" required></label>' +
         '    </div>' +
         '    <label>Branch<input name="branch" autocomplete="off" required></label>' +
+        '    <p class="senko-github-backup-note" hidden>Destino fixo do projeto. O token continua sendo individual.</p>' +
         '    <label>Token pessoal<input name="token" type="password" autocomplete="off" required></label>' +
         '    <p class="senko-github-backup-status" aria-live="polite"></p>' +
         '    <footer>' +
@@ -142,6 +143,13 @@
       form.elements.repo.value = defaults.repo || '';
       form.elements.branch.value = defaults.branch || 'main';
       form.elements.token.value = api.getToken();
+
+      if (typeof api.isDestinationFixed === 'function' && api.isDestinationFixed()) {
+        form.elements.owner.readOnly = true;
+        form.elements.repo.readOnly = true;
+        form.elements.branch.readOnly = true;
+        overlay.querySelector('.senko-github-backup-note').hidden = false;
+      }
 
       function close(result) {
         if (closed) return;

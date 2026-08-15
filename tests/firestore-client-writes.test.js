@@ -115,8 +115,33 @@ async function testGithubBackup(memberDb, writes) {
   };
 
   try {
+    global.localStorage.setItem('senkolib_github_config', JSON.stringify({
+      OWNER: 'wrong-owner',
+      REPO: 'wrong-repo',
+      BRANCH: 'wrong-branch'
+    }));
     delete require.cache[require.resolve('../app/infrastructure/firebase/senko-github-backup.js')];
     require('../app/infrastructure/firebase/senko-github-backup.js');
+    assert.deepEqual(global.window.SenkoGithubBackup.getDefaults(), {
+      owner: 'example',
+      repo: 'repo',
+      branch: 'main'
+    });
+    assert.equal(global.window.SenkoGithubBackup.isDestinationFixed(), true);
+    assert.deepEqual(
+      global.window.SenkoGithubBackup.saveCredentials({
+        owner: 'wrong-owner',
+        repo: 'wrong-repo',
+        branch: 'wrong-branch',
+        token: 'token-de-teste'
+      }),
+      {
+        owner: 'example',
+        repo: 'repo',
+        branch: 'main',
+        token: 'token-de-teste'
+      }
+    );
     const result = await global.window.SenkoGithubBackup.run({
       credentials: {
         owner: 'example',

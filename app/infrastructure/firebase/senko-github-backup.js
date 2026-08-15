@@ -34,13 +34,33 @@
     }
   }
 
-  function configuredDefaults() {
+  function configuredDestination() {
     var configured = (window.SenkoFirebaseConfig || {}).githubBackup || {};
-    var stored = readStoredConfig();
     return {
-      owner: stored.owner || stored.OWNER || configured.owner || '',
-      repo: stored.repo || stored.REPO || configured.repo || '',
-      branch: stored.branch || stored.BRANCH || configured.branch || 'main'
+      owner: String(configured.owner || configured.OWNER || '').trim(),
+      repo: String(configured.repo || configured.REPO || '').trim(),
+      branch: String(configured.branch || configured.BRANCH || '').trim()
+    };
+  }
+
+  function hasFixedDestination() {
+    var configured = configuredDestination();
+    return Boolean(configured.owner && configured.repo);
+  }
+
+  function configuredDefaults() {
+    var configured = configuredDestination();
+    var stored = readStoredConfig();
+
+    /*
+     * Em producao o destino do backup pertence ao projeto, nao ao navegador.
+     * Configuracoes antigas no localStorage continuam servindo apenas como
+     * fallback para ambientes sem githubBackup em firebase-config.js.
+     */
+    return {
+      owner: configured.owner || stored.owner || stored.OWNER || '',
+      repo: configured.repo || stored.repo || stored.REPO || '',
+      branch: configured.branch || stored.branch || stored.BRANCH || 'main'
     };
   }
 
@@ -53,10 +73,12 @@
   }
 
   function saveCredentials(values) {
+    var fixed = configuredDestination();
+    var useFixedDestination = Boolean(fixed.owner && fixed.repo);
     var credentials = {
-      owner: cleanSegment(values.owner, 'Owner'),
-      repo: cleanSegment(values.repo, 'Repositorio'),
-      branch: cleanBranch(values.branch)
+      owner: cleanSegment(useFixedDestination ? fixed.owner : values.owner, 'Owner'),
+      repo: cleanSegment(useFixedDestination ? fixed.repo : values.repo, 'Repositorio'),
+      branch: cleanBranch(useFixedDestination && fixed.branch ? fixed.branch : values.branch)
     };
     var token = String(values.token || '').trim();
     if (!token) {
@@ -534,6 +556,7 @@
     clearToken: clearToken,
     isConfigured: function () { return Boolean(getCredentials()); },
     isRunning: function () { return isRunning; },
+    isDestinationFixed: hasFixedDestination,
     run: run
   };
 })();
