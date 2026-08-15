@@ -79,8 +79,8 @@ O corte Firebase original continua marcado por tag Git.
 - [ ] Regressao visual de todos os layouts e variacoes.
 - [ ] Regressao manual de grupos, colecoes e layouts internos.
 - [ ] Backup real contendo os tres arquivos publicos gerados.
-- [ ] GitHub Pages anonimo exibindo o ultimo backup em modo somente leitura.
-- [ ] Live Server com Firebase indisponivel exibindo todas as contagens.
+- [x] GitHub Pages anonimo exibindo o ultimo backup em modo somente leitura.
+- [x] Live Server com Firebase indisponivel exibindo todas as contagens.
 - [ ] Troca anonimo -> membro e membro -> anonimo sem recarregar a pagina.
 
 ## Dados atuais da migracao
@@ -164,3 +164,4 @@ Adicione novas rodadas sem apagar as anteriores.
 | 2026-08-15 | GitHub Pages | c0cef9f | Aprovado | Conta autorizada entrou, Biblioteca carregou, tag em layout persistiu, edicao de layout salvou e Colecoes salvou no Firebase real |
 | 2026-08-15 | GitHub backup | alteracoes locais | Aprovado | Identificado backup enviado para repo errado por configuracao antiga do navegador; destino fixo do projeto passou a prevalecer sobre `localStorage`, com teste automatizado |
 | 2026-08-15 | Live Server publico | alteracoes locais | Aprovado | Sem login: 34 layouts, 11 variacoes, 5 colecoes, 48 layouts internos e 5 grupos pelo bundle; escrita bloqueada, copia e preview mantidos; desktop e 390x844 sem overflow |
+| 2026-08-15 | GitHub Pages publico | 0f64f44 | Aprovado | Pagina anonima exibiu selo Somente leitura, 34 layouts e 5 colecoes; login disponivel e controles de criacao, edicao e backup bloqueados |
