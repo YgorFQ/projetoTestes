@@ -9,9 +9,10 @@ SenkoLib continuam no Firebase normalmente.
 O backup atual e exclusivamente manual. Nao existe GitHub Actions, agendamento
 de 30 minutos nem Cloud Function de producao.
 
-Importante: o commit de backup nao alimenta a tela publica do GitHub Pages. A
-pagina publica le o Firestore depois do corte de producao. `senkolib-data/` e
-uma copia para restauracao, auditoria e emergencia.
+O mesmo commit possui duas representacoes. `senkolib-data/` e o snapshot
+tecnico completo para restauracao e auditoria. `app/infrastructure/static-backup/`
+e a ultima versao publica usada pelo aplicativo quando Firebase nao esta
+disponivel ou a pessoa nao entrou.
 
 ## Quem pode fazer backup
 
@@ -31,9 +32,10 @@ O botao com o simbolo do GitHub fica no topo do shell. Ao clicar:
 2. mostra owner, repositorio e branch configurados pelo projeto;
 3. solicita o token pessoal daquele navegador;
 4. le um snapshot consistente do Firestore;
-5. envia os arquivos alterados juntos em uma tree pela Git Data API;
-6. cria um commit e atualiza a branch sem `force`;
-7. grava o SHA no workspace e conclui um documento em `exports`.
+5. gera os arquivos publicos somente com a versao atual;
+6. envia os arquivos alterados juntos em uma tree pela Git Data API;
+7. cria um commit e atualiza a branch sem `force`;
+8. grava o SHA no workspace e conclui um documento em `exports`.
 
 O commit e atomico: a branch recebe todos os arquivos juntos ou nao recebe
 nenhum. Uma falha nunca deixa metade do snapshot no commit final.
@@ -157,6 +159,29 @@ Nao sao exportados:
 - token GitHub ou qualquer outro segredo;
 - documento raiz completo do workspace.
 
+O bundle publico gerado no mesmo commit fica em:
+
+```text
+app/infrastructure/static-backup/
+|-- manifest.js
+|-- biblioteca.js
+`-- colecoes.js
+```
+
+Esses tres arquivos sao dados gerados. Nao devem ser editados manualmente.
+Eles contem somente a versao atual de layouts, variacoes, colecoes, layouts
+internos e grupos. Nao incluem documentos de revisao, autoria, membros,
+e-mails, presenca, tokens ou logs. O HTML e o CSS ficam publicos por decisao
+de produto.
+
+O gerador compartilhado fica em
+`app/infrastructure/static-backup/senko-static-backup-builder.js`. Para
+reconstruir o bundle a partir de `senkolib-data/` sem acessar Firebase:
+
+```powershell
+npm run backup:build-static
+```
+
 ## Consistencia do snapshot
 
 O Firestore nao oferece uma transacao de leitura para todas as subcolecoes do
@@ -184,15 +209,20 @@ regra e validada em `firestore.rules`.
 6. Confira uma amostra de grupo, layout, variacao, colecao e layout interno.
 7. Confirme que HTML e CSS estao completos.
 8. Confirme que nenhum token ou documento `members` apareceu.
+9. Abra o aplicativo sem login e confira o selo **Somente leitura**.
+10. Confira as mesmas contagens em Biblioteca e Colecoes.
 
 No Firestore, `workspaces/senkolib/exports/{id}` deve ficar com
 `status: completed`, `commitSha`, `commitUrl` e `fileCount`. Uma falha fica com
 `status: failed` e uma mensagem curta.
 
-Se o commit aparecer no GitHub, mas o GitHub Pages nao mostrar um layout novo,
-isso nao indica falha do backup. Depois do corte, a pagina publica le o
-Firestore; `senkolib-data/` e somente uma copia externa para restauracao,
-auditoria e emergencia.
+O membro autenticado ve o Firestore ao vivo. Uma pessoa sem login ve o bundle
+do ultimo backup, portanto uma mudanca nova so aparece no modo publico depois
+de outro backup e da publicacao do commit no GitHub Pages.
+
+Para testar fora do Firebase, sirva a raiz do repositorio com Live Server ou
+outro servidor HTTP estatico. Abrir `index.html` diretamente por `file://` nao
+e um requisito desta arquitetura.
 
 ## Erros comuns do backup
 
@@ -319,12 +349,15 @@ Com o Firestore Emulator aberto:
 
 ```powershell
 $env:FIRESTORE_EMULATOR_HOST='127.0.0.1:8080'
+npm run test:static-backup
 node tests/firestore-client-writes.test.js
 npm --prefix functions run test:restore:emulator
 ```
 
-O primeiro teste usa uma API GitHub simulada e nao transmite token nem cria
-commit real. O segundo valida a restauracao por pasta e commit local.
+O teste estatico garante que somente o estado atual e publicado e que dados
+de membros e revisoes antigas ficam fora. O teste do cliente usa uma API
+GitHub simulada e nao transmite token nem cria commit real. O ultimo valida a
+restauracao por pasta e commit local.
 
 Antes da producao, ainda e obrigatorio criar um commit real pelo botao,
 restaura-lo em workspace descartavel e comparar as contagens.

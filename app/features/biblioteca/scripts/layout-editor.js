@@ -158,6 +158,38 @@
     });
   }
 
+  function isReadOnlyMode() {
+    return Boolean(window.SenkoDataMode && window.SenkoDataMode.isReadOnly());
+  }
+
+  function applyReadOnlyMode() {
+    var readOnly = isReadOnlyMode();
+    var nameInput = document.getElementById('layoutEditorNameInput');
+    var tagsInput = document.getElementById('layoutEditorTagsInput');
+    var codeEditor = document.getElementById('layoutEditorCodeEditor');
+    if (nameInput) nameInput.readOnly = readOnly;
+    if (tagsInput) tagsInput.readOnly = readOnly;
+    if (codeEditor) codeEditor.readOnly = readOnly;
+
+    var saveButton = document.getElementById('layoutEditorSaveBtn');
+    var deleteButton = document.getElementById('layoutEditorDeleteBtn');
+    if (saveButton) saveButton.hidden = readOnly;
+    if (deleteButton) deleteButton.hidden = readOnly;
+
+    if (readOnly) {
+      document.getElementById('layoutEditorEditorHeading').textContent =
+        editorState.mode === 'variant' ? 'Visualizar variacao' : 'Visualizar layout';
+      var dirtyLabel = document.getElementById('layoutEditorDirtyLabel');
+      if (dirtyLabel) dirtyLabel.textContent = 'Somente leitura';
+      var presence = document.getElementById('layoutEditorPresence');
+      if (presence) {
+        presence.hidden = false;
+        presence.textContent = 'Backup publico';
+        presence.classList.remove('has-others');
+      }
+    }
+  }
+
   function isDirty() {
     syncCurrentEditor();
     var nameInput = document.getElementById('layoutEditorNameInput');
@@ -210,6 +242,14 @@
 
   function startPresence() {
     stopPresence();
+    if (isReadOnlyMode()) {
+      var readOnlyPresence = document.getElementById('layoutEditorPresence');
+      if (readOnlyPresence) {
+        readOnlyPresence.hidden = false;
+        readOnlyPresence.textContent = 'Backup publico';
+      }
+      return;
+    }
     var repository = getFirebaseRepository();
     var layoutId = editorState.layout && editorState.layout.id;
     var variantId = editorState.mode === 'variant' && editorState.variant
@@ -672,12 +712,20 @@
   }
 
   function saveCurrent() {
+    if (isReadOnlyMode()) {
+      setStatus('Backup publico: somente leitura.');
+      return;
+    }
     syncCurrentEditor();
     if (editorState.mode === 'variant') saveVariant();
     else saveLayout();
   }
 
   function deleteCurrent() {
+    if (isReadOnlyMode()) {
+      setStatus('Backup publico: somente leitura.');
+      return;
+    }
     var data = getCurrentData();
     var firebaseRepository = getFirebaseRepository();
 
@@ -841,13 +889,14 @@
     state.currentEditVariant = null;
 
     applyModeChrome();
+    applyReadOnlyMode();
     document.getElementById('layoutEditorNameInput').value = layout.name || '';
     document.getElementById('layoutEditorTagsInput').value = (layout.tags || []).filter(Boolean).join(', ');
 
     setEditorTab('html', true);
     setPreviewWidth(1200);
     setMobileView('html');
-    setStatus('Sem alteracoes salvas');
+    setStatus(isReadOnlyMode() ? 'Backup publico: somente leitura' : 'Sem alteracoes salvas');
     refreshPreview();
 
     document.getElementById('layoutEditorLayoutOverlay').classList.remove('hidden');
@@ -877,13 +926,14 @@
     state.currentEdit = null;
 
     applyModeChrome();
+    applyReadOnlyMode();
     document.getElementById('layoutEditorNameInput').value = variant.name || '';
     document.getElementById('layoutEditorTagsInput').value = '';
 
     setEditorTab('html', true);
     setPreviewWidth(1200);
     setMobileView('html');
-    setStatus('Sem alteracoes salvas');
+    setStatus(isReadOnlyMode() ? 'Backup publico: somente leitura' : 'Sem alteracoes salvas');
     refreshPreview();
 
     document.getElementById('layoutEditorLayoutOverlay').classList.remove('hidden');

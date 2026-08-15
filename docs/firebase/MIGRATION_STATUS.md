@@ -4,11 +4,10 @@ Ultima revisao documental: **2026-08-15**.
 
 ## Resumo
 
-Estimativa atual: **100% da migracao concluida**. CRUD colaborativo, regras do
-plano Spark, backup manual pelo navegador, primeiro commit real de backup,
-restauracao em emulador, restauracao no Firestore real, primeiro membro real e
-smoke test no GitHub Pages com conta autorizada foram concluidos. O corte esta
-marcado por tag Git.
+Estimativa atual: **100% da migracao Firebase concluida**. O complemento de
+continuidade publica esta implementado localmente e em validacao: o ultimo
+backup pode alimentar Biblioteca e Colecoes sem login, em modo somente leitura.
+O corte Firebase original continua marcado por tag Git.
 
 ## Decisoes confirmadas
 
@@ -19,6 +18,11 @@ marcado por tag Git.
 - Nao havera backup automatico de 30 minutos.
 - Nao havera GitHub Actions para esse fluxo.
 - GitHub App e chave privada nao fazem parte da arquitetura ativa.
+- O ultimo backup sera a fonte publica somente leitura quando Firebase nao
+  estiver `ready`.
+- O fallback publico contem apenas a ultima versao, nunca revisoes antigas.
+- Abrir por Live Server e suportado; abrir por `file://` nao e requisito.
+- Arquivos legados serao removidos somente no ultimo processo da reforma.
 - Cada responsavel pelo backup usara seu proprio fine-grained token.
 - Digitar nao grava; somente **Salvar** envia conteudo.
 - Saves aparecem para outros computadores por listeners.
@@ -60,6 +64,11 @@ marcado por tag Git.
 - [x] Importador de restauracao com `--dry-run` e `--force`.
 - [x] Teste automatizado de restauracao no Firestore Emulator.
 - [x] Conferencia visual da janela de backup em desktop e mobile.
+- [x] Gerador compartilhado do bundle publico por feature.
+- [x] Repositorios estaticos independentes para Biblioteca e Colecoes.
+- [x] Estado global alternando Firebase e backup somente leitura.
+- [x] Snapshot publico inicial com as contagens do ultimo backup tecnico.
+- [x] Teste que exclui revisoes antigas, membros, e-mails e autoria do bundle.
 
 ## Em validacao
 
@@ -69,6 +78,10 @@ marcado por tag Git.
 - [ ] Saida de presenca ao fechar aba e perder conexao.
 - [ ] Regressao visual de todos os layouts e variacoes.
 - [ ] Regressao manual de grupos, colecoes e layouts internos.
+- [ ] Backup real contendo os tres arquivos publicos gerados.
+- [ ] GitHub Pages anonimo exibindo o ultimo backup em modo somente leitura.
+- [ ] Live Server com Firebase indisponivel exibindo todas as contagens.
+- [ ] Troca anonimo -> membro e membro -> anonimo sem recarregar a pagina.
 
 ## Dados atuais da migracao
 
@@ -119,17 +132,18 @@ nao possui warnings.
 
 ## Proximo passo recomendado
 
-1. Publicar a correcao do destino fixo do backup no GitHub Pages.
-2. Recarregar a pagina publica e criar um novo backup pelo botao.
-3. Confirmar que o commit aparece em `YgorFQ/projetoTestes`.
-4. Iniciar a rodada com segunda conta/perfil quando houver outro membro.
+1. Validar o modo somente leitura por Live Server com Firebase indisponivel.
+2. Criar um backup real para publicar o bundle gerado pelo novo exportador.
+3. Abrir o GitHub Pages anonimo e comparar as contagens.
+4. Entrar com membro autorizado e confirmar a troca para dados ao vivo.
+5. Manter os arquivos legados ate a regressao completa terminar.
 
 ## Observacao sobre GitHub Pages
 
-O commit de backup grava `senkolib-data/` para recuperacao externa. Ele nao e a
-fonte de leitura do aplicativo publico. A pagina publica so passa a mostrar os
-dados do Firebase depois que o codigo com `enabled: true` chega ao branch usado
-pelo GitHub Pages.
+O commit de backup grava `senkolib-data/` para recuperacao e tambem gera os
+arquivos publicos em `app/infrastructure/static-backup/`. Membros autorizados
+veem Firebase ao vivo. Pessoas sem login ou com Firebase indisponivel veem o
+ultimo backup, com comandos de escrita bloqueados.
 
 ## Registro de rodadas de teste
 
@@ -149,3 +163,4 @@ Adicione novas rodadas sem apagar as anteriores.
 | 2026-08-15 | Firebase real | NR6Zez...GfL2 | Aprovado | Primeiro membro real criado no Firestore e `presenceAccess` liberado no Realtime Database |
 | 2026-08-15 | GitHub Pages | c0cef9f | Aprovado | Conta autorizada entrou, Biblioteca carregou, tag em layout persistiu, edicao de layout salvou e Colecoes salvou no Firebase real |
 | 2026-08-15 | GitHub backup | alteracoes locais | Aprovado | Identificado backup enviado para repo errado por configuracao antiga do navegador; destino fixo do projeto passou a prevalecer sobre `localStorage`, com teste automatizado |
+| 2026-08-15 | Live Server publico | alteracoes locais | Aprovado | Sem login: 34 layouts, 11 variacoes, 5 colecoes, 48 layouts internos e 5 grupos pelo bundle; escrita bloqueada, copia e preview mantidos; desktop e 390x844 sem overflow |

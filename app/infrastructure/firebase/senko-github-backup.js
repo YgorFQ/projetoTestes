@@ -233,6 +233,13 @@
         dataVersion: Number(workspaceData.dataVersion || 0),
         files: dataFiles
       }, null, 2) + '\n';
+      if (!window.SenkoStaticBackupBuilder) {
+        throw appError(
+          'Gerador do backup publico nao foi carregado.',
+          'github-backup/static-builder-missing'
+        );
+      }
+      Object.assign(files, window.SenkoStaticBackupBuilder.buildPublicFiles(files));
       return files;
     });
   }

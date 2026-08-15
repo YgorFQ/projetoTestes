@@ -116,9 +116,19 @@ da implementacao administrativa anterior. A interface ainda deve ser conferida.
 - [ ] Save do Firebase continua funcionando quando GitHub falha.
 - [ ] Falha cria documento `exports/{id}` com estado `failed`.
 - [ ] Restauracao em workspace vazio foi executada e comparada com a origem.
+- [ ] Commit atualiza `manifest.js`, `biblioteca.js` e `colecoes.js` juntos.
+- [ ] Bundle publico contem a ultima versao, sem documentos de revisao antiga.
+- [ ] Bundle publico nao contem membros, e-mails, tokens, presenca ou autoria.
+- [ ] Sem login, Biblioteca e Colecoes usam o bundle em modo somente leitura.
+- [ ] Live Server mostra preview e permite copiar codigo sem acessar Firebase.
+- [ ] Criacao, edicao, exclusao e backup ficam indisponiveis no modo publico.
+- [ ] Login autorizado troca o bundle pelos listeners Firebase sem recarregar.
+- [ ] Logout volta ao ultimo bundle publico e encerra listeners das features.
 
-`tests/firestore-client-writes.test.js` cobre snapshot, tree, remocao obsoleta,
-commit e log usando API GitHub simulada. `test:restore:emulator` cobre modelo
+`tests/static-backup-builder.test.js` cobre o formato publico e a exclusao de
+revisoes e dados privados. `tests/firestore-client-writes.test.js` cobre
+snapshot, tree, remocao obsoleta, commit e log usando API GitHub simulada.
+`test:restore:emulator` cobre modelo
 completo, protecao contra sobrescrita e preservacao de membros. O item final
 exige um commit real criado pelo botao e verificacao visual da restauracao.
 

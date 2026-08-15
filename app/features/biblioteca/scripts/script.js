@@ -1411,6 +1411,7 @@ bibliotecaApi.isReady = function isBibliotecaReady() {
  * openAddModal() ou acessa o estado interno diretamente.
  */
 bibliotecaApi.openCreateLayout = function openCreateLayoutFromProvider() {
+  if (window.SenkoDataMode && window.SenkoDataMode.isReadOnly()) return false;
   openAddModal();
   return true;
 };
@@ -1432,6 +1433,7 @@ bibliotecaApi.listLayoutsForCreation = function listLayoutsForCreation() {
 };
 
 bibliotecaApi.openCreateVariantForLayout = function openCreateVariantForLayout(layoutId) {
+  if (window.SenkoDataMode && window.SenkoDataMode.isReadOnly()) return false;
   var layout = SenkoLib.getAll().find(function (item) {
     return item.id === layoutId;
   });

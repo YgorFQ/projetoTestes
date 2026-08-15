@@ -435,6 +435,7 @@ colFeatureApi.isReady = function isColecoesReady() {
  * próprios modais. O shell recebe apenas estes métodos por meio do provider.
  */
 colFeatureApi.openCreateCollection = function openCreateCollectionFromProvider() {
+  if (window.SenkoDataMode && window.SenkoDataMode.isReadOnly()) return false;
   if (typeof colOpenCreateModal !== 'function') return false;
   colOpenCreateModal();
   return true;
@@ -467,6 +468,7 @@ colFeatureApi.listCollectionsForCreation = function listCollectionsForCreation()
 };
 
 colFeatureApi.openCreateLayoutForCollection = function openCreateLayoutForCollectionFromProvider(slug) {
+  if (window.SenkoDataMode && window.SenkoDataMode.isReadOnly()) return Promise.resolve(false);
   if (typeof ColLib === 'undefined' || typeof colOpenAddLayoutModal !== 'function') return Promise.resolve(false);
 
   var collection = ColLib.getBySlug(slug);

@@ -77,6 +77,50 @@
   display: none;
 }
 
+.senko-data-mode-badge {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  gap: .4rem;
+  padding: 0 .65rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--accent) 9%, var(--bg2));
+  color: var(--text2);
+  font-size: .74rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.senko-data-mode-badge[hidden] {
+  display: none;
+}
+
+.senko-data-mode-badge svg {
+  width: 15px;
+  height: 15px;
+  color: var(--accent);
+}
+
+.senko-readonly #senkoGlobalCreateBtn,
+.senko-readonly #openAddModal,
+.senko-readonly #colOpenCreateBtn,
+.senko-readonly .copy-base-edit-btn,
+.senko-readonly .variant-add-card,
+.senko-readonly .col-layout-add-card,
+.senko-readonly .col-groups-manage-btn,
+.senko-readonly .col-group-new-btn,
+.senko-readonly .btn-edit-icon,
+.senko-readonly #layoutEditorSaveBtn,
+.senko-readonly #layoutEditorDeleteBtn,
+.senko-readonly #colEditLayoutDelAnchor,
+.senko-readonly #colEditLayoutGhAnchor,
+.senko-readonly #colEditDeleteAnchor,
+.senko-readonly #colEditGhAnchor,
+.senko-readonly #colManageGroupsNew {
+  display: none !important;
+}
+
 .senko-account-menu {
   position: fixed;
   z-index: 10001;
@@ -301,6 +345,16 @@
 }
 
 @media (max-width: 520px) {
+  .senko-data-mode-badge span {
+    display: none;
+  }
+
+  .senko-data-mode-badge {
+    width: 34px;
+    justify-content: center;
+    padding: 0;
+  }
+
   .senko-github-backup-grid {
     grid-template-columns: 1fr;
   }

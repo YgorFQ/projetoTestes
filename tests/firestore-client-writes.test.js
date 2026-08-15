@@ -80,6 +80,9 @@ async function testGithubBackup(memberDb, writes) {
   global.window.SenkoFirebaseConfig = {
     githubBackup: { owner: 'example', repo: 'repo', branch: 'main' }
   };
+  global.window.SenkoStaticBackupBuilder = require(
+    '../app/infrastructure/static-backup/senko-static-backup-builder.js'
+  );
 
   global.fetch = async (url, options = {}) => {
     const method = options.method || 'GET';
@@ -153,7 +156,7 @@ async function testGithubBackup(memberDb, writes) {
 
     assert.equal(result.commitSha, 'commit-sha');
     assert.equal(result.dataVersion, 10);
-    assert.equal(result.fileCount, 2);
+    assert.equal(result.fileCount, 5);
 
     const treeRequest = requests.find((request) =>
       request.method === 'POST' && request.url.endsWith('/git/trees')
@@ -166,6 +169,18 @@ async function testGithubBackup(memberDb, writes) {
     ));
     assert.ok(treeBody.tree.some((entry) =>
       entry.path === 'senkolib-data/manifest.json' && typeof entry.content === 'string'
+    ));
+    assert.ok(treeBody.tree.some((entry) =>
+      entry.path === 'app/infrastructure/static-backup/manifest.js' &&
+      entry.content.includes('dataVersion')
+    ));
+    assert.ok(treeBody.tree.some((entry) =>
+      entry.path === 'app/infrastructure/static-backup/biblioteca.js' &&
+      typeof entry.content === 'string'
+    ));
+    assert.ok(treeBody.tree.some((entry) =>
+      entry.path === 'app/infrastructure/static-backup/colecoes.js' &&
+      entry.content.includes('Grupo do backup')
     ));
     assert.ok(treeBody.tree.some((entry) =>
       entry.path === 'senkolib-data/arquivo-antigo.json' && entry.sha === null

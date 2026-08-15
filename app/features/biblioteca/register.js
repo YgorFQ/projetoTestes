@@ -22,6 +22,7 @@
   var firebaseUnsubscribers = [];
   var firebaseVariantUnsubscribe;
   var firebaseVariantLayoutSignature = '';
+  var dataModeUnsubscribe;
 
   function usesFirebaseData() {
     return Boolean(
@@ -29,6 +30,14 @@
       window.SenkoFirebase.isEnabled &&
       window.SenkoFirebase.isEnabled()
     );
+  }
+
+  function loadStaticSnapshot() {
+    var repository = window.SenkoBibliotecaStatic;
+    if (!repository || !repository.isAvailable() || !window.SenkoLib) return false;
+    SenkoLib.replaceLayouts(repository.getLayouts());
+    SenkoLib.replaceVariants(repository.getVariants());
+    return true;
   }
 
   function featureUrl(path) {
@@ -196,9 +205,11 @@
   }
 
   function startFirebaseSync() {
-    if (firebaseSyncPromise || !usesFirebaseData()) return firebaseSyncPromise;
+    if (firebaseSyncPromise || !usesFirebaseData() || !window.SenkoFirebase.isReady()) {
+      return firebaseSyncPromise;
+    }
 
-    firebaseSyncPromise = window.SenkoFirebase.whenAuthorized().then(function () {
+    firebaseSyncPromise = Promise.resolve().then(function () {
       var repository = window.SenkoBibliotecaFirebase;
       if (!repository || !window.SenkoLib) {
         throw new Error('Repositorio Firebase da Biblioteca indisponivel.');
@@ -246,6 +257,31 @@
     return firebaseSyncPromise;
   }
 
+  function stopFirebaseSync() {
+    firebaseUnsubscribers.splice(0).forEach(function (unsubscribe) {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    });
+    if (typeof firebaseVariantUnsubscribe === 'function') firebaseVariantUnsubscribe();
+    firebaseVariantUnsubscribe = null;
+    firebaseVariantLayoutSignature = '';
+    firebaseSyncPromise = null;
+  }
+
+  function bindDataMode() {
+    if (dataModeUnsubscribe || !window.SenkoDataMode) return;
+    dataModeUnsubscribe = window.SenkoDataMode.onChange(function (dataState) {
+      if (!window.SenkoLib) return;
+      if (dataState.mode === 'firebase') {
+        startFirebaseSync();
+        return;
+      }
+      stopFirebaseSync();
+      if (loadStaticSnapshot() && window.SenkoBiblioteca) {
+        window.SenkoBiblioteca.render(true);
+      }
+    });
+  }
+
   async function loadFeature() {
     if (loadPromise) return loadPromise;
 
@@ -258,14 +294,16 @@
         loadScript('view.js?v=20260613-fast-load'),
         loadScript('scripts/senkolib-core.js?v=20260613-fast-load'),
         loadScript('data/firebase-repository.js?v=20260730-parent-listeners'),
+        loadScript('data/static-repository.js?v=20260815-public-backup'),
         loadManifest()
       ]);
-      var manifest = initialResources[3];
+      var manifest = initialResources[4];
       var content = window.SenkoBiblioteca.createView();
       panel.replaceChildren(content);
 
       var layouts = getManifestFiles(manifest.layouts);
-      var layoutDataReady = usesFirebaseData()
+      var staticLoaded = loadStaticSnapshot();
+      var layoutDataReady = usesFirebaseData() || staticLoaded
         ? Promise.resolve()
         : Promise.all(layouts.map(function (path) {
             return loadScript('data/' + path).catch(function (error) {
@@ -292,8 +330,9 @@
       if (window.SenkoBibliotecaCopyBaseEditor) {
         window.SenkoBibliotecaCopyBaseEditor.init();
       }
-      if (usesFirebaseData()) startFirebaseSync();
-      else loadSecondaryModules(manifest);
+      bindDataMode();
+      if (window.SenkoDataMode && window.SenkoDataMode.isFirebase()) startFirebaseSync();
+      if (!usesFirebaseData() && !staticLoaded) loadSecondaryModules(manifest);
 
       return panel;
     })().catch(function (error) {
@@ -325,6 +364,11 @@
   }
 
   function prepareBibliotecaCreation() {
+    if (window.SenkoDataMode && window.SenkoDataMode.isReadOnly()) {
+      return Promise.reject(new Error(
+        'O backup publico e somente leitura. Entre com uma conta autorizada para criar.'
+      ));
+    }
     /*
      * A criação rápida pode ser aberta a partir de qualquer aba. Antes de
      * entregar a API pública, a Biblioteca se torna ativa e conclui seu

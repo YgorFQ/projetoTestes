@@ -41,6 +41,22 @@
     return styleBlock + '\n' + nextHtml;
   }
 
+  function isReadOnlyMode() {
+    return Boolean(window.SenkoDataMode && window.SenkoDataMode.isReadOnly());
+  }
+
+  function applyReadOnlyMode() {
+    var readOnly = isReadOnlyMode();
+    var nameInput = document.getElementById('colEditLayoutName');
+    var codeEditor = document.getElementById('colEditLayoutCode');
+    if (nameInput) nameInput.readOnly = readOnly;
+    if (codeEditor) codeEditor.readOnly = readOnly;
+    var heading = document.getElementById('colEditLayoutHeading');
+    if (heading) heading.textContent = readOnly ? 'Visualizar layout completo' : 'Editar layout completo';
+    var dirtyLabel = document.getElementById('colEditLayoutDirtyLabel');
+    if (dirtyLabel && readOnly) dirtyLabel.textContent = 'Somente leitura';
+  }
+
   function ensure() {
     var existing = document.getElementById('colEditLayoutOverlay');
     if (existing) return existing;
@@ -158,6 +174,11 @@
   }
 
   function updateDirtyState() {
+    if (isReadOnlyMode()) {
+      var readOnlyDirtyLabel = document.getElementById('colEditLayoutDirtyLabel');
+      if (readOnlyDirtyLabel) readOnlyDirtyLabel.textContent = 'Somente leitura';
+      return;
+    }
     var dirty = isDirty();
     var dirtyLabel = document.getElementById('colEditLayoutDirtyLabel');
     var statusLabel = document.getElementById('colEditLayoutStatusLabel');
@@ -325,6 +346,14 @@
 
   function startPresence() {
     stopPresence();
+    if (isReadOnlyMode()) {
+      var readOnlyPresence = document.getElementById('colEditLayoutPresence');
+      if (readOnlyPresence) {
+        readOnlyPresence.hidden = false;
+        readOnlyPresence.textContent = 'Backup publico';
+      }
+      return;
+    }
     var repository = window.SenkoColecoesFirebase;
     var presenceElement = document.getElementById('colEditLayoutPresence');
     if (!repository || !state.collection || !state.layout ||
@@ -384,10 +413,12 @@
     if (typeof _colSetFieldIssue === 'function') _colSetFieldIssue('colEditLayoutNameErr', '');
 
     document.getElementById('colEditLayoutCode').value = state.html;
+    applyReadOnlyMode();
     setMobileView('html');
     setPreviewWidth(1200);
     refreshPreview();
     updateDirtyState();
+    if (isReadOnlyMode()) setStatus('Backup publico: somente leitura');
 
     document.getElementById('colEditLayoutOverlay').classList.remove('hidden');
     document.body.style.overflow = 'hidden';

@@ -35,12 +35,16 @@ afetado junto com o codigo.
 
 - Em localhost, Firebase e emuladores sao usados automaticamente.
 - No GitHub Pages, Firebase real e a fonte principal depois do corte.
+- Sem login ou quando o Firebase nao inicia, o aplicativo mostra o ultimo
+  backup GitHub em modo publico e somente leitura.
 - Biblioteca e Colecoes ja possuem adaptadores Firebase.
 - Firestore guarda conteudo; Realtime Database guarda presenca.
 - Membros escrevem pelo SDK Web; Security Rules validam identidade, schema,
   versoes e limites no servidor.
 - O botao global cria backup manual com token GitHub individual. Nao existe
   agendamento, GitHub Actions ou Function de producao nesse fluxo.
+- O mesmo commit guarda o snapshot tecnico restauravel e os arquivos JS
+  estaticos usados pelo modo publico. Um Live Server simples basta para le-los.
 - Exportador e restauracao existem; backups novos devem ser verificados em
   commits reais e restaurados primeiro em workspace descartavel quando forem
   usados para recuperacao.

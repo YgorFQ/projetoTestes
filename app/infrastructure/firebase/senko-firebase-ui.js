@@ -5,6 +5,8 @@
   var panelAction;
   var accountButton;
   var accountMenu;
+  var dataModeBadge;
+  var currentState = null;
   var exporterRegistered = false;
   var toastTimer;
 
@@ -58,9 +60,27 @@
     document.body.appendChild(accountMenu);
 
     accountButton.addEventListener('click', function () {
+      if (!currentState || currentState.status !== 'ready') {
+        accountButton.disabled = true;
+        window.SenkoFirebase.signInWithGoogle().catch(function (error) {
+          showToast(error.message || String(error), true);
+        }).finally(function () {
+          accountButton.disabled = false;
+        });
+        return;
+      }
       accountMenu.hidden = !accountMenu.hidden;
       if (!accountMenu.hidden) positionAccountMenu();
     });
+
+    dataModeBadge = document.createElement('span');
+    dataModeBadge.className = 'senko-data-mode-badge';
+    dataModeBadge.hidden = true;
+    dataModeBadge.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">' +
+      '<path d="M4 4h16v16H4z"></path><path d="M8 9h8M8 13h8M8 17h5"></path></svg>' +
+      '<span>Somente leitura</span>';
+    if (headerActions) headerActions.insertBefore(dataModeBadge, accountButton);
 
     document.getElementById('senkoSignOutBtn').addEventListener('click', function () {
       accountMenu.hidden = true;
@@ -115,7 +135,7 @@
         'aria-labelledby="senkoGithubBackupTitle">' +
         '  <header><span class="senko-github-backup-icon">' + githubIcon() + '</span>' +
         '    <div><h2 id="senkoGithubBackupTitle">Backup no GitHub</h2>' +
-        '    <p>Snapshot completo do Firebase</p></div></header>' +
+        '    <p>Snapshot restauravel + copia publica</p></div></header>' +
         '  <form>' +
         '    <div class="senko-github-backup-grid">' +
         '      <label>Owner<input name="owner" autocomplete="off" required></label>' +
@@ -238,9 +258,26 @@
 
   function renderState(state) {
     ensureUi();
+    currentState = state;
+
+    var hasStaticSnapshot = window.SenkoDataMode &&
+      window.SenkoDataMode.hasStaticSnapshot &&
+      window.SenkoDataMode.hasStaticSnapshot();
+    var usingStatic = state.status !== 'ready' && hasStaticSnapshot;
+    var manifest = usingStatic && window.SenkoDataMode.getManifest
+      ? window.SenkoDataMode.getManifest()
+      : null;
+
+    dataModeBadge.hidden = !usingStatic;
+    if (usingStatic) {
+      var exportedAt = manifest && manifest.exportedAt
+        ? new Date(manifest.exportedAt).toLocaleString('pt-BR')
+        : 'data desconhecida';
+      dataModeBadge.title = 'Backup publico de ' + exportedAt;
+    }
 
     if (!state.enabled || state.status === 'disabled') {
-      gate.hidden = true;
+      gate.hidden = hasStaticSnapshot;
       accountButton.hidden = true;
       return;
     }
@@ -248,7 +285,8 @@
     registerGithubExporter();
     panelAction.hidden = true;
     panelAction.disabled = false;
-    accountButton.hidden = state.status !== 'ready';
+    accountButton.hidden = false;
+    accountButton.disabled = state.status === 'loading' || state.status === 'checking-access';
 
     if (state.status === 'ready') {
       gate.hidden = true;
@@ -259,6 +297,23 @@
       if (user.photoURL) {
         accountButton.innerHTML = '<img src="' + user.photoURL.replace(/"/g, '&quot;') + '" alt="">';
       }
+      if (window.SenkoShell && typeof window.SenkoShell.refreshGithubButton === 'function') {
+        window.SenkoShell.refreshGithubButton();
+      }
+      return;
+    }
+
+    accountButton.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">' +
+      '<circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>';
+    accountButton.title = state.status === 'unauthorized'
+      ? 'Entrar com outra conta para editar'
+      : 'Entrar para editar';
+    accountButton.setAttribute('aria-label', accountButton.title);
+
+    if (usingStatic) {
+      gate.hidden = true;
+      accountMenu.hidden = true;
       if (window.SenkoShell && typeof window.SenkoShell.refreshGithubButton === 'function') {
         window.SenkoShell.refreshGithubButton();
       }

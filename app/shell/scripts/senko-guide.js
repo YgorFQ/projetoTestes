@@ -425,11 +425,11 @@
       label: 'Firebase',
       items: [
         {
-          title: 'Transicao para Firebase',
+          title: 'Firebase e continuidade publica',
           badge: 'dados',
           terms: 'firebase firestore transicao legado enabled config banco principal',
           paragraphs: [
-            'Firebase sera a fonte principal de Biblioteca e Colecoes. Durante a migracao, localhost usa os emuladores e os demais enderecos continuam no modo antigo.',
+            'Firebase e a fonte principal editavel de Biblioteca e Colecoes. Sem uma sessao autorizada, o SenkoLib mostra o ultimo backup publico em modo somente leitura.',
             'A configuracao fica em app/infrastructure/firebase/firebase-config.js e o passo a passo completo fica em FIREBASE_SETUP.md.'
           ],
           bullets: [
@@ -440,7 +440,27 @@
             'O navegador executa transacoes e Firestore Rules valida membro, campos, versoes e limites.',
             'Realtime Database guarda somente quem esta presente em um editor.',
             'Storage recebera imagens e conteudos que ultrapassarem o limite definido.',
-            'O navegador nunca recebe credencial administrativa nem chave privada do GitHub; o backup usa o token individual de quem clicou.'
+            'O navegador nunca recebe credencial administrativa nem chave privada do GitHub; o backup usa o token individual de quem clicou.',
+            'SenkoDataMode alterna entre firebase, static e unavailable sem misturar as regras internas das features.'
+          ]
+        },
+        {
+          title: 'Modo publico somente leitura',
+          badge: 'fallback',
+          terms: 'fallback publico static somente leitura live server firebase indisponivel backup',
+          paragraphs: [
+            'O modo publico usa os arquivos gerados pelo ultimo backup GitHub. Ele existe para consulta quando a pessoa nao entrou ou quando o Firebase nao consegue iniciar.',
+            'O HTML e o CSS ficam publicos por decisao de produto, mas membros, e-mails, presenca, tokens, logs, autoria e revisoes antigas nao entram nesse bundle.'
+          ],
+          bullets: [
+            'Arquivos gerados: app/infrastructure/static-backup/manifest.js, biblioteca.js e colecoes.js.',
+            'Adaptadores: data/static-repository.js dentro de Biblioteca e Colecoes.',
+            'Criar, editar, excluir e fazer backup ficam bloqueados no modo static.',
+            'Preview e copia de HTML/CSS continuam disponiveis.',
+            'Um Live Server simples na raiz e suportado; file:// nao e requisito.',
+            'Ao entrar como membro, os listeners Firebase substituem o snapshot estatico.',
+            'Ao sair, as features encerram listeners e voltam ao ultimo backup.',
+            'Arquivos legados permanecem preservados ate a ultima etapa da reforma.'
           ]
         },
         {
@@ -532,7 +552,8 @@
             'Nao existe backup automatico, GitHub Actions ou agendamento de 30 minutos.',
             'Token recomendado: fine-grained, somente no repositorio e Contents read/write.',
             'GitHub App e chave privada nao fazem parte da arquitetura ativa.',
-            'Formato exportado: JSON em senkolib-data/.',
+            'Formato tecnico: JSON em senkolib-data/.',
+            'Formato publico: arquivos JS gerados em app/infrastructure/static-backup/.',
             'A restauracao administrativa existe e deve ser testada primeiro em workspace descartavel.',
             'A chave senkolib_github_token guarda o token; senkolib_github_config fica apenas como fallback legado.'
           ]
@@ -543,7 +564,7 @@
           terms: 'botao global github criacao rapida provider registerGithubProvider registerCreateProvider independencia',
           paragraphs: [
             'Os botoes de GitHub e criacao rapida ficam no shell porque sao controles globais.',
-            'No modo Firebase, a infraestrutura registra um exportador global; no modo legado, cada feature ainda pode registrar seu provider.'
+            'No modo Firebase, a infraestrutura registra um exportador global. Providers antigos por feature permanecem apenas como codigo historico ate a limpeza final.'
           ],
           note: 'Analogia: o shell oferece as tomadas. Biblioteca e Colecoes conectam seus proprios motores por contratos publicos.'
         },
@@ -562,6 +583,7 @@
             'A janela mostra o destino fixo do projeto; no fluxo Firebase a pessoa nao escolhe outro repo pelo navegador.',
             'O historico Git preserva snapshots anteriores mesmo quando um item e excluido.',
             'Se dataVersion mudar durante a leitura, o exportador descarta a tentativa e le novamente antes de criar o commit.',
+            'O mesmo commit gera o snapshot restauravel completo e o bundle publico apenas com a versao atual.',
             'As integracoes Contents API por feature permanecem somente no modo legado historico.'
           ]
         },
@@ -913,8 +935,8 @@
           badge: 'interface',
           terms: 'botao salvar nao aparece github localhost live server file modal layout variacao colecao',
           paragraphs: [
-            'Os controles de salvar devem aparecer no GitHub Pages, localhost, Live Server e file://.',
-            'A ausencia de credenciais deve abrir a configuracao quando necessario, nunca remover o botao da interface.'
+            'No modo Firebase autorizado, os controles de salvar devem aparecer. No backup publico, a ausencia desses controles e intencional porque o modo e somente leitura.',
+            'Use o selo Somente leitura e SenkoDataMode.getState() para distinguir fallback correto de uma falha de carregamento.'
           ],
           bullets: [
             'Conferir se a integracao GitHub da feature foi carregada e inicializada.',
@@ -1105,8 +1127,8 @@
             'Token do GitHub nunca entra no codigo.',
             'Nao permitir nomes duplicados.',
             'Grupos de Colecoes nao devem ser apagados automaticamente.',
-            'Cada layout, variacao, colecao e layout de colecao novo deve ter seu proprio arquivo JS.',
-            'Todo arquivo de dados novo precisa de entrada no manifest da feature.',
+            'Novos dados editaveis pertencem ao Firestore; o backup gera automaticamente o bundle publico.',
+            'Arquivos legados e manifests antigos nao devem ser removidos antes da regressao final.',
             'ID tecnico nao deve ser editado como campo comum.',
             'Ordenacao alfabetica deve acontecer na renderizacao, sem reescrever manifest so para ordenar.',
             'Toda alteracao precisa ser testada em mais de uma aba.',
@@ -1127,7 +1149,7 @@
             'Nao fazer o shell conhecer detalhes como layouts, variantes ou grupos.',
             'Nao salvar token do GitHub no codigo.',
             'Nao deixar duas colecoes, layouts, variantes ou layouts de colecao com o mesmo nome.',
-            'Nao voltar layout, variacao ou layout de colecao novo para arquivos grandes com arrays de objetos.',
+            'Nao editar manualmente os arquivos gerados em app/infrastructure/static-backup/.',
             'Nao editar ID gerado pelo editor como se fosse nome de exibicao.',
             'Nao deixar tela oficial dentro de prototype depois que virou fluxo oficial.',
             'Nao finalizar mudanca sem atualizar o guia quando o comportamento documentado mudou.'

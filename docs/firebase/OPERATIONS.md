@@ -153,6 +153,24 @@ migracao e antes de exclusoes em massa.
 Confira o commit e `exports/{id}` depois de cada backup importante. Consulte
 `BACKUP_AND_RESTORE.md` para configuracao e erros.
 
+Cada backup tambem atualiza o bundle publico em
+`app/infrastructure/static-backup/`. A pagina sem login permanece na versao do
+ultimo backup, mesmo que o Firestore tenha mudancas mais novas.
+
+## Verificar o modo publico
+
+1. Conclua um backup pelo botao GitHub.
+2. Aguarde o commit chegar ao host publicado ou atualize a copia local.
+3. Abra uma janela anonima, sem sessao Google do SenkoLib.
+4. Confirme o selo **Somente leitura** no header.
+5. Confira Biblioteca, variacoes, grupos, colecoes e layouts internos.
+6. Abra layouts e confirme preview e copia de codigo.
+7. Confirme que criar, editar, excluir e fazer backup nao estao disponiveis.
+
+Para um teste independente do Firebase, use um Live Server na raiz do
+repositorio. O modo publico usa arquivos JavaScript locais e nao faz `fetch`
+de JSON. `file://` nao faz parte do contrato suportado.
+
 ## Restaurar um backup
 
 Sempre valide primeiro:
@@ -185,9 +203,9 @@ enabled: isLocalhost,
 useEmulators: isLocalhost
 ```
 
-Use esse rollback apenas quando for intencional congelar o Firebase no host
-publico. Se ja existirem saves reais no Firestore, voltar ao modo legado pode
-criar duas fontes divergentes.
+Use esse rollback apenas para testar ou congelar a edicao Firebase. Com o
+bundle publico presente, o host continua exibindo o ultimo backup em modo
+somente leitura; ele nao volta aos arquivos legados.
 
 ## Ordem historica do corte
 
@@ -224,6 +242,7 @@ Locais principais:
 - Emulator UI: documentos, regras e Functions locais;
 - Firestore `exports`: inicio, sucesso e falha de backups;
 - historico de commits: snapshot externo;
+- `app/infrastructure/static-backup/manifest.js`: versao e contagens publicas;
 - `firebase-debug.log` e logs de emuladores: inicializacao local.
 
 Para um incidente, registre:

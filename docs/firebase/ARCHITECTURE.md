@@ -7,6 +7,11 @@ excluir altera o Firestore somente quando a pessoa confirma a operacao. O
 GitHub nao participa do CRUD: ele recebe um snapshot completo quando um membro
 clica no botao global de backup.
 
+Para leitura publica, o GitHub tambem guarda uma representacao estatica da
+ultima versao confirmada. Quando a sessao Firebase nao esta `ready`, Biblioteca
+e Colecoes usam esse snapshot em modo somente leitura. O modo publico nao
+grava, nao cria fila offline e nao substitui o Firestore como fonte principal.
+
 Esta arquitetura foi escolhida para funcionar no plano gratuito Spark. Ela nao
 depende de Cloud Functions implantadas, Cloud Scheduler, Secret Manager ou
 GitHub Actions.
@@ -25,6 +30,9 @@ GitHub Actions.
   um backup GitHub anterior.
 - O backup GitHub e manual. Nenhum temporizador de 30 minutos existe.
 - Cada pessoa que fizer backup usa seu proprio token GitHub de escopo minimo.
+- O ultimo backup confirmado e publico e contem o HTML/CSS atual.
+- Revisoes antigas ficam somente no snapshot tecnico, nao no bundle publico.
+- Um servidor HTTP estatico simples consegue abrir o modo publico sem Firebase.
 
 ## Componentes
 
@@ -36,7 +44,8 @@ GitHub Actions.
 | Realtime Database | Guardar presenca temporaria dos editores | Guardar layouts ou colecoes |
 | Cloud Storage | Reserva para uma necessidade futura de arquivos | Guardar o conteudo atual sem fluxo definido |
 | Firebase Hosting | Servir o aplicativo | Ser banco de dados |
-| GitHub | Receber snapshots restauraveis | Ser usado pelo CRUD normal |
+| GitHub | Receber snapshot restauravel e bundle publico de leitura | Ser usado pelo CRUD normal |
+| SenkoDataMode | Escolher Firebase `ready` ou backup estatico | Permitir escrita no modo publico |
 
 `functions/` continua no repositorio porque contem importadores, restauracao,
 testes e a implementacao anterior. No plano Spark, o frontend de producao nao
@@ -51,8 +60,13 @@ depende dessas Functions.
 | `app/infrastructure/firebase/senko-firestore-writes.js` | Validacao do cliente e transacoes de CRUD |
 | `app/infrastructure/firebase/senko-github-backup.js` | Snapshot Firestore e commit GitHub pelo navegador |
 | `app/infrastructure/firebase/senko-firebase-ui.js` | Login, conta e janela do backup global |
+| `app/infrastructure/static-backup/senko-data-mode.js` | Estado global `firebase`, `static` ou `unavailable` |
+| `app/infrastructure/static-backup/senko-static-backup-builder.js` | Converte o snapshot tecnico em dados publicos atuais |
+| `app/infrastructure/static-backup/{manifest,biblioteca,colecoes}.js` | Bundle gerado e servido sem consultar Firebase |
 | `app/features/biblioteca/data/firebase-repository.js` | Adaptador Firebase da Biblioteca |
+| `app/features/biblioteca/data/static-repository.js` | Adaptador somente leitura da Biblioteca |
 | `app/features/colecoes/data/firebase-repository.js` | Adaptador Firebase de Colecoes e grupos |
+| `app/features/colecoes/data/static-repository.js` | Adaptador somente leitura de Colecoes e grupos |
 | `firestore.rules` | Autoridade de seguranca para leituras e escritas |
 | `database.rules.json` | Permissoes de presenca |
 | `storage.rules` | Bloqueio atual de uploads |
@@ -69,33 +83,64 @@ normaliza nomes e executa transacoes. As regras repetem no servidor as
 restricoes de identidade, versao, tamanho e campos permitidos. Validacao do
 JavaScript melhora a mensagem de erro; Security Rules e que protegem o banco.
 
-Cada `firebase-repository.js` converte entre o documento Firestore e o objeto
-que a feature antiga entende. A interface nao deve montar caminhos Firestore.
+Cada feature possui adaptadores independentes para Firebase e para o snapshot
+estatico. Ambos entregam o formato que a interface entende; a interface nao
+monta caminhos Firestore nem interpreta os arquivos gerados.
 
 `senko-github-backup.js` e infraestrutura separada. Uma falha do GitHub nao
 desfaz nem impede um save que ja ocorreu no Firestore.
 
 ## Inicializacao
 
-1. `index.html` carrega `firebase-config.js`.
+1. `index.html` carrega o bundle do ultimo backup e `firebase-config.js`.
 2. `senko-firebase.js` importa o SDK modular e inicializa os produtos.
-3. Em localhost, os SDKs apontam para os emuladores.
-4. `onAuthStateChanged` observa o login.
-5. A infraestrutura le `workspaces/{workspaceId}/members/{uid}`.
-6. Somente um documento existente muda o estado para `ready`.
-7. As features iniciam listeners e liberam a interface.
+3. `SenkoDataMode` disponibiliza imediatamente o snapshot como `static`.
+4. Em localhost, os SDKs apontam para os emuladores.
+5. `onAuthStateChanged` observa o login e confere o documento de membro.
+6. Somente um membro existente muda o Firebase para `ready`.
+7. `SenkoDataMode` muda para `firebase` e as features substituem o snapshot
+   por listeners ao vivo.
+8. Ao sair da conta ou perder a inicializacao Firebase, as features voltam ao
+   snapshot estatico e bloqueiam comandos de escrita.
 
 Estados esperados:
 
 | Estado | Significado |
 | --- | --- |
-| `disabled` | Firebase desligado; modo legado temporario |
+| `disabled` | Firebase desligado; snapshot publico quando disponivel |
 | `loading` | SDK sendo carregado |
 | `signed-out` | Firebase ativo sem login |
 | `checking-access` | Conta autenticada, membro em verificacao |
 | `unauthorized` | Conta valida sem acesso ao workspace |
 | `ready` | Conta autenticada e membro autorizado |
 | `error` | Falha de configuracao, SDK, rede ou regras |
+
+Estados de dados do aplicativo:
+
+| Estado | Fonte | Escrita |
+| --- | --- | --- |
+| `firebase` | Firestore e listeners ao vivo | Permitida para membro |
+| `static` | Ultimo bundle gerado pelo backup | Bloqueada |
+| `unavailable` | Nenhuma fonte carregada | Bloqueada e tela de erro/login |
+
+## Fluxo de leitura publica
+
+```mermaid
+sequenceDiagram
+    participant GH as "Arquivos no GitHub"
+    participant Mode as "SenkoDataMode"
+    participant Repo as "Repositorio estatico"
+    participant UI as "Biblioteca ou Colecoes"
+
+    GH-->>Mode: manifest.js + dados atuais
+    Mode->>Repo: modo static
+    Repo-->>UI: layouts, variacoes, grupos e colecoes
+    UI-->>UI: esconder criacao, save e exclusao
+```
+
+O bundle publico contem HTML e CSS porque a proposta do SenkoLib e permitir
+consulta e copia desse codigo. Ele nao contem membros, e-mails, presenca,
+tokens, logs ou revisoes antigas.
 
 ## Fluxo de leitura
 
@@ -226,7 +271,8 @@ sequenceDiagram
     B->>DB: ler workspace e dataVersion
     B->>DB: ler grupos, layouts, variacoes, colecoes e revisoes
     B->>DB: conferir dataVersion novamente
-    B->>GH: tree com conteudos + commit
+    B->>B: gerar bundle publico sem revisoes antigas
+    B->>GH: tree com snapshot tecnico + bundle publico
     B->>GH: atualizar branch sem force
     B->>DB: registrar commit e job concluido
 ```
@@ -245,8 +291,9 @@ somente o uso de emuladores:
 
 - `localhost` e `127.0.0.1`: Firebase ativo usando emuladores;
 - GitHub Pages e outros hosts autorizados: Firebase ativo no projeto real;
-- modo legado fica apenas como fallback historico de codigo, nao como fonte
-  principal de producao.
+- sem sessao `ready`: bundle do ultimo backup em modo somente leitura;
+- os arquivos legados ficam preservados temporariamente para seguranca da
+  migracao, mas nao sao a fonte normal do fallback novo.
 
 Qualquer novo ambiente publico precisa ser adicionado aos dominios autorizados
 do Firebase Authentication antes do login funcionar.

@@ -21,7 +21,9 @@
   var firebaseCollections = [];
   var firebaseLayouts = [];
   var firebaseLayoutsUnsubscribe;
+  var firebaseUnsubscribers = [];
   var firebaseCollectionSignature = '';
+  var dataModeUnsubscribe;
 
   function usesFirebaseData() {
     return Boolean(
@@ -29,6 +31,14 @@
       window.SenkoFirebase.isEnabled &&
       window.SenkoFirebase.isEnabled()
     );
+  }
+
+  function loadStaticSnapshot() {
+    var repository = window.SenkoColecoesStatic;
+    if (!repository || !repository.isAvailable() || typeof ColLib === 'undefined') return false;
+    ColLib.replaceAll(repository.getCollections());
+    if (typeof ColGroups !== 'undefined') ColGroups.load(repository.getGroups());
+    return true;
   }
 
   function featureUrl(path) {
@@ -297,9 +307,11 @@
   }
 
   function startFirebaseSync() {
-    if (firebaseSyncPromise || !usesFirebaseData()) return firebaseSyncPromise;
+    if (firebaseSyncPromise || !usesFirebaseData() || !window.SenkoFirebase.isReady()) {
+      return firebaseSyncPromise;
+    }
 
-    firebaseSyncPromise = window.SenkoFirebase.whenAuthorized().then(function () {
+    firebaseSyncPromise = Promise.resolve().then(function () {
       var repository = window.SenkoColecoesFirebase;
       if (!repository) {
         throw new Error('Repositorio Firebase de Colecoes indisponivel.');
@@ -328,21 +340,21 @@
         );
       }
 
-      repository.watchCollections(function (collections) {
+      firebaseUnsubscribers.push(repository.watchCollections(function (collections) {
         firebaseCollections = collections;
         syncLayoutListeners(collections);
         applyFirebaseSnapshot();
       }, function (error) {
         console.error('[Colecoes] Falha ao sincronizar colecoes:', error);
-      });
+      }));
 
-      repository.watchGroups(function (groups) {
+      firebaseUnsubscribers.push(repository.watchGroups(function (groups) {
         if (typeof ColGroups !== 'undefined') ColGroups.load(groups);
         if (typeof colRefreshGroupSelects === 'function') colRefreshGroupSelects();
         if (window.SenkoColecoes) window.SenkoColecoes.render();
       }, function (error) {
         console.error('[Colecoes] Falha ao sincronizar grupos:', error);
-      });
+      }));
 
       return true;
     }).catch(function (error) {
@@ -351,6 +363,32 @@
     });
 
     return firebaseSyncPromise;
+  }
+
+  function stopFirebaseSync() {
+    firebaseUnsubscribers.splice(0).forEach(function (unsubscribe) {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    });
+    if (typeof firebaseLayoutsUnsubscribe === 'function') firebaseLayoutsUnsubscribe();
+    firebaseLayoutsUnsubscribe = null;
+    firebaseCollectionSignature = '';
+    firebaseSyncPromise = null;
+  }
+
+  function bindDataMode() {
+    if (dataModeUnsubscribe || !window.SenkoDataMode) return;
+    dataModeUnsubscribe = window.SenkoDataMode.onChange(function (dataState) {
+      if (typeof ColLib === 'undefined') return;
+      if (dataState.mode === 'firebase') {
+        startFirebaseSync();
+        return;
+      }
+      stopFirebaseSync();
+      if (loadStaticSnapshot()) {
+        if (typeof colRefreshGroupSelects === 'function') colRefreshGroupSelects();
+        if (window.SenkoColecoes) window.SenkoColecoes.render();
+      }
+    });
   }
 
   async function loadFeature() {
@@ -371,6 +409,7 @@
       await Promise.all([
         loadScript('data/col-groups-data.js?v=20260613-fast-load'),
         loadScript('data/firebase-repository.js?v=20260815-group-manager'),
+        loadScript('data/static-repository.js?v=20260815-public-backup'),
         loadScript('scripts/col-core.js?v=20260613-fast-load'),
         loadScript('scripts/col-script.js?v=20260815-group-manager'),
         loadScript('scripts/col-modals.js?v=20260815-group-manager'),
@@ -378,7 +417,8 @@
         loadScript('scripts/firebase-controls.js?v=20260801-layout-feedback')
       ]);
 
-      if (!usesFirebaseData()) {
+      var staticLoaded = loadStaticSnapshot();
+      if (!usesFirebaseData() && !staticLoaded) {
         var legacyFiles = registerCollectionCatalog(manifest);
         await Promise.all(legacyFiles.map(function (file) {
           return loadScript('data/' + file);
@@ -392,8 +432,9 @@
       window.SenkoColecoes.init();
       if (window.SenkoColecoesModals) window.SenkoColecoesModals.init();
       if (window.SenkoColecoesFirebaseControls) window.SenkoColecoesFirebaseControls.refresh();
-      if (usesFirebaseData()) startFirebaseSync();
-      else {
+      bindDataMode();
+      if (window.SenkoDataMode && window.SenkoDataMode.isFirebase()) startFirebaseSync();
+      else if (!staticLoaded) {
         loadGithubIntegration();
         prefetchCollectionData();
       }
@@ -422,6 +463,11 @@
   }
 
   function prepareColecoesCreation() {
+    if (window.SenkoDataMode && window.SenkoDataMode.isReadOnly()) {
+      return Promise.reject(new Error(
+        'O backup publico e somente leitura. Entre com uma conta autorizada para criar.'
+      ));
+    }
     /*
      * A feature é ativada antes de expor seu contexto público. Assim, seus
      * modais nunca ficam presos em um painel suspenso de outra aba.
