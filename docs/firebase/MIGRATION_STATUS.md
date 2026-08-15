@@ -4,11 +4,11 @@ Ultima revisao documental: **2026-08-15**.
 
 ## Resumo
 
-Estimativa atual: **97% da migracao concluida**. CRUD colaborativo, regras do
+Estimativa atual: **99% da migracao concluida**. CRUD colaborativo, regras do
 plano Spark, backup manual pelo navegador, primeiro commit real de backup,
-restauracao em emulador e restauracao no Firestore real existem. Faltam o
-primeiro login real para gerar UID, cadastro do membro real e smoke test final
-no GitHub Pages com conta autorizada.
+restauracao em emulador, restauracao no Firestore real e primeiro membro real
+existem. Falta o smoke test final no GitHub Pages com conta autorizada e a tag
+do corte.
 
 ## Decisoes confirmadas
 
@@ -97,8 +97,8 @@ nao possui warnings.
 - [x] Restaurar esse commit em workspace descartavel.
 - [x] Comparar contagens e amostras de HTML/CSS.
 - [x] Publicar regras e indices no projeto real.
-- [ ] Criar o primeiro membro real.
-- [ ] Criar `presenceAccess` para cada membro real.
+- [x] Criar o primeiro membro real.
+- [x] Criar `presenceAccess` para cada membro real.
 - [x] Importar o snapshot final sem warnings.
 - [x] Separar ativacao de producao e emuladores na configuracao.
 - [x] Publicar o frontend com Firebase ativo no GitHub Pages.
@@ -118,10 +118,10 @@ nao possui warnings.
 
 ## Proximo passo recomendado
 
-1. Abrir o GitHub Pages e fazer o primeiro login real com Google.
-2. Exportar ou consultar o usuario criado no Firebase Auth.
-3. Rodar `npm --prefix functions run member:add:cli-auth -- --uid <uid> --email <email> --name <nome>`.
-4. Recarregar o GitHub Pages e executar o smoke test.
+1. Recarregar o GitHub Pages com `Ctrl+Shift+R`.
+2. Confirmar que Biblioteca e Colecoes aparecem com dados do Firebase real.
+3. Fazer um smoke test pequeno de leitura e, se aprovado, um save controlado.
+4. Criar backup GitHub pelo botao.
 5. Criar a tag do corte depois do smoke test aprovado.
 
 ## Observacao sobre GitHub Pages
@@ -146,3 +146,4 @@ Adicione novas rodadas sem apagar as anteriores.
 | 2026-08-15 | Firestore Emulator | d9e63426514bee66ac997b608dff706922551c86 | Aprovado | Backup real restaurado em `senkolib-restauracao-d9e6342`; contagens conferidas: 5 grupos, 34 layouts, 11 variacoes, 5 colecoes, 48 layouts internos |
 | 2026-08-15 | Firebase real | d9e63426514bee66ac997b608dff706922551c86 | Aprovado | Regras Firestore/Realtime publicadas, `ygorfq.github.io` autorizado e backup restaurado no workspace `senkolib`; contagens reais conferidas |
 | 2026-08-15 | GitHub Pages | 4812d098921a8f960fccba78eca5c36bbcf31065 | Parcial aprovado | Codigo do corte publicado e `firebase-config.js` servido com `enabled: true`; aguardando primeiro membro real para smoke test autenticado |
+| 2026-08-15 | Firebase real | NR6Zez...GfL2 | Aprovado | Primeiro membro real criado no Firestore e `presenceAccess` liberado no Realtime Database |
