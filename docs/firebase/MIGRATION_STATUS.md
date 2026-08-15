@@ -175,4 +175,4 @@ Adicione novas rodadas sem apagar as anteriores.
 | 2026-08-15 | Emuladores e GitHub Pages | e3c929d | Aprovado | Regras de owner/admin/editor passaram nos testes automatizados; gestao de acessos foi publicada e permanece invisivel para visitantes anonimos, que continuam no backup somente leitura |
 | 2026-08-15 | UI local e teste unitario | alteracoes locais | Aprovado | Limite, indisponibilidade e navegador offline possuem avisos distintos; fallback informa a data do backup e permaneceu responsivo em desktop e 390x844 |
 | 2026-08-15 | GitHub Pages e cache local | 66ef971 | Aprovado | F5 deixou de forcar rede para todo CSS/JS; dois reloads mediram 142 ms e 109 ms, codigo usou a versao do release e os tres arquivos do backup permaneceram sempre frescos |
-| 2026-08-15 | UI local | alteracoes locais | Aprovado | Menu de ferramentas agrupou acoes globais sem recria-las; Notas, fechamento e responsividade em desktop e 390x844 foram validados |
+| 2026-08-15 | UI local e GitHub Pages | 80aefb2 | Aprovado | Menu de ferramentas agrupou acoes globais sem recria-las; Notas, tema, fechamento, permissoes e responsividade em desktop e 390x844 foram validados |
