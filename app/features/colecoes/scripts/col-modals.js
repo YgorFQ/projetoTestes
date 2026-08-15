@@ -528,6 +528,7 @@ function _colBuildCreateModal() {
 
 function colOpenCreateModal() {
   _colBuildCreateModal();
+  if (window.SenkoColecoesFirebaseControls) window.SenkoColecoesFirebaseControls.refresh();
 
   /* Limpa campos */
   ['colCreateName', 'colCreateSlug', 'colCreateTags'].forEach(function (id) {
@@ -686,6 +687,7 @@ function _colBuildEditModal() {
 
 function colOpenEditModal(col) {
   _colBuildEditModal();
+  if (window.SenkoColecoesFirebaseControls) window.SenkoColecoesFirebaseControls.refresh();
   _colCurrentCollection = col;
 
   document.getElementById('colEditSlug').value = col.slug;
@@ -734,7 +736,8 @@ function colGetEditFormData() {
    4. MODAL DE NOVO GRUPO
 ═══════════════════════════════════════════════════════════════════════ */
 
-var _colNewGroupCallback = null; /* função chamada após criar grupo */
+var _colNewGroupCallback = null; /* função chamada após salvar grupo */
+var _colEditingGroup = null;
 
 function _colBuildNewGroupModal() {
   if (document.getElementById('colNewGroupOverlay')) return;
@@ -751,8 +754,8 @@ function _colBuildNewGroupModal() {
 
       '<div class="col-form-header">' +
         '<div>' +
-          '<div class="col-modal-category">Novo Grupo</div>' +
-          '<h2 class="col-modal-title">Criar Grupo</h2>' +
+          '<div class="col-modal-category" id="colGroupFormCategory">Novo Grupo</div>' +
+          '<h2 class="col-modal-title" id="colGroupFormTitle">Criar Grupo</h2>' +
         '</div>' +
         '<button class="modal-close" id="colNewGroupClose" title="Fechar">✕</button>' +
       '</div>' +
@@ -805,56 +808,285 @@ function _colBuildNewGroupModal() {
   });
 
   document.getElementById('colNewGroupConfirm').addEventListener('click', function () {
+    var confirmButton = this;
     var name = _colReadMetadataInput('colNewGroupName', false).trim();
-    var slug = _colSlugify(name);
+    var slug = _colEditingGroup ? _colEditingGroup.slug : _colSlugify(name);
     if (!name || !_colValidSlug(slug)) {
       document.getElementById('colNewGroupNameErr').style.display = 'block';
       return;
     }
     var cor  = document.getElementById('colNewGroupColorHex').value || COL_PRESET_COLORS[4];
 
-    var grupo = { slug: slug, name: name, cor: cor };
+    var grupo = {
+      slug: slug,
+      name: name,
+      cor: cor,
+      expectedVersion: _colEditingGroup
+        ? Number(_colEditingGroup._firebaseVersion || 0)
+        : null
+    };
 
-    /* Adiciona como pendente no ColGroups */
-    if (typeof ColGroups !== 'undefined') {
-      ColGroups.addPending(grupo);
+    var duplicateGroup = typeof ColGroups !== 'undefined' && ColGroups.getAll().some(function (item) {
+      return (!_colEditingGroup || item.slug !== _colEditingGroup.slug) &&
+        _colSlugify(item.name) === _colSlugify(name);
+    });
+    if (duplicateGroup) {
+      _colSetFieldIssue('colNewGroupNameErr', 'Ja existe um grupo com esse nome');
+      return;
     }
 
-    _colHideOverlay('colNewGroupOverlay');
+    function finishGroupSave(firebaseSaved) {
+      if (typeof ColGroups !== 'undefined') {
+        if (firebaseSaved && typeof ColGroups.upsert === 'function') ColGroups.upsert(grupo);
+        else ColGroups.addPending(grupo);
+      }
+      _colHideOverlay('colNewGroupOverlay');
 
-    /* Chama callback do modal pai */
-    if (typeof _colNewGroupCallback === 'function') {
-      _colNewGroupCallback(grupo);
-      _colNewGroupCallback = null;
+      if (typeof _colNewGroupCallback === 'function') {
+        _colNewGroupCallback(grupo);
+        _colNewGroupCallback = null;
+      }
+      _colEditingGroup = null;
     }
+
+    var firebaseExpected = window.SenkoFirebase &&
+      window.SenkoFirebase.isEnabled &&
+      window.SenkoFirebase.isEnabled();
+    var firebaseGroups = firebaseExpected &&
+      window.SenkoColecoesFirebase &&
+      typeof window.SenkoColecoesFirebase.saveGroup === 'function';
+
+    if (firebaseExpected && !firebaseGroups) {
+      alert('O repositorio de grupos ainda nao terminou de carregar. Feche e abra Colecoes novamente.');
+      return;
+    }
+
+    if (firebaseGroups) {
+      confirmButton.disabled = true;
+      confirmButton.textContent = _colEditingGroup ? 'Salvando...' : 'Criando...';
+      window.SenkoColecoesFirebase.saveGroup(grupo).then(function (result) {
+        grupo.slug = result.id || grupo.slug;
+        grupo._firebaseVersion = Number(result.version || grupo._firebaseVersion || 0);
+        finishGroupSave(true);
+      }).catch(function (error) {
+        var code = String(error && error.code || '').replace('functions/', '');
+        var message = code === 'already-exists'
+          ? 'Ja existe um grupo com esse nome.'
+          : (error && error.message ? error.message : 'Erro ao criar o grupo.');
+        _colSetFieldIssue('colNewGroupNameErr', message);
+        alert(message);
+      }).finally(function () {
+        confirmButton.disabled = false;
+        confirmButton.textContent = _colEditingGroup ? 'Salvar Grupo' : 'Criar Grupo';
+      });
+      return;
+    }
+
+    finishGroupSave(false);
   });
 
   document.getElementById('colNewGroupClose').addEventListener('click', function () {
     _colHideOverlay('colNewGroupOverlay');
     _colNewGroupCallback = null;
+    _colEditingGroup = null;
   });
   document.getElementById('colNewGroupCancel').addEventListener('click', function () {
     _colHideOverlay('colNewGroupOverlay');
     _colNewGroupCallback = null;
+    _colEditingGroup = null;
   });
   _colOverlayClick('colNewGroupOverlay', 'colNewGroupModal', function () {
     _colHideOverlay('colNewGroupOverlay');
     _colNewGroupCallback = null;
+    _colEditingGroup = null;
   });
 }
 
-function colOpenNewGroupModal(callback) {
+function colOpenNewGroupModal(callback, group) {
   _colBuildNewGroupModal();
 
+  _colEditingGroup = group || null;
+
   /* Limpa campos */
-  document.getElementById('colNewGroupName').value = '';
+  document.getElementById('colNewGroupName').value = group ? group.name || '' : '';
   document.getElementById('colNewGroupNameErr').style.display = 'none';
-  document.getElementById('colNewGroupColorHex').value = COL_PRESET_COLORS[4];
-  document.getElementById('colNewGroupColorPreview').style.background = COL_PRESET_COLORS[4];
+  var color = group ? group.cor || COL_PRESET_COLORS[4] : COL_PRESET_COLORS[4];
+  document.getElementById('colNewGroupColorHex').value = color;
+  document.getElementById('colNewGroupColorPreview').style.background = color;
+  document.getElementById('colGroupFormCategory').textContent = group ? 'Editar Grupo' : 'Novo Grupo';
+  document.getElementById('colGroupFormTitle').textContent = group ? 'Editar Grupo' : 'Criar Grupo';
+  document.getElementById('colNewGroupConfirm').disabled = false;
+  document.getElementById('colNewGroupConfirm').textContent = group ? 'Salvar Grupo' : 'Criar Grupo';
   document.querySelectorAll('.col-color-swatch').forEach(function (s) { s.classList.remove('active'); });
 
   _colNewGroupCallback = callback || null;
   _colShowOverlay('colNewGroupOverlay');
+}
+
+function _colGroupUsageCount(slug) {
+  if (typeof ColLib === 'undefined') return 0;
+  return ColLib.getAll().filter(function (collection) {
+    return collection.group === slug;
+  }).length;
+}
+
+function _colBuildManageGroupsModal() {
+  if (document.getElementById('colManageGroupsOverlay')) return;
+
+  var overlay = _colMakeOverlay('colManageGroupsOverlay');
+  overlay.innerHTML =
+    '<div class="col-form-modal col-groups-manager-modal" id="colManageGroupsModal">' +
+      '<div class="col-form-header">' +
+        '<div>' +
+          '<div class="col-modal-category">Colecoes</div>' +
+          '<h2 class="col-modal-title">Gerenciar grupos</h2>' +
+        '</div>' +
+        '<button class="modal-close" id="colManageGroupsClose" title="Fechar">X</button>' +
+      '</div>' +
+      '<div class="col-form-body col-groups-manager-list" id="colManageGroupsList"></div>' +
+      '<div class="col-form-footer">' +
+        '<button class="col-btn-cancel" id="colManageGroupsDone">Fechar</button>' +
+        '<button class="col-btn-primary" id="colManageGroupsNew">Novo grupo</button>' +
+      '</div>' +
+    '</div>';
+
+  function closeManager() {
+    _colHideOverlay('colManageGroupsOverlay');
+  }
+
+  document.getElementById('colManageGroupsClose').addEventListener('click', closeManager);
+  document.getElementById('colManageGroupsDone').addEventListener('click', closeManager);
+  document.getElementById('colManageGroupsNew').addEventListener('click', function () {
+    colOpenNewGroupModal(function () {
+      _colRenderManageGroups();
+      colRefreshGroupSelects();
+      if (typeof colRenderGrid === 'function') colRenderGrid();
+    });
+  });
+  _colOverlayClick('colManageGroupsOverlay', 'colManageGroupsModal', closeManager);
+}
+
+function _colRenderManageGroups() {
+  var list = document.getElementById('colManageGroupsList');
+  if (!list || typeof ColGroups === 'undefined') return;
+
+  list.innerHTML = '';
+  var groups = ColGroups.getAll().slice().sort(function (left, right) {
+    return String(left.name || '').localeCompare(String(right.name || ''), 'pt-BR', {
+      sensitivity: 'base'
+    });
+  });
+
+  if (!groups.length) {
+    var empty = document.createElement('p');
+    empty.className = 'col-groups-manager-empty';
+    empty.textContent = 'Nenhum grupo cadastrado.';
+    list.appendChild(empty);
+    return;
+  }
+
+  groups.forEach(function (group) {
+    var usageCount = _colGroupUsageCount(group.slug);
+    var row = document.createElement('div');
+    row.className = 'col-groups-manager-row';
+
+    var identity = document.createElement('div');
+    identity.className = 'col-groups-manager-identity';
+    var dot = document.createElement('span');
+    dot.className = 'col-groups-manager-color';
+    dot.style.background = group.cor || '#aaaaaa';
+    var copy = document.createElement('div');
+    var name = document.createElement('strong');
+    name.textContent = group.name || group.slug;
+    var usage = document.createElement('span');
+    usage.textContent = usageCount === 1
+      ? '1 colecao usa este grupo'
+      : usageCount + ' colecoes usam este grupo';
+    copy.appendChild(name);
+    copy.appendChild(usage);
+    identity.appendChild(dot);
+    identity.appendChild(copy);
+
+    var actions = document.createElement('div');
+    actions.className = 'col-groups-manager-actions';
+    var editButton = document.createElement('button');
+    editButton.type = 'button';
+    editButton.className = 'col-btn-cancel';
+    editButton.textContent = 'Editar';
+    editButton.addEventListener('click', function () {
+      colOpenNewGroupModal(function () {
+        _colRenderManageGroups();
+        colRefreshGroupSelects();
+        if (typeof colRenderGrid === 'function') colRenderGrid();
+      }, group);
+    });
+
+    var deleteButton = document.createElement('button');
+    deleteButton.type = 'button';
+    deleteButton.className = 'col-btn-delete';
+    deleteButton.textContent = 'Excluir';
+    deleteButton.title = usageCount
+      ? 'Mova as colecoes para outro grupo antes de excluir.'
+      : 'Excluir grupo';
+    deleteButton.addEventListener('click', function () {
+      if (usageCount) {
+        alert('Mova as colecoes deste grupo para outro grupo antes de exclui-lo.');
+        return;
+      }
+
+      var repository = window.SenkoColecoesFirebase;
+      if (!repository || typeof repository.deleteGroup !== 'function') {
+        alert('A exclusao de grupos ainda nao terminou de carregar.');
+        return;
+      }
+
+      colOpenConfirm({
+        title: 'Excluir grupo',
+        body: 'O grupo "' + (group.name || group.slug) + '" sera excluido diretamente.',
+        labelOk: 'Excluir',
+        onConfirm: function () {
+          deleteButton.disabled = true;
+          deleteButton.textContent = 'Excluindo...';
+          repository.deleteGroup(group).then(function () {
+            ColGroups.remove(group.slug);
+            if (typeof colState !== 'undefined' && colState.activeGroup === group.slug) {
+              colState.activeGroup = null;
+            }
+            colRefreshGroupSelects();
+            _colRenderManageGroups();
+            if (typeof colRenderGrid === 'function') colRenderGrid();
+          }).catch(function (error) {
+            var code = String(error && error.code || '').replace('functions/', '');
+            var message = code === 'failed-precondition'
+              ? 'Mova as colecoes deste grupo antes de exclui-lo.'
+              : (error && error.message ? error.message : 'Erro ao excluir o grupo.');
+            alert(message);
+            deleteButton.disabled = false;
+            deleteButton.textContent = 'Excluir';
+          });
+        }
+      });
+    });
+
+    actions.appendChild(editButton);
+    actions.appendChild(deleteButton);
+    row.appendChild(identity);
+    row.appendChild(actions);
+    list.appendChild(row);
+  });
+}
+
+function colOpenManageGroupsModal() {
+  var firebaseEnabled = window.SenkoFirebase &&
+    window.SenkoFirebase.isEnabled &&
+    window.SenkoFirebase.isEnabled();
+  if (!firebaseEnabled) {
+    alert('O gerenciamento de grupos fica disponivel no modo Firebase.');
+    return;
+  }
+  _colBuildManageGroupsModal();
+  _colRenderManageGroups();
+  _colShowOverlay('colManageGroupsOverlay');
 }
 
 
@@ -948,6 +1180,7 @@ function _colBuildAddLayoutModal() {
 function colOpenAddLayoutModal(col) {
   _colBuildAddLayoutModal();
   _colCurrentCollection = col;
+  if (window.SenkoColecoesFirebaseControls) window.SenkoColecoesFirebaseControls.refresh();
 
   var catEl = document.getElementById('colAddLayoutParentName');
   if (catEl) catEl.textContent = 'em: ' + (col ? col.name : '');
@@ -994,6 +1227,16 @@ function colGetAddLayoutFormData() {
     );
   }
   return ok ? { id: id, name: name.trim(), html: content, css: '' } : null;
+}
+
+function colRefreshGroupSelects() {
+  ['colCreateGroup', 'colEditGroup'].forEach(function (id) {
+    var select = document.getElementById(id);
+    if (!select) return;
+    var selected = select.value;
+    _colPopulateGroupSelect(select, selected);
+  });
+  _colRenderManageGroups();
 }
 
 

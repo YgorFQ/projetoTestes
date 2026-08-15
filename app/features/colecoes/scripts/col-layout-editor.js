@@ -14,7 +14,9 @@
     originalName: '',
     originalHtml: '',
     width: 1200,
-    timer: null
+    timer: null,
+    presenceLeave: null,
+    presenceToken: 0
   };
 
   function buildPreviewDoc(html) {
@@ -55,6 +57,7 @@
               '<div class="collection-layout-editor-heading" id="colEditLayoutHeading">Editar layout completo</div>' +
               '<div class="collection-layout-editor-file-pill" id="colEditLayoutFilePill"></div>' +
             '</div>' +
+            '<div class="collection-layout-editor-presence" id="colEditLayoutPresence">Conectando pessoas...</div>' +
           '</div>' +
           '<div class="collection-layout-editor-actions">' +
             '<span class="collection-layout-editor-action-anchor" id="colEditLayoutDelAnchor"></span>' +
@@ -127,6 +130,7 @@
 
     document.body.appendChild(overlay);
     bindEvents();
+    if (window.SenkoColecoesFirebaseControls) window.SenkoColecoesFirebaseControls.refresh();
     return overlay;
   }
 
@@ -281,7 +285,75 @@
     if (label) label.textContent = message || '';
   }
 
+  function stopPresence() {
+    state.presenceToken += 1;
+    if (typeof state.presenceLeave === 'function') state.presenceLeave();
+    state.presenceLeave = null;
+  }
+
+  function renderPresence(people) {
+    var element = document.getElementById('colEditLayoutPresence');
+    if (!element) return;
+    var firebaseState = window.SenkoFirebase && window.SenkoFirebase.getState
+      ? window.SenkoFirebase.getState()
+      : null;
+    var currentUid = firebaseState && firebaseState.user ? firebaseState.user.uid : '';
+    var currentPerson = (people || []).find(function (person) { return person.uid === currentUid; });
+    var ownExtraSessions = currentPerson ? Math.max((currentPerson.sessionCount || 1) - 1, 0) : 0;
+    var others = (people || []).filter(function (person) { return person.uid !== currentUid; });
+    var otherEditorCount = others.length + ownExtraSessions;
+    if (!otherEditorCount) {
+      element.textContent = 'So voce neste editor';
+      element.classList.remove('has-others');
+      element.title = '';
+      return;
+    }
+    var names = others.map(function (person) { return person.displayName; });
+    if (ownExtraSessions) {
+      names.push(ownExtraSessions === 1 ? 'outra sessao sua' : ownExtraSessions + ' outras sessoes suas');
+    }
+    if (otherEditorCount === 1) {
+      element.textContent = ownExtraSessions
+        ? 'Outra sessao sua tambem esta editando'
+        : names[0] + ' tambem esta editando';
+    } else {
+      element.textContent = otherEditorCount + ' outras sessoes tambem estao editando';
+    }
+    element.classList.add('has-others');
+    element.title = names.join(', ');
+  }
+
+  function startPresence() {
+    stopPresence();
+    var repository = window.SenkoColecoesFirebase;
+    var presenceElement = document.getElementById('colEditLayoutPresence');
+    if (!repository || !state.collection || !state.layout ||
+        typeof repository.enterEditor !== 'function') {
+      if (presenceElement) presenceElement.hidden = true;
+      return;
+    }
+    var token = state.presenceToken;
+    if (presenceElement) presenceElement.hidden = false;
+    renderPresence([]);
+    repository.enterEditor(state.collection.slug, state.layout.id, renderPresence).then(function (leave) {
+      if (token !== state.presenceToken || !isOpen()) {
+        if (typeof leave === 'function') leave();
+        return;
+      }
+      state.presenceLeave = leave;
+    }).catch(function (error) {
+      console.error('[Colecoes] Presenca indisponivel:', error);
+      if (presenceElement) presenceElement.textContent = 'Presenca indisponivel';
+    });
+  }
+
+  function isOpen() {
+    var overlay = document.getElementById('colEditLayoutOverlay');
+    return Boolean(overlay && !overlay.classList.contains('hidden'));
+  }
+
   function close() {
+    stopPresence();
     clearTimeout(state.timer);
     var overlay = document.getElementById('colEditLayoutOverlay');
     if (overlay) overlay.classList.add('hidden');
@@ -319,6 +391,7 @@
 
     document.getElementById('colEditLayoutOverlay').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    startPresence();
     setTimeout(function () {
       fitPreview();
       document.getElementById('colEditLayoutCode').focus();
@@ -374,6 +447,28 @@
     close: close,
     getData: getData,
     setStatus: setStatus,
+    isOpen: isOpen,
+    applyRemoteChange: function (remote) {
+      if (!remote || !state.layout || remote.id !== state.layout.id) return false;
+      if (isDirty()) {
+        setStatus('Outra pessoa salvou uma versao mais recente. Seu rascunho foi preservado.');
+        return false;
+      }
+      state.layout.name = remote.name || '';
+      state.layout.html = remote.html || '';
+      state.layout.css = remote.css || '';
+      state.layout._firebaseRevisionId = remote._firebaseRevisionId || null;
+      state.layout._firebaseVersion = Number(remote._firebaseVersion || 0);
+      state.html = mergeLegacyCssIntoHtml(state.layout.html, state.layout.css);
+      state.originalName = state.layout.name;
+      state.originalHtml = state.html;
+      document.getElementById('colEditLayoutName').value = state.originalName;
+      document.getElementById('colEditLayoutCode').value = state.html;
+      refreshPreview();
+      updateDirtyState();
+      setStatus('Atualizado ao vivo por ' + (remote._firebaseUpdatedBy || 'outra pessoa') + '.');
+      return true;
+    },
     fitPreview: fitPreview
   };
 })();

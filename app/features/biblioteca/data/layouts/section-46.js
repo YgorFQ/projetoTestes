@@ -1,7 +1,7 @@
 // @ts-nocheck
-SenkoLib.registerVariantFile("section-46",
+SenkoLib.registerLayout(
 {
-  id: "variavel-1",
+  id: "section-46",
   name: "variavel-1",
   html: `  <div class="section-46-y reverse-46">
 

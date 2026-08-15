@@ -8,8 +8,13 @@
     "node": "22"
   },
   "scripts": {
-    "check": "node --check src/index.js && node --check src/content.js && node --check src/github-export.js",
+    "check": "node --check src/index.js && node --check src/content.js && node --check src/github-export.js && node --check scripts/import-legacy.js && node --check scripts/restore-github-snapshot.js && node --check scripts/restore-github-snapshot-cli-auth.js && node --check scripts/add-member-cli-auth.js && node --check scripts/test-groups-emulator.js && node --check scripts/test-restore-emulator.js",
+    "test:groups:emulator": "node scripts/test-groups-emulator.js",
+    "test:restore:emulator": "node scripts/test-restore-emulator.js",
     "migrate:legacy": "node scripts/import-legacy.js",
+    "restore:github": "node scripts/restore-github-snapshot.js",
+    "restore:github:cli-auth": "node scripts/restore-github-snapshot-cli-auth.js",
+    "member:add:cli-auth": "node scripts/add-member-cli-auth.js",
     "serve": "firebase emulators:start --only auth,firestore,database,storage,functions,hosting",
     "deploy": "firebase deploy --only firestore,database,storage,functions",
     "logs": "firebase functions:log"

@@ -6,8 +6,10 @@ SenkoLib/
 |   |-- infrastructure/
 |   |   `-- firebase/
 |   |       |-- firebase-config.js       - liga/desliga e identifica o projeto Firebase
-|   |       |-- senko-firebase.js        - Auth, Firestore, Functions, Storage e presenca
-|   |       |-- senko-firebase-ui.js     - login, conta e exportacao GitHub global
+|   |       |-- senko-firebase.js        - Auth, Firestore, listeners, Storage e presenca
+|   |       |-- senko-firestore-writes.js - validacao e transacoes de escrita no plano Spark
+|   |       |-- senko-github-backup.js   - snapshot e commit GitHub pelo navegador
+|   |       |-- senko-firebase-ui.js     - login, conta e janela do backup global
 |   |       `-- senko-firebase.css       - interface global de autenticacao
 |   |
 |   |-- shell/
@@ -75,10 +77,14 @@ SenkoLib/
 |       |-- scripts/                     - utilitarios usados por mais de uma feature
 |       `-- styles/                      - tokens/componentes visuais compartilhados
 |
-|-- functions/                           - backend Firebase e exportador GitHub
+|-- functions/                           - ferramentas administrativas, emulador e codigo historico
+|-- tests/                               - regras, gravacoes, backup simulado e fixtures visuais
+|-- docs/
+|   |-- README.md                        - indice da documentacao tecnica canonica
+|   `-- firebase/                        - arquitetura, dados, testes e operacao Firebase
 |-- tools/build-legacy-snapshot.js       - converte dados JS para snapshot de migracao
 |-- firebase.json                        - regras, emuladores, hosting e Functions
-|-- firestore.rules                     - leitura por membro; escrita somente pelo backend
+|-- firestore.rules                     - leitura e escrita validada para membros
 |-- database.rules.json                 - regras da presenca colaborativa
 |-- storage.rules                       - regras de arquivos
 |-- FIREBASE_SETUP.md                   - configuracao passo a passo para iniciantes
@@ -92,15 +98,16 @@ SenkoLib/
 - `shell` controla o aplicativo como um todo: aba ativa, registro de features e layout da casca.
 - `app/infrastructure/firebase` concentra servicos globais sem conhecer regras internas das features.
 - Biblioteca e Colecoes possuem seus proprios `data/firebase-repository.js`; o shell nao acessa seus documentos.
-- Com Firebase ativado, o navegador le dados e chama Functions para escrever. As regras bloqueiam escrita direta.
+- Com Firebase ativado, o navegador usa transacoes do SDK Web e as regras validam cada escrita.
 - Realtime Database guarda somente presenca de editores; conteudo fica no Firestore.
-- GitHub passa a receber snapshots globais pela Function, manualmente ou a cada 30 minutos.
+- GitHub recebe snapshots globais somente quando um membro aciona o botao manual.
 - Em localhost, Firebase e emuladores sao ativados automaticamente; fora dele, o modo legado continua disponivel durante a transicao.
 - A criacao rapida e uma ferramenta oficial do shell e descobre opcoes por `registerCreateProvider`.
 - O Senko Guide e uma ferramenta oficial do shell, aberta pelo header e exposta pela API `SenkoGuide.open()`/`close()`.
 - Cada feature registrada como provider continua dona de seu carregamento, modal, validacao e persistencia.
 - Cada aba com comportamento proprio fica em `app/features/[nome]`.
-- Integracoes externas ficam dentro da feature que elas salvam; por isso cada GitHub continua independente.
+- No modo legado, integracoes GitHub continuam dentro da feature que salvam.
+- No modo Firebase, o backup GitHub e global e roda em `senko-github-backup.js` com token individual.
 - Codigo compartilhado so entra em `app/shared` quando mais de uma feature depende dele.
 - `shared/styles/senko-tokens.css` define a paleta oficial; `senko-components.css` define componentes visuais neutros.
 - Features registradas pelo shell renderizam no `index.html` principal. Cada uma monta seu proprio painel direto e isolado.
@@ -113,3 +120,14 @@ SenkoLib/
 - `iframe` fica reservado para preview, sandbox ou medicao interna, nunca para carregar uma janela inteira de feature.
 - Uma feature opcional so cria aba quando o seu script de registro carrega. Remover a pasta da feature impede esse registro.
 - Cada abertura gera uma chave nova para os assets locais; em HTTP/HTTPS, `sw.js` tambem busca tudo com cache desativado.
+
+## Documentacao canonica
+
+- `docs/README.md` define a ordem de leitura e a prioridade entre documentos.
+- `docs/firebase/ARCHITECTURE.md` explica componentes e sequencias.
+- `docs/firebase/DATA_MODEL.md` registra caminhos, campos e limites.
+- `docs/firebase/DEVELOPMENT.md` ensina a executar e depurar localmente.
+- `docs/firebase/TEST_PLAN.md` define a regressao obrigatoria.
+- `docs/firebase/OPERATIONS.md` documenta membros, deploy e rollback.
+- `docs/firebase/BACKUP_AND_RESTORE.md` documenta limites do backup e restauracao.
+- `docs/firebase/MIGRATION_STATUS.md` e o checklist vivo da transicao.

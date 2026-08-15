@@ -58,6 +58,14 @@ function cleanTags(value) {
     .map((tag) => tag.slice(0, 80));
 }
 
+function cleanColor(value) {
+  const color = String(value || '').trim();
+  if (!/^#[0-9a-fA-F]{6}$/.test(color)) {
+    throw new HttpsError('invalid-argument', 'Informe uma cor hexadecimal valida.');
+  }
+  return color.toLowerCase();
+}
+
 function reservationId(scope, nameKey) {
   return crypto
     .createHash('sha256')
@@ -269,6 +277,10 @@ async function saveCollection(request) {
   await requireMember(actor, workspaceId);
 
   const collections = db.collection(`workspaces/${workspaceId}/collections`);
+  const groupId = data.groupId ? cleanId(data.groupId, 'Grupo') : null;
+  const groupRef = groupId
+    ? db.doc(`workspaces/${workspaceId}/groups/${groupId}`)
+    : null;
   const collectionId = data.collectionId
     ? cleanId(data.collectionId, 'ID da colecao')
     : collections.doc().id;
@@ -284,14 +296,24 @@ async function saveCollection(request) {
     : Number(data.expectedVersion);
 
   return db.runTransaction(async (transaction) => {
-    const [memberSnapshot, collectionSnapshot, reservationSnapshot] = await Promise.all([
+    const reads = [
       transaction.get(memberRef(workspaceId, actor.uid)),
       transaction.get(collectionRef),
       transaction.get(newReservationRef)
-    ]);
+    ];
+    if (groupRef) reads.push(transaction.get(groupRef));
+
+    const snapshots = await Promise.all(reads);
+    const memberSnapshot = snapshots[0];
+    const collectionSnapshot = snapshots[1];
+    const reservationSnapshot = snapshots[2];
+    const groupSnapshot = groupRef ? snapshots[3] : null;
 
     if (!memberSnapshot.exists) {
       throw new HttpsError('permission-denied', 'Sua permissao foi removida.');
+    }
+    if (groupSnapshot && !groupSnapshot.exists) {
+      throw new HttpsError('not-found', 'O grupo selecionado nao existe mais.');
     }
 
     const existing = collectionSnapshot.exists ? collectionSnapshot.data() : null;
@@ -317,7 +339,7 @@ async function saveCollection(request) {
       workspaceId,
       name,
       nameKey,
-      groupId: data.groupId ? cleanId(data.groupId, 'Grupo') : null,
+      groupId,
       tags: cleanTags(data.tags),
       version,
       updatedAt: now,
@@ -356,6 +378,155 @@ async function saveCollection(request) {
     }, { merge: true });
 
     return { id: collectionId, version };
+  });
+}
+
+async function saveGroup(request) {
+  const data = request.data || {};
+  const workspaceId = cleanWorkspaceId(data.workspaceId);
+  const actor = request.auth;
+  await requireMember(actor, workspaceId);
+
+  const groups = db.collection(`workspaces/${workspaceId}/groups`);
+  const groupId = cleanId(data.groupId, 'ID do grupo');
+  const groupRef = groups.doc(groupId);
+  const name = cleanName(data.name);
+  const nameKey = normalizeName(name);
+  const color = cleanColor(data.color);
+  const scope = 'grupos';
+  const reservationRef = db.doc(
+    `workspaces/${workspaceId}/nameReservations/${reservationId(scope, nameKey)}`
+  );
+  const expectedVersion = data.expectedVersion === null
+    ? null
+    : Number(data.expectedVersion);
+
+  return db.runTransaction(async (transaction) => {
+    const [memberSnapshot, groupSnapshot, reservationSnapshot] = await Promise.all([
+      transaction.get(memberRef(workspaceId, actor.uid)),
+      transaction.get(groupRef),
+      transaction.get(reservationRef)
+    ]);
+
+    if (!memberSnapshot.exists) {
+      throw new HttpsError('permission-denied', 'Sua permissao foi removida.');
+    }
+
+    const existing = groupSnapshot.exists ? groupSnapshot.data() : null;
+    if (existing && expectedVersion === null) {
+      throw new HttpsError('already-exists', 'Ja existe um grupo com esse nome.');
+    }
+    if (existing && expectedVersion !== Number(existing.version || 0)) {
+      throw new HttpsError('aborted', 'Outra pessoa alterou este grupo.');
+    }
+    if (!existing && expectedVersion !== null) {
+      throw new HttpsError('aborted', 'Este grupo ainda nao existe no Firebase.');
+    }
+    if (reservationSnapshot.exists &&
+        reservationSnapshot.data().resourcePath !== groupRef.path) {
+      throw new HttpsError('already-exists', 'Ja existe outro grupo com esse nome.');
+    }
+
+    const now = FieldValue.serverTimestamp();
+    const version = existing ? Number(existing.version || 0) + 1 : 1;
+    const groupData = {
+      id: groupId,
+      workspaceId,
+      name,
+      nameKey,
+      color,
+      version,
+      updatedAt: now,
+      updatedBy: actor.uid,
+      updatedByName: actor.token.name || actor.token.email || 'Membro'
+    };
+
+    if (!existing) {
+      groupData.createdAt = now;
+      groupData.createdBy = actor.uid;
+    }
+
+    transaction.set(groupRef, groupData, { merge: true });
+    transaction.set(reservationRef, {
+      scope,
+      name,
+      nameKey,
+      resourcePath: groupRef.path,
+      updatedAt: now
+    });
+
+    if (existing && existing.nameKey && existing.nameKey !== nameKey) {
+      transaction.delete(db.doc(
+        `workspaces/${workspaceId}/nameReservations/` +
+        reservationId(scope, existing.nameKey)
+      ));
+    }
+
+    transaction.set(workspaceRef(workspaceId), {
+      dataVersion: FieldValue.increment(1),
+      updatedAt: now,
+      updatedBy: actor.uid
+    }, { merge: true });
+
+    return { id: groupId, version };
+  });
+}
+
+async function deleteGroup(request) {
+  const data = request.data || {};
+  const workspaceId = cleanWorkspaceId(data.workspaceId);
+  const actor = request.auth;
+  await requireMember(actor, workspaceId);
+
+  const groupId = cleanId(data.groupId, 'ID do grupo');
+  const groupRef = db.doc(`workspaces/${workspaceId}/groups/${groupId}`);
+  const collectionsUsingGroup = db.collection(`workspaces/${workspaceId}/collections`)
+    .where('groupId', '==', groupId)
+    .limit(1);
+  const expectedVersion = Number(data.expectedVersion || 0);
+
+  return db.runTransaction(async (transaction) => {
+    const [memberSnapshot, groupSnapshot, usageSnapshot] = await Promise.all([
+      transaction.get(memberRef(workspaceId, actor.uid)),
+      transaction.get(groupRef),
+      transaction.get(collectionsUsingGroup)
+    ]);
+
+    if (!memberSnapshot.exists) {
+      throw new HttpsError('permission-denied', 'Sua permissao foi removida.');
+    }
+    if (!groupSnapshot.exists) {
+      return { deleted: false, reason: 'not-found' };
+    }
+    if (!usageSnapshot.empty) {
+      throw new HttpsError(
+        'failed-precondition',
+        'Mova as colecoes deste grupo antes de exclui-lo.'
+      );
+    }
+
+    const group = groupSnapshot.data();
+    if (Number(group.version || 0) !== expectedVersion) {
+      throw new HttpsError(
+        'aborted',
+        'Outra pessoa alterou este grupo antes da exclusao.'
+      );
+    }
+
+    transaction.delete(groupRef);
+    if (group.nameKey) {
+      transaction.delete(db.doc(
+        `workspaces/${workspaceId}/nameReservations/` +
+        reservationId('grupos', group.nameKey)
+      ));
+    }
+    transaction.set(workspaceRef(workspaceId), {
+      dataVersion: FieldValue.increment(1),
+      updatedAt: FieldValue.serverTimestamp(),
+      updatedBy: actor.uid
+    }, { merge: true });
+
+    return { deleted: true, id: groupId, name: group.name || '' };
   });
 }
 
@@ -399,6 +570,13 @@ async function deleteContent(request) {
     if (!currentSnapshot.exists) return;
 
     const current = currentSnapshot.data();
+    if (data.expectedVersion !== undefined && data.expectedVersion !== null &&
+        Number(current.version || 0) !== Number(data.expectedVersion)) {
+      throw new HttpsError(
+        'aborted',
+        'Outra pessoa alterou este item antes da exclusao.'
+      );
+    }
     if (data.expectedRevisionId &&
         current.currentRevisionId !== data.expectedRevisionId) {
       throw new HttpsError(
@@ -476,9 +654,11 @@ async function bootstrapEmulatorMember(request) {
 module.exports = {
   bootstrapEmulatorMember,
   deleteContent,
+  deleteGroup,
   ensurePresenceAccess,
   normalizeName,
   requireMember,
   saveCollection,
+  saveGroup,
   saveVersionedContent
 };

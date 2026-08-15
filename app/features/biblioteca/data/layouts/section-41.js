@@ -1,7 +1,7 @@
 // @ts-nocheck
-SenkoLib.registerVariantFile("section-41",
+SenkoLib.registerLayout(
 {
-  id: "padrao-p-table-click",
+  id: "section-41",
   name: "padrao-p-table-click",
   html: `<footer>
   

@@ -3,6 +3,7 @@ const { getFirestore, Timestamp, GeoPoint } = require('firebase-admin/firestore'
 const { HttpsError } = require('firebase-functions/v2/https');
 const { requireMember } = require('./content');
 
+/* Implementacao de servidor preservada como historico; nao e exportada por src/index.js. */
 const db = getFirestore();
 const GITHUB_PRIVATE_KEY = 'GITHUB_PRIVATE_KEY';
 
@@ -130,6 +131,35 @@ async function buildWorkspaceFiles(workspaceId, metadata) {
   }, null, 2)}\n`;
 
   return output;
+}
+
+async function buildConsistentWorkspaceFiles(workspaceId, firstWorkspaceData) {
+  const workspaceRef = db.doc(`workspaces/${workspaceId}`);
+  let workspaceData = firstWorkspaceData;
+
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    if (!workspaceData) {
+      const before = await workspaceRef.get();
+      if (!before.exists) throw new Error(`Workspace ${workspaceId} nao encontrado.`);
+      workspaceData = before.data();
+    }
+
+    const expectedVersion = Number(workspaceData.dataVersion || 0);
+    const files = await buildWorkspaceFiles(workspaceId, workspaceData);
+    const after = await workspaceRef.get();
+    if (!after.exists) throw new Error(`Workspace ${workspaceId} foi excluido.`);
+
+    const currentVersion = Number(after.data().dataVersion || 0);
+    if (currentVersion === expectedVersion) {
+      return { files, dataVersion: expectedVersion };
+    }
+
+    workspaceData = after.data();
+  }
+
+  throw new Error(
+    'O workspace mudou durante tres tentativas de backup. Tente novamente quando as escritas diminuirem.'
+  );
 }
 
 async function mapWithConcurrency(items, concurrency, worker) {
@@ -273,25 +303,27 @@ async function performGithubExport({
   }
 
   const workspaceData = workspaceSnapshot.data();
-  const dataVersion = Number(workspaceData.dataVersion || 0);
+  const initialDataVersion = Number(workspaceData.dataVersion || 0);
   const lastExportVersion = Number(workspaceData.lastGithubExportVersion || -1);
-  if (!force && dataVersion === lastExportVersion) {
+  if (!force && initialDataVersion === lastExportVersion) {
     return {
       skipped: true,
-      dataVersion
+      dataVersion: initialDataVersion
     };
   }
 
   const jobRef = workspaceRef.collection('exports').doc();
   await jobRef.set({
     status: 'running',
-    dataVersion,
+    dataVersion: initialDataVersion,
     triggeredBy,
     startedAt: Timestamp.now()
   });
 
   try {
-    const files = await buildWorkspaceFiles(workspaceId, workspaceData);
+    const snapshot = await buildConsistentWorkspaceFiles(workspaceId, workspaceData);
+    const { files, dataVersion } = snapshot;
+    await jobRef.set({ dataVersion }, { merge: true });
     const exported = await commitFilesToGithub(
       files,
       `SenkoLib backup v${dataVersion} (${triggeredBy})`,
@@ -346,16 +378,7 @@ async function exportGithubSnapshot(request) {
   }
 }
 
-async function scheduledGithubExport() {
-  return performGithubExport({
-    workspaceId: process.env.SENKO_WORKSPACE_ID || 'senkolib',
-    triggeredBy: 'schedule-30-minutes',
-    force: false
-  });
-}
-
 module.exports = {
   GITHUB_PRIVATE_KEY,
-  exportGithubSnapshot,
-  scheduledGithubExport
+  exportGithubSnapshot
 };

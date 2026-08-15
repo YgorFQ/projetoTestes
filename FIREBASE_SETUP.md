@@ -1,296 +1,456 @@
 # SenkoLib - Configuracao do Firebase
 
-Este guia foi escrito para quem nunca usou Firebase. Siga a ordem e nao ative
-o modo Firebase no SenkoLib antes de concluir a importacao inicial.
+Este e o roteiro principal para uma pessoa que nunca usou Firebase. Execute em
+ordem e nao pule a verificacao de cada parte.
 
-## O que ja esta preparado no codigo
+Projeto atual:
 
-- Login com Google e bloqueio para contas nao convidadas.
-- Firestore como banco principal.
-- Realtime Database somente para mostrar quem esta no mesmo editor.
-- Cloud Functions para salvar com revisao, detectar conflito e excluir.
-- Exportacao manual para GitHub e agendamento a cada 30 minutos.
-- Regras que deixam o navegador apenas ler dados. Escritas passam pelas Functions.
-- Emuladores para testar sem tocar nos dados reais.
-- Extrator e importador dos arquivos antigos.
+```text
+Firebase project ID: senkolibtestes
+Workspace ID: senkolib
+Repositorio: YgorFQ/projetoTestes
+Branch de backup: main
+Plano esperado: Spark (gratuito)
+```
 
-Na fase atual, `firebase-config.js` ativa Firebase e emuladores somente em
-`localhost` ou `127.0.0.1`. Em qualquer outro endereco, o SenkoLib continua no
-modo antigo e nao acessa os dados reais.
+## Antes de comecar
 
-## Parte 1 - Criar o projeto no Console
+Leia tambem:
 
-1. Abra https://console.firebase.google.com/.
-2. Entre com sua conta Google.
-3. Clique em **Criar um projeto**.
-4. Nome sugerido: `SenkoLib`.
-5. O `Project ID` precisa ser unico. Exemplo: `senkolib-ygor`.
-6. Guarde esse Project ID; ele sera usado nos arquivos e comandos.
-7. O Google Analytics e opcional. Pode deixar desativado.
-8. Conclua a criacao.
+- `docs/firebase/ARCHITECTURE.md`: por que cada componente existe;
+- `docs/firebase/DATA_MODEL.md`: caminhos e campos do banco;
+- `docs/firebase/DEVELOPMENT.md`: ambiente local;
+- `docs/firebase/BACKUP_AND_RESTORE.md`: token, backup e restauracao;
+- `docs/firebase/MIGRATION_STATUS.md`: pronto e pendente.
 
-O Project ID nao pode ser alterado depois.
+Requisitos no computador:
 
-## Parte 2 - Registrar o aplicativo Web
+- Node.js e npm;
+- Java 21 ou compativel para os emuladores;
+- acesso ao projeto `senkolibtestes` no Firebase Console;
+- acesso ao repositorio para quem for testar backup real.
 
-1. Na pagina inicial do projeto, clique no icone **Web** (`</>`).
-2. Apelido sugerido: `SenkoLib Web`.
-3. Nao marque Firebase Hosting ainda.
-4. Clique em **Registrar app**.
-5. O Console mostrara um objeto chamado `firebaseConfig`.
-6. Abra `app/infrastructure/firebase/firebase-config.js`.
-7. Copie somente os valores para dentro da propriedade `firebase`.
-8. Mantenha a ativacao restrita ao localhost enquanto a migracao estiver sendo
-   validada.
+Nao e necessario ativar o plano Blaze. A arquitetura ativa nao implanta Cloud
+Functions, nao usa Scheduler e nao usa Secret Manager.
 
-Exemplo apenas de formato:
+## O que o codigo ja possui
+
+- configuracao publica do aplicativo Web;
+- login Google;
+- verificacao de membros;
+- listeners em tempo real;
+- transacoes de criacao, edicao e exclusao;
+- revisoes e controle de conflitos;
+- regras Firestore para escrita direta de membros;
+- presenca pelo Realtime Database;
+- emuladores locais;
+- migracao dos arquivos antigos;
+- backup manual para GitHub;
+- restauracao administrativa;
+- testes automatizados.
+
+O Firebase esta ativado somente em localhost enquanto o corte de producao nao
+for concluido.
+
+## Parte 1 - Conferir o projeto Firebase
+
+1. Abra o [Firebase Console](https://console.firebase.google.com/).
+2. Entre com a conta que administra o projeto.
+3. Abra **senkolibtestes**.
+4. Clique na engrenagem e abra **Configuracoes do projeto**.
+5. Confirme que o **ID do projeto** e `senkolibtestes`.
+6. Abra **Uso e faturamento** e confirme o plano Spark.
+
+O nome visivel pode mudar; o ID do projeto nao deve mudar no codigo.
+
+## Parte 2 - Conferir o aplicativo Web
+
+Em **Configuracoes do projeto > Geral > Seus apps**, deve existir um aplicativo
+Web. A configuracao publica usada pelo SenkoLib fica em:
+
+```text
+app/infrastructure/firebase/firebase-config.js
+```
+
+Campos esperados:
 
 ```js
 firebase: {
-  apiKey: 'valor-mostrado-pelo-console',
-  authDomain: 'senkolib-ygor.firebaseapp.com',
-  projectId: 'senkolib-ygor',
-  storageBucket: 'senkolib-ygor.firebasestorage.app',
-  messagingSenderId: '...',
+  apiKey: '...',
+  authDomain: 'senkolibtestes.firebaseapp.com',
+  projectId: 'senkolibtestes',
+  storageBucket: 'senkolibtestes.firebasestorage.app',
+  messagingSenderId: '340361654040',
   appId: '...',
-  databaseURL: '...'
+  databaseURL: 'https://senkolibtestes-default-rtdb.firebaseio.com'
 }
 ```
 
-Essa configuracao Web e publica por natureza. Chave administrativa e chave
-privada do GitHub nunca entram nesse arquivo.
+A `apiKey` do app Web identifica o projeto e pode ficar no frontend. Ela nao e
+uma credencial administrativa. O acesso real e controlado por Authentication
+e Security Rules.
 
-## Parte 3 - Ativar os produtos
+Nunca coloque nesse arquivo:
 
-### Authentication
+- chave JSON de conta de servico;
+- token pessoal do GitHub;
+- chave privada de GitHub App;
+- senha.
+
+## Parte 3 - Ativar Authentication
 
 1. No menu lateral, abra **Build > Authentication**.
-2. Clique em **Comecar**.
+2. Clique em **Comecar**, se necessario.
 3. Abra **Sign-in method**.
-4. Selecione **Google**.
-5. Ative o provedor.
-6. Escolha seu e-mail como e-mail de suporte.
+4. Abra **Google**.
+5. Marque **Ativar**.
+6. Escolha um e-mail de suporte.
 7. Salve.
 
-### Cloud Firestore
+Antes da producao, confira **Settings > Authorized domains**. O dominio usado
+pelo app precisa estar autorizado. `localhost` normalmente ja aparece.
+
+Authentication responde apenas quem e a pessoa. A permissao vem do documento
+`members/{uid}` explicado na Parte 8.
+
+## Parte 4 - Ativar Cloud Firestore
 
 1. Abra **Build > Firestore Database**.
-2. Clique em **Criar banco de dados**.
-3. Escolha **Standard edition / Native mode**.
-4. Escolha a regiao `southamerica-east1` (Sao Paulo), se estiver disponivel.
-5. Escolha modo de producao.
-6. Conclua.
+2. Clique em **Criar banco de dados**, se ainda nao existir.
+3. Escolha o modo de producao.
+4. Escolha uma regiao proxima da equipe e mantenha essa decisao.
+5. Conclua.
 
-A localizacao do Firestore nao pode ser trocada depois.
+Nao use as regras temporarias abertas do modo de teste. O arquivo oficial e
+`firestore.rules`.
 
-### Realtime Database
+O Firestore guarda:
+
+- grupos;
+- layouts da Biblioteca e variacoes;
+- colecoes e layouts internos;
+- revisoes;
+- reservas de nome;
+- historico de backups.
+
+## Parte 5 - Ativar Realtime Database
 
 1. Abra **Build > Realtime Database**.
 2. Clique em **Criar banco de dados**.
-3. Escolha `us-central1` (Iowa). O Realtime Database nao oferece uma regiao no
-   Brasil; essa e a opcao disponivel nas Americas.
-4. Escolha modo bloqueado.
-5. Depois de criado, copie a URL mostrada no topo.
-6. Cole essa URL em `databaseURL` no `firebase-config.js`.
+3. Escolha a regiao.
+4. Inicie bloqueado.
+5. Confirme que a URL e:
 
-Este banco guarda apenas presenca: entrada e saida de pessoas dos editores.
+```text
+https://senkolibtestes-default-rtdb.firebaseio.com
+```
 
-### Storage
+Ele guarda somente presenca temporaria. O Firestore continua sendo o banco do
+conteudo.
 
-O Console pode exigir que o projeto esteja no plano Blaze antes de criar o
-bucket. Nao confirme a cobranca sem antes ler a Parte 6 e criar um alerta de
-orcamento. O Storage nao e necessario para o primeiro teste local.
+## Parte 6 - Storage
 
-1. Abra **Build > Storage**.
-2. Clique em **Comecar**.
-3. Use a mesma regiao do Firestore quando o Console permitir.
-4. Escolha regras de producao.
+Storage nao e usado pelas features atuais. Se o Console permitir ativar no
+plano escolhido, mantenha `storage.rules` implantado. Se a ativacao pedir
+faturamento, pule esta parte: isso nao bloqueia Biblioteca, Colecoes ou backup.
 
-## Parte 4 - Preparar o computador
+Nao adapte layouts para Storage sem atualizar arquitetura, modelo de dados,
+regras e restauracao.
 
-Abra PowerShell na pasta do projeto:
+## Parte 7 - Preparar o projeto local
+
+Abra PowerShell:
 
 ```powershell
-cd D:\Cursos\Repositorios\projetoTestes
+Set-Location D:\Cursos\Repositorios\projetoTestes
 npm install
-npm --prefix functions install
+npx firebase-tools login
+npx firebase-tools use
 ```
 
-Os emuladores exigem Java. Instale JDK 21 quando `java -version` ainda nao
-funcionar:
+Resultado esperado de `use`:
 
-```powershell
-winget install Microsoft.OpenJDK.21
+```text
+Active Project: default (senkolibtestes)
 ```
 
-Feche e abra o PowerShell depois da instalacao e confira:
+Confira Java:
 
 ```powershell
 java -version
 ```
 
-Depois conecte a Firebase CLI:
+Confira sintaxe e regras:
 
 ```powershell
-npm run firebase:login
-Copy-Item .firebaserc.example .firebaserc
+node --check app/infrastructure/firebase/senko-firebase.js
+node --check app/infrastructure/firebase/senko-firestore-writes.js
+node --check app/infrastructure/firebase/senko-github-backup.js
+node --check app/infrastructure/firebase/senko-firebase-ui.js
+npx firebase-tools deploy --only firestore:rules --dry-run
 ```
 
-Abra `.firebaserc` e troque `SEU_PROJECT_ID` pelo Project ID criado no Console.
-Depois confirme:
+`--dry-run` compila, mas nao publica.
 
-```powershell
-npx firebase-tools use SEU_PROJECT_ID
-```
+## Parte 8 - Testar localmente
 
-## Parte 5 - Testar localmente sem usar producao
-
-1. Em `firebase-config.js`, preencha os dados Web.
-2. Confirme que `enabled` e `useEmulators` usam a verificacao `isLocalhost`.
-3. Execute:
+Inicie todos os emuladores:
 
 ```powershell
 npm run firebase:emulators
 ```
 
-4. Abra http://127.0.0.1:5000/.
-5. Clique em **Entrar com Google**.
-6. O emulador mostra uma tela de login simulada; nenhum login real e enviado.
-7. O primeiro usuario local vira membro automaticamente.
-8. A interface dos emuladores fica em http://127.0.0.1:4000/.
+Enderecos:
 
-Fora de localhost, o modo antigo permanece ativo ate o corte de producao.
-
-## Parte 6 - Publicar regras e Functions basicas
-
-O plano Blaze sera necessario para Cloud Functions implantadas e para o
-agendamento de 30 minutos. Configure um alerta de orcamento no Google Cloud
-antes de publicar.
-
-Primeiro publique apenas regras e operacoes de dados:
-
-```powershell
-npx firebase-tools deploy --only firestore,database,storage
-npx firebase-tools deploy --only functions:saveVersionedContent,functions:saveCollection,functions:deleteContent,functions:ensurePresenceAccess
+```text
+SenkoLib:   http://127.0.0.1:5000
+Emulator UI http://127.0.0.1:4000
 ```
 
-Nao publique as Functions do GitHub antes de configurar o GitHub App.
+1. Abra o SenkoLib.
+2. Clique em **Entrar com Google**.
+3. No emulador, use uma identidade de teste.
+4. O ambiente local cria o documento de membro automaticamente.
+5. Confirme layouts e colecoes.
 
-## Parte 7 - Cadastrar o primeiro membro real
+O bootstrap automatico existe somente no emulador. Nunca adicione esse
+comportamento em producao.
 
-1. Coloque `enabled: true` e `useEmulators: false`.
-2. Abra o SenkoLib pelo servidor local ou site publicado.
-3. Clique em **Entrar com Google**.
-4. A tela informara que a conta ainda nao tem acesso. Isso e esperado.
-5. Volte ao Console Firebase.
-6. Abra **Authentication > Users**.
-7. Copie o `User UID` da sua conta.
-8. Abra **Firestore Database > Data**.
-9. Crie a colecao `workspaces`.
-10. Crie o documento `senkolib`.
-11. Adicione `name` como string `SenkoLib`.
-12. Adicione `dataVersion` como number `0`.
-13. Dentro desse documento, crie a subcolecao `members`.
-14. Crie um documento cujo ID seja exatamente o User UID copiado.
-15. Adicione `email`, `displayName` e `joinedAt`.
-16. Recarregue o SenkoLib.
+## Parte 9 - Rodar testes de regras
 
-Para convidar outra pessoa, ela entra uma vez, voce copia o UID em
-Authentication e cria outro documento em `workspaces/senkolib/members`.
+Com o emulador Firestore aberto:
 
-## Parte 8 - Preparar a migracao dos dados atuais
+```powershell
+$env:FIRESTORE_EMULATOR_HOST='127.0.0.1:8080'
+node tests/firestore-client-writes.test.js
+```
 
-Crie o snapshot:
+O teste confirma:
+
+- CRUD de todos os tipos principais;
+- revisao e conflito;
+- exclusao recursiva;
+- incremento de `dataVersion`;
+- log e metadados de backup;
+- bloqueio de visitante;
+- bloqueio de escrita em `members`;
+- exportador contra GitHub simulado.
+
+Mensagens `PERMISSION_DENIED` aparecem nos casos negativos esperados. O final
+deve mostrar:
+
+```text
+Firestore client/rules test: OK
+```
+
+## Parte 10 - Publicar regras e indices
+
+Antes de publicar, revise `git diff` e rode os testes. Depois:
+
+```powershell
+npx firebase-tools deploy --only firestore:rules,firestore:indexes,database,storage
+```
+
+Se Storage nao estiver ativado, publique apenas:
+
+```powershell
+npx firebase-tools deploy --only firestore:rules,firestore:indexes,database
+```
+
+Nao use `firebase deploy` sem `--only`: o `firebase.json` ainda lista Functions
+para desenvolvimento e historico, mas o plano Spark nao deve tentar implanta-las.
+
+Depois do deploy:
+
+1. abra Firestore > Rules e confira o horario;
+2. abra Realtime Database > Rules e confira o horario;
+3. rode um login real apenas depois de cadastrar o membro.
+
+## Parte 11 - Cadastrar o primeiro membro real
+
+O UID so aparece depois que a conta se autentica pelo menos uma vez.
+
+1. Ative temporariamente o frontend no dominio de teste ou use um fluxo de
+   autenticacao controlado.
+2. A pessoa tenta entrar com Google.
+3. Em **Authentication > Users**, copie o UID.
+4. Em **Firestore Database > Data**, abra ou crie:
+
+```text
+workspaces
+  senkolib
+    members
+      UID_COPIADO
+```
+
+5. No documento, adicione:
+
+```text
+uid         string  UID_COPIADO
+email       string  email da pessoa
+displayName string  nome da pessoa
+joinedAt    timestamp horario atual
+```
+
+6. Em Realtime Database > Data, crie:
+
+```text
+presenceAccess/senkolib/UID_COPIADO = true
+```
+
+7. A pessoa recarrega e entra novamente.
+
+O documento Firestore concede CRUD completo. O valor do Realtime concede
+somente presenca. Remover um membro exige apagar ambos e, se necessario,
+desativar a conta em Authentication.
+
+As regras impedem que o frontend crie ou altere membros.
+
+## Parte 12 - Preparar os dados antigos
+
+Gere o snapshot:
 
 ```powershell
 npm run migration:build
 ```
 
-O arquivo sera criado em:
+Resultado atual esperado:
 
 ```text
-migration-output/senkolib-legacy.json
+groups: 5
+bibliotecaLayouts: 34
+bibliotecaVariants: 11
+collections: 5
+collectionLayouts: 48
+warnings: []
 ```
 
-O extrator valida quantidades e informa layouts ou variantes orfas. O snapshot
-nao entra no Git porque a pasta esta no `.gitignore`.
-
-Para importar no Firestore Emulator:
+Teste a importacao no emulador:
 
 ```powershell
 $env:SENKO_FIREBASE_PROJECT_ID='senkolibtestes'
 $env:FIRESTORE_EMULATOR_HOST='127.0.0.1:8080'
-npm --prefix functions run migrate:legacy -- --allow-warnings
-```
-
-O importador local nao usa chave administrativa. `--allow-warnings` preserva
-os itens validos e registra quantos itens orfaos foram ignorados.
-
-Para importar em producao:
-
-1. No Console, abra **Configuracoes do projeto > Contas de servico**.
-2. Clique em **Gerar nova chave privada**.
-3. Salve o JSON fora do repositorio. Exemplo: `D:\Segredos\senkolib-admin.json`.
-4. Nunca envie esse JSON ao GitHub.
-5. No PowerShell, execute:
-
-```powershell
-$env:GOOGLE_APPLICATION_CREDENTIALS='D:\Segredos\senkolib-admin.json'
-$env:SENKO_FIREBASE_PROJECT_ID='SEU_PROJECT_ID'
 npm --prefix functions run migrate:legacy
 ```
 
-Se o extrator encontrar inconsistencias, a importacao para. Corrija os dados
-antes de continuar. `--allow-warnings` existe para emergencia, mas pula itens
-orfaos e nao deve ser a primeira escolha.
+Sem `--force`, o importador recusa um workspace que ja possui layouts ou
+colecoes. Essa e uma protecao. Nunca use `--force` apenas para contornar a
+mensagem; primeiro descubra quais dados existem.
 
-Depois da importacao:
-
-1. Confira contagens no Firestore.
-2. Remova as variaveis da sessao fechando o PowerShell.
-3. Exclua a chave local.
-4. No Console/IAM, revogue a chave gerada.
-
-## Parte 9 - Configurar o backup GitHub
-
-Esta parte pode ser feita depois que leitura e salvamento Firebase estiverem
-validados.
-
-1. No GitHub, abra **Settings > Developer settings > GitHub Apps**.
-2. Crie um GitHub App para o SenkoLib.
-3. Em Repository permissions, conceda **Contents: Read and write**.
-4. Desative webhook se ele nao for usado.
-5. Instale o App somente no repositorio de backup escolhido.
-6. Guarde App ID e Installation ID.
-7. Gere uma private key `.pem`.
-8. Copie `functions/.env.example` para
-   `functions/.env.SEU_PROJECT_ID`.
-9. Preencha nesse arquivo `GITHUB_OWNER`, `GITHUB_REPO`, `GITHUB_BRANCH`,
-   `GITHUB_APP_ID` e `GITHUB_INSTALLATION_ID`.
-10. Cadastre a chave privada como Secret Manager:
+Para producao, use uma conta de servico temporaria fora do repositorio:
 
 ```powershell
-npx firebase-tools functions:secrets:set GITHUB_PRIVATE_KEY --data-file 'D:\Segredos\senkolib-github.pem'
+$env:GOOGLE_APPLICATION_CREDENTIALS='D:\Segredos\senkolib-admin.json'
+$env:SENKO_FIREBASE_PROJECT_ID='senkolibtestes'
+Remove-Item Env:FIRESTORE_EMULATOR_HOST -ErrorAction SilentlyContinue
+npm --prefix functions run migrate:legacy
 ```
 
-11. Publique as duas Functions:
+Depois, revogue a chave administrativa.
+
+Alternativa sem chave JSON, usando a conta ja logada no Firebase CLI:
 
 ```powershell
-npx firebase-tools deploy --only functions:exportGithubSnapshot,functions:scheduledGithubExport
+$env:SENKO_FIREBASE_PROJECT_ID='senkolibtestes'
+npm --prefix functions run restore:github:cli-auth -- `
+  --source D:\Cursos\Repositorios\projetoTestes `
+  --commit d9e63426514bee66ac997b608dff706922551c86 `
+  --workspace senkolib
 ```
 
-O botao do header dispara `exportGithubSnapshot`. A Function
-`scheduledGithubExport` verifica mudancas a cada 30 minutos e nao cria commit
-quando `dataVersion` nao mudou.
+Esse caminho restaura um commit de backup e interrompe se o workspace ja tiver
+conteudo gerenciado. Ele foi usado no corte inicial para escrever os dados reais
+sem guardar chave administrativa no projeto.
+
+## Parte 13 - Configurar backup GitHub
+
+O destino publico ja esta em `firebase-config.js`:
+
+```js
+githubBackup: {
+  owner: 'YgorFQ',
+  repo: 'projetoTestes',
+  branch: 'main'
+}
+```
+
+Cada pessoa que fara backup precisa:
+
+1. acesso de escrita ao repositorio;
+2. um fine-grained personal access token limitado ao repositorio;
+3. permissao `Contents: Read and write`;
+4. ser membro Firebase.
+
+O passo a passo completo esta em
+`docs/firebase/BACKUP_AND_RESTORE.md`.
+
+O token e colado na janela do botao GitHub e guardado somente no navegador.
+Ele nao deve ser enviado ao Firebase nem ao codigo.
+
+## Parte 14 - Ativar Firebase fora de localhost
+
+Hoje `firebase-config.js` possui:
+
+```js
+enabled: isLocalhost,
+useEmulators: isLocalhost
+```
+
+Isto evita que o site atual use o banco real antes do corte. Quando todas as
+pendencias de `MIGRATION_STATUS.md` estiverem concluídas, separe as condicoes:
+
+```js
+enabled: true,
+useEmulators: isLocalhost
+```
+
+Antes dessa alteracao:
+
+1. publique regras e indices;
+2. cadastre membros e `presenceAccess`;
+3. importe os dados;
+4. crie e restaure um backup real;
+5. confira dominios autorizados;
+6. tenha um commit de rollback.
+
+Se um backup ja aparece no GitHub mas a pagina publica nao mostra a alteracao,
+isso e esperado enquanto `enabled` continuar dependendo de `isLocalhost`. O
+backup fica em `senkolib-data/`; ele nao substitui a etapa de importar dados no
+Firestore real nem a etapa de ativar Firebase no GitHub Pages.
 
 ## Erros comuns
 
-- **Configuracao Firebase incompleta:** algum valor do `firebaseConfig` ficou vazio.
-- **Conta sem acesso:** o UID ainda nao existe em `members`.
-- **Failed to fetch dynamically imported module:** abra por servidor HTTP, nao
-  dependa de `file://`.
-- **Java nao encontrado:** instale JDK 21 e reabra o PowerShell.
-- **Outra pessoa salvou uma versao mais recente:** o bloqueio de concorrencia
-  funcionou; compare ou recarregue antes de salvar.
-- **Configuracao GitHub incompleta:** as Functions do GitHub foram publicadas
-  antes dos parametros/GitHub App.
+### `Conta sem acesso`
+
+O login funcionou, mas nao existe
+`workspaces/senkolib/members/{uid}`. Cadastre o UID exato.
+
+### `Missing or insufficient permissions`
+
+Confira login, membro, regras publicadas e `workspaceId`. No ambiente local,
+confirme que o frontend e o emulador usam o mesmo project ID.
+
+### `Outra pessoa salvou uma versao mais recente`
+
+E a protecao de concorrencia. Recarregue ou compare o rascunho; nao altere a
+regra para forcar a sobrescrita.
+
+### Presenca nao aparece
+
+Confira `presenceAccess/senkolib/{uid} = true` e as regras do Realtime
+Database. CRUD do Firestore pode continuar normal.
+
+### Deploy tenta exigir Blaze
+
+Voce provavelmente executou deploy geral ou incluiu Functions. Use os comandos
+com `--only` da Parte 10.
+
+### Backup retorna 401 ou 403
+
+401 indica token invalido ou expirado. 403 indica escopo ou acesso
+insuficiente. Gere um token individual com permissao minima.
+
+### Backup pede token em outro computador
+
+E esperado. A configuracao fica no `localStorage` daquele perfil de navegador
+e nao sincroniza pelo Firebase.

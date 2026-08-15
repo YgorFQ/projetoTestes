@@ -294,6 +294,17 @@
     });
   }
 
+  function getClientContext() {
+    assertReady();
+    return {
+      db: services.db,
+      firestore: modules.firestore,
+      user: state.user,
+      member: state.member,
+      workspaceId: getWorkspaceId()
+    };
+  }
+
   function buildQuery(reference, options) {
     var constraints = [];
     var settings = options || {};
@@ -386,7 +397,8 @@
         return {
           uid: uid,
           displayName: session.displayName || 'Pessoa',
-          photoURL: session.photoURL || ''
+          photoURL: session.photoURL || '',
+          sessionCount: Object.keys(sessions).length
         };
       });
       if (typeof callback === 'function') callback(people);
@@ -420,6 +432,7 @@
     signInWithGoogle: signInWithGoogle,
     signOut: signOut,
     call: callFunction,
+    getClientContext: getClientContext,
     listenCollection: listenCollection,
     listenCollectionGroup: listenCollectionGroup,
     listenDocument: listenDocument,

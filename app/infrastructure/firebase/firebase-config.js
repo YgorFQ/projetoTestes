@@ -8,10 +8,17 @@
    * aqui. Consulte FIREBASE_SETUP.md antes de ativar.
    */
   window.SenkoFirebaseConfig = {
-    enabled: isLocalhost,
+    enabled: true,
     sdkVersion: '12.17.0',
     workspaceId: 'senkolib',
     region: 'southamerica-east1',
+
+    /* Destino publico do backup. Cada pessoa informa somente o proprio token. */
+    githubBackup: {
+      owner: 'YgorFQ',
+      repo: 'projetoTestes',
+      branch: 'main'
+    },
 
     /*
      * Ative somente no localhost quando estiver usando

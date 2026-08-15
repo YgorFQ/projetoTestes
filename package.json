@@ -7,12 +7,14 @@
     "firebase:login": "firebase login",
     "firebase:use": "firebase use",
     "firebase:emulators": "firebase emulators:start",
-    "firebase:deploy:rules": "firebase deploy --only firestore,database,storage",
-    "firebase:deploy": "firebase deploy",
-    "migration:build": "node tools/build-legacy-snapshot.js"
+    "firebase:deploy:rules": "firebase deploy --only firestore:rules,firestore:indexes,database",
+    "firebase:deploy:hosting": "firebase deploy --only hosting",
+    "migration:build": "node tools/build-legacy-snapshot.js",
+    "test:firestore-rules": "firebase emulators:exec --only firestore --project senkolib-rules-test \"node tests/firestore-client-writes.test.js\""
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^5.0.0",
+    "firebase": "^12.17.0",
     "firebase-tools": "15.25.0"
   }
 }
-

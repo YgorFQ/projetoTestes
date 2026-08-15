@@ -59,8 +59,10 @@ var ColGroups = (function () {
           slug: (g.slug || '').toLowerCase(),
           name: g.name || g.slug || '',
           cor:  g.cor  || '#aaaaaa',
+          _firebaseVersion: Number(g._firebaseVersion || 0),
         };
       });
+      _pending = [];
     },
 
     /* ─────────────────────────────────────────────────────────────────
@@ -100,6 +102,28 @@ var ColGroups = (function () {
         name: grupo.name || slug,
         cor:  grupo.cor  || '#aaaaaa',
       });
+    },
+
+    upsert: function (grupo) {
+      if (!grupo || !grupo.slug) return;
+      var normalized = {
+        slug: String(grupo.slug).toLowerCase(),
+        name: grupo.name || grupo.slug,
+        cor: grupo.cor || '#aaaaaa',
+        _firebaseVersion: Number(grupo._firebaseVersion || 0)
+      };
+      var index = _findIndex(normalized.slug);
+      if (index === -1) _groups.push(normalized);
+      else _groups[index] = normalized;
+      _pending = _pending.filter(function (item) {
+        return item.slug !== normalized.slug;
+      });
+    },
+
+    remove: function (slug) {
+      var normalized = String(slug || '').toLowerCase();
+      _groups = _groups.filter(function (item) { return item.slug !== normalized; });
+      _pending = _pending.filter(function (item) { return item.slug !== normalized; });
     },
 
     /* ─────────────────────────────────────────────────────────────────

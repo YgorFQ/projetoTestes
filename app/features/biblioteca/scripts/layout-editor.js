@@ -6,9 +6,15 @@
     variant: null,
     html: '',
     css: '',
+    originalName: '',
+    originalTags: '',
+    originalHtml: '',
+    originalCss: '',
     activeTab: 'html',
     width: 1200,
-    timer: null
+    timer: null,
+    presenceLeave: null,
+    presenceToken: 0
   };
 
   function fallbackEscapeTemplate(value) {
@@ -61,6 +67,7 @@
               '<div class="library-editor-editor-heading" id="layoutEditorEditorHeading">Editar layout</div>' +
               '<div class="library-editor-file-pill" id="layoutEditorFilePill"></div>' +
             '</div>' +
+            '<div class="library-editor-presence" id="layoutEditorPresence">Conectando pessoas...</div>' +
           '</div>' +
           '<div class="library-editor-actions">' +
             '<button class="library-editor-btn library-editor-danger-btn" id="layoutEditorDeleteBtn">Excluir</button>' +
@@ -148,6 +155,84 @@
     ['layoutEditorSaveBtn', 'layoutEditorDeleteBtn', 'layoutEditorCopyHtmlBtn', 'layoutEditorCopyCssBtn'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.disabled = Boolean(isBusy);
+    });
+  }
+
+  function isDirty() {
+    syncCurrentEditor();
+    var nameInput = document.getElementById('layoutEditorNameInput');
+    var tagsInput = document.getElementById('layoutEditorTagsInput');
+    var name = nameInput ? nameInput.value : '';
+    var tags = tagsInput ? tagsInput.value : '';
+    return name !== editorState.originalName ||
+      (editorState.mode === 'layout' && tags !== editorState.originalTags) ||
+      editorState.html !== editorState.originalHtml ||
+      editorState.css !== editorState.originalCss;
+  }
+
+  function stopPresence() {
+    editorState.presenceToken += 1;
+    if (typeof editorState.presenceLeave === 'function') editorState.presenceLeave();
+    editorState.presenceLeave = null;
+  }
+
+  function renderPresence(people) {
+    var element = document.getElementById('layoutEditorPresence');
+    if (!element) return;
+    var firebaseState = window.SenkoFirebase && window.SenkoFirebase.getState
+      ? window.SenkoFirebase.getState()
+      : null;
+    var currentUid = firebaseState && firebaseState.user ? firebaseState.user.uid : '';
+    var currentPerson = (people || []).find(function (person) { return person.uid === currentUid; });
+    var ownExtraSessions = currentPerson ? Math.max((currentPerson.sessionCount || 1) - 1, 0) : 0;
+    var others = (people || []).filter(function (person) { return person.uid !== currentUid; });
+    var otherEditorCount = others.length + ownExtraSessions;
+    if (!otherEditorCount) {
+      element.textContent = 'So voce neste editor';
+      element.classList.remove('has-others');
+      element.title = '';
+      return;
+    }
+    var names = others.map(function (person) { return person.displayName; });
+    if (ownExtraSessions) {
+      names.push(ownExtraSessions === 1 ? 'outra sessao sua' : ownExtraSessions + ' outras sessoes suas');
+    }
+    if (otherEditorCount === 1) {
+      element.textContent = ownExtraSessions
+        ? 'Outra sessao sua tambem esta editando'
+        : names[0] + ' tambem esta editando';
+    } else {
+      element.textContent = otherEditorCount + ' outras sessoes tambem estao editando';
+    }
+    element.classList.add('has-others');
+    element.title = names.join(', ');
+  }
+
+  function startPresence() {
+    stopPresence();
+    var repository = getFirebaseRepository();
+    var layoutId = editorState.layout && editorState.layout.id;
+    var variantId = editorState.mode === 'variant' && editorState.variant
+      ? editorState.variant.id
+      : '';
+    var presenceElement = document.getElementById('layoutEditorPresence');
+    if (!repository || !layoutId || typeof repository.enterEditor !== 'function') {
+      if (presenceElement) presenceElement.hidden = true;
+      return;
+    }
+
+    var token = editorState.presenceToken;
+    if (presenceElement) presenceElement.hidden = false;
+    renderPresence([]);
+    repository.enterEditor(layoutId, renderPresence, variantId).then(function (leave) {
+      if (token !== editorState.presenceToken || !isOpen()) {
+        if (typeof leave === 'function') leave();
+        return;
+      }
+      editorState.presenceLeave = leave;
+    }).catch(function (error) {
+      console.error('[Biblioteca] Presenca indisponivel:', error);
+      if (presenceElement) presenceElement.textContent = 'Presenca indisponivel';
     });
   }
 
@@ -315,6 +400,7 @@
   }
 
   function closeEditor() {
+    stopPresence();
     var overlay = document.getElementById('layoutEditorLayoutOverlay');
     if (overlay) overlay.classList.add('hidden');
     document.body.style.overflow = '';
@@ -744,6 +830,10 @@
     editorState.variant = null;
     editorState.html = layout.html || '';
     editorState.css = layout.css || '';
+    editorState.originalName = layout.name || '';
+    editorState.originalTags = (layout.tags || []).filter(Boolean).join(', ');
+    editorState.originalHtml = editorState.html;
+    editorState.originalCss = editorState.css;
     editorState.activeTab = 'html';
     editorState.width = 1200;
 
@@ -762,6 +852,7 @@
 
     document.getElementById('layoutEditorLayoutOverlay').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    startPresence();
     setTimeout(fitPreview, 0);
   }
 
@@ -774,6 +865,10 @@
     editorState.variant = variant;
     editorState.html = variant.html || '';
     editorState.css = variant.css || '';
+    editorState.originalName = variant.name || '';
+    editorState.originalTags = '';
+    editorState.originalHtml = editorState.html;
+    editorState.originalCss = editorState.css;
     editorState.activeTab = 'html';
     editorState.width = 1200;
 
@@ -793,6 +888,7 @@
 
     document.getElementById('layoutEditorLayoutOverlay').classList.remove('hidden');
     document.body.style.overflow = 'hidden';
+    startPresence();
     setTimeout(fitPreview, 0);
   }
 
@@ -803,6 +899,38 @@
     isOpen: isOpen,
     notifyRemoteChange: function (message) {
       setStatus(message || 'Existe uma versao mais recente no Firebase.');
+    },
+    applyRemoteChange: function (remote) {
+      var currentItem = editorState.mode === 'variant'
+        ? editorState.variant
+        : editorState.layout;
+      if (!remote || !currentItem || remote.id !== currentItem.id) return;
+      if (isDirty()) {
+        setStatus('Outra pessoa salvou uma versao mais recente. Seu rascunho foi preservado.');
+        return;
+      }
+
+      currentItem.name = remote.name || '';
+      currentItem.tags = Array.isArray(remote.tags) ? remote.tags.slice() : [];
+      currentItem.html = remote.html || '';
+      currentItem.css = remote.css || '';
+      currentItem._firebaseRevisionId = remote._firebaseRevisionId || null;
+      currentItem._firebaseVersion = Number(remote._firebaseVersion || 0);
+      editorState.html = currentItem.html;
+      editorState.css = currentItem.css;
+      editorState.originalName = currentItem.name;
+      editorState.originalTags = editorState.mode === 'layout'
+        ? currentItem.tags.join(', ')
+        : '';
+      editorState.originalHtml = editorState.html;
+      editorState.originalCss = editorState.css;
+      document.getElementById('layoutEditorNameInput').value = currentItem.name;
+      if (editorState.mode === 'layout') {
+        document.getElementById('layoutEditorTagsInput').value = editorState.originalTags;
+      }
+      setEditorTab(editorState.activeTab, true);
+      refreshPreview();
+      setStatus('Atualizado ao vivo por ' + (remote._firebaseUpdatedBy || 'outra pessoa') + '.');
     },
     getCurrentData: getCurrentData,
     buildLayoutObjectCode: function () { return buildLayoutObjectCode(getCurrentData()); },

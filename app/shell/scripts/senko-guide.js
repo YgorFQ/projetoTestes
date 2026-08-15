@@ -283,6 +283,7 @@
             'Motor de colecoes: scripts/col-core.js.',
             'Motor de grupos: scripts/col-groups.js.',
             'Modais: scripts/col-modals.js.',
+            'Gerenciador de grupos: cria, edita e exclui grupos vazios no modo Firebase.',
             'Editor de layouts completos: scripts/col-layout-editor.js.',
             'Estilos do editor: styles/col-layout-editor.css.',
             'Dados: data/manifest.js, data/col-groups-data.js e data/collections/.',
@@ -432,12 +433,14 @@
             'A configuracao fica em app/infrastructure/firebase/firebase-config.js e o passo a passo completo fica em FIREBASE_SETUP.md.'
           ],
           bullets: [
+            'Documentacao canonica: docs/README.md e docs/firebase/.',
+            'Estado e pendencias: docs/firebase/MIGRATION_STATUS.md.',
             'Firestore guarda conteudo, metadados e revisoes.',
             'Variantes e layouts de colecao sao observados nas subcolecoes de cada documento pai.',
-            'Cloud Functions valida nomes, conflitos, exclusoes e exportacoes.',
+            'O navegador executa transacoes e Firestore Rules valida membro, campos, versoes e limites.',
             'Realtime Database guarda somente quem esta presente em um editor.',
             'Storage recebera imagens e conteudos que ultrapassarem o limite definido.',
-            'O navegador nunca recebe credencial administrativa nem chave privada do GitHub.'
+            'O navegador nunca recebe credencial administrativa nem chave privada do GitHub; o backup usa o token individual de quem clicou.'
           ]
         },
         {
@@ -451,10 +454,12 @@
           bullets: [
             'Cada save cria uma revisao imutavel.',
             'baseRevisionId detecta se outra pessoa salvou antes.',
-            'O editor oficial da Biblioteca salva layouts e variacoes pelas Cloud Functions.',
+            'O editor oficial da Biblioteca salva layouts e variacoes por transacoes do SDK Web.',
             'Novos layouts e variacoes recebem IDs de documento gerados pelo Firestore.',
-            'Visualizadores podem receber a nova versao imediatamente.',
-            'Editores com alteracoes locais precisam comparar ou recarregar antes de salvar.'
+            'Colecoes e seus layouts internos usam o mesmo fluxo de transacoes e revisoes.',
+            'Biblioteca e Colecoes mostram quem esta no mesmo editor usando o Realtime Database.',
+            'Um editor sem rascunho aplica a nova versao imediatamente na tela.',
+            'Um editor com alteracoes locais preserva o rascunho, avisa sobre a versao nova e continua usando a revisao antiga para impedir sobrescrita silenciosa.'
           ]
         },
         {
@@ -466,8 +471,8 @@
             'Entrar com Google nao concede acesso sozinho: o UID precisa existir em workspaces/senkolib/members.'
           ],
           bullets: [
-            'Firestore Rules libera leitura apenas para membros.',
-            'Escritas de conteudo passam pelas Cloud Functions.',
+            'Firestore Rules libera leitura e escrita valida apenas para membros.',
+            'O frontend nao pode criar ou alterar documentos de members.',
             'O primeiro membro real e cadastrado manualmente no Console.',
             'Nos emuladores, o primeiro usuario local e cadastrado automaticamente.'
           ]
@@ -483,8 +488,11 @@
           bullets: [
             'Gerar: npm run migration:build.',
             'Saida: migration-output/senkolib-legacy.json.',
+            'As duas antigas variacoes orfas foram promovidas a layouts independentes sem perda de conteudo.',
+            'O snapshot atual possui 34 layouts, 11 variacoes e nenhum warning.',
+            'Grupos importados recebem campos completos, auditoria e reserva de nome.',
             'No emulador, defina FIRESTORE_EMULATOR_HOST antes de importar.',
-            'Importar: npm --prefix functions run migrate:legacy -- --allow-warnings.',
+            'Importar: npm --prefix functions run migrate:legacy. Use --allow-warnings somente depois de investigar cada warning.',
             'Chave administrativa deve ficar fora do repositorio e ser revogada depois.'
           ]
         },
@@ -514,16 +522,17 @@
           badge: 'token',
           terms: 'github token owner repo branch localstorage config',
           paragraphs: [
-            'No modo Firebase, GitHub e um backup global: o navegador chama uma Function e nunca recebe token ou chave privada.',
-            'As configuracoes antigas em localStorage continuam apenas durante a transicao com Firebase desativado.'
+            'No modo Firebase, GitHub e um backup global acionado manualmente pelo botao do shell.',
+            'Cada pessoa usa seu proprio fine-grained token, guardado somente no localStorage daquele navegador.'
           ],
           bullets: [
-            'Botao global: cria snapshot manual do workspace.',
-            'Agendamento: verifica mudancas a cada 30 minutos.',
-            'Autenticacao do servidor: GitHub App com Contents read/write.',
-            'Chave privada: Secret Manager das Cloud Functions.',
+            'Botao global: le o Firebase e cria um snapshot manual do workspace.',
+            'Nao existe backup automatico, GitHub Actions ou agendamento de 30 minutos.',
+            'Token recomendado: fine-grained, somente no repositorio e Contents read/write.',
+            'GitHub App e chave privada nao fazem parte da arquitetura ativa.',
             'Formato exportado: JSON em senkolib-data/.',
-            'Modo legado: senkolib_github_config e senkolib_github_token continuam temporariamente compativeis.'
+            'A restauracao administrativa existe; o ensaio com um commit real ainda bloqueia o corte de producao.',
+            'As chaves senkolib_github_config e senkolib_github_token sao compartilhadas com o modo legado para compatibilidade.'
           ]
         },
         {
@@ -532,7 +541,7 @@
           terms: 'botao global github criacao rapida provider registerGithubProvider registerCreateProvider independencia',
           paragraphs: [
             'Os botoes de GitHub e criacao rapida ficam no shell porque sao controles globais.',
-            'Mesmo assim, cada feature registra seus providers e continua dona de sua propria logica.'
+            'No modo Firebase, a infraestrutura registra um exportador global; no modo legado, cada feature ainda pode registrar seu provider.'
           ],
           note: 'Analogia: o shell oferece as tomadas. Biblioteca e Colecoes conectam seus proprios motores por contratos publicos.'
         },
@@ -541,15 +550,32 @@
           badge: 'api',
           terms: 'github contents api get put delete sha salvar excluir manifest',
           paragraphs: [
-            'No modo Firebase, o botao pede a uma Cloud Function que leia uma versao consistente do workspace e crie um unico commit.',
+            'No modo Firebase, o navegador autenticado le os dados atuais do workspace e cria um unico commit pela Git Data API.',
             'O GitHub nao participa de criar, editar ou excluir dentro do SenkoLib.'
           ],
           bullets: [
-            'Exportacao manual: qualquer membro pode usar o botao global.',
-            'Exportacao automatica: scheduledGithubExport roda a cada 30 minutos.',
-            'Sem mudanca em dataVersion, o agendamento nao cria commit vazio.',
+            'Exportacao manual: qualquer membro que tambem tenha token com acesso ao repositorio pode usar o botao global.',
+            'Nao existe exportacao automatica; a equipe e responsavel por acionar o backup.',
+            'O token nunca entra no snapshot ou no Firestore.',
             'O historico Git preserva snapshots anteriores mesmo quando um item e excluido.',
+            'Se dataVersion mudar durante a leitura, o exportador descarta a tentativa e le novamente antes de criar o commit.',
             'As integracoes Contents API por feature permanecem somente no modo legado ate a migracao terminar.'
+          ]
+        },
+        {
+          title: 'Como restaurar um backup',
+          badge: 'admin',
+          terms: 'restaurar backup snapshot dry run force commit workspace firebase admin',
+          paragraphs: [
+            'Restauracao e uma operacao administrativa local. Ela nao aparece como botao para membros e exige acesso administrativo ao Firebase.',
+            'O procedimento completo e os comandos ficam em docs/firebase/BACKUP_AND_RESTORE.md.'
+          ],
+          bullets: [
+            'Executar --dry-run antes de qualquer escrita.',
+            'Restaurar primeiro em um workspace descartavel.',
+            'Sem --force, um workspace com conteudo e recusado.',
+            '--force substitui conteudo e reservas, mas preserva membros e segredos.',
+            'O teste automatizado usa npm --prefix functions run test:restore:emulator.'
           ]
         }
       ]
@@ -741,12 +767,12 @@
             'GitHub precisa ser tratado com cuidado porque mexe em arquivos reais do repositorio.'
           ],
           bullets: [
-            'Confirmar se a mudanca pertence ao provider da feature correta.',
+            'Confirmar se a mudanca pertence ao exportador global Firebase ou a uma integracao legada de feature.',
             'Verificar owner, repo e branch configurados.',
             'Testar sem token para ver se a tela de erro aparece.',
-            'Testar com token valido e permissao de escrita.',
-            'Conferir se GET, PUT e DELETE usam SHA correto.',
-            'Conferir se o manifest da feature foi atualizado quando arquivo novo entrou.',
+            'Testar com fine-grained token limitado ao repositorio e Contents read/write.',
+            'Conferir se o commit usa tree atomica e atualiza a branch sem force.',
+            'Conferir manifest.json, remocao de arquivos obsoletos e ausencia de segredos.',
             'Atualizar o guia se a mensagem de erro, permissao ou fluxo mudar.'
           ]
         },
@@ -915,13 +941,13 @@
           badge: 'mensagem',
           terms: 'mensagem token nao encontrado ausente github configurar credenciais',
           paragraphs: [
-            'Acontece quando a feature tenta salvar no GitHub sem token configurado.'
+            'Acontece quando o backup ou uma integracao legada tenta usar o GitHub sem token configurado.'
           ],
           bullets: [
             'Abrir o botao global de GitHub.',
             'Informar owner, repo, branch e token.',
-            'Confirmar se a feature ativa tem provider de GitHub registrado.',
-            'A operacao deve parar com erro claro, sem quebrar outras features.'
+            'No modo Firebase, confirmar se SenkoGithubBackup foi carregado antes de senko-firebase-ui.js.',
+            'A operacao deve parar com erro claro, sem afetar saves no Firebase.'
           ]
         },
         {
@@ -932,8 +958,8 @@
             'Normalmente significa token sem permissao suficiente ou repo errado.'
           ],
           bullets: [
-            'Token classic: precisa de escopo repo.',
-            'Token fine-grained: precisa de Contents read/write no repositorio certo.',
+            'Preferir token fine-grained; nao compartilhar token classic entre a equipe.',
+            'O fine-grained token precisa de Contents read/write somente no repositorio certo.',
             'Conferir se owner e repo apontam para o projeto correto.',
             'Conferir se a branch existe.'
           ]

@@ -147,6 +147,24 @@
   /* background é definido inline pelo JS com a cor do grupo */
 }
 
+.col-groups-manage-btn {
+  margin-left: auto;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: .35rem .7rem;
+  background: var(--bg3);
+  color: var(--text2);
+  font: 700 .78rem var(--font-body);
+  cursor: pointer;
+  transition: border-color var(--transition), color var(--transition), background var(--transition);
+}
+
+.col-groups-manage-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
 /* Stats bar */
 .col-stats-bar {
   font-size: .82rem;
@@ -749,6 +767,100 @@
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   overflow: hidden;
+}
+
+.col-groups-manager-modal {
+  width: min(620px, calc(100vw - 2rem));
+  max-height: min(720px, calc(100vh - 2rem));
+}
+
+.col-groups-manager-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+}
+
+.col-groups-manager-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .8rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.col-groups-manager-row:last-child {
+  border-bottom: 0;
+}
+
+.col-groups-manager-identity {
+  display: flex;
+  align-items: center;
+  gap: .7rem;
+  min-width: 0;
+}
+
+.col-groups-manager-identity > div {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.col-groups-manager-identity strong {
+  overflow: hidden;
+  color: var(--text);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.col-groups-manager-identity span:not(.col-groups-manager-color) {
+  color: var(--text3);
+  font-size: .75rem;
+}
+
+.col-groups-manager-color {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  border-radius: 50%;
+}
+
+.col-groups-manager-actions {
+  display: flex;
+  gap: .45rem;
+  flex: 0 0 auto;
+}
+
+.col-groups-manager-actions button {
+  min-height: 34px;
+  padding: .35rem .65rem;
+}
+
+.col-groups-manager-empty {
+  margin: 0;
+  padding: 1rem 0;
+  color: var(--text3);
+  text-align: center;
+}
+
+@media (max-width: 620px) {
+  .col-groups-manage-btn {
+    margin-left: 0;
+  }
+
+  .col-groups-manager-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .col-groups-manager-actions {
+    width: 100%;
+  }
+
+  .col-groups-manager-actions button {
+    flex: 1;
+  }
 }
 
 

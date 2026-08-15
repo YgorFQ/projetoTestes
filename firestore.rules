@@ -11,14 +11,384 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/workspaces/$(workspaceId)/members/$(request.auth.uid));
     }
 
+    function validName(value) {
+      return value is string && value.size() >= 2 && value.size() <= 160;
+    }
+
+    function validId(value) {
+      return value is string && value.size() >= 1 && value.size() <= 180;
+    }
+
+    function validTags(value) {
+      return value is list && value.size() <= 40;
+    }
+
+    function dataVersionAdvanced(workspaceId) {
+      let before = get(/databases/$(database)/documents/workspaces/$(workspaceId));
+      let after = getAfter(/databases/$(database)/documents/workspaces/$(workspaceId));
+      return after.data.dataVersion == before.data.dataVersion + 1;
+    }
+
+    function validVersionedDocument(data, workspaceId, resourceId, kind) {
+      return data.keys().hasAll([
+          'id', 'workspaceId', 'kind', 'parentId', 'collectionId',
+          'name', 'nameKey', 'tags', 'html', 'css', 'currentRevisionId',
+          'version', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy',
+          'updatedByName'
+        ])
+        && data.keys().hasOnly([
+          'id', 'legacyId', 'workspaceId', 'kind', 'parentId', 'collectionId',
+          'name', 'nameKey', 'tags', 'html', 'css', 'currentRevisionId',
+          'version', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy',
+          'updatedByName', 'deleting'
+        ])
+        && data.id == resourceId
+        && data.workspaceId == workspaceId
+        && data.kind == kind
+        && validName(data.name)
+        && data.nameKey is string
+        && data.nameKey.size() >= 1
+        && data.nameKey.size() <= 160
+        && validTags(data.tags)
+        && data.html is string
+        && data.html.size() <= 750000
+        && data.css is string
+        && data.css.size() <= 250000
+        && validId(data.currentRevisionId)
+        && data.version is int
+        && data.version >= 1
+        && data.createdBy is string
+        && data.updatedBy is string
+        && data.updatedByName is string
+        && data.updatedByName.size() <= 320;
+    }
+
+    function validVersionedCreate(workspaceId, resourceId, kind) {
+      return validVersionedDocument(request.resource.data, workspaceId, resourceId, kind)
+        && request.resource.data.version == 1
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.createdBy == request.auth.uid
+        && request.resource.data.updatedBy == request.auth.uid
+        && !request.resource.data.keys().hasAny(['deleting'])
+        && dataVersionAdvanced(workspaceId);
+    }
+
+    function validVersionedUpdate(workspaceId, resourceId, kind) {
+      return validVersionedDocument(request.resource.data, workspaceId, resourceId, kind)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'name', 'nameKey', 'tags', 'html', 'css', 'currentRevisionId',
+          'version', 'updatedAt', 'updatedBy', 'updatedByName'
+        ])
+        && request.resource.data.version == resource.data.version + 1
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.updatedBy == request.auth.uid
+        && dataVersionAdvanced(workspaceId);
+    }
+
+    function validDeletingMarker(workspaceId, resourceId, kind) {
+      return validVersionedDocument(request.resource.data, workspaceId, resourceId, kind)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'deleting', 'updatedAt', 'updatedBy'
+        ])
+        && request.resource.data.deleting == true
+        && request.resource.data.version == resource.data.version
+        && request.resource.data.updatedAt == request.time
+        && request.resource.data.updatedBy == request.auth.uid
+        && dataVersionAdvanced(workspaceId);
+    }
+
+    function validRevision(data, workspaceId, resourceId, revisionId, kind) {
+      return data.keys().hasAll([
+          'revisionId', 'resourceId', 'workspaceId', 'kind', 'name', 'tags',
+          'html', 'css', 'baseRevisionId', 'createdAt', 'createdBy',
+          'createdByName'
+        ])
+        && data.keys().hasOnly([
+          'revisionId', 'resourceId', 'workspaceId', 'kind', 'name', 'tags',
+          'html', 'css', 'baseRevisionId', 'createdAt', 'createdBy',
+          'createdByName'
+        ])
+        && data.revisionId == revisionId
+        && data.resourceId == resourceId
+        && data.workspaceId == workspaceId
+        && data.kind == kind
+        && validName(data.name)
+        && validTags(data.tags)
+        && data.html is string
+        && data.html.size() <= 750000
+        && data.css is string
+        && data.css.size() <= 250000
+        && (data.baseRevisionId == null || validId(data.baseRevisionId))
+        && data.createdAt == request.time
+        && data.createdBy == request.auth.uid
+        && data.createdByName is string
+        && data.createdByName.size() <= 320;
+    }
+
+    function validGroup(data, workspaceId, groupId) {
+      return data.keys().hasAll([
+          'id', 'workspaceId', 'name', 'nameKey', 'color', 'version',
+          'createdAt', 'createdBy', 'updatedAt', 'updatedBy', 'updatedByName'
+        ])
+        && data.keys().hasOnly([
+          'id', 'workspaceId', 'name', 'nameKey', 'color', 'version',
+          'createdAt', 'createdBy', 'updatedAt', 'updatedBy', 'updatedByName'
+        ])
+        && data.id == groupId
+        && data.workspaceId == workspaceId
+        && validName(data.name)
+        && data.nameKey is string
+        && data.nameKey.size() >= 1
+        && data.color is string
+        && data.color.matches('^#[0-9a-f]{6}$')
+        && data.version is int
+        && data.version >= 1
+        && data.createdBy is string
+        && data.updatedBy is string
+        && data.updatedByName is string;
+    }
+
+    function validCollection(data, workspaceId, collectionId) {
+      return data.keys().hasAll([
+          'id', 'workspaceId', 'name', 'nameKey', 'groupId', 'tags', 'version',
+          'createdAt', 'createdBy', 'updatedAt', 'updatedBy', 'updatedByName'
+        ])
+        && data.keys().hasOnly([
+          'id', 'legacyId', 'workspaceId', 'name', 'nameKey', 'groupId', 'tags',
+          'version', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy',
+          'updatedByName', 'deleting'
+        ])
+        && data.id == collectionId
+        && data.workspaceId == workspaceId
+        && validName(data.name)
+        && data.nameKey is string
+        && data.nameKey.size() >= 1
+        && (data.groupId == null || validId(data.groupId))
+        && validTags(data.tags)
+        && data.version is int
+        && data.version >= 1
+        && data.createdBy is string
+        && data.updatedBy is string
+        && data.updatedByName is string;
+    }
+
     match /workspaces/{workspaceId} {
       allow read: if isMember(workspaceId);
-      allow write: if false;
+      allow create, delete: if false;
+      allow update: if isMember(workspaceId) && (
+        (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'dataVersion', 'updatedAt', 'updatedBy'
+          ])
+          && request.resource.data.dataVersion == resource.data.dataVersion + 1
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.updatedBy == request.auth.uid
+        )
+        ||
+        (
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'lastGithubExportVersion', 'lastGithubExportAt', 'lastGithubCommitSha'
+          ])
+          && request.resource.data.dataVersion == resource.data.dataVersion
+          && request.resource.data.lastGithubExportVersion is int
+          && request.resource.data.lastGithubExportAt == request.time
+          && request.resource.data.lastGithubCommitSha is string
+          && request.resource.data.lastGithubCommitSha.size() >= 7
+          && request.resource.data.lastGithubCommitSha.size() <= 128
+        )
+      );
 
       match /members/{memberId} {
         allow get: if signedIn() && request.auth.uid == memberId;
         allow list: if isMember(workspaceId);
         allow write: if false;
+      }
+
+      match /groups/{groupId} {
+        allow create: if isMember(workspaceId)
+          && validGroup(request.resource.data, workspaceId, groupId)
+          && request.resource.data.version == 1
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.createdBy == request.auth.uid
+          && request.resource.data.updatedBy == request.auth.uid
+          && dataVersionAdvanced(workspaceId);
+        allow update: if isMember(workspaceId)
+          && validGroup(request.resource.data, workspaceId, groupId)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'name', 'nameKey', 'color', 'version', 'updatedAt',
+            'updatedBy', 'updatedByName'
+          ])
+          && request.resource.data.version == resource.data.version + 1
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.updatedBy == request.auth.uid
+          && dataVersionAdvanced(workspaceId);
+        allow delete: if isMember(workspaceId) && dataVersionAdvanced(workspaceId);
+      }
+
+      match /bibliotecaLayouts/{layoutId} {
+        allow create: if isMember(workspaceId)
+          && validVersionedCreate(workspaceId, layoutId, 'libraryLayout')
+          && request.resource.data.parentId == null
+          && request.resource.data.collectionId == null;
+        allow update: if isMember(workspaceId)
+          && request.resource.data.parentId == null
+          && request.resource.data.collectionId == null
+          && (
+            validVersionedUpdate(workspaceId, layoutId, 'libraryLayout')
+            || validDeletingMarker(workspaceId, layoutId, 'libraryLayout')
+          );
+        allow delete: if isMember(workspaceId) && resource.data.deleting == true;
+
+        match /revisions/{revisionId} {
+          allow create: if isMember(workspaceId)
+            && validRevision(request.resource.data, workspaceId, layoutId, revisionId, 'libraryLayout')
+            && getAfter(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)).data.currentRevisionId == revisionId;
+          allow update: if false;
+          allow delete: if isMember(workspaceId)
+            && get(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)).data.deleting == true;
+        }
+
+        match /variants/{variantId} {
+          allow create: if isMember(workspaceId)
+            && validVersionedCreate(workspaceId, variantId, 'libraryVariant')
+            && request.resource.data.parentId == layoutId
+            && request.resource.data.collectionId == null
+            && exists(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId));
+          allow update: if isMember(workspaceId)
+            && request.resource.data.parentId == layoutId
+            && request.resource.data.collectionId == null
+            && (
+              validVersionedUpdate(workspaceId, variantId, 'libraryVariant')
+              || validDeletingMarker(workspaceId, variantId, 'libraryVariant')
+            );
+          allow delete: if isMember(workspaceId) && (
+            resource.data.deleting == true
+            || get(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)).data.deleting == true
+          );
+
+          match /revisions/{revisionId} {
+            allow create: if isMember(workspaceId)
+              && validRevision(request.resource.data, workspaceId, variantId, revisionId, 'libraryVariant')
+              && getAfter(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)/variants/$(variantId)).data.currentRevisionId == revisionId;
+            allow update: if false;
+            allow delete: if isMember(workspaceId) && (
+              get(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)/variants/$(variantId)).data.deleting == true
+              || get(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)).data.deleting == true
+            );
+          }
+        }
+      }
+
+      match /collections/{collectionId} {
+        allow create: if isMember(workspaceId)
+          && validCollection(request.resource.data, workspaceId, collectionId)
+          && request.resource.data.version == 1
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.createdBy == request.auth.uid
+          && request.resource.data.updatedBy == request.auth.uid
+          && !request.resource.data.keys().hasAny(['deleting'])
+          && dataVersionAdvanced(workspaceId);
+        allow update: if isMember(workspaceId) && validCollection(
+          request.resource.data, workspaceId, collectionId
+        ) && (
+          (
+            request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+              'name', 'nameKey', 'groupId', 'tags', 'version', 'updatedAt',
+              'updatedBy', 'updatedByName'
+            ])
+            && request.resource.data.version == resource.data.version + 1
+            && request.resource.data.updatedAt == request.time
+            && request.resource.data.updatedBy == request.auth.uid
+            && dataVersionAdvanced(workspaceId)
+          )
+          ||
+          (
+            request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+              'deleting', 'updatedAt', 'updatedBy'
+            ])
+            && request.resource.data.deleting == true
+            && request.resource.data.version == resource.data.version
+            && request.resource.data.updatedAt == request.time
+            && request.resource.data.updatedBy == request.auth.uid
+            && dataVersionAdvanced(workspaceId)
+          )
+        );
+        allow delete: if isMember(workspaceId) && resource.data.deleting == true;
+
+        match /layouts/{layoutId} {
+          allow create: if isMember(workspaceId)
+            && validVersionedCreate(workspaceId, layoutId, 'collectionLayout')
+            && request.resource.data.parentId == collectionId
+            && request.resource.data.collectionId == collectionId
+            && exists(/databases/$(database)/documents/workspaces/$(workspaceId)/collections/$(collectionId));
+          allow update: if isMember(workspaceId)
+            && request.resource.data.parentId == collectionId
+            && request.resource.data.collectionId == collectionId
+            && (
+              validVersionedUpdate(workspaceId, layoutId, 'collectionLayout')
+              || validDeletingMarker(workspaceId, layoutId, 'collectionLayout')
+            );
+          allow delete: if isMember(workspaceId) && (
+            resource.data.deleting == true
+            || get(/databases/$(database)/documents/workspaces/$(workspaceId)/collections/$(collectionId)).data.deleting == true
+          );
+
+          match /revisions/{revisionId} {
+            allow create: if isMember(workspaceId)
+              && validRevision(request.resource.data, workspaceId, layoutId, revisionId, 'collectionLayout')
+              && getAfter(/databases/$(database)/documents/workspaces/$(workspaceId)/collections/$(collectionId)/layouts/$(layoutId)).data.currentRevisionId == revisionId;
+            allow update: if false;
+            allow delete: if isMember(workspaceId) && (
+              get(/databases/$(database)/documents/workspaces/$(workspaceId)/collections/$(collectionId)/layouts/$(layoutId)).data.deleting == true
+              || get(/databases/$(database)/documents/workspaces/$(workspaceId)/collections/$(collectionId)).data.deleting == true
+            );
+          }
+        }
+      }
+
+      match /nameReservations/{reservationId} {
+        allow create, update: if isMember(workspaceId)
+          && request.resource.data.keys().hasAll([
+            'scope', 'name', 'nameKey', 'resourcePath', 'updatedAt'
+          ])
+          && request.resource.data.keys().hasOnly([
+            'scope', 'name', 'nameKey', 'resourcePath', 'updatedAt'
+          ])
+          && request.resource.data.scope is string
+          && validName(request.resource.data.name)
+          && request.resource.data.nameKey is string
+          && request.resource.data.resourcePath is string
+          && request.resource.data.resourcePath.matches('^workspaces/' + workspaceId + '/.+')
+          && request.resource.data.updatedAt == request.time;
+        allow delete: if isMember(workspaceId);
+      }
+
+      match /exports/{exportId} {
+        allow create: if isMember(workspaceId)
+          && request.resource.data.keys().hasAll([
+            'status', 'triggeredBy', 'triggeredByName', 'startedAt'
+          ])
+          && request.resource.data.keys().hasOnly([
+            'status', 'triggeredBy', 'triggeredByName', 'startedAt'
+          ])
+          && request.resource.data.status == 'running'
+          && request.resource.data.triggeredBy == request.auth.uid
+          && request.resource.data.triggeredByName is string
+          && request.resource.data.startedAt == request.time;
+        allow update: if isMember(workspaceId)
+          && resource.data.triggeredBy == request.auth.uid
+          && request.resource.data.triggeredBy == resource.data.triggeredBy
+          && request.resource.data.status in ['completed', 'failed']
+          && request.resource.data.completedAt == request.time
+          && request.resource.data.keys().hasOnly([
+            'status', 'triggeredBy', 'triggeredByName', 'startedAt',
+            'dataVersion', 'completedAt', 'commitSha', 'commitUrl',
+            'fileCount', 'error'
+          ]);
+        allow delete: if false;
       }
 
       match /{document=**} {
@@ -32,4 +402,3 @@ service cloud.firestore {
     }
   }
 }
-

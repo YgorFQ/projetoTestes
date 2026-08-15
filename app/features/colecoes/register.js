@@ -236,6 +236,13 @@
   function applyFirebaseSnapshot() {
     if (typeof ColLib === 'undefined' || typeof ColLib.replaceAll !== 'function') return;
 
+    var openCollectionId = window._colCurrentCollection
+      ? window._colCurrentCollection.slug
+      : '';
+    var openLayoutId = window._colCurrentLayout
+      ? window._colCurrentLayout.id
+      : '';
+
     var layoutsByCollection = {};
     firebaseLayouts.forEach(function (layout) {
       var collectionId = String(layout.collectionId || '').toLowerCase();
@@ -245,7 +252,8 @@
     });
 
     var collections = firebaseCollections.map(function (collection) {
-      var layouts = layoutsByCollection[collection.slug] || [];
+      var collectionKey = String(collection.slug || '').toLowerCase();
+      var layouts = layoutsByCollection[collectionKey] || [];
       return Object.assign({}, collection, {
         layouts: layouts,
         layoutCount: layouts.length,
@@ -254,6 +262,37 @@
     });
 
     ColLib.replaceAll(collections);
+
+    if (openCollectionId && typeof ColLib.getBySlug === 'function') {
+      var freshCollection = ColLib.getBySlug(openCollectionId);
+      if (freshCollection) {
+        window._colCurrentCollection = freshCollection;
+        if (openLayoutId) {
+          var freshLayout = (freshCollection.layouts || []).find(function (layout) {
+            return layout.id === openLayoutId;
+          });
+          if (freshLayout && window.SenkoColecoesLayoutEditor &&
+              window.SenkoColecoesLayoutEditor.isOpen &&
+              window.SenkoColecoesLayoutEditor.isOpen() &&
+              window.SenkoColecoesLayoutEditor.applyRemoteChange) {
+            var previousRevision = window._colCurrentLayout &&
+              window._colCurrentLayout._firebaseRevisionId;
+            if (previousRevision && previousRevision !== freshLayout._firebaseRevisionId) {
+              var remoteApplied = window.SenkoColecoesLayoutEditor.applyRemoteChange(freshLayout);
+              if (remoteApplied === false) freshLayout = window._colCurrentLayout;
+            }
+          }
+          window._colCurrentLayout = freshLayout || window._colCurrentLayout;
+        }
+
+        var collectionOverlay = document.getElementById('colCollectionOverlay');
+        if (collectionOverlay && !collectionOverlay.classList.contains('hidden') &&
+            typeof _colRenderLayoutsGrid === 'function') {
+          _colRenderLayoutsGrid(freshCollection);
+        }
+      }
+    }
+
     if (window.SenkoColecoes) window.SenkoColecoes.render();
   }
 
@@ -297,6 +336,14 @@
         console.error('[Colecoes] Falha ao sincronizar colecoes:', error);
       });
 
+      repository.watchGroups(function (groups) {
+        if (typeof ColGroups !== 'undefined') ColGroups.load(groups);
+        if (typeof colRefreshGroupSelects === 'function') colRefreshGroupSelects();
+        if (window.SenkoColecoes) window.SenkoColecoes.render();
+      }, function (error) {
+        console.error('[Colecoes] Falha ao sincronizar grupos:', error);
+      });
+
       return true;
     }).catch(function (error) {
       console.error('[Colecoes] Firebase indisponivel:', error);
@@ -310,12 +357,12 @@
     if (loadPromise) return loadPromise;
 
     loadPromise = (async function () {
-      loadStyle('styles/col-styles.css?v=20260613-lazy-data');
-      loadStyle('styles/col-layout-editor.css?v=20260730-full-editor');
+      loadStyle('styles/col-styles.css?v=20260815-group-manager');
+      loadStyle('styles/col-layout-editor.css?v=20260801-presence');
 
       var firstResources = await Promise.all([
         loadScript('view.js?v=20260613-fast-load'),
-        loadScript('scripts/col-groups.js?v=20260613-fast-load'),
+        loadScript('scripts/col-groups.js?v=20260815-group-manager'),
         loadManifest()
       ]);
       var manifest = firstResources[2];
@@ -323,11 +370,12 @@
 
       await Promise.all([
         loadScript('data/col-groups-data.js?v=20260613-fast-load'),
-        loadScript('data/firebase-repository.js?v=20260730-parent-listeners'),
+        loadScript('data/firebase-repository.js?v=20260815-group-manager'),
         loadScript('scripts/col-core.js?v=20260613-fast-load'),
-        loadScript('scripts/col-script.js?v=20260613-fast-load-2'),
-        loadScript('scripts/col-modals.js?v=20260730-full-editor'),
-        loadScript('scripts/col-layout-editor.js?v=20260730-full-editor')
+        loadScript('scripts/col-script.js?v=20260815-group-manager'),
+        loadScript('scripts/col-modals.js?v=20260815-group-manager'),
+        loadScript('scripts/col-layout-editor.js?v=20260801-presence-sessions'),
+        loadScript('scripts/firebase-controls.js?v=20260801-layout-feedback')
       ]);
 
       if (!usesFirebaseData()) {
@@ -343,6 +391,7 @@
 
       window.SenkoColecoes.init();
       if (window.SenkoColecoesModals) window.SenkoColecoesModals.init();
+      if (window.SenkoColecoesFirebaseControls) window.SenkoColecoesFirebaseControls.refresh();
       if (usesFirebaseData()) startFirebaseSync();
       else {
         loadGithubIntegration();

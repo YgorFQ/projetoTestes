@@ -1,8 +1,8 @@
 const { initializeApp } = require('firebase-admin/app');
 const { setGlobalOptions } = require('firebase-functions/v2');
 const { onCall } = require('firebase-functions/v2/https');
-const { onSchedule } = require('firebase-functions/v2/scheduler');
 
+/* Mantido para emulacao e ferramentas antigas; o frontend Spark nao depende deste deploy. */
 initializeApp();
 setGlobalOptions({
   region: 'southamerica-east1',
@@ -12,32 +12,16 @@ setGlobalOptions({
 const {
   bootstrapEmulatorMember,
   deleteContent,
+  deleteGroup,
   ensurePresenceAccess,
   saveCollection,
+  saveGroup,
   saveVersionedContent
 } = require('./content');
-const {
-  GITHUB_PRIVATE_KEY,
-  exportGithubSnapshot,
-  scheduledGithubExport
-} = require('./github-export');
-
 exports.saveVersionedContent = onCall(saveVersionedContent);
 exports.saveCollection = onCall(saveCollection);
+exports.saveGroup = onCall(saveGroup);
 exports.deleteContent = onCall(deleteContent);
+exports.deleteGroup = onCall(deleteGroup);
 exports.ensurePresenceAccess = onCall(ensurePresenceAccess);
 exports.bootstrapEmulatorMember = onCall(bootstrapEmulatorMember);
-
-exports.exportGithubSnapshot = onCall({
-  timeoutSeconds: 540,
-  memory: '1GiB',
-  secrets: [GITHUB_PRIVATE_KEY]
-}, exportGithubSnapshot);
-
-exports.scheduledGithubExport = onSchedule({
-  schedule: 'every 30 minutes',
-  timeZone: 'America/Sao_Paulo',
-  timeoutSeconds: 540,
-  memory: '1GiB',
-  secrets: [GITHUB_PRIVATE_KEY]
-}, scheduledGithubExport);

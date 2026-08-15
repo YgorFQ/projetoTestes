@@ -28,6 +28,7 @@
       "**/.*",
       "**/node_modules/**",
       "functions/**",
+      "tests/**",
       "migration-output/**",
       "Guia e documentação/**"
     ],

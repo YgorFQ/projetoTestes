@@ -186,7 +186,9 @@
     if (!remote || !currentItem || !currentItem._firebaseRevisionId) return;
     if (remote._firebaseRevisionId === currentItem._firebaseRevisionId) return;
 
-    if (window.SenkoLayoutEditor.notifyRemoteChange) {
+    if (window.SenkoLayoutEditor.applyRemoteChange) {
+      window.SenkoLayoutEditor.applyRemoteChange(remote);
+    } else if (window.SenkoLayoutEditor.notifyRemoteChange) {
       window.SenkoLayoutEditor.notifyRemoteChange(
         'Outra pessoa salvou uma versao mais recente. Seu rascunho foi preservado.'
       );
@@ -249,7 +251,7 @@
 
     loadPromise = (async function () {
       loadStyle('styles/biblioteca.css?v=20260613-library-scroll');
-      loadStyle('styles/layout-editor.css?v=20260613-official-editor');
+      loadStyle('styles/layout-editor.css?v=20260801-presence');
       loadStyle('styles/copy-base-editor.css?v=20260723-official-editor');
 
       var initialResources = await Promise.all([
@@ -273,7 +275,7 @@
           }));
       await Promise.all([
         layoutDataReady,
-        loadScript('scripts/layout-editor.js?v=20260730-firebase-save-required'),
+        loadScript('scripts/layout-editor.js?v=20260801-presence-sessions'),
         loadScript('scripts/copy-base-editor.js?v=20260723-official-editor'),
         loadScript('scripts/script.js?v=20260730-firebase-create'),
         loadScript('scripts/copy-base-template.js?v=20260723-copy-base-editor').then(function () {

@@ -1,5 +1,18 @@
 # Documentação Completa do SenkoLib
 
+> **ATENÇÃO: REFERÊNCIA DO MODO LEGADO.** Este documento descreve principalmente
+> a arquitetura baseada em arquivos JS e salvamento direto no GitHub. Durante a
+> migração para Firebase, a referência técnica atual fica em `docs/README.md` e
+> `docs/firebase/`. Use este arquivo para entender as features antigas, mas não
+> implemente persistência nova seguindo as seções antigas de GitHub.
+
+> **ARQUITETURA FIREBASE ATUAL (2026-08-15).** No plano Spark, membros gravam
+> por transações do SDK Web protegidas por `firestore.rules`. O GitHub recebe
+> somente backups manuais pelo botão global, usando o token individual da
+> pessoa. Não existe agendamento de 30 minutos, GitHub Actions ou GitHub App no
+> fluxo ativo. Comece por `docs/firebase/ARCHITECTURE.md` e
+> `docs/firebase/BACKUP_AND_RESTORE.md`.
+
 Este documento explica o SenkoLib da forma mais simples possível, mas sem esconder as partes importantes.
 
 A ideia é que qualquer pessoa consiga entender:

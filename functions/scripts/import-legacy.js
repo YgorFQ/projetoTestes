@@ -169,13 +169,22 @@ async function main() {
   }, { merge: true });
 
   for (const group of snapshot.groups || []) {
-    writer.set(workspace.collection('groups').doc(group.slug), {
+    const groupRef = workspace.collection('groups').doc(group.slug);
+    const groupData = {
       id: group.slug,
+      workspaceId,
       name: group.name,
+      nameKey: normalizeName(group.name),
       color: group.cor || '',
+      version: 1,
       createdAt: FieldValue.serverTimestamp(),
-      updatedAt: FieldValue.serverTimestamp()
-    });
+      createdBy: 'legacy-import',
+      updatedAt: FieldValue.serverTimestamp(),
+      updatedBy: 'legacy-import',
+      updatedByName: 'Importacao inicial'
+    };
+    writer.set(groupRef, groupData);
+    queueReservation(writer, workspaceId, 'grupos', groupRef, groupData);
   }
 
   for (const layout of snapshot.bibliotecaLayouts || []) {

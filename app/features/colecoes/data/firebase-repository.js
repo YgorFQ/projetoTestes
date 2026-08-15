@@ -34,6 +34,27 @@
     );
   }
 
+  function watchGroups(callback, onError) {
+    return window.SenkoFirebase.listenCollection(
+      workspacePath('groups'),
+      {},
+      function (documents, changes) {
+        var groups = documents.map(function (item) {
+          return {
+            slug: item.id,
+            name: item.name || '',
+            cor: item.color || '#aaaaaa',
+            _firebaseVersion: Number(item.version || 0)
+          };
+        }).sort(function (a, b) {
+          return a.name.localeCompare(b.name, 'pt-BR', { sensitivity: 'base' });
+        });
+        callback(groups, changes);
+      },
+      onError
+    );
+  }
+
   function watchLayoutsForCollections(collectionIds, callback, onError) {
     var ids = Array.from(new Set((collectionIds || []).filter(Boolean))).sort();
     var layoutsByCollection = {};
@@ -105,7 +126,7 @@
   }
 
   function saveCollection(collection) {
-    return window.SenkoFirebase.call('saveCollection', {
+    return window.SenkoFirestoreWrites.saveCollection({
       workspaceId: window.SenkoFirebase.getWorkspaceId(),
       collectionId: collection.slug || null,
       legacyId: collection.legacyId || collection.slug || null,
@@ -118,8 +139,28 @@
     });
   }
 
+  function saveGroup(group) {
+    return window.SenkoFirestoreWrites.saveGroup({
+      workspaceId: window.SenkoFirebase.getWorkspaceId(),
+      groupId: group.slug,
+      name: group.name,
+      color: group.cor,
+      expectedVersion: group.expectedVersion === undefined
+        ? null
+        : group.expectedVersion
+    });
+  }
+
+  function deleteGroup(group) {
+    return window.SenkoFirestoreWrites.deleteGroup({
+      workspaceId: window.SenkoFirebase.getWorkspaceId(),
+      groupId: group.slug,
+      expectedVersion: Number(group._firebaseVersion || 0)
+    });
+  }
+
   function saveLayout(collectionId, layout) {
-    return window.SenkoFirebase.call('saveVersionedContent', {
+    return window.SenkoFirestoreWrites.saveVersionedContent({
       workspaceId: window.SenkoFirebase.getWorkspaceId(),
       kind: 'collectionLayout',
       parentId: collectionId,
@@ -135,15 +176,16 @@
   }
 
   function deleteCollection(collection) {
-    return window.SenkoFirebase.call('deleteContent', {
+    return window.SenkoFirestoreWrites.deleteContent({
       workspaceId: window.SenkoFirebase.getWorkspaceId(),
       kind: 'collection',
-      resourceId: collection.slug
+      resourceId: collection.slug,
+      expectedVersion: Number(collection._firebaseVersion || 0)
     });
   }
 
   function deleteLayout(collectionId, layout) {
-    return window.SenkoFirebase.call('deleteContent', {
+    return window.SenkoFirestoreWrites.deleteContent({
       workspaceId: window.SenkoFirebase.getWorkspaceId(),
       kind: 'collectionLayout',
       parentId: collectionId,
@@ -163,8 +205,11 @@
   window.SenkoColecoesFirebase = {
     isActive: firebaseReady,
     watchCollections: watchCollections,
+    watchGroups: watchGroups,
     watchLayoutsForCollections: watchLayoutsForCollections,
     saveCollection: saveCollection,
+    saveGroup: saveGroup,
+    deleteGroup: deleteGroup,
     saveLayout: saveLayout,
     deleteCollection: deleteCollection,
     deleteLayout: deleteLayout,

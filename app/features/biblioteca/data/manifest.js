@@ -142,6 +142,16 @@ window.SenkoBibliotecaManifest = {
       "name": "Section-33"
     },
     {
+      "file": "layouts/section-41.js",
+      "id": "section-41",
+      "name": "padrao-p-table-click"
+    },
+    {
+      "file": "layouts/section-46.js",
+      "id": "section-46",
+      "name": "variavel-1"
+    },
+    {
       "file": "layouts/section-3.js",
       "id": "section-3",
       "name": "Section-3"
@@ -222,18 +232,6 @@ window.SenkoBibliotecaManifest = {
       "layoutId": "section-33",
       "id": "section-33-1",
       "name": "section-33-1"
-    },
-    {
-      "file": "variants/section-41/padrao-p-table-click.js",
-      "layoutId": "section-41",
-      "id": "padrao-p-table-click",
-      "name": "padrao-p-table-click"
-    },
-    {
-      "file": "variants/section-46/variavel-1.js",
-      "layoutId": "section-46",
-      "id": "variavel-1",
-      "name": "variavel-1"
     },
     {
       "file": "variants/section-6/section-6-1.js",

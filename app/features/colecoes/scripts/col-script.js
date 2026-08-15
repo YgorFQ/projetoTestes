@@ -160,6 +160,20 @@ function colRenderFilterBar() {
 
     bar.appendChild(pill);
   });
+
+  var firebaseEnabled = window.SenkoFirebase &&
+    window.SenkoFirebase.isEnabled &&
+    window.SenkoFirebase.isEnabled();
+  if (firebaseEnabled) {
+    var manageButton = document.createElement('button');
+    manageButton.type = 'button';
+    manageButton.className = 'col-groups-manage-btn';
+    manageButton.textContent = 'Gerenciar grupos';
+    manageButton.addEventListener('click', function () {
+      if (typeof colOpenManageGroupsModal === 'function') colOpenManageGroupsModal();
+    });
+    bar.appendChild(manageButton);
+  }
 }
 
 

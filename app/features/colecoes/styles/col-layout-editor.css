@@ -296,6 +296,34 @@
   white-space: nowrap;
 }
 
+.collection-layout-editor-presence {
+  width: fit-content;
+  max-width: min(100%, 520px);
+  margin-top: 8px;
+  color: var(--text2, #4b5563);
+  font-size: .75rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.collection-layout-editor-presence::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+}
+
+.collection-layout-editor-presence.has-others {
+  color: #b45309;
+}
+
+.collection-layout-editor-presence.has-others::before {
+  background: #f59e0b;
+}
+
 .collection-layout-editor-code-wrap {
   min-height: 0;
   display: grid;

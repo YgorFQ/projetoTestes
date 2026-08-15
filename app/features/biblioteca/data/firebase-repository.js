@@ -107,7 +107,7 @@
   }
 
   function saveLayout(layout) {
-    return window.SenkoFirebase.call('saveVersionedContent', {
+    return window.SenkoFirestoreWrites.saveVersionedContent({
       workspaceId: window.SenkoFirebase.getWorkspaceId(),
       kind: 'libraryLayout',
       resourceId: layout.id || null,
@@ -123,7 +123,7 @@
   }
 
   function saveVariant(layoutId, variant) {
-    return window.SenkoFirebase.call('saveVersionedContent', {
+    return window.SenkoFirestoreWrites.saveVersionedContent({
       workspaceId: window.SenkoFirebase.getWorkspaceId(),
       kind: 'libraryVariant',
       parentId: layoutId,
@@ -139,7 +139,7 @@
   }
 
   function deleteLayout(layout) {
-    return window.SenkoFirebase.call('deleteContent', {
+    return window.SenkoFirestoreWrites.deleteContent({
       workspaceId: window.SenkoFirebase.getWorkspaceId(),
       kind: 'libraryLayout',
       resourceId: layout.id,
@@ -148,7 +148,7 @@
   }
 
   function deleteVariant(layoutId, variant) {
-    return window.SenkoFirebase.call('deleteContent', {
+    return window.SenkoFirestoreWrites.deleteContent({
       workspaceId: window.SenkoFirebase.getWorkspaceId(),
       kind: 'libraryVariant',
       parentId: layoutId,
@@ -157,10 +157,10 @@
     });
   }
 
-  function enterEditor(layoutId, callback) {
+  function enterEditor(layoutId, callback, variantId) {
     return window.SenkoFirebase.enterPresence(
-      'biblioteca-layout',
-      layoutId,
+      variantId ? 'biblioteca-variant' : 'biblioteca-layout',
+      variantId ? layoutId + ':' + variantId : layoutId,
       callback
     );
   }
