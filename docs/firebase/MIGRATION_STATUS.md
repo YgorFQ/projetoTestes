@@ -101,7 +101,7 @@ nao possui warnings.
 - [ ] Criar `presenceAccess` para cada membro real.
 - [x] Importar o snapshot final sem warnings.
 - [x] Separar ativacao de producao e emuladores na configuracao.
-- [ ] Publicar o frontend com Firebase ativo no GitHub Pages.
+- [x] Publicar o frontend com Firebase ativo no GitHub Pages.
 - [ ] Executar smoke test de producao.
 - [ ] Criar commit e tag do corte.
 
@@ -118,11 +118,11 @@ nao possui warnings.
 
 ## Proximo passo recomendado
 
-1. Publicar o codigo do corte no branch `main`.
-2. Abrir o GitHub Pages e fazer o primeiro login real com Google.
-3. Exportar ou consultar o usuario criado no Firebase Auth.
-4. Rodar `npm --prefix functions run member:add:cli-auth -- --uid <uid> --email <email> --name <nome>`.
-5. Recarregar o GitHub Pages e executar o smoke test.
+1. Abrir o GitHub Pages e fazer o primeiro login real com Google.
+2. Exportar ou consultar o usuario criado no Firebase Auth.
+3. Rodar `npm --prefix functions run member:add:cli-auth -- --uid <uid> --email <email> --name <nome>`.
+4. Recarregar o GitHub Pages e executar o smoke test.
+5. Criar a tag do corte depois do smoke test aprovado.
 
 ## Observacao sobre GitHub Pages
 
@@ -145,3 +145,4 @@ Adicione novas rodadas sem apagar as anteriores.
 | 2026-08-15 | GitHub real | d9e63426514bee66ac997b608dff706922551c86 | Aprovado | Primeiro backup real criado pelo botao global; 197 arquivos em `senkolib-data/` |
 | 2026-08-15 | Firestore Emulator | d9e63426514bee66ac997b608dff706922551c86 | Aprovado | Backup real restaurado em `senkolib-restauracao-d9e6342`; contagens conferidas: 5 grupos, 34 layouts, 11 variacoes, 5 colecoes, 48 layouts internos |
 | 2026-08-15 | Firebase real | d9e63426514bee66ac997b608dff706922551c86 | Aprovado | Regras Firestore/Realtime publicadas, `ygorfq.github.io` autorizado e backup restaurado no workspace `senkolib`; contagens reais conferidas |
+| 2026-08-15 | GitHub Pages | 4812d098921a8f960fccba78eca5c36bbcf31065 | Parcial aprovado | Codigo do corte publicado e `firebase-config.js` servido com `enabled: true`; aguardando primeiro membro real para smoke test autenticado |
