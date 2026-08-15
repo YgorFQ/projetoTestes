@@ -25,20 +25,38 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="senko-release" content="2026.08.15.2" />
   <title>SenkoLib</title>
   <script>(function () { try { var t = localStorage.getItem('senkolib_theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) { } })();</script>
   <script>
     /*
-     * Cada abertura recebe uma chave nova. CSS, JavaScript e dados locais
-     * carregados pelo shell ou pelas features recebem essa chave na URL.
+     * Em producao, codigo usa uma chave estavel por release para aproveitar o
+     * cache do navegador. Os tres arquivos do backup publico continuam sempre
+     * frescos porque podem mudar sem que index.html seja alterado.
      */
     (function initializeFreshAssets() {
-      var token = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+      var host = window.location.hostname;
+      var isLocalDevelopment = window.location.protocol === 'file:' ||
+        host === '127.0.0.1' || host === 'localhost';
+      var releaseMeta = document.querySelector('meta[name="senko-release"]');
+      var releaseToken = releaseMeta ? releaseMeta.content : 'unversioned';
+      var openingToken = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+
+      function needsOpeningToken(path) {
+        if (isLocalDevelopment) return true;
+        return /^app\/infrastructure\/static-backup\/(manifest|biblioteca|colecoes)\.js$/
+          .test(String(path || '').replace(/^\.\//, ''));
+      }
 
       function freshUrl(path) {
         var url = new URL(path, document.baseURI);
         var isLocal = url.protocol === 'file:' || url.origin === window.location.origin;
-        if (isLocal) url.searchParams.set('_senko_reload', token);
+        if (isLocal) {
+          url.searchParams.set(
+            '_senko_reload',
+            needsOpeningToken(path) ? openingToken : releaseToken
+          );
+        }
         return url.href;
       }
 
@@ -47,7 +65,8 @@
       }
 
       window.SenkoFreshAssets = {
-        token: token,
+        token: releaseToken,
+        openingToken: openingToken,
         url: freshUrl,
         writeStyle: function (path) {
           document.write('<link rel="stylesheet" href="' + escapeAttribute(freshUrl(path)) + '">');
@@ -62,7 +81,7 @@
        * aceita Service Worker e continua coberto pelas URLs versionadas.
        */
       if ('serviceWorker' in navigator && /^https?:$/.test(window.location.protocol)) {
-        var controllerReloadKey = 'senkolib_sw_controller_reload_done';
+        var controllerReloadKey = 'senkolib_sw_controller_reload_' + releaseToken;
         navigator.serviceWorker.addEventListener('controllerchange', function () {
           /*
            * Quando um worker novo assume a pagina, recarrega uma unica vez na

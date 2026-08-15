@@ -1098,11 +1098,14 @@
           badge: 'reload',
           terms: 'cache reload ctrl shift r service worker senko_reload',
           paragraphs: [
-            'O projeto tenta evitar cache com meta tags, _senko_reload e service worker.',
-            'Mesmo assim, se algo parecer antigo, confirme se esta abrindo o arquivo certo.'
+            'Em producao, CSS e JavaScript usam a versao meta senko-release para o navegador reaproveitar o cache entre reloads.',
+            'Os tres arquivos do backup publico recebem uma chave nova em toda abertura, entao dados atualizados nao dependem de limpar o cache.'
           ],
           bullets: [
             'Testar reload normal.',
+            'Incrementar meta[name="senko-release"] quando codigo ou CSS mudar.',
+            'Backup-only nao exige incremento porque manifest.js, biblioteca.js e colecoes.js sao sempre frescos.',
+            'sw.js nao intercepta assets; ele apenas limpa caches historicos durante atualizacoes.',
             'Testar servidor local.',
             'Conferir caminho do arquivo alterado.',
             'Verificar se o navegador nao esta usando aba antiga.'

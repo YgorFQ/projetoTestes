@@ -174,3 +174,4 @@ Adicione novas rodadas sem apagar as anteriores.
 | 2026-08-15 | Firestore Emulator e producao | alteracoes locais | Aprovado | Solicitacoes de acesso passaram nas regras: conta grava apenas o proprio UID, incrementa tentativas e nao lista terceiros; regras publicadas em `senkolibtestes` |
 | 2026-08-15 | Emuladores e GitHub Pages | e3c929d | Aprovado | Regras de owner/admin/editor passaram nos testes automatizados; gestao de acessos foi publicada e permanece invisivel para visitantes anonimos, que continuam no backup somente leitura |
 | 2026-08-15 | UI local e teste unitario | alteracoes locais | Aprovado | Limite, indisponibilidade e navegador offline possuem avisos distintos; fallback informa a data do backup e permaneceu responsivo em desktop e 390x844 |
+| 2026-08-15 | GitHub Pages e cache local | alteracoes locais | Aprovado | F5 deixou de forcar rede para todo CSS/JS; codigo usa versao de release e os tres arquivos do backup permanecem sempre frescos |

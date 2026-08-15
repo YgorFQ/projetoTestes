@@ -106,7 +106,7 @@ SenkoLib/
 |-- storage.rules                       - regras de arquivos
 |-- FIREBASE_SETUP.md                   - configuracao passo a passo para iniciantes
 |-- index.html                           - ponto de entrada do SenkoLib
-|-- sw.js                                - desativa cache local em HTTP/HTTPS
+|-- sw.js                                - atualiza o shell sem interceptar os assets versionados
 `-- settings.json                        - configuracoes locais do Live Server
 ```
 
@@ -139,7 +139,13 @@ SenkoLib/
 - O painel principal nao busca nem recorta o `index.html` standalone de uma feature.
 - `iframe` fica reservado para preview, sandbox ou medicao interna, nunca para carregar uma janela inteira de feature.
 - Uma feature opcional so cria aba quando o seu script de registro carrega. Remover a pasta da feature impede esse registro.
-- Cada abertura gera uma chave nova para os assets locais; em HTTP/HTTPS, `sw.js` tambem busca tudo com cache desativado.
+- Em producao, codigo recebe a versao de `meta[name="senko-release"]` e pode
+  usar o cache do navegador. Em localhost e `file://`, cada abertura continua
+  com uma chave nova para facilitar desenvolvimento.
+- `manifest.js`, `biblioteca.js` e `colecoes.js` sempre recebem uma chave por
+  abertura, pois o botao de backup pode altera-los sem modificar `index.html`.
+- `sw.js` nao intercepta requisicoes; ele apenas limpa caches historicos e
+  avisa a pagina quando uma nova versao do worker assume o controle.
 
 ## Documentacao canonica
 

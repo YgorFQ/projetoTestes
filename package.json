@@ -11,6 +11,7 @@
     "firebase:deploy:hosting": "firebase deploy --only hosting",
     "migration:build": "node tools/build-legacy-snapshot.js",
     "backup:build-static": "node tools/build-static-backup.js",
+    "test:asset-versioning": "node tests/asset-versioning.test.js",
     "test:static-backup": "node tests/static-backup-builder.test.js",
     "test:firebase-health": "node tests/firebase-service-health.test.js",
     "test:firestore-rules": "firebase emulators:exec --only firestore --project senkolib-rules-test \"node tests/firestore-client-writes.test.js\"",

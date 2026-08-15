@@ -44,6 +44,7 @@ visual sem afetar producao, abra
 6. Conta Firebase correta no CLI.
 7. Projeto ativo `senkolibtestes`.
 8. Commit de rollback identificado.
+9. `meta[name="senko-release"]` incrementada quando o corte altera codigo ou CSS.
 
 Comandos:
 
@@ -75,6 +76,19 @@ Nao use deploy geral. O `firebase.json` ainda contem Functions para emulacao e
 ferramentas historicas; a arquitetura Spark nao implanta essas Functions.
 
 Depois, abra o Console e confira o horario das regras.
+
+## Cache e versao do frontend
+
+O `index.html` separa codigo de dados publicos:
+
+- CSS e JavaScript usam `meta[name="senko-release"]`, estavel durante o release;
+- `manifest.js`, `biblioteca.js` e `colecoes.js` recebem uma chave nova em cada
+  abertura para refletir o ultimo backup;
+- localhost e `file://` continuam sem cache entre aberturas;
+- `sw.js` nao intercepta requisicoes e nao transforma `F5` em hard reload.
+
+Ao publicar mudanca de codigo ou CSS, incremente `senko-release`. Um commit
+gerado somente pelo botao de backup nao precisa alterar essa versao.
 
 ## Adicionar um membro
 
