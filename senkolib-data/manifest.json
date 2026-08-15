@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "workspaceId": "senkolib",
-  "exportedAt": "2026-08-15T18:38:24.670Z",
-  "dataVersion": 4,
+  "exportedAt": "2026-08-15T19:43:18.080Z",
+  "dataVersion": 5,
   "files": [
     "senkolib-data/workspaces/senkolib/bibliotecaLayouts/section 39.1 (caderno).json",
     "senkolib-data/workspaces/senkolib/bibliotecaLayouts/section 39.1 (caderno)/revisions/legacy-import-v1.json",
@@ -80,6 +80,7 @@
     "senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-4/revisions/legacy-import-v1.json",
     "senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-41.json",
     "senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/WUAa2ZMhTYhUaQhnSkjK.json",
+    "senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/kJLQVJ8AOZwunkCdJQ2r.json",
     "senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/legacy-import-v1.json",
     "senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/raWpQqEmjqKFBgU2nbXZ.json",
     "senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/zaPQ2NjGffEgvxZiCSQB.json",

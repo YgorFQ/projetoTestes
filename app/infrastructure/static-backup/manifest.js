@@ -4,8 +4,8 @@
   backup.manifest = {
   "schemaVersion": 1,
   "workspaceId": "senkolib",
-  "exportedAt": "2026-08-15T18:38:24.670Z",
-  "dataVersion": 4,
+  "exportedAt": "2026-08-15T19:43:18.080Z",
+  "dataVersion": 5,
   "counts": {
     "bibliotecaLayouts": 34,
     "bibliotecaVariants": 11,

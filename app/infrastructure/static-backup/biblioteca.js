@@ -5,7 +5,7 @@
   "layouts": [
     {
       "id": "section-41",
-      "name": "padrao-p-table-clickcQSWDADAWD",
+      "name": "lickcQSWDADAWD",
       "tags": [
         "secxoa"
       ],
