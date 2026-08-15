@@ -80,6 +80,10 @@ da implementacao administrativa anterior. A interface ainda deve ser conferida.
 
 ## Validacao e limites
 
+- [x] `resource-exhausted` e mensagem de cota sao classificados como `quota`.
+- [x] Navegador offline e indisponibilidade do Firestore possuem avisos distintos.
+- [x] Aviso de limite informa que o ultimo backup esta em somente leitura.
+- [ ] Teste manual real apos a renovacao da cota confirma retorno ao Firebase.
 - [ ] Nome com menos de 2 caracteres e recusado.
 - [ ] Nome acima de 160 caracteres e recusado.
 - [ ] ID vazio, com `/` ou acima de 180 caracteres e recusado.

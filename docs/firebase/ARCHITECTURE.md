@@ -134,6 +134,13 @@ Estados esperados:
 | `ready` | Conta autenticada e membro autorizado |
 | `error` | Falha de configuracao, SDK, rede ou regras |
 
+O estado tambem pode carregar `serviceIssue`, classificado como `quota`,
+`offline`, `unavailable` ou `error`. Falhas de cota e conexao recebidas por um
+listener ou por um salvamento retiram o app do estado `ready`, ativam o backup
+somente leitura e exibem um aviso persistente no header. O botao **Tentar
+novamente** recarrega a aplicacao; nenhuma tentativa automatica fica consumindo
+leituras durante o incidente.
+
 Estados de dados do aplicativo:
 
 | Estado | Fonte | Escrita |

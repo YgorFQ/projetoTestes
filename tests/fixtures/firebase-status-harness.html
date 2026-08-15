@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SenkoLib - Firebase status harness</title>
+  <link rel="stylesheet" href="../../app/shared/styles/senko-tokens.css">
+  <link rel="stylesheet" href="../../app/shared/styles/senko-components.css">
+  <link rel="stylesheet" href="../../app/shell/styles/styles.css">
+  <link rel="stylesheet" href="../../app/infrastructure/firebase/senko-firebase.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <img src="../../app/shared/assets/senko.png" class="logo-img" alt="SenkoLib">
+        <span class="logo-text">Senko<strong>Lib</strong></span>
+      </div>
+      <nav class="senko-tab-bar" aria-label="Ferramentas do SenkoLib">
+        <button class="senko-tab-btn active">Biblioteca</button>
+        <button class="senko-tab-btn">Colecoes</button>
+      </nav>
+      <div class="header-actions">
+        <button class="theme-toggle" id="themeToggleBtn" type="button" title="Tema"></button>
+      </div>
+    </div>
+  </header>
+  <div id="senkoFeatureRoot">
+    <main style="padding:2rem"><h1>Conteudo do ultimo backup</h1></main>
+  </div>
+  <script>
+    (function () {
+      var kind = new URLSearchParams(location.search).get('kind') || 'quota';
+      var issues = {
+        quota: {
+          kind: 'quota',
+          title: 'Limite do Firebase atingido',
+          message: 'As leituras do plano gratuito acabaram por enquanto.'
+        },
+        unavailable: {
+          kind: 'unavailable',
+          title: 'Firebase indisponivel',
+          message: 'Nao foi possivel manter a conexao com os dados ao vivo.'
+        },
+        offline: {
+          kind: 'offline',
+          title: 'Sem conexao com a internet',
+          message: 'Este dispositivo nao consegue acessar o Firebase.'
+        }
+      };
+      var state = {
+        enabled: true,
+        status: 'error',
+        user: null,
+        member: null,
+        error: new Error(issues[kind].message),
+        serviceIssue: issues[kind]
+      };
+      window.SenkoDataMode = {
+        hasStaticSnapshot: function () { return true; },
+        getManifest: function () { return { exportedAt: '2026-08-15T19:43:18.000Z' }; }
+      };
+      window.SenkoFirebase = {
+        onStateChange: function (listener) { listener(state); },
+        isReady: function () { return false; },
+        signInWithGoogle: function () { return Promise.resolve(); },
+        signOut: function () { return Promise.resolve(); }
+      };
+    })();
+  </script>
+  <script src="../../app/infrastructure/firebase/senko-firebase-ui.js"></script>
+</body>
+</html>

@@ -173,3 +173,4 @@ Adicione novas rodadas sem apagar as anteriores.
 | 2026-08-15 | GitHub Pages publico | 0f64f44 | Aprovado | Pagina anonima exibiu selo Somente leitura, 34 layouts e 5 colecoes; login disponivel e controles de criacao, edicao e backup bloqueados |
 | 2026-08-15 | Firestore Emulator e producao | alteracoes locais | Aprovado | Solicitacoes de acesso passaram nas regras: conta grava apenas o proprio UID, incrementa tentativas e nao lista terceiros; regras publicadas em `senkolibtestes` |
 | 2026-08-15 | Emuladores e GitHub Pages | e3c929d | Aprovado | Regras de owner/admin/editor passaram nos testes automatizados; gestao de acessos foi publicada e permanece invisivel para visitantes anonimos, que continuam no backup somente leitura |
+| 2026-08-15 | UI local e teste unitario | alteracoes locais | Aprovado | Limite, indisponibilidade e navegador offline possuem avisos distintos; fallback informa a data do backup e permaneceu responsivo em desktop e 390x844 |

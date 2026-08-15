@@ -17,6 +17,23 @@ alterar regras, importar dados ou publicar novo corte.
 
 Nao use o projeto real como substituto do emulador durante desenvolvimento.
 
+## Avisos de disponibilidade
+
+O header diferencia falhas reais do modo publico normal:
+
+| Aviso | Causa | Comportamento |
+| --- | --- | --- |
+| `Somente leitura` | Pessoa deslogada ou Firebase desativado | Usa o ultimo backup publico |
+| `Limite atingido` | Firestore retornou `resource-exhausted` ou mensagem de cota | Bloqueia escrita e usa o ultimo backup |
+| `Sem conexao` | O navegador ficou offline | Bloqueia escrita e usa o ultimo backup |
+| `Firebase fora do ar` | Listener retornou indisponibilidade ou timeout | Bloqueia escrita e usa o ultimo backup |
+
+A faixa mostra a data do backup que esta sendo exibido. **Tentar novamente**
+recarrega o SenkoLib para repetir a verificacao. Nao fique recarregando quando
+o limite diario tiver acabado; aguarde a renovacao da cota. Para validar o
+visual sem afetar producao, abra
+`tests/fixtures/firebase-status-harness.html?kind=quota` por Live Server.
+
 ## Checklist antes do deploy
 
 1. `git status --short` revisado.

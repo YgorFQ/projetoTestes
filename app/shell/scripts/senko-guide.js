@@ -442,7 +442,24 @@
             'Storage recebera imagens e conteudos que ultrapassarem o limite definido.',
             'O navegador nunca recebe credencial administrativa nem chave privada do GitHub; o backup usa o token individual de quem clicou.',
             'SenkoDataMode alterna entre firebase, static e unavailable sem misturar as regras internas das features.',
+            'Falhas de cota, internet ou disponibilidade exibem uma faixa persistente no header e mudam a fonte para o ultimo backup somente leitura.',
             'Uma conta autenticada sem acesso registra a propria solicitacao em workspaces/senkolib/accessRequests; proprietarios e admins podem listar pela feature Acessos.'
+          ]
+        },
+        {
+          title: 'Firebase fora do ar ou sem cota',
+          badge: 'status',
+          terms: 'firebase fora do ar limite cota 50 mil leitura offline indisponivel resource exhausted',
+          paragraphs: [
+            'O header mostra Limite atingido, Sem conexao ou Firebase fora do ar quando uma falha real interrompe os dados ao vivo.',
+            'O SenkoLib bloqueia escrita e exibe a data do ultimo backup publico usado. O modo Somente leitura sem alerta continua significando apenas que a pessoa nao entrou.'
+          ],
+          bullets: [
+            'resource-exhausted e mensagens de quota viram o estado quota.',
+            'unavailable, deadline-exceeded e network-request-failed viram indisponibilidade.',
+            'O evento offline do navegador muda imediatamente para o fallback.',
+            'Tentar novamente recarrega a pagina; nao existe repeticao automatica consumindo leituras.',
+            'Harness visual: tests/fixtures/firebase-status-harness.html?kind=quota.'
           ]
         },
         {

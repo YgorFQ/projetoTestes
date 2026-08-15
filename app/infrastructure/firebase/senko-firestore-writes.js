@@ -87,6 +87,12 @@
   function withContext(operation) {
     return window.SenkoFirebase.whenAuthorized().then(function () {
       return operation(window.SenkoFirebase.getClientContext());
+    }).catch(function (error) {
+      if (window.SenkoFirebase &&
+          typeof window.SenkoFirebase.reportServiceError === 'function') {
+        window.SenkoFirebase.reportServiceError(error, 'write');
+      }
+      throw error;
     });
   }
 

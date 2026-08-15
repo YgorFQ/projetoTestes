@@ -102,6 +102,103 @@
   color: var(--accent);
 }
 
+.senko-data-mode-badge.is-issue {
+  border-color: color-mix(in srgb, var(--red) 55%, var(--border));
+  background: color-mix(in srgb, var(--red) 10%, var(--bg2));
+  color: var(--red);
+}
+
+.senko-data-mode-badge.is-issue svg {
+  color: var(--red);
+}
+
+.senko-service-alert {
+  border-top: 1px solid color-mix(in srgb, var(--red) 42%, var(--border));
+  border-bottom: 1px solid color-mix(in srgb, var(--red) 42%, var(--border));
+  background: color-mix(in srgb, var(--red) 9%, var(--bg2));
+  color: var(--text);
+}
+
+.senko-service-alert[hidden] {
+  display: none;
+}
+
+.senko-service-alert-inner {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .7rem;
+  width: min(100%, 1600px);
+  min-height: 48px;
+  margin: 0 auto;
+  padding: .45rem 2rem;
+}
+
+.senko-service-alert svg {
+  width: 20px;
+  height: 20px;
+  color: var(--red);
+}
+
+.senko-service-alert strong,
+.senko-service-alert p {
+  margin: 0;
+}
+
+.senko-service-alert strong {
+  display: block;
+  color: var(--red);
+  font-size: .8rem;
+  font-weight: 900;
+}
+
+.senko-service-alert p {
+  margin-top: .1rem;
+  color: var(--text2);
+  font-size: .74rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.senko-service-alert button {
+  min-height: 32px;
+  padding: .35rem .65rem;
+  border: 1px solid color-mix(in srgb, var(--red) 55%, var(--border));
+  border-radius: var(--radius);
+  background: var(--bg2);
+  color: var(--red);
+  cursor: pointer;
+  font: 900 .74rem var(--font-body);
+}
+
+.senko-service-alert button:hover {
+  background: color-mix(in srgb, var(--red) 8%, var(--bg2));
+}
+
+.senko-service-alert.is-offline,
+.senko-service-alert.is-unavailable {
+  border-color: color-mix(in srgb, #b45309 45%, var(--border));
+  background: color-mix(in srgb, #b45309 9%, var(--bg2));
+}
+
+.senko-service-alert.is-offline svg,
+.senko-service-alert.is-offline strong,
+.senko-service-alert.is-offline button,
+.senko-service-alert.is-unavailable svg,
+.senko-service-alert.is-unavailable strong,
+.senko-service-alert.is-unavailable button {
+  color: #b45309;
+}
+
+.senko-service-alert.is-offline button,
+.senko-service-alert.is-unavailable button {
+  border-color: color-mix(in srgb, #b45309 50%, var(--border));
+}
+
+.site-header:has(.senko-service-alert:not([hidden])) + #senkoFeatureRoot .senko-dom-feature {
+  height: calc(100vh - 119px);
+}
+
 .senko-readonly #senkoGlobalCreateBtn,
 .senko-readonly #openAddModal,
 .senko-readonly #colOpenCreateBtn,
@@ -353,6 +450,20 @@
     width: 34px;
     justify-content: center;
     padding: 0;
+  }
+
+  .senko-service-alert-inner {
+    grid-template-columns: 20px minmax(0, 1fr);
+    padding: .55rem 1rem;
+  }
+
+  .senko-service-alert button {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .site-header:has(.senko-service-alert:not([hidden])) + #senkoFeatureRoot .senko-dom-feature {
+    height: calc(100vh - 154px);
   }
 
   .senko-github-backup-grid {

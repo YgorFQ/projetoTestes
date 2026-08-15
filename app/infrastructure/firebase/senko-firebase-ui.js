@@ -6,6 +6,7 @@
   var accountButton;
   var accountMenu;
   var dataModeBadge;
+  var serviceAlert;
   var currentState = null;
   var exporterRegistered = false;
   var toastTimer;
@@ -82,6 +83,27 @@
       '<span>Somente leitura</span>';
     if (headerActions) headerActions.insertBefore(dataModeBadge, accountButton);
 
+    serviceAlert = document.createElement('section');
+    serviceAlert.className = 'senko-service-alert';
+    serviceAlert.hidden = true;
+    serviceAlert.setAttribute('role', 'alert');
+    serviceAlert.setAttribute('aria-live', 'polite');
+    serviceAlert.innerHTML =
+      '<div class="senko-service-alert-inner">' +
+      '  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">' +
+      '    <path d="M12 3 2.5 20h19L12 3Z"></path><path d="M12 9v5"></path><path d="M12 17.5h.01"></path>' +
+      '  </svg>' +
+      '  <div><strong></strong><p></p></div>' +
+      '  <button type="button" title="Recarregar e tentar conectar novamente">Tentar novamente</button>' +
+      '</div>';
+    var siteHeader = document.querySelector('.site-header');
+    if (siteHeader) siteHeader.appendChild(serviceAlert);
+    else document.body.insertBefore(serviceAlert, document.body.firstChild);
+
+    serviceAlert.querySelector('button').addEventListener('click', function () {
+      window.location.reload();
+    });
+
     document.getElementById('senkoSignOutBtn').addEventListener('click', function () {
       accountMenu.hidden = true;
       window.SenkoFirebase.signOut();
@@ -116,6 +138,48 @@
     toastTimer = setTimeout(function () {
       toast.hidden = true;
     }, 5000);
+  }
+
+  function formatBackupDate(manifest) {
+    if (!manifest || !manifest.exportedAt) return 'data desconhecida';
+    var exportedAt = new Date(manifest.exportedAt);
+    return Number.isNaN(exportedAt.getTime())
+      ? 'data desconhecida'
+      : exportedAt.toLocaleString('pt-BR');
+  }
+
+  function renderServiceStatus(issue, usingStatic, manifest) {
+    var badgeLabel = dataModeBadge.querySelector('span');
+    var backupDate = formatBackupDate(manifest);
+
+    dataModeBadge.classList.toggle('is-issue', Boolean(issue));
+    if (issue) dataModeBadge.dataset.issueKind = issue.kind || 'error';
+    else delete dataModeBadge.dataset.issueKind;
+
+    if (!issue) {
+      badgeLabel.textContent = 'Somente leitura';
+      serviceAlert.hidden = true;
+      return;
+    }
+
+    var labels = {
+      quota: 'Limite atingido',
+      offline: 'Sem conexao',
+      unavailable: 'Firebase fora do ar',
+      error: 'Falha no Firebase'
+    };
+    badgeLabel.textContent = labels[issue.kind] || labels.error;
+    dataModeBadge.title = issue.title || labels.error;
+
+    var detail = issue.message || 'Nao foi possivel acessar os dados ao vivo.';
+    detail += usingStatic
+      ? ' Exibindo o backup de ' + backupDate + ' em somente leitura.'
+      : ' Nenhum backup publico esta disponivel neste navegador.';
+
+    serviceAlert.className = 'senko-service-alert is-' + (issue.kind || 'error');
+    serviceAlert.querySelector('strong').textContent = issue.title || labels.error;
+    serviceAlert.querySelector('p').textContent = detail;
+    serviceAlert.hidden = false;
   }
 
   function githubIcon() {
@@ -267,14 +331,13 @@
     var manifest = usingStatic && window.SenkoDataMode.getManifest
       ? window.SenkoDataMode.getManifest()
       : null;
+    var serviceIssue = state.serviceIssue || null;
 
     dataModeBadge.hidden = !usingStatic;
     if (usingStatic) {
-      var exportedAt = manifest && manifest.exportedAt
-        ? new Date(manifest.exportedAt).toLocaleString('pt-BR')
-        : 'data desconhecida';
-      dataModeBadge.title = 'Backup publico de ' + exportedAt;
+      dataModeBadge.title = 'Backup publico de ' + formatBackupDate(manifest);
     }
+    renderServiceStatus(serviceIssue, usingStatic, manifest);
 
     if (!state.enabled || state.status === 'disabled') {
       gate.hidden = hasStaticSnapshot;

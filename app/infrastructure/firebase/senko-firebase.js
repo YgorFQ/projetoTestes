@@ -12,6 +12,7 @@
     user: null,
     member: null,
     error: null,
+    serviceIssue: null,
     usingEmulators: false
   };
 
@@ -22,8 +23,83 @@
       user: state.user,
       member: state.member,
       error: state.error,
+      serviceIssue: state.serviceIssue,
       usingEmulators: state.usingEmulators
     };
+  }
+
+  function errorCode(error) {
+    return String(error && error.code || '')
+      .toLowerCase()
+      .replace(/^firebase\//, '')
+      .replace(/^firestore\//, '')
+      .replace(/^functions\//, '')
+      .replace(/^auth\//, '');
+  }
+
+  function describeServiceError(error) {
+    var code = errorCode(error);
+    var message = String(error && error.message || '');
+    var normalizedMessage = message.toLowerCase();
+    var browserOffline = typeof navigator !== 'undefined' && navigator.onLine === false;
+    var isQuota = code === 'resource-exhausted' || code === 'quota-exceeded' ||
+      normalizedMessage.indexOf('quota') !== -1 ||
+      normalizedMessage.indexOf('50,000') !== -1 ||
+      normalizedMessage.indexOf('50000') !== -1;
+
+    if (isQuota) {
+      return {
+        kind: 'quota',
+        code: code || 'resource-exhausted',
+        title: 'Limite do Firebase atingido',
+        message: 'As leituras do plano gratuito acabaram por enquanto.'
+      };
+    }
+
+    if (browserOffline) {
+      return {
+        kind: 'offline',
+        code: code || 'network-request-failed',
+        title: 'Sem conexao com a internet',
+        message: 'Este dispositivo nao consegue acessar o Firebase.'
+      };
+    }
+
+    if (['unavailable', 'deadline-exceeded', 'network-request-failed'].indexOf(code) !== -1) {
+      return {
+        kind: 'unavailable',
+        code: code,
+        title: 'Firebase indisponivel',
+        message: 'Nao foi possivel manter a conexao com os dados ao vivo.'
+      };
+    }
+
+    return {
+      kind: 'error',
+      code: code || 'unknown',
+      title: 'Falha no Firebase',
+      message: message || 'Nao foi possivel acessar os dados ao vivo.'
+    };
+  }
+
+  function reportServiceError(error, source, force) {
+    var issue = describeServiceError(error);
+    issue.source = String(source || 'firebase');
+    issue.detectedAt = new Date().toISOString();
+
+    if (!force && issue.kind === 'error') return issue;
+
+    publish({
+      status: 'error',
+      error: error || new Error(issue.message),
+      serviceIssue: issue
+    });
+    return issue;
+  }
+
+  function handleListenerError(error, callback, source) {
+    reportServiceError(error, source, true);
+    if (typeof callback === 'function') callback(error);
   }
 
   function normalizeMember(member) {
@@ -155,10 +231,12 @@
         status: 'ready',
         user: user,
         member: normalizeMember(Object.assign({ id: snapshot.id }, snapshot.data())),
-        error: null
+        error: null,
+        serviceIssue: null
       });
     }, function (error) {
       console.warn('[SenkoFirebase] Falha ao acompanhar o cargo do membro:', error);
+      reportServiceError(error, 'member-listener', true);
     });
   }
 
@@ -203,7 +281,8 @@
             member: normalizeMember(Object.assign({
               id: createdMemberSnapshot.id
             }, createdMemberSnapshot.data())),
-            error: null
+            error: null,
+            serviceIssue: null
           });
           startMemberListener(user, reference);
           return callFunction('ensurePresenceAccess', {
@@ -217,7 +296,8 @@
           status: 'unauthorized',
           user: user,
           member: null,
-          error: null
+          error: null,
+          serviceIssue: null
         });
         startMemberListener(user, reference);
         return recordAccessRequest(user).catch(function (error) {
@@ -232,7 +312,8 @@
         status: 'ready',
         user: user,
         member: normalizeMember(Object.assign({ id: memberSnapshot.id }, memberSnapshot.data())),
-        error: null
+        error: null,
+        serviceIssue: null
       });
       startMemberListener(user, reference);
 
@@ -286,7 +367,8 @@
               status: 'signed-out',
               user: null,
               member: null,
-              error: null
+              error: null,
+              serviceIssue: null
             });
             return;
           }
@@ -295,16 +377,14 @@
             status: 'checking-access',
             user: user,
             member: null,
-            error: null
+            error: null,
+            serviceIssue: null
           });
 
           checkMembership(user).catch(function (error) {
-            publish({
-              status: 'error',
-              user: user,
-              member: null,
-              error: error
-            });
+            state.user = user;
+            state.member = null;
+            reportServiceError(error, 'membership-check', true);
           });
         });
 
@@ -312,10 +392,7 @@
       })
       .catch(function (error) {
         console.error('[SenkoFirebase] Inicializacao falhou:', error);
-        publish({
-          status: 'error',
-          error: error
-        });
+        reportServiceError(error, 'initialization', true);
         throw error;
       });
 
@@ -402,7 +479,9 @@
         return Object.assign({ id: documentSnapshot.id }, documentSnapshot.data());
       });
       callback(documents, snapshot.docChanges());
-    }, onError);
+    }, function (error) {
+      handleListenerError(error, onError, 'collection-listener');
+    });
   }
 
   function listenCollectionGroup(collectionId, options, callback, onError) {
@@ -418,7 +497,9 @@
         }, documentSnapshot.data());
       });
       callback(documents, snapshot.docChanges());
-    }, onError);
+    }, function (error) {
+      handleListenerError(error, onError, 'collection-group-listener');
+    });
   }
 
   function listenDocument(path, callback, onError) {
@@ -428,7 +509,9 @@
       callback(documentSnapshot.exists()
         ? Object.assign({ id: documentSnapshot.id }, documentSnapshot.data())
         : null);
-    }, onError);
+    }, function (error) {
+      handleListenerError(error, onError, 'document-listener');
+    });
   }
 
   function safePresenceSegment(value) {
@@ -513,6 +596,8 @@
     getWorkspaceId: getWorkspaceId,
     getWorkspacePath: getWorkspacePath,
     onStateChange: onStateChange,
+    describeServiceError: describeServiceError,
+    reportServiceError: reportServiceError,
     whenAuthorized: whenAuthorized,
     signInWithGoogle: signInWithGoogle,
     signOut: signOut,
@@ -524,6 +609,13 @@
     enterPresence: enterPresence,
     syncMemberRealtimeAccess: syncMemberRealtimeAccess
   };
+
+  window.addEventListener('offline', function () {
+    if (state.status !== 'ready') return;
+    var error = new Error('O navegador perdeu a conexao com a internet.');
+    error.code = 'network-request-failed';
+    reportServiceError(error, 'browser', true);
+  });
 
   initialize().catch(function () {});
 })();
