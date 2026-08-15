@@ -8,7 +8,7 @@
    * aqui. Consulte FIREBASE_SETUP.md antes de ativar.
    */
   window.SenkoFirebaseConfig = {
-    enabled: true,
+    enabled: false,
     sdkVersion: '12.17.0',
     workspaceId: 'senkolib',
     region: 'southamerica-east1',
