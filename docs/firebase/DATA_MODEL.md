@@ -16,6 +16,7 @@
 ```text
 workspaces/{workspaceId}
 |-- members/{uid}
+|-- accessRequests/{uid}
 |-- groups/{groupId}
 |-- bibliotecaLayouts/{layoutId}
 |   |-- revisions/{revisionId}
@@ -65,6 +66,19 @@ Caminho: `workspaces/{workspaceId}/members/{uid}`
 
 Atualmente a existencia do documento significa acesso completo. Ainda nao
 existem papeis como leitor, editor ou administrador.
+
+## Solicitacoes de acesso
+
+Caminho: `workspaces/{workspaceId}/accessRequests/{uid}`
+
+Quando uma conta Google autentica, mas ainda nao existe em `members`, o
+navegador registra `uid`, `email`, `displayName`, `status: pending`,
+`attemptCount`, `firstAttemptAt` e `lastAttemptAt`. A conta pode ler e atualizar
+somente o proprio documento; nao pode listar outras solicitacoes. O Console do
+Firebase continua capaz de listar os documentos para administracao do projeto.
+
+Tokens, senhas e credenciais nao sao registrados. A colecao tambem nao entra
+nos backups publicos ou tecnicos do GitHub.
 
 ## Grupos
 

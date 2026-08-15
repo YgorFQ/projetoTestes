@@ -441,7 +441,8 @@
             'Realtime Database guarda somente quem esta presente em um editor.',
             'Storage recebera imagens e conteudos que ultrapassarem o limite definido.',
             'O navegador nunca recebe credencial administrativa nem chave privada do GitHub; o backup usa o token individual de quem clicou.',
-            'SenkoDataMode alterna entre firebase, static e unavailable sem misturar as regras internas das features.'
+            'SenkoDataMode alterna entre firebase, static e unavailable sem misturar as regras internas das features.',
+            'Uma conta autenticada sem acesso registra a propria solicitacao em workspaces/senkolib/accessRequests; somente o Console Firebase pode listar todas.'
           ]
         },
         {

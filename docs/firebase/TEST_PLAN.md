@@ -17,6 +17,7 @@ indicado, em um ambiente de producao controlado.
 - [ ] Pessoa deslogada ve a opcao de entrar e nao carrega dados.
 - [ ] Primeiro usuario local vira membro automaticamente.
 - [ ] Usuario real sem documento de membro recebe estado `unauthorized`.
+- [ ] Usuario sem acesso cria ou incrementa somente a propria solicitacao.
 - [ ] Usuario real cadastrado como membro consegue ler o workspace.
 - [ ] Remover o documento de membro impede a proxima escrita.
 - [ ] Sair limpa o estado visual e impede novas operacoes.
@@ -91,6 +92,7 @@ da implementacao administrativa anterior. A interface ainda deve ser conferida.
 - [ ] Firestore permite escrita valida somente para membro.
 - [ ] Firestore recusa schema, versao ou ator invalidos.
 - [ ] Firestore impede o navegador de escrever em `members`.
+- [ ] Firestore impede listar solicitacoes ou gravar solicitacao para outro UID.
 - [ ] Alteracao de conteudo sem incremento de `dataVersion` e recusada.
 - [ ] Realtime Database permite escrever apenas a propria sessao.
 - [ ] Realtime Database nega presenca sem `presenceAccess`.

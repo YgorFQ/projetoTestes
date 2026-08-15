@@ -341,7 +341,7 @@
     if (state.status === 'unauthorized') {
       panelTitle.textContent = 'Conta sem acesso';
       panelMessage.textContent =
-        'Esta conta entrou corretamente, mas ainda nao foi adicionada como membro do SenkoLib.';
+        'Esta conta entrou corretamente, mas ainda nao foi adicionada. O responsavel pode ver esta solicitacao no Firebase.';
       panelAction.textContent = 'Entrar com outra conta';
       panelAction.hidden = false;
       return;

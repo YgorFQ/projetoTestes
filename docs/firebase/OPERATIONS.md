@@ -63,14 +63,18 @@ Depois, abra o Console e confira o horario das regras.
 
 Todos os membros atuais sao editores completos.
 
-1. A pessoa autentica com Google uma vez.
-2. Em **Authentication > Users**, copie o UID.
-3. Crie `workspaces/senkolib/members/{uid}` no Firestore.
-4. Preencha `uid`, `email`, `displayName` e `joinedAt`.
-5. Crie `presenceAccess/senkolib/{uid} = true` no Realtime Database.
-6. A pessoa entra novamente.
+1. A pessoa tenta entrar com Google uma vez.
+2. No Console Firebase, abra **Firestore Database > Dados > workspaces >
+   senkolib > accessRequests**.
+3. Abra o documento da pessoa e copie `uid`, `email` e `displayName`.
+4. Como alternativa, o UID tambem aparece em **Authentication > Users**.
+5. Crie `workspaces/senkolib/members/{uid}` no Firestore.
+6. Preencha `uid`, `email`, `displayName` e `joinedAt`.
+7. Crie `presenceAccess/senkolib/{uid} = true` no Realtime Database.
+8. A pessoa entra novamente.
 
 O frontend nao pode editar `members` nem `presenceAccess`.
+Ele registra apenas a propria solicitacao pendente e nao pode listar as demais.
 
 Alternativa pelo Firebase CLI, depois que o usuario ja apareceu em
 Authentication:

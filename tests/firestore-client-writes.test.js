@@ -11,6 +11,7 @@ const firestore = require('firebase/firestore');
 const PROJECT_ID = 'senkolib-rules-test';
 const WORKSPACE_ID = 'senkolib';
 const MEMBER_UID = 'member-1';
+const OUTSIDER_UID = 'outsider';
 
 async function seed(testEnvironment) {
   await testEnvironment.withSecurityRulesDisabled(async (context) => {
@@ -240,7 +241,9 @@ async function main() {
     const memberDb = testEnvironment.authenticatedContext(MEMBER_UID, {
       email: 'member@example.com'
     }).firestore();
-    const outsiderDb = testEnvironment.authenticatedContext('outsider').firestore();
+    const outsiderDb = testEnvironment.authenticatedContext(OUTSIDER_UID, {
+      email: 'outsider@example.com'
+    }).firestore();
     const writes = loadClientWriter(memberDb);
 
     const group = await writes.saveGroup({
@@ -383,6 +386,46 @@ async function main() {
       memberDb,
       `workspaces/${WORKSPACE_ID}/groups/invalido`
     ), { id: 'invalido' }));
+
+    const accessRequestRef = firestore.doc(
+      outsiderDb,
+      `workspaces/${WORKSPACE_ID}/accessRequests/${OUTSIDER_UID}`
+    );
+    await firestore.setDoc(accessRequestRef, {
+      uid: OUTSIDER_UID,
+      workspaceId: WORKSPACE_ID,
+      email: 'outsider@example.com',
+      displayName: 'Pessoa sem acesso',
+      status: 'pending',
+      attemptCount: 1,
+      firstAttemptAt: firestore.serverTimestamp(),
+      lastAttemptAt: firestore.serverTimestamp()
+    });
+    assert.equal((await firestore.getDoc(accessRequestRef)).data().attemptCount, 1);
+    await firestore.setDoc(accessRequestRef, {
+      email: 'outsider@example.com',
+      displayName: 'Pessoa sem acesso',
+      attemptCount: 2,
+      lastAttemptAt: firestore.serverTimestamp()
+    }, { merge: true });
+    assert.equal((await firestore.getDoc(accessRequestRef)).data().attemptCount, 2);
+    await assertFails(firestore.setDoc(firestore.doc(
+      outsiderDb,
+      `workspaces/${WORKSPACE_ID}/accessRequests/outro-uid`
+    ), {
+      uid: 'outro-uid',
+      workspaceId: WORKSPACE_ID,
+      email: 'outsider@example.com',
+      displayName: 'Tentativa invalida',
+      status: 'pending',
+      attemptCount: 1,
+      firstAttemptAt: firestore.serverTimestamp(),
+      lastAttemptAt: firestore.serverTimestamp()
+    }));
+    await assertFails(firestore.getDocs(firestore.collection(
+      outsiderDb,
+      `workspaces/${WORKSPACE_ID}/accessRequests`
+    )));
 
     const workspace = await firestore.getDoc(workspaceRef);
     assert.equal(workspace.data().dataVersion, 9);

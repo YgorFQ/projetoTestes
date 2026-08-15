@@ -36,6 +36,7 @@ O corte Firebase original continua marcado por tag Git.
 - [x] Configuracao Web do projeto `senkolibtestes`.
 - [x] Emuladores de Auth, Firestore, Functions, Realtime, Storage e Hosting.
 - [x] Login e verificacao do documento de membro.
+- [x] Registro seguro de contas autenticadas sem acesso em `accessRequests`.
 - [x] Bootstrap de membro somente no emulador.
 - [x] Firestore como fonte local da Biblioteca e Colecoes.
 - [x] Gravacoes diretas com transacoes no SDK Web.
@@ -165,3 +166,4 @@ Adicione novas rodadas sem apagar as anteriores.
 | 2026-08-15 | GitHub backup | alteracoes locais | Aprovado | Identificado backup enviado para repo errado por configuracao antiga do navegador; destino fixo do projeto passou a prevalecer sobre `localStorage`, com teste automatizado |
 | 2026-08-15 | Live Server publico | alteracoes locais | Aprovado | Sem login: 34 layouts, 11 variacoes, 5 colecoes, 48 layouts internos e 5 grupos pelo bundle; escrita bloqueada, copia e preview mantidos; desktop e 390x844 sem overflow |
 | 2026-08-15 | GitHub Pages publico | 0f64f44 | Aprovado | Pagina anonima exibiu selo Somente leitura, 34 layouts e 5 colecoes; login disponivel e controles de criacao, edicao e backup bloqueados |
+| 2026-08-15 | Firestore Emulator e producao | alteracoes locais | Aprovado | Solicitacoes de acesso passaram nas regras: conta grava apenas o proprio UID, incrementa tentativas e nao lista terceiros; regras publicadas em `senkolibtestes` |

@@ -119,6 +119,10 @@
     return 'workspaces/' + getWorkspaceId() + '/members/' + uid;
   }
 
+  function accessRequestPath(uid) {
+    return 'workspaces/' + getWorkspaceId() + '/accessRequests/' + uid;
+  }
+
   function getWorkspaceId() {
     return String(config.workspaceId || 'senkolib');
   }
@@ -126,6 +130,29 @@
   function getWorkspacePath(relativePath) {
     var suffix = String(relativePath || '').replace(/^\/+/, '');
     return 'workspaces/' + getWorkspaceId() + (suffix ? '/' + suffix : '');
+  }
+
+  function recordAccessRequest(user) {
+    var reference = modules.firestore.doc(services.db, accessRequestPath(user.uid));
+    return modules.firestore.runTransaction(services.db, function (transaction) {
+      return transaction.get(reference).then(function (requestSnapshot) {
+        var current = requestSnapshot.exists() ? requestSnapshot.data() : null;
+        var requestData = {
+          uid: user.uid,
+          workspaceId: getWorkspaceId(),
+          email: user.email || '',
+          displayName: user.displayName || '',
+          status: 'pending',
+          attemptCount: current ? Number(current.attemptCount || 0) + 1 : 1,
+          firstAttemptAt: current && current.firstAttemptAt
+            ? current.firstAttemptAt
+            : modules.firestore.serverTimestamp(),
+          lastAttemptAt: modules.firestore.serverTimestamp()
+        };
+
+        transaction.set(reference, requestData);
+      });
+    });
   }
 
   function checkMembership(user) {
@@ -161,7 +188,12 @@
           member: null,
           error: null
         });
-        return;
+        return recordAccessRequest(user).catch(function (error) {
+          console.warn(
+            '[SenkoFirebase] Nao foi possivel registrar a solicitacao de acesso:',
+            error.message || error
+          );
+        });
       }
 
       publish({
