@@ -4,11 +4,11 @@ Ultima revisao documental: **2026-08-15**.
 
 ## Resumo
 
-Estimativa atual: **99% da migracao concluida**. CRUD colaborativo, regras do
+Estimativa atual: **100% da migracao concluida**. CRUD colaborativo, regras do
 plano Spark, backup manual pelo navegador, primeiro commit real de backup,
-restauracao em emulador, restauracao no Firestore real e primeiro membro real
-existem. Falta o smoke test final no GitHub Pages com conta autorizada e a tag
-do corte.
+restauracao em emulador, restauracao no Firestore real, primeiro membro real e
+smoke test no GitHub Pages com conta autorizada foram concluidos. O corte esta
+marcado por tag Git.
 
 ## Decisoes confirmadas
 
@@ -102,8 +102,8 @@ nao possui warnings.
 - [x] Importar o snapshot final sem warnings.
 - [x] Separar ativacao de producao e emuladores na configuracao.
 - [x] Publicar o frontend com Firebase ativo no GitHub Pages.
-- [ ] Executar smoke test de producao.
-- [ ] Criar commit e tag do corte.
+- [x] Executar smoke test de producao.
+- [x] Criar commit e tag do corte.
 
 ## Melhorias posteriores
 
@@ -118,11 +118,9 @@ nao possui warnings.
 
 ## Proximo passo recomendado
 
-1. Recarregar o GitHub Pages com `Ctrl+Shift+R`.
-2. Confirmar que Biblioteca e Colecoes aparecem com dados do Firebase real.
-3. Fazer um smoke test pequeno de leitura e, se aprovado, um save controlado.
-4. Criar backup GitHub pelo botao.
-5. Criar a tag do corte depois do smoke test aprovado.
+1. Criar backup GitHub pelo botao apos os testes reais de edicao.
+2. Registrar o SHA desse backup em uma nova rodada de teste.
+3. Iniciar a rodada com segunda conta/perfil quando houver outro membro.
 
 ## Observacao sobre GitHub Pages
 
@@ -147,3 +145,4 @@ Adicione novas rodadas sem apagar as anteriores.
 | 2026-08-15 | Firebase real | d9e63426514bee66ac997b608dff706922551c86 | Aprovado | Regras Firestore/Realtime publicadas, `ygorfq.github.io` autorizado e backup restaurado no workspace `senkolib`; contagens reais conferidas |
 | 2026-08-15 | GitHub Pages | 4812d098921a8f960fccba78eca5c36bbcf31065 | Parcial aprovado | Codigo do corte publicado e `firebase-config.js` servido com `enabled: true`; aguardando primeiro membro real para smoke test autenticado |
 | 2026-08-15 | Firebase real | NR6Zez...GfL2 | Aprovado | Primeiro membro real criado no Firestore e `presenceAccess` liberado no Realtime Database |
+| 2026-08-15 | GitHub Pages | c0cef9f | Aprovado | Conta autorizada entrou, Biblioteca carregou, tag em layout persistiu, edicao de layout salvou e Colecoes salvou no Firebase real |
