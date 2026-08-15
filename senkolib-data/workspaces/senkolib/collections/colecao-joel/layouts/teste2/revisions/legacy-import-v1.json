@@ -1,14 +1,14 @@
 {
-  "revisionId": "legacy-import-v1",
-  "resourceId": "teste2",
-  "workspaceId": "senkolib",
-  "kind": "collectionLayout",
-  "name": "teste2",
-  "tags": [],
-  "html": "teste2",
-  "css": "",
+  "createdAt": "2026-08-15T15:14:08.167Z",
   "baseRevisionId": null,
-  "createdBy": "legacy-import",
   "createdByName": "Importacao inicial",
-  "createdAt": "2026-08-15T15:14:08.167Z"
+  "html": "teste2",
+  "resourceId": "teste2",
+  "name": "teste2",
+  "createdBy": "legacy-import",
+  "tags": [],
+  "kind": "collectionLayout",
+  "revisionId": "legacy-import-v1",
+  "css": "",
+  "workspaceId": "senkolib"
 }

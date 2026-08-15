@@ -1,13 +1,13 @@
 {
-  "id": "joel",
-  "workspaceId": "senkolib",
-  "name": "Joel",
-  "nameKey": "joel",
-  "color": "#06b6d4",
+  "updatedAt": "2026-08-15T15:14:08.138Z",
   "version": 1,
-  "createdBy": "legacy-import",
-  "updatedBy": "legacy-import",
   "updatedByName": "Importacao inicial",
+  "workspaceId": "senkolib",
+  "nameKey": "joel",
+  "createdBy": "legacy-import",
+  "color": "#06b6d4",
+  "id": "joel",
   "createdAt": "2026-08-15T15:14:08.138Z",
-  "updatedAt": "2026-08-15T15:14:08.138Z"
+  "name": "Joel",
+  "updatedBy": "legacy-import"
 }
