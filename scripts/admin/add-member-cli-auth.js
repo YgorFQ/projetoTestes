@@ -35,7 +35,7 @@ function parseArgs(argv) {
 
 function printHelp() {
   console.log(`Uso:
-  node scripts/add-member-cli-auth.js --uid <uid> --email <email> --name <nome> [--role editor|admin|owner]
+  node scripts/admin/add-member-cli-auth.js --uid <uid> --email <email> --name <nome> [--role editor|admin|owner]
 
 Opcoes:
   --workspace <id>      Workspace alvo. Padrao: senkolib

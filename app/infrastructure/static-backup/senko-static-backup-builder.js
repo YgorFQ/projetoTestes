@@ -13,8 +13,8 @@
 })(typeof window !== 'undefined' ? window : null, function () {
   // O snapshot tecnico prioriza restauracao completa. O bundle publico contem
   // apenas o necessario para renderizar Biblioteca e Colecoes em leitura.
-  var DATA_ROOT = 'generated/backups/senkolib-data/';
-  var PUBLIC_ROOT = 'generated/static-backup/';
+  var DATA_ROOT = 'backup/data/';
+  var PUBLIC_ROOT = 'backup/latest/';
 
   function parseJson(content, path) {
     try {

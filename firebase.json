@@ -1,13 +1,13 @@
 {
   "firestore": {
-    "rules": "config/firebase/firestore.rules",
-    "indexes": "config/firebase/firestore.indexes.json"
+    "rules": "firebase/firestore.rules",
+    "indexes": "firebase/firestore.indexes.json"
   },
   "database": {
-    "rules": "config/firebase/database.rules.json"
+    "rules": "firebase/database.rules.json"
   },
   "storage": {
-    "rules": "config/firebase/storage.rules"
+    "rules": "firebase/storage.rules"
   },
   "hosting": {
     "public": ".",
@@ -15,13 +15,12 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**",
-      "functions/**",
       "tests/**",
-      "tools/**",
-      "config/**",
+      "scripts/**",
+      "firebase/**",
       "docs/**",
-      "generated/backups/**",
-      "generated/meta/**"
+      "backup/data/**",
+      "backup/meta/**"
     ],
     "headers": [
       {

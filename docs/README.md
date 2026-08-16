@@ -3,6 +3,10 @@
 Esta pasta e a referencia canonica do produto e da implementacao. Ela existe
 para uma pessoa nova entender o SenkoLib antes de alterar o codigo.
 
+Ao transferir o projeto para outro computador ou outra instancia do Codex,
+comece por [CONTEXTO_COMPLETO_CODEX.txt](CONTEXTO_COMPLETO_CODEX.txt). Ele
+registra as decisoes, o historico da migracao e o estado operacional atual.
+
 ## Ordem de leitura recomendada
 
 1. [Especificacao do produto](PRODUCT_SPECIFICATION.md): comportamento, cargos e estados.

@@ -41,9 +41,9 @@ npm run firebase:deploy:rules
 
 Os arquivos implantados sao:
 
-- `config/firebase/firestore.rules`;
-- `config/firebase/firestore.indexes.json`;
-- `config/firebase/database.rules.json`.
+- `firebase/firestore.rules`;
+- `firebase/firestore.indexes.json`;
+- `firebase/database.rules.json`.
 
 ## 4. Criar Realtime Database
 
@@ -57,7 +57,7 @@ A interface nao pode criar o primeiro owner porque ainda nao existe alguem
 autorizado. Use a conta autenticada na Firebase CLI:
 
 ```powershell
-npm --prefix functions run member:add:cli-auth -- \
+npm run admin:add-member -- \
   --workspace senkolib \
   --uid UID_DA_CONTA \
   --email email@exemplo.com \
@@ -66,7 +66,7 @@ npm --prefix functions run member:add:cli-auth -- \
 ```
 
 Depois do primeiro owner, use Menu > Acessos. Owner pode promover owners,
-admins e editors. Admin nao pode criar owner. Editor nao administra pessoas.
+admins e editors. Admin gerencia somente editors. Editor nao administra pessoas.
 
 ## 6. Configurar GitHub Pages e backup
 
@@ -76,8 +76,8 @@ o repositorio e deve ser revogado se aparecer em screenshot, log ou commit.
 
 O backup grava:
 
-- snapshot tecnico em `generated/backups/senkolib-data/`;
-- bundle publico em `generated/static-backup/`.
+- snapshot tecnico em `backup/data/`;
+- bundle publico em `backup/latest/`.
 
 Somente o segundo e carregado pelo site. O primeiro serve para restauracao e e
 recriado a cada backup concluido.
@@ -93,7 +93,6 @@ Requisitos:
 
 ```powershell
 npm install
-npm --prefix functions install
 npm run firebase:emulators
 ```
 

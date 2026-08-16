@@ -166,12 +166,12 @@
           badge: 'dados',
           terms: 'manifest data indice arquivos carregar layouts colecoes variantes',
           paragraphs: [
-            'Os dados atuais vem do Firestore ou do bundle em generated/static-backup. Nao existe uma terceira fonte.',
-            'O inventario generated/meta/file-classification.json marca cada arquivo como official, generated ou prototype.'
+            'Os dados atuais vem do Firestore ou do bundle em backup/latest. Nao existe uma terceira fonte.',
+            'O inventario backup/meta/file-classification.json marca cada arquivo como official, generated ou prototype.'
           ],
           bullets: [
             'Execute npm run inventory:build depois de criar, mover ou remover arquivos.',
-            'generated/static-backup/manifest.js informa a versao e as contagens do fallback publico.',
+            'backup/latest/manifest.js informa a versao e as contagens do fallback publico.',
             'Manifestos gerados sao saida do backup e nunca cadastro manual.'
           ],
           note: 'Conteudo novo e criado pela interface e persistido no Firestore.'
@@ -250,8 +250,12 @@
             'app/shared: tokens, componentes e assets globais.',
             'app/features: features principais.',
             'app/prototype: telas em teste ou beta.',
-            'generated: arquivos produzidos por scripts ou backups.',
-            'config/firebase: regras, indices e exemplo de configuracao.',
+            'backup: ultimo snapshot publico, dados restauraveis e inventarios gerados.',
+            'firebase: regras, indices e exemplo de configuracao.',
+            'scripts/admin: operacoes locais de contas e membros.',
+            'scripts/backup: criacao e restauracao de snapshots.',
+            'scripts/maintenance: manutencao automatizada do repositorio.',
+            'tests: verificacoes automaticas e fixtures isoladas.',
             '.vscode/settings.json: configuracao local do Live Server.',
             'docs: toda a documentacao canonica do produto e da implementacao.'
           ]
@@ -288,7 +292,9 @@
             'Mudanca de Sources: app/features/sources.',
             'Mudanca de ferramenta global: app/tools/[nome].',
             'Mudanca do cliente Firebase ou GitHub: app/infrastructure.',
-            'Mudanca de regras e indices Firebase: config/firebase.',
+            'Mudanca de regras e indices Firebase: firebase/.',
+            'Operacao administrativa: scripts/admin/.',
+            'Criacao ou restauracao de backup: scripts/backup/.',
             'Experimento: app/prototype.'
           ]
         }
@@ -518,7 +524,7 @@
             'O HTML e o CSS ficam publicos por decisao de produto, mas membros, e-mails, presenca, tokens, logs, autoria e revisoes antigas nao entram nesse bundle.'
           ],
           bullets: [
-            'Arquivos gerados: generated/static-backup/manifest.js, biblioteca.js e colecoes.js.',
+            'Arquivos gerados: backup/latest/manifest.js, biblioteca.js e colecoes.js.',
             'Adaptadores: repositories/static-repository.js dentro de Biblioteca e Colecoes.',
             'Criar, editar, excluir e fazer backup ficam bloqueados no modo static.',
             'Preview e copia de HTML/CSS continuam disponiveis.',
@@ -600,8 +606,8 @@
             'Nao existe backup automatico, GitHub Actions ou agendamento de 30 minutos.',
             'Token recomendado: fine-grained, somente no repositorio e Contents read/write.',
             'GitHub App e chave privada nao fazem parte da arquitetura ativa.',
-            'Formato tecnico: JSON em generated/backups/senkolib-data/.',
-            'Formato publico: arquivos JS gerados em generated/static-backup/.',
+            'Formato tecnico: JSON em backup/data/.',
+            'Formato publico: arquivos JS gerados em backup/latest/.',
             'A restauracao administrativa existe e deve ser testada primeiro em workspace descartavel.',
             'A chave senkolib_github_token guarda o token pessoal no navegador; ela nunca entra no commit.'
           ]
@@ -648,7 +654,7 @@
             'Restaurar primeiro em um workspace descartavel.',
             'Sem --force, um workspace com conteudo e recusado.',
             '--force substitui conteudo e reservas, mas preserva membros e segredos.',
-            'O teste automatizado usa npm --prefix functions run test:restore:emulator.'
+            'O teste automatizado usa npm run test:restore-emulator.'
           ]
         }
       ]
@@ -896,7 +902,7 @@
             'Conferir SenkoDataMode.getState() e o selo do header.',
             'Em firebase, conferir erros de listener, permissao e consulta no console.',
             'Em static, fazer novo backup GitHub para publicar a ultima alteracao.',
-            'Confirmar que generated/static-backup foi atualizado no commit.',
+            'Confirmar que backup/latest foi atualizado no commit.',
             'Nao editar o snapshot gerado para tentar corrigir dados atuais.'
           ]
         },
@@ -1133,7 +1139,7 @@
           badge: 'contrato',
           terms: 'fonte verdade firebase firestore snapshot static dados',
           paragraphs: [
-            'Firestore e a unica fonte editavel. O snapshot em generated/static-backup e a unica fonte de contingencia e funciona somente para leitura.',
+            'Firestore e a unica fonte editavel. O snapshot em backup/latest e a unica fonte de contingencia e funciona somente para leitura.',
             'O GitHub armazena o resultado do backup, mas nao participa do salvamento diario de layouts ou colecoes.'
           ],
           bullets: [
@@ -1177,7 +1183,7 @@
           ],
           bullets: [
             'Owner gerencia todos os cargos e pode criar outro owner.',
-            'Admin aprova editores e admins, mas nao cria nem remove owner.',
+            'Admin aprova e gerencia somente editores; apenas owner concede admin ou owner.',
             'Editor nao concede acesso a outras contas.',
             'Esconder botao nao basta: Security Rules repetem esses limites.',
             'Cargo do Console Firebase nao substitui o documento de membro do SenkoLib.'
@@ -1246,7 +1252,7 @@
             'Encontre o click no controller.',
             'Confira o payload enviado ao repository.',
             'Siga para senko-firestore-writes.js.',
-            'Compare os campos com config/firebase/firestore.rules.',
+            'Compare os campos com firebase/firestore.rules.',
             'Confira o mapper do repository de leitura.',
             'Verifique o listener que chama render ou atualiza o editor.'
           ]
@@ -1290,7 +1296,7 @@
             'Inventario: npm run inventory:build.',
             'Snapshot publico: fluxo de backup ou npm run backup:build-static sobre um snapshot tecnico valido.',
             'package-lock: npm install.',
-            'Nunca corrigir dado atual editando generated/static-backup manualmente.'
+            'Nunca corrigir dado atual editando backup/latest manualmente.'
           ]
         },
         {
@@ -1349,7 +1355,7 @@
             'Nao fazer o shell conhecer detalhes como layouts, variantes ou grupos.',
             'Nao salvar token do GitHub no codigo.',
             'Nao deixar duas colecoes, layouts, variantes ou layouts de colecao com o mesmo nome.',
-            'Nao editar manualmente os arquivos em generated/static-backup/.',
+            'Nao editar manualmente os arquivos em backup/latest/.',
             'Nao editar ID gerado pelo editor como se fosse nome de exibicao.',
             'Nao deixar tela oficial dentro de prototype depois que virou fluxo oficial.',
             'Nao finalizar mudanca sem atualizar o guia quando o comportamento documentado mudou.'

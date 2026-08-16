@@ -1,9 +1,9 @@
 const assert = require('node:assert/strict');
 const builder = require('../app/infrastructure/static-backup/senko-static-backup-builder.js');
 
-const root = 'generated/backups/senkolib-data/workspaces/senkolib/';
+const root = 'backup/data/workspaces/senkolib/';
 const files = {
-  'generated/backups/senkolib-data/manifest.json': JSON.stringify({
+  'backup/data/manifest.json': JSON.stringify({
     workspaceId: 'senkolib',
     exportedAt: '2026-08-15T12:00:00.000Z',
     dataVersion: 9
@@ -69,9 +69,9 @@ assert.ok(!generatedText.includes('<main>antigo</main>'));
 assert.ok(!generatedText.includes('privado@example.com'));
 assert.ok(!generatedText.includes('Nome privado'));
 assert.deepEqual(Object.keys(generated).sort(), [
-  'generated/static-backup/biblioteca.js',
-  'generated/static-backup/colecoes.js',
-  'generated/static-backup/manifest.js'
+  'backup/latest/biblioteca.js',
+  'backup/latest/colecoes.js',
+  'backup/latest/manifest.js'
 ]);
 
 console.log('Static backup builder: OK');

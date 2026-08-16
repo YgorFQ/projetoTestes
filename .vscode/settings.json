@@ -4,8 +4,8 @@
     "**/*.bak",
     "legacy/biblioteca/data/layouts/**",
     "legacy/biblioteca/data/variants/**",
-    "generated/backups/**",
-    "generated/migrations/**"
+    "backup/data/**",
+    "backup/migrations/**"
   ],
   "liveServer.settings.donotShowInfoMsg": true
 }

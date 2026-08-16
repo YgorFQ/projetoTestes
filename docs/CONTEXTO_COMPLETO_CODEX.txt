@@ -1,0 +1,1281 @@
+SENKOLIB - CONTEXTO COMPLETO PARA TRANSFERENCIA ENTRE INSTANCIAS DO CODEX
+=======================================================================
+
+Data deste registro: 2026-08-16
+Projeto: SenkoLib
+Repositorio: https://github.com/YgorFQ/projetoTestes
+GitHub Pages: https://ygorfq.github.io/projetoTestes/
+Projeto Firebase: senkolibtestes
+Workspace Firebase principal: senkolib
+Pasta usada no computador original: D:\Cursos\Repositorios\projetoTestes
+Branch principal: main
+
+
+0. COMO O PROXIMO CODEX DEVE USAR ESTE ARQUIVO
+----------------------------------------------
+
+Este documento e um transplante operacional de contexto. Ele nao e uma copia
+literal de todas as mensagens da conversa. Ele registra, de forma organizada,
+as decisoes tomadas, o motivo delas, o que foi implementado, o que foi
+abandonado, como o sistema funciona e qual e o estado do repositorio.
+
+Ao receber este projeto em outro computador, o proximo Codex deve:
+
+1. Ler este arquivo inteiro antes de propor uma nova arquitetura.
+2. Ler README.md e docs/README.md.
+3. Conferir git status antes de alterar qualquer arquivo.
+4. Preservar mudancas locais que ainda nao tenham sido commitadas.
+5. Considerar o codigo e as Security Rules como autoridade final quando uma
+   documentacao antiga divergir.
+6. Atualizar codigo, testes, Senko Guide e documentacao na mesma entrega.
+7. Nunca inserir token GitHub, chave de conta de servico, arquivo PEM, senha ou
+   segredo administrativo no repositorio.
+8. Nao reintroduzir implementacoes antigas baseadas em arquivos individuais
+   como banco de dados.
+9. Respeitar AGENTS.md. A instrucao especifica atual proibe usar gpt-image-2.
+
+IMPORTANTE SOBRE O ESTADO DO GIT NESTE MOMENTO:
+
+- A reorganizacao foi integrada sobre o backup remoto v8, commit 11c9680.
+- O commit seguinte usa a mensagem
+  "Reorganizar estrutura e registrar contexto do SenkoLib".
+- Esse commit inclui este arquivo, a nova estrutura e o backup v8 movido para
+  backup/data.
+- Depois de clonar em outro computador, git status deve iniciar limpo.
+- Se houver mudancas locais, preserve-as e descubra sua origem antes de limpar.
+- Nao usar git reset --hard ou checkout para apagar trabalho sem autorizacao.
+
+
+1. O QUE E O SENKOLIB
+---------------------
+
+SenkoLib e uma aplicacao web colaborativa para guardar, organizar, procurar,
+visualizar, copiar e manter blocos de HTML e CSS. As duas areas de conteudo
+principais sao Biblioteca e Colecoes.
+
+Biblioteca:
+
+- guarda layouts independentes;
+- permite procurar por nome, ID e tags;
+- mostra preview;
+- copia HTML e CSS;
+- cria, edita e exclui layouts;
+- cria, edita e exclui variacoes ligadas a um layout.
+
+Colecoes:
+
+- guarda grupos coloridos;
+- guarda colecoes associadas a grupos;
+- guarda layouts internos dentro de cada colecao;
+- cria, edita e exclui grupos, colecoes e layouts internos;
+- impede excluir um grupo que ainda possui colecoes.
+
+Outras features independentes existentes:
+
+- Imagens;
+- Sources;
+- prototipos visuais ainda nao oficiais.
+
+Ferramentas globais do shell:
+
+- Criacao rapida;
+- Acessos;
+- Backup no GitHub;
+- Senko Guide;
+- Notas da equipe;
+- Sessao/login;
+- status de disponibilidade do Firebase.
+
+
+2. PROBLEMA ORIGINAL QUE MOTIVOU A MIGRACAO
+-------------------------------------------
+
+No inicio da conversa, Biblioteca e Colecoes funcionavam usando o GitHub como
+se fosse banco de dados. Criar, procurar, editar e excluir dependia de indices,
+IDs, manifestos e arquivos JavaScript individuais. Isso causava varios
+problemas:
+
+- o GitHub participava do CRUD normal;
+- dados e codigo ficavam misturados;
+- operacoes dependiam de posicoes e IDs antigos;
+- edicao colaborativa real era dificil;
+- mudancas entre computadores nao apareciam imediatamente;
+- a estrutura acumulava muitos arquivos com responsabilidades pouco claras.
+
+A decisao foi migrar o CRUD para Firebase e manter GitHub somente como backup
+publico e historico externo.
+
+
+3. DECISAO CENTRAL DE ARQUITETURA
+--------------------------------
+
+Existem somente duas fontes de leitura validas:
+
+1. Firestore: fonte principal, atual e editavel.
+2. backup/latest: ultimo snapshot publico, somente leitura.
+
+Nao existe terceira fonte. Arquivos antigos de secoes, manifests antigos,
+indices e controladores nao podem voltar a funcionar como banco paralelo.
+
+O GitHub nao participa de criar, editar ou excluir conteudo no uso normal.
+Salvar um item escreve no Firestore. O GitHub so recebe dados quando alguem
+aciona manualmente o botao de backup.
+
+
+4. COMPORTAMENTO DE SALVAMENTO E TEMPO REAL
+-------------------------------------------
+
+O usuario deixou explicito que o Firebase nao deve receber escrita a cada
+tecla. O comportamento acordado e implementado e:
+
+- digitar modifica apenas o rascunho local do editor;
+- clicar em Salvar inicia uma transacao Firestore;
+- depois do commit, listeners Firestore entregam a mudanca para os outros
+  computadores conectados;
+- portanto, outra pessoa ve a alteracao automaticamente sem apertar F5;
+- um editor aberto percebe quando chegou uma versao remota;
+- nenhuma sobrescrita silenciosa e permitida.
+
+O sistema usa controle otimista de concorrencia:
+
+1. O editor guarda currentRevisionId/baseRevisionId da versao aberta.
+2. Ao salvar, a transacao compara essa revisao com a atual no servidor.
+3. Se forem iguais, o save pode prosseguir.
+4. Se forem diferentes, outro usuario salvou primeiro.
+5. O segundo save falha com conflito/aborted.
+6. A interface deve preservar o rascunho e explicar que existe uma versao
+   mais nova.
+
+Presenca nao e bloqueio. Duas pessoas podem abrir o mesmo item. Realtime
+Database mostra quem esta no recurso, mas Firestore e revisoes decidem se o
+save ainda e valido.
+
+
+5. EXCLUSAO
+-----------
+
+O usuario decidiu que exclusao pode ser direta, com confirmacao visual. Nao
+foi adotada lixeira ou soft delete como comportamento do produto.
+
+Exclusoes de recursos versionados removem tambem filhos, revisoes e reservas
+de nome relacionadas. A implementacao usa exclusao em fases/lotes quando a
+arvore pode ultrapassar o limite de uma unica transacao.
+
+Um grupo de Colecoes so pode ser excluido se estiver vazio. Colecoes nunca sao
+apagadas automaticamente junto com um grupo.
+
+
+6. FIREBASE ATUAL
+-----------------
+
+Projeto Firebase selecionado:
+
+- projectId: senkolibtestes
+- alias em .firebaserc: default -> senkolibtestes
+- workspace de dados: senkolib
+- Realtime Database:
+  https://senkolibtestes-default-rtdb.firebaseio.com
+- SDK Web configurado: 12.17.0
+- region declarada pela aplicacao: southamerica-east1
+- Firebase esta habilitado em producao: enabled = true
+
+O objeto publico completo do app Web fica em:
+
+app/infrastructure/firebase/firebase-config.js
+
+A apiKey desse objeto e uma chave publica de aplicacao Web Firebase, nao uma
+chave administrativa. A seguranca real vem de Authentication, documentos de
+membro e Security Rules. Mesmo assim, evitar duplicar configuracoes em varios
+documentos para nao criar divergencia.
+
+Servicos usados:
+
+- Firebase Authentication: login Google;
+- Cloud Firestore: conteudo, membros, revisoes, reservas e logs de backup;
+- Realtime Database: presenca e espelhos pequenos de autorizacao;
+- Storage: conectado/reservado, mas nenhuma feature atual envia arquivos;
+- Emulator Suite: desenvolvimento e testes;
+- Firebase Hosting: configurado, mas o site publico usado pelo usuario e o
+  GitHub Pages.
+
+Comportamento por host:
+
+- localhost ou 127.0.0.1: useEmulators = true;
+- GitHub Pages/outro host: usa Firebase real;
+- se Firebase nao ficar ready e existir snapshot: modo static;
+- se nenhuma fonte existir: modo unavailable.
+
+Portas dos emuladores:
+
+- Emulator UI: 4000
+- Firestore: 8080
+- Realtime Database: 9000
+- Authentication: 9099
+- Storage: 9199
+- Hosting: 5000
+
+JDK 21 foi instalado e validado para os emuladores.
+
+
+7. A TELA FIREBASE EMULATOR SUITE
+---------------------------------
+
+A tela em http://127.0.0.1:4000 e oficial do Firebase Emulator Suite. Ela nao
+foi criada dentro do SenkoLib.
+
+Foi discutida a ideia futura de criar uma janela administrativa parecida
+dentro do SenkoLib para configuracoes, logs, contas e administradores. O
+usuario pediu para ignorar essa ideia por enquanto. Nao embutir a interface do
+Emulator Suite e nao implementar esse painel futuro sem uma nova solicitacao.
+
+A ferramenta Acessos implementada depois cobre somente gestao de solicitacoes,
+membros, cargos e eventos administrativos do SenkoLib.
+
+
+8. AUTENTICACAO E AUTORIZACAO
+-----------------------------
+
+Entrar com Google cria uma identidade Firebase Auth, mas nao concede edicao.
+Para editar, deve existir:
+
+workspaces/senkolib/members/{uid}
+
+Uma conta que autentica sem esse documento gera/atualiza sua propria
+solicitacao:
+
+workspaces/senkolib/accessRequests/{uid}
+
+Essa solicitacao fica pending e aparece para gestores na ferramenta Acessos.
+A conta pendente nao pode listar solicitacoes de outras pessoas nem editar
+conteudo.
+
+Existem tres cargos internos:
+
+OWNER
+
+- cria, edita e exclui conteudo;
+- faz backup;
+- aprova editores;
+- aprova administradores;
+- promove outra pessoa a owner;
+- altera ou remove qualquer cargo permitido pelas protecoes;
+- ve solicitacoes, membros e eventos.
+
+ADMIN
+
+- cria, edita e exclui conteudo;
+- faz backup;
+- ve a area administrativa;
+- aprova e gerencia editores;
+- nao cria, promove, rebaixa ou remove owners;
+- a implementacao atual tambem nao permite que admin conceda cargo admin.
+
+EDITOR
+
+- cria, edita e exclui conteudo;
+- faz backup;
+- nao aprova pessoas;
+- nao gerencia cargos;
+- nao promove outros usuarios.
+
+VISITANTE/NAO MEMBRO
+
+- nao le dados privados do Firebase;
+- nao edita;
+- pode ver backup/latest publicamente em modo somente leitura.
+
+IMPORTANTE: cargo IAM do Google/Firebase e cargo do SenkoLib sao sistemas
+separados. Tornar alguem Owner/Editor do projeto no Firebase Console nao cria
+automaticamente o documento members/{uid}.
+
+Motivo: o frontend nao deve confiar nem tentar consultar privilegios IAM do
+projeto Google para autorizar o produto. As regras do SenkoLib usam documentos
+do workspace.
+
+Primeiro owner ou recuperacao quando todos os owners perderam acesso:
+
+- uma pessoa que ainda controla o projeto Firebase entra pela Firebase CLI;
+- usa scripts/admin/add-member-cli-auth.js;
+- o comando npm correspondente e admin:add-member;
+- o script cria o membro Firestore e os espelhos necessarios no Realtime
+  Database;
+- depois disso, a gestao normal volta a ser feita no modal Acessos.
+
+Comando de referencia:
+
+npm run admin:add-member -- \
+  --workspace senkolib \
+  --uid UID_DA_CONTA \
+  --email email@exemplo.com \
+  --name "Nome da pessoa" \
+  --role owner
+
+Nao incluir UID ou email real neste arquivo. Obter os dados no Authentication
+ou na solicitacao pendente.
+
+
+9. MODELO DE DADOS FIRESTORE
+----------------------------
+
+Arvore principal:
+
+workspaces/{workspaceId}
+|-- members/{uid}
+|-- accessRequests/{uid}
+|-- memberEvents/{eventId}
+|-- groups/{groupId}
+|-- bibliotecaLayouts/{layoutId}
+|   |-- revisions/{revisionId}
+|   `-- variants/{variantId}
+|       `-- revisions/{revisionId}
+|-- collections/{collectionId}
+|   `-- layouts/{layoutId}
+|       `-- revisions/{revisionId}
+|-- nameReservations/{hash}
+`-- exports/{exportId}
+
+Workspace:
+
+- schemaVersion descreve o modelo;
+- dataVersion aumenta a cada mutacao de conteudo;
+- updatedAt e updatedBy registram a ultima alteracao;
+- lastGithubExportVersion, lastGithubExportAt e lastGithubCommitSha registram
+  o ultimo backup concluido;
+- restauracoes registram status, origem, horario e contagens.
+
+Layouts da Biblioteca:
+
+- IDs novos sao gerados pelo Firestore;
+- kind = libraryLayout;
+- name e nameKey controlam exibicao e unicidade;
+- tags tem limite de 40 itens, 80 caracteres cada;
+- html tem limite de 750.000 caracteres;
+- css tem limite de 250.000 caracteres;
+- currentRevisionId controla concorrencia;
+- version e contador informativo;
+- auditoria guarda criador e ultima pessoa que alterou.
+
+Variacoes:
+
+- ficam dentro do layout pai;
+- kind = libraryVariant;
+- parentId aponta para o layout;
+- nome e unico apenas dentro daquele pai;
+- possuem revisoes imutaveis.
+
+Colecoes:
+
+- ficam em collections/{collectionId};
+- guardam nome, nameKey, groupId, tags, version e auditoria;
+- nao possuem revisoes de HTML/CSS porque sao metadados;
+- concorrencia usa version.
+
+Layouts internos:
+
+- ficam dentro da colecao;
+- kind = collectionLayout;
+- parentId e collectionId apontam para a colecao;
+- possuem HTML, CSS, tags e revisoes imutaveis;
+- nome e unico dentro da colecao.
+
+Grupos:
+
+- groupId e fornecido pela feature;
+- color deve ser #rrggbb;
+- grupo pode existir vazio;
+- uma colecao exige grupo existente.
+
+Reservas de nome:
+
+- ID = SHA-256 de escopo:nameKey;
+- impedem duplicidade atomicamente;
+- sao atualizadas na mesma transacao do recurso.
+
+Revisoes:
+
+- uma revisao nova e criada em cada save de conteudo versionado;
+- revisoes sao imutaveis;
+- baseRevisionId registra a origem;
+- revisoes antigas nao aparecem no bundle publico;
+- revisoes entram no snapshot tecnico de restauracao.
+
+Exports:
+
+- running: backup iniciado;
+- completed: commit criado, com SHA, URL e fileCount;
+- failed: mensagem curta de erro;
+- membros e exports nao entram no backup GitHub.
+
+
+10. REALTIME DATABASE E PRESENCA
+--------------------------------
+
+Estrutura:
+
+presenceAccess/{workspaceId}/{uid} = true
+memberManagers/{workspaceId}/{uid} = "owner" | "admin"
+
+presence/{workspaceId}/{resourceType}/{resourceId}/{uid}/{sessionId}
+  displayName
+  photoURL
+  joinedAt
+
+Tipos de recurso com presenca:
+
+- biblioteca-layout
+- biblioteca-variant
+- collection-layout
+
+Presenca e efemera e usa onDisconnect. Ela informa quem esta olhando/editando,
+mas nao concede permissao e nao impede saves.
+
+
+11. BACKUP MANUAL PARA GITHUB
+-----------------------------
+
+Decisao final:
+
+- backup e manual;
+- nao existe backup automatico de 30 em 30 minutos;
+- nao existe GitHub Action para isso;
+- nao existe Cloud Scheduler;
+- nao existe Cloud Function de producao;
+- qualquer membro autorizado pode clicar no botao;
+- cada pessoa usa seu proprio token GitHub.
+
+Destino fixo atual:
+
+- owner: YgorFQ
+- repo: projetoTestes
+- branch: main
+
+Esse destino fica em firebase-config.js. Configuracao antiga salva no navegador
+serve apenas como fallback quando o destino nao existe no projeto. O destino
+do projeto deve ter prioridade.
+
+Token:
+
+- e digitado em um campo password;
+- fica no localStorage do navegador sob chave propria;
+- nunca entra nos arquivos gerados;
+- nunca entra no Firestore;
+- nunca entra no commit;
+- deve ser fine-grained e limitado ao repositorio, com Contents read/write;
+- deve ser revogado se aparecer em screenshot, log ou conversa publica.
+
+O backup gera duas representacoes:
+
+backup/data/
+
+- snapshot tecnico completo;
+- JSON por documento;
+- inclui revisoes necessarias para restauracao;
+- nao inclui membros, solicitacoes, eventos, exports, tokens ou presenca.
+
+backup/latest/
+
+- bundle publico carregado pelo site;
+- manifest.js;
+- biblioteca.js;
+- colecoes.js;
+- somente estado atual;
+- nao inclui revisoes antigas nem dados administrativos.
+
+Coerencia do backup:
+
+1. Le workspace.dataVersion.
+2. Le os documentos gerenciados.
+3. Le dataVersion novamente.
+4. Se mudou, tenta novamente.
+5. Se estabilizou, gera os arquivos.
+6. Cria uma unica Git tree e um unico commit.
+7. Atualiza exports e metadados do workspace.
+
+Mensagem de commit gerada:
+
+SenkoLib backup vN (nome da pessoa)
+
+O fluxo foi otimizado para evitar o limite secundario do GitHub. Durante os
+testes anteriores ocorreram dois erros importantes:
+
+- NetworkError when attempting to fetch resource;
+- HTTP 403 por secondary rate limit.
+
+O comportamento atual reduz chamadas, cria a tree de uma vez, traduz 401,
+403, 404 e erro de rede, e orienta aguardar quando o GitHub limita requisicoes.
+Nao clicar repetidamente durante um 403 de limite.
+
+
+12. TENTATIVA ABANDONADA DE GITHUB APP
+--------------------------------------
+
+Foi criada e instalada uma GitHub App de teste chamada SenkoLibTeste. Uma
+chave privada PEM chegou a ser gerada no computador original. Depois o usuario
+decidiu que nao podia seguir com aquela abordagem.
+
+Essa arquitetura foi ABANDONADA.
+
+O proximo Codex deve:
+
+- nao depender da GitHub App;
+- nao pedir a chave PEM antiga;
+- nao copiar a chave para o projeto;
+- nao criar Cloud Functions apenas para assinar tokens da App;
+- nao presumir que a App esta configurada em outro computador;
+- usar o fluxo atual de token pessoal no navegador, salvo se o usuario pedir
+  explicitamente outra arquitetura no futuro.
+
+Nenhum fingerprint, segredo, client secret ou conteudo da chave privada deve
+ser transplantado.
+
+
+13. FALLBACK PUBLICO E INDISPONIBILIDADE
+----------------------------------------
+
+O usuario quer que qualquer pessoa consiga ver o ultimo estado publicado. O
+fallback e publico e inclui HTML/CSS atuais. Isso e intencional.
+
+Estados globais de dados:
+
+- firebase: sessao autorizada e servico ready;
+- static: Firebase nao esta ready, mas backup/latest existe;
+- unavailable: nenhuma fonte esta disponivel.
+
+No modo static:
+
+- a interface mostra Somente leitura;
+- criar, editar e excluir sao bloqueados;
+- busca, preview e copia continuam funcionando;
+- nao existe fila de alteracoes offline;
+- quando Firebase volta, o usuario deve usar a fonte principal normalmente;
+- o snapshot nao recebe sincronizacao de volta.
+
+Se Firebase estiver fora do ar, atingir cota ou falhar na inicializacao, o
+ultimo backup continua aparecendo. Ele pode estar atrasado em relacao ao banco.
+
+Abrir por GitHub Pages ou servidor HTTP simples e requisito. Abrir index.html
+diretamente por file:// chegou a funcionar em testes, mas nao deve ser tratado
+como contrato oficial. Live Server simples e suficiente e recomendado.
+
+
+14. COTA E SINAL DE SAUDE FIREBASE
+----------------------------------
+
+O usuario encontrou o painel mostrando cerca de 4,5 mil leituras, 9,1% do
+limite diario de 50 mil no plano gratuito. Foi explicado que, ao esgotar a
+cota, leituras/escritas podem ser recusadas ate a renovacao diaria ou mudanca
+de plano.
+
+Foi implementado um sinal no shell para:
+
+- Firebase fora do ar;
+- sem conexao;
+- servico indisponivel;
+- modo somente leitura com snapshot;
+- tentativa de reconectar.
+
+O status e implementado principalmente em:
+
+- app/infrastructure/firebase/senko-firebase.js
+- app/infrastructure/static-backup/senko-data-mode.js
+- app/tools/session/register.js
+- app/tools/session/styles.css
+
+O painel de uso da cota continua no Firebase Console. O app detecta falha de
+servico pelas respostas e estado da conexao; ele nao possui uma API confiavel
+para mostrar a contagem exata da cota Spark em tempo real.
+
+
+15. MENU GLOBAL E TELA DE ACESSOS
+---------------------------------
+
+O header tinha varios botoes soltos. O usuario pediu um teste com menu
+hamburguer e depois oficializou o comportamento.
+
+Estado final:
+
+- existe um menu hamburguer de ferramentas globais;
+- Criacao rapida fica fora do menu, imediatamente a esquerda do hamburguer;
+- Acessos fica dentro do menu;
+- a tela Acessos e um modal, nao uma feature principal permanente;
+- Guide, Notas, Backup e demais ferramentas globais sao registradas pelo
+  shell/tools;
+- o modal Acessos mostra solicitacoes, membros, cargos e atividade;
+- fechamento por botao, fundo e Escape e testado;
+- foco deve voltar ao trigger.
+
+Arquivos principais:
+
+- app/shell/scripts/senko-shell.js
+- app/shell/scripts/senko-utility-menu.js
+- app/tools/quick-create/
+- app/tools/access/
+- app/tools/github-backup/
+- app/tools/session/
+
+
+16. ARQUITETURA DE ARQUIVOS ATUAL
+---------------------------------
+
+A estrutura atual foi escolhida depois de varias rodadas de reorganizacao. O
+usuario gostou da independencia das janelas e da facilidade de entender
+arquivos, mas nao gostou de pastas tecnicas confusas na raiz.
+
+Estrutura final local:
+
+projetoTestes/
+|-- app/
+|   |-- features/
+|   |   |-- biblioteca/
+|   |   |-- colecoes/
+|   |   |-- imagens/
+|   |   `-- sources/
+|   |-- tools/
+|   |-- shell/
+|   |-- infrastructure/
+|   |-- shared/
+|   `-- prototype/
+|-- backup/
+|   |-- data/       (snapshot tecnico v8 presente no repositorio)
+|   |-- latest/     (fallback publico atual)
+|   `-- meta/       (inventario gerado)
+|-- docs/
+|-- firebase/
+|-- scripts/
+|   |-- admin/
+|   |-- backup/
+|   `-- maintenance/
+|-- tests/
+|-- .vscode/
+|-- .firebaserc
+|-- .gitignore
+|-- AGENTS.md
+|-- README.md
+|-- firebase.json
+|-- index.html
+|-- package.json
+|-- package-lock.json
+`-- sw.js
+
+Pastas antigas removidas/renomeadas nesta reorganizacao local:
+
+- config/firebase -> firebase
+- generated/static-backup -> backup/latest
+- generated/meta -> backup/meta
+- generated/backups/senkolib-data -> backup/data
+- tools/build-static-backup.js -> scripts/backup/build-static-backup.js
+- tools/build-file-classification.js ->
+  scripts/maintenance/build-file-classification.js
+- functions/scripts/add-member-cli-auth.js -> scripts/admin/
+- functions/scripts/restore-* -> scripts/backup/
+- teste valido de restauracao -> tests/backup/
+- package.json e node_modules separados de functions foram eliminados;
+- firebase-admin foi centralizado nas dependencias da raiz;
+- teste antigo que chamava Cloud Functions inexistentes foi removido.
+
+As pastas functions, generated, config e tools nao devem ser recriadas com os
+significados antigos.
+
+
+17. ORGANIZACAO INTERNA DAS FEATURES
+------------------------------------
+
+Biblioteca e Colecoes seguem o mesmo contrato:
+
+- register.js: composition root, registro no shell e ordem de carga;
+- view.js: cria estrutura DOM;
+- controllers/: eventos, modais, editores e casos de uso;
+- core/: estado e invariantes em memoria, sem DOM/Firebase;
+- repositories/: leitura Firebase ou leitura static;
+- styles/: CSS exclusivo da feature.
+
+Regras:
+
+- uma feature nao chama controller interno de outra;
+- comportamento neutro compartilhado sobe para shared ou infrastructure;
+- repository le/converte dados e devolve unsubscribe;
+- controller coordena interface e traduz erros;
+- escritas de conteudo passam pelo modulo transacional comum;
+- shell nao conhece layout, variacao, colecao ou caminho Firestore;
+- APIs globais intencionais usam prefixo Senko.
+
+
+18. CARREGAMENTO SEM BUNDLER
+----------------------------
+
+O frontend usa HTML, CSS e JavaScript direto, sem etapa obrigatoria de build.
+index.html e um carregador explicito. A ordem e parte do contrato:
+
+1. tokens e estilos compartilhados;
+2. backup/latest registra window.SenkoStaticBackup;
+3. configuracao e cliente Firebase;
+4. SenkoDataMode;
+5. shell;
+6. tools globais;
+7. registradores das features;
+8. cada feature carrega seus modulos internos sob demanda.
+
+O service worker atual nao intercepta requisicoes de dados. Ele limpa caches
+antigos e permite que index.html controle versionamento dos assets criticos.
+
+Nao introduzir bundler, framework ou imports ES em massa sem discutir com o
+usuario. A independencia e legibilidade dos arquivos e uma preferencia forte.
+
+
+19. MIGRACAO DOS DADOS E BUGS JA RESOLVIDOS
+-------------------------------------------
+
+Durante a migracao ocorreram varios problemas que foram corrigidos:
+
+- layouts apareciam, mas variacoes nao;
+- Colecoes aparecia com zero;
+- editar uma tag parecia salvar, mas F5 nao refletia;
+- criar layout funcionava apenas para um layout;
+- criar conjunto interno e grupo novo falhava;
+- criacao de colecao funcionava antes dos filhos;
+- backup GitHub teve erro de rede e limite 403;
+- commit de backup subia, mas GitHub Pages nao mostrava a mudanca porque o
+  site ainda consumia outra fonte/caminho;
+- cache fazia F5 parecer mais lento ou manter versao antiga;
+- uma conta IAM proprietaria do Firebase continuava sem editar por nao ser
+  membro do workspace.
+
+Depois das correcoes, foram testados com sucesso:
+
+- layouts da Biblioteca;
+- variacoes;
+- grupos;
+- colecoes;
+- layouts internos;
+- criacao e edicao no Firebase real;
+- atualizacao em producao;
+- backup manual;
+- fallback publico;
+- solicitacao e gestao de acesso.
+
+Os importadores e dados de legado foram removidos depois que a migracao ficou
+funcional. Nao existe mais motivo para corrigir dados editando arquivos antigos.
+
+
+20. SNAPSHOT PUBLICO ATUAL
+--------------------------
+
+No momento em que este documento foi criado, backup/latest/manifest.js informa:
+
+- schemaVersion: 1
+- workspaceId: senkolib
+- exportedAt: 2026-08-16T04:55:07.535Z
+- dataVersion: 8
+- bibliotecaLayouts: 34
+- bibliotecaVariants: 11
+- collections: 5
+- collectionLayouts: 48
+- groups: 5
+
+Esses numeros descrevem o ultimo backup publico, nao necessariamente o estado
+mais recente do Firestore. Se alguem salvou depois e nao fez outro backup, o
+Firebase pode estar adiante.
+
+
+21. DOCUMENTACAO E COMENTARIOS
+------------------------------
+
+O usuario pediu documentacao muito extensa para que um dev junior consiga
+entender o projeto no futuro. Tambem pediu muitos comentarios no codigo.
+
+Documentos canonicos:
+
+- docs/README.md
+- docs/PRODUCT_SPECIFICATION.md
+- docs/DEVELOPMENT_GUIDE.md
+- docs/architecture/STRUCTURE.md
+- docs/architecture/RUNTIME_FLOW.md
+- docs/architecture/MODULE_CONTRACTS.md
+- docs/architecture/FILE_CLASSIFICATION.md
+- docs/architecture/ROOT_FILES.md
+- docs/firebase/ARCHITECTURE.md
+- docs/firebase/DATA_MODEL.md
+- docs/firebase/SETUP.md
+- docs/firebase/DEVELOPMENT.md
+- docs/firebase/OPERATIONS.md
+- docs/firebase/BACKUP_AND_RESTORE.md
+- docs/firebase/TEST_PLAN.md
+- app/tools/guide/register.js (guia dentro do SenkoLib)
+
+Regra de manutencao:
+
+- mudanca de comportamento atualiza especificacao;
+- mudanca de dados atualiza DATA_MODEL e regras/testes;
+- mudanca de operacao atualiza SETUP/OPERATIONS;
+- mudanca visivel para usuarios/devs atualiza Senko Guide;
+- inventario deve ser regenerado;
+- comentario explica motivo, invariante, risco ou ordem; nao repete sintaxe.
+
+Observacao conhecida: documentos anteriores podem ainda conter alguma frase
+historica ambigua sobre poderes de admin. A implementacao atual e a regra a
+seguir: owner administra todos os cargos; admin administra apenas editors;
+editor nao administra pessoas. Ao encontrar divergencia, corrigir o documento.
+
+
+22. COMANDOS IMPORTANTES
+------------------------
+
+Instalacao:
+
+npm install
+
+Servidor estatico simples:
+
+python -m http.server 4173 --bind 127.0.0.1
+
+Abrir:
+
+http://127.0.0.1:4173/
+
+Firebase:
+
+npm run firebase:login
+npm run firebase:use
+npm run firebase:emulators
+npm run firebase:deploy:rules
+npm run firebase:deploy:hosting
+
+Estrutura e scripts:
+
+npm run inventory:build
+npm run scripts:check
+
+Testes rapidos:
+
+npm run test:structure
+npm run test:asset-versioning
+npm run test:access-modal
+npm run test:static-backup
+npm run test:firebase-health
+
+Testes de regras:
+
+npm run test:firestore-rules
+npm run test:database-rules
+
+Quando ja existe um emulador nas portas, os testes podem ser executados
+diretamente com as variaveis descritas em docs/firebase/TEST_PLAN.md.
+
+Restauracao:
+
+npm run backup:restore -- --source <pasta> [opcoes]
+npm run backup:restore:cli-auth -- --source <pasta> [opcoes]
+npm run test:restore-emulator
+
+Gerar bundle publico a partir de backup/data existente:
+
+npm run backup:build-static
+
+Adicionar primeiro owner/recuperacao:
+
+npm run admin:add-member -- [argumentos]
+
+
+23. TESTES EXECUTADOS NA ULTIMA RODADA
+--------------------------------------
+
+A reorganizacao local foi validada em 2026-08-16 com sucesso:
+
+- npm run inventory:build
+- npm run scripts:check
+- npm run test:structure
+- npm run test:asset-versioning
+- npm run test:access-modal
+- npm run test:static-backup
+- npm run test:firebase-health
+- teste Firestore client/rules contra emulador existente
+- teste Realtime Database member management contra emulador existente
+- teste de restauracao contra Firestore Emulator
+- Firebase deploy --dry-run para regras e indices
+- carregamento HTTP de index.html em 127.0.0.1:4173
+- carregamento HTTP de backup/latest/manifest.js
+- git diff --check
+- npm audit --omit=dev, com zero vulnerabilidades de producao
+
+O npm informou vulnerabilidades em ferramentas de desenvolvimento quando
+incluiu devDependencies. Nao executar npm audit fix --force automaticamente,
+pois pode trocar versoes principais do Firebase CLI. Avaliar separadamente.
+
+
+24. ESTADO DO GIT E HISTORICO RECENTE
+-------------------------------------
+
+Branch: main
+Remote: origin -> https://github.com/YgorFQ/projetoTestes.git
+
+Commits que formam a base desta reorganizacao:
+
+- 11c9680 SenkoLib backup v8 (Ygor Ferreira Queiroz)
+- 8ca4851 Documentar arquitetura e remover implementacoes antigas
+- 6ecbbde Limpar arquivos da raiz do projeto
+- 55709b2 Reorganizar arquitetura e arquivos do SenkoLib
+- 3b4c560 Oficializar menu e modal de acessos
+- ed00cdf Registrar validacao do menu de ferramentas
+- 80aefb2 Agrupar ferramentas globais em menu
+- 68ab0b7 Registrar validacao do cache de producao
+- 66ef971 Otimizar carregamento entre recargas
+- 1553bce Sinalizar indisponibilidade do Firebase
+- e3c929d Adicionar gestao de acessos e cargos
+- 51ddd2c Registrar solicitacoes de acesso
+- a3a3f17 SenkoLib backup v5
+- 0f64f44 Adicionar fallback publico do ultimo backup
+- e778e3e Reativar Firebase
+- b5618f3 Desativar Firebase temporariamente
+- a644342 Fixar destino do backup GitHub
+- tag firebase-cutover-2026-08-15 marca o corte de producao.
+
+A reorganizacao publicada depois do backup v8 inclui:
+
+- config/firebase -> firebase;
+- generated -> backup;
+- functions e tools -> scripts;
+- teste de restauracao -> tests/backup;
+- dependencias administrativas -> package.json da raiz;
+- todos os caminhos em codigo, testes, Firebase e documentacao.
+
+Essas mudancas passaram nos testes e foram reunidas no commit com a mensagem
+"Reorganizar estrutura e registrar contexto do SenkoLib".
+
+
+25. SEGURANCA E SEGREDOS
+------------------------
+
+Nunca versionar:
+
+- token pessoal GitHub;
+- arquivo .pem de GitHub App;
+- chave JSON de conta de servico;
+- client secret;
+- senha;
+- cookie ou token Firebase CLI;
+- arquivo .env com valores reais;
+- logs que contenham credenciais.
+
+Arquivos de configuracao Web Firebase sao publicos por design. Security Rules
+precisam proteger o banco mesmo se alguem copiar todo o frontend.
+
+O HTML e CSS dos layouts ficam publicos no fallback por decisao explicita do
+usuario. Nao tratar isso como vazamento. Dados administrativos, emails,
+membros, eventos, tokens e revisoes antigas nao devem entrar no bundle publico.
+
+O token GitHub no localStorage e uma escolha pratica atual. Como qualquer
+segredo acessivel ao JavaScript, ele depende de evitar XSS e codigo de terceiros
+na pagina. Nao adicionar scripts externos sem revisar esse risco.
+
+
+26. IDEIAS DISCUTIDAS E NAO ADOTADAS
+------------------------------------
+
+Nao implementar automaticamente estas ideias:
+
+- backup automatico a cada 30 minutos;
+- GitHub Actions para backup;
+- GitHub App com chave privada;
+- Cloud Functions apenas para backup;
+- GitHub como banco principal;
+- salvar no Firebase a cada tecla;
+- bloqueio pessimista de edicao;
+- lixeira/soft delete;
+- painel completo igual ao Emulator Suite dentro do SenkoLib;
+- permissao automatica baseada apenas em IAM do Firebase;
+- dependencia obrigatoria do Firebase para visualizar o ultimo backup;
+- retorno de arquivos legados como terceira fonte;
+- obrigacao de suportar file:// sem servidor HTTP.
+
+
+27. PENDENCIAS E RISCOS CONHECIDOS
+----------------------------------
+
+Pendencia operacional imediata apos a publicacao:
+
+- aguardar GitHub Pages concluir o deployment;
+- fazer smoke test em producao para confirmar backup/latest no novo caminho.
+
+Depois do push, conferir:
+
+- pagina principal carrega;
+- Biblioteca mostra os 34 layouts do snapshot quando sem sessao;
+- variacoes aparecem;
+- Colecoes, grupos e layouts internos aparecem;
+- login Google usa Firebase real;
+- membro autorizado recebe listeners;
+- menu hamburguer e Criacao rapida estao posicionados corretamente;
+- modal Acessos abre;
+- botao Backup aponta para YgorFQ/projetoTestes/main;
+- um backup novo cria backup/data e atualiza backup/latest;
+- GitHub Pages publica o commit sem cache antigo.
+
+Riscos permanentes:
+
+- plano Spark tem limites diarios;
+- fallback fica atrasado se ninguem fizer backup;
+- token localStorage exige cuidado com XSS;
+- backup via API GitHub pode receber limite secundario;
+- restauracao com --force pode deixar estado parcial se falhar depois da
+  limpeza;
+- abrir muitos listeners duplicados aumenta leituras;
+- GitHub Pages e commit GitHub nao atualizam instantaneamente;
+- IAM Firebase e cargo SenkoLib continuam sendo autorizacoes separadas.
+
+
+28. COMO DIAGNOSTICAR PROBLEMAS
+-------------------------------
+
+Tela nao abre:
+
+- seguir ordem do index.html;
+- verificar erro no console;
+- conferir caminho apos a reorganizacao;
+- verificar register.js da area.
+
+Tela abre vazia:
+
+- verificar SenkoDataMode;
+- verificar window.SenkoStaticBackup;
+- verificar sessao/autorizacao;
+- verificar listeners e unsubscribe;
+- nao inserir dados fixos no controller para esconder o erro.
+
+Salvar falha:
+
+- aborted: conflito de revisao;
+- already-exists: reserva de nome;
+- permission-denied: membro, cargo ou Security Rule;
+- unavailable/deadline-exceeded: Firebase/infraestrutura;
+- parent ausente: layout, colecao ou grupo pai nao existe.
+
+Outro computador nao atualiza:
+
+- ambos precisam usar mesmo workspace e modo Firebase;
+- verificar se os dois estao autorizados;
+- verificar listener do pai correto;
+- verificar unsubscribe prematuro ou listener duplicado.
+
+Backup falha:
+
+- 401: token invalido/revogado;
+- 403: permissao ou limite secundario;
+- 404: owner/repo/branch ou acesso do token;
+- NetworkError: conexao, bloqueador, CORS/proxy ou GitHub;
+- nao repetir rapidamente durante rate limit.
+
+GitHub Pages nao mostra dado novo:
+
+- confirmar que backup criou commit;
+- confirmar que o commit esta em main;
+- aguardar deployment Pages;
+- conferir caminho backup/latest;
+- conferir cache/versionamento;
+- lembrar que Firebase ao vivo e fallback publico sao estados diferentes.
+
+
+29. PREFERENCIAS DO USUARIO PARA FUTURAS MUDANCAS
+-------------------------------------------------
+
+- Explicar Firebase passo a passo porque o usuario comecou sem experiencia
+  previa com o servico.
+- Ser direto quando ele pedir uma resposta curta.
+- Em implementacoes grandes, documentar muito e pensar em dev junior.
+- Manter cada janela/feature independente.
+- Preferir arquivos com responsabilidade facil de localizar.
+- Evitar raiz cheia de pastas tecnicas com nomes enganosos.
+- Nao remover implementacao antiga antes de confirmar que a nova funciona;
+  essa etapa ja foi concluida para a migracao Firebase.
+- Depois que algo e validado, limpar legado em vez de manter duas arquiteturas.
+- Firebase e main; GitHub e backup/fallback.
+- Todas as pessoas aprovadas podem editar conteudo, respeitando governanca de
+  cargos.
+- Exclusao direta e aceitavel.
+- Nenhuma sobrescrita silenciosa em conflito.
+- O fallback pode mostrar publicamente HTML e CSS atuais.
+- O usuario valoriza testes praticos no navegador alem de testes automatizados.
+
+
+30. CRITERIO DE CONTINUIDADE PARA O PROXIMO CODEX
+------------------------------------------------
+
+Uma tarefa futura no SenkoLib so deve ser considerada pronta quando:
+
+1. O comportamento solicitado funciona na fonte Firebase quando aplicavel.
+2. O modo static continua coerente e somente leitura.
+3. Permissoes visuais e Security Rules concordam.
+4. Concorrencia nao permite sobrescrita silenciosa.
+5. Listeners possuem descarte e nao duplicam leituras.
+6. Backup e caminhos gerados continuam validos.
+7. Testes proporcionais ao risco passam.
+8. Senko Guide e docs foram atualizados.
+9. Nenhum segredo entrou no diff.
+10. git status foi revisado sem descartar trabalho anterior do usuario.
+
+
+31. RESUMO DE UMA FRASE
+-----------------------
+
+SenkoLib e um catalogo colaborativo de HTML/CSS em JavaScript direto no
+navegador, com Firestore como unica fonte editavel, listeners em tempo real,
+revisoes para conflitos, cargos internos para governanca, Realtime Database
+para presenca e um backup GitHub manual que publica o ultimo estado em modo
+publico e somente leitura.
+
+
+32. LINHA DO TEMPO DA CONVERSA E DA IMPLEMENTACAO
+-------------------------------------------------
+
+Esta linha do tempo ajuda a distinguir decisao final de experimento temporario.
+
+ETAPA 1 - ENTENDER O PROJETO ANTIGO
+
+- O usuario apresentou o repositorio em D:\Cursos\Repositorios\projetoTestes.
+- Biblioteca e Colecoes ja funcionavam, mas GitHub era usado como banco.
+- Foi identificado forte acoplamento a indices, IDs e arquivos individuais.
+- O objetivo passou a ser um backend real com Firebase.
+
+ETAPA 2 - DEFINIR A EXPERIENCIA COLABORATIVA
+
+- Firebase foi escolhido como fonte principal.
+- O usuario confirmou que escrita deveria ocorrer somente ao salvar.
+- Foi confirmado que listeners fariam outra pessoa ver o save automaticamente.
+- Foi escolhido controle de revisao, aviso de versao desatualizada e nenhuma
+  sobrescrita silenciosa.
+- Exclusao direta foi aceita.
+- Presenca de outras pessoas no editor foi desejada.
+
+ETAPA 3 - PRIMEIRA IDEIA DE BACKUP
+
+- Inicialmente foi sugerido botao manual mais backup automatico de 30 minutos.
+- Depois o usuario retirou o agendamento.
+- A decisao final passou a ser somente botao manual acionado por membros.
+
+ETAPA 4 - CONFIGURAR FIREBASE E EMULADORES
+
+- O usuario criou o app Web senkolibtestes e forneceu a configuracao publica.
+- Realtime Database foi criado e inicialmente aparecia como null, o que era
+  normal antes de dados.
+- Java 21 foi validado.
+- Firebase CLI foi autenticada e o alias default selecionou senkolibtestes.
+- Emulator Suite foi iniciado e usado para Auth, Firestore, RTDB e testes.
+- Foi explicado que a Emulator UI e produto oficial do Firebase.
+
+ETAPA 5 - MIGRAR E CORRIGIR CRUD
+
+- Primeiro layouts apareceram, mas variacoes e contagens de Colecoes falharam.
+- Depois uma tag salva nao reapareceu no refresh.
+- Em seguida criacao de layout passou a funcionar.
+- Criacao de colecao funcionou antes de grupo e conjunto interno.
+- As falhas foram corrigidas gradualmente ate Biblioteca, variacoes, grupos,
+  colecoes e layouts internos funcionarem.
+- Um bug que fazia apenas um layout funcionar na Biblioteca foi corrigido.
+
+ETAPA 6 - DOCUMENTAR ANTES DE CONTINUAR
+
+- O usuario perguntou se a integracao estava bem documentada.
+- Pediu documentacao muito detalhada e adequada a dev junior.
+- A partir dali, documentacao e Senko Guide passaram a acompanhar mudancas.
+
+ETAPA 7 - EXPERIMENTO GITHUB APP
+
+- Foi criada uma GitHub App de teste e instalada no repositorio.
+- Uma chave privada foi gerada fora do projeto.
+- O usuario decidiu que nao poderia seguir com esse caminho.
+- GitHub App, chave privada e backend associado foram abandonados.
+
+ETAPA 8 - BACKUP DIRETO PELO NAVEGADOR
+
+- Foi recuperada a ideia do comportamento antigo de escrita no GitHub, mas
+  restrita ao botao de backup.
+- O modal passou a usar token pessoal do usuario.
+- Houve NetworkError e depois HTTP 403 de secondary rate limit.
+- O exportador foi ajustado para reduzir requisicoes e criar um commit unico.
+- Um commit real de backup subiu com sucesso.
+
+ETAPA 9 - CORTE DE PRODUCAO FIREBASE
+
+- Regras foram publicadas.
+- Dados foram usados no Firebase real.
+- Dominio GitHub Pages e login Google foram configurados.
+- Testes manuais confirmaram tag, layout e colecao no ambiente real.
+- O botao de backup foi corrigido para producao.
+- Firebase foi temporariamente desativado para observar falha e depois reativado.
+
+ETAPA 10 - DEFINIR FALLBACK
+
+- O usuario esclareceu que queria o ultimo backup visivel sem depender do
+  Firebase.
+- Foi decidido que o fallback seria publico e somente leitura.
+- HTML e CSS atuais poderiam ficar publicos porque esse e o objetivo do site.
+- Live Server simples deveria bastar.
+- Revisoes antigas ficaram fora do bundle publico.
+- Arquivos antigos foram mantidos durante validacao e removidos somente depois.
+
+ETAPA 11 - GESTAO DE ACESSOS
+
+- Uma conta desconhecida passou a registrar tentativa/solicitacao pending.
+- Foi criada a tela para ver solicitacoes e membros.
+- Foi esclarecido que IAM Firebase nao equivale a membro SenkoLib.
+- Foram definidos owner, admin e editor.
+- Owner gerencia todos os cargos.
+- Admin gerencia editors na implementacao final.
+- Editor nao convida nem administra.
+- Recuperacao sem owners usa Firebase CLI por alguem com controle IAM.
+
+ETAPA 12 - COTA E SAUDE
+
+- O usuario viu 4,5 mil de 50 mil leituras diarias.
+- Foi explicado o comportamento ao atingir a cota.
+- Foi implementado aviso visual de indisponibilidade/offline e modo fallback.
+- Uma demora maior no F5 motivou validacoes de cache e listeners.
+
+ETAPA 13 - MENU HAMBURGUER
+
+- Os atalhos globais foram agrupados em um menu hamburguer como teste.
+- O usuario aprovou e oficializou.
+- Criacao rapida ficou a esquerda do hamburguer.
+- Acessos entrou no menu e virou modal.
+
+ETAPA 14 - GRANDE LIMPEZA DE ARQUITETURA
+
+- Arquivos foram marcados como official, generated ou prototype.
+- Tools globais foram agrupadas em app/tools.
+- Biblioteca e Colecoes receberam estrutura padronizada.
+- Documentacao foi centralizada em docs.
+- Snapshots foram separados do codigo.
+- Codigo legado, importadores antigos e Cloud Functions antigas foram removidos.
+- Foram adicionados comentarios e guias extensos.
+
+ETAPA 15 - SIMPLIFICAR A RAIZ
+
+- O usuario gostou da organizacao de app, mas nao entendia config, functions,
+  generated, tests e tools na raiz.
+- Foi explicado o papel de cada uma.
+- A estrutura final escolhida foi firebase, backup, scripts e tests.
+- A reorganizacao foi implementada e todos os caminhos foram atualizados.
+- Um backup v8 chegou ao remoto durante o envio; a reorganizacao foi reaplicada
+  por cima dele sem force push e o snapshot tecnico foi movido para backup/data.
+
+ETAPA 16 - TRANSPLANTE DE CONTEXTO
+
+- O usuario pediu este TXT para levar todo o conhecimento a outro Codex em
+  outro computador.
+- Este arquivo foi criado e versionado junto da reorganizacao.
+
+
+33. NOTA SOBRE CAMINHOS EM OUTRO COMPUTADOR
+-------------------------------------------
+
+D:\Cursos\Repositorios\projetoTestes e apenas o caminho do computador em que
+este arquivo foi criado. Em outro PC, localizar a raiz pelo arquivo package.json
+e executar os comandos a partir dela. Nao codificar o caminho absoluto antigo
+em scripts do projeto.
+
+Pastas locais ignoradas como node_modules e .firebase nao sao transportadas
+pelo Git. No novo computador, npm install recria dependencias e
+npm run firebase:emulators recria o estado local necessario.
+
+
+FIM DO CONTEXTO DE TRANSFERENCIA
+===============================

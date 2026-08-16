@@ -20,12 +20,12 @@ scripts pertencem a pastas especificas.
 
 ## Arquivos movidos
 
-- regras e indices Firebase: `config/firebase/`;
+- regras e indices Firebase: `firebase/`;
 - configuracao do Live Server: `.vscode/settings.json`;
 - documentacao: `docs/`;
-- scripts de manutencao: `tools/`;
-- snapshots e inventarios: `generated/`;
-- snapshots e inventarios: `generated/`.
+- scripts administrativos e de manutencao: `scripts/`;
+- snapshots e inventarios: `backup/`;
+- testes automatizados: `tests/`.
 
 ## Logs locais
 

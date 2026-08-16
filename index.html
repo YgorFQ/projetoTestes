@@ -44,7 +44,7 @@
 
       function needsOpeningToken(path) {
         if (isLocalDevelopment) return true;
-        return /^generated\/static-backup\/(manifest|biblioteca|colecoes)\.js$/
+        return /^backup\/latest\/(manifest|biblioteca|colecoes)\.js$/
           .test(String(path || '').replace(/^\.\//, ''));
       }
 
@@ -189,9 +189,9 @@
 
   <script>
     SenkoFreshAssets.writeScript('app/infrastructure/firebase/firebase-config.js');
-    SenkoFreshAssets.writeScript('generated/static-backup/manifest.js');
-    SenkoFreshAssets.writeScript('generated/static-backup/biblioteca.js');
-    SenkoFreshAssets.writeScript('generated/static-backup/colecoes.js');
+    SenkoFreshAssets.writeScript('backup/latest/manifest.js');
+    SenkoFreshAssets.writeScript('backup/latest/biblioteca.js');
+    SenkoFreshAssets.writeScript('backup/latest/colecoes.js');
     SenkoFreshAssets.writeScript('app/infrastructure/static-backup/senko-static-backup-builder.js');
     SenkoFreshAssets.writeScript('app/infrastructure/firebase/senko-firebase.js');
     SenkoFreshAssets.writeScript('app/infrastructure/static-backup/senko-data-mode.js');

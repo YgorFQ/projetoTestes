@@ -86,6 +86,6 @@ owner, admin, editor, visitante, schema invalido e conflito.
 
 ## Dependencias
 
-`functions/` conserva o nome por estabilidade dos comandos, mas contem apenas
-scripts administrativos locais. O frontend nao chama Cloud Functions. Depois
-de mudar dependencias dessa pasta, rode `npm install` nela e versione o lockfile.
+`scripts/` contem ferramentas administrativas, de backup e manutencao. O
+frontend nao chama Cloud Functions. Todas as dependencias e o lockfile ficam
+centralizados na raiz; depois de altera-los, rode `npm install` na raiz.

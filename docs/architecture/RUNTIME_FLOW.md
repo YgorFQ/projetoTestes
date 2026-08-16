@@ -61,7 +61,7 @@ sessao ou remontagem.
 
 ## 4. Modo estatico
 
-`generated/static-backup/manifest.js`, `biblioteca.js` e `colecoes.js` formam
+`backup/latest/manifest.js`, `biblioteca.js` e `colecoes.js` formam
 um bundle gerado. Repositories estaticos leem esse objeto e devolvem clones para
 que controladores nao alterem a copia global.
 

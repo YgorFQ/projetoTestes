@@ -7,6 +7,9 @@ alterar persistencia, autenticacao, permissoes, modelo de dados,
 presenca, migracao, backup ou deploy, leia `docs/README.md` e
 `docs/PRODUCT_SPECIFICATION.md`.
 
+Em um novo computador ou uma nova instancia, leia tambem
+`docs/CONTEXTO_COMPLETO_CODEX.txt` antes de modificar o projeto.
+
 Sempre que uma mudanca alterar arquitetura, feature, fluxo de dados, GitHub,
 estilos globais, validacoes, mensagens de erro, pastas ou responsabilidades,
 atualize tambem o guia. Codigo atualizado com guia desatualizado ainda deve ser
@@ -18,10 +21,10 @@ Regras principais:
 - `shared` deve guardar apenas tokens, componentes neutros e assets globais.
 - O shell nao deve conhecer regras internas de Biblioteca, Colecoes, Imagens,
   Sources ou Preview.
-- A integracao GitHub ativa deve ficar em `app/infrastructure/github`; as
-  o GitHub e usado somente pelo backup global; features nao gravam nele.
+- A integracao GitHub ativa deve ficar em `app/infrastructure/github`; o GitHub
+  e usado somente pelo backup global; features nao gravam nele.
 - Todo arquivo do projeto deve aparecer em
-  `generated/meta/file-classification.json` com um unico estado.
+  `backup/meta/file-classification.json` com um unico estado.
 - Nomes duplicados devem ser bloqueados ao criar e ao editar.
 - Ao finalizar qualquer alteracao relevante, revise o guia antes de responder
   que o trabalho terminou.
@@ -29,3 +32,4 @@ Regras principais:
   `docs/PRODUCT_SPECIFICATION.md` e os casos afetados em
   `docs/firebase/TEST_PLAN.md`.
 - Nao marque backup como concluido sem uma restauracao testada.
+- Nunca use gpt-image-2 neste projeto.

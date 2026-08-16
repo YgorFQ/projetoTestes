@@ -1,7 +1,7 @@
 # Classificacao dos arquivos
 
 Cada arquivo mantido pelo projeto recebe exatamente um estado no inventario
-`generated/meta/file-classification.json`. O inventario evita depender do nome
+`backup/meta/file-classification.json`. O inventario evita depender do nome
 ou da memoria de quem reorganizou as pastas.
 
 ## Estados
@@ -23,13 +23,13 @@ npm run inventory:build
 O script usa os arquivos versionados e os novos arquivos ainda nao ignorados
 pelo Git. Artefatos locais ignorados seguem a classificacao da pasta, mas nao
 entram na lista para que um clone limpo produza o mesmo inventario. As regras
-ficam em `tools/build-file-classification.js`; uma nova categoria nao deve ser
+ficam em `scripts/maintenance/build-file-classification.js`; uma nova categoria nao deve ser
 inventada apenas para um arquivo.
 
 Pastas comunicam a intencao principal:
 
-- `app/`, `tests/`, `tools/` e `docs/` sao oficiais por padrao;
-- `generated/` e sempre gerado;
+- `app/`, `scripts/`, `tests/`, `firebase/` e `docs/` sao oficiais por padrao;
+- `backup/` e sempre gerado;
 - `app/prototype/` e sempre prototipo.
 
 O projeto nao mantem uma categoria historica executavel. Quando uma

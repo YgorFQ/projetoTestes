@@ -27,7 +27,7 @@ npm run test:asset-versioning
 npm run test:access-modal
 npm run test:static-backup
 npm run test:firebase-health
-npm --prefix functions run check
+npm run scripts:check
 ```
 
 Implante regras separadamente quando mudarem:
@@ -66,7 +66,7 @@ Antes de uma operacao arriscada, peça um backup. Confirme no commit:
 
 - manifest tecnico;
 - documentos esperados;
-- `generated/static-backup/manifest.js` atualizado;
+- `backup/latest/manifest.js` atualizado;
 - contagens coerentes;
 - nenhum token ou arquivo `.pem`.
 
@@ -78,8 +78,8 @@ leitura, o exportador tenta novamente antes de publicar.
 Restaure primeiro em workspace descartavel:
 
 ```powershell
-npm --prefix functions run restore:github:cli-auth -- \
-  --source generated/backups/senkolib-data \
+npm run backup:restore:cli-auth -- \
+  --source backup/data \
   --workspace senkolib-restore-test \
   --dry-run
 ```

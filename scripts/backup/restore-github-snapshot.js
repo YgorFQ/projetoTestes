@@ -10,8 +10,7 @@ const {
 } = require('firebase-admin/firestore');
 
 const SNAPSHOT_ROOTS = [
-  'generated/backups/senkolib-data',
-  'senkolib-data'
+  'backup/data'
 ];
 const MANIFEST_PATHS = SNAPSHOT_ROOTS.map((root) => `${root}/manifest.json`);
 const MANAGED_COLLECTIONS = [
@@ -53,10 +52,10 @@ function parseArgs(argv) {
 
 function printHelp() {
   console.log(`Uso:
-  node scripts/restore-github-snapshot.js --source <pasta> [opcoes]
+  node scripts/backup/restore-github-snapshot.js --source <pasta> [opcoes]
 
 Opcoes:
-  --commit <sha-ou-ref>   Le generated/backups/senkolib-data de um commit Git local
+  --commit <sha-ou-ref>   Le backup/data de um commit Git local
   --workspace <id>        Restaura em outro workspace (padrao: workspace do backup)
   --dry-run               Valida e mostra o plano sem acessar o Firebase
   --force                 Substitui o conteudo gerenciado de um workspace preenchido
@@ -131,8 +130,8 @@ function createSourceReader(sourceValue, commit) {
 
   function projectRootFromSnapshotDirectory(snapshotDirectory) {
     const parent = path.dirname(snapshotDirectory);
-    if (path.basename(parent) === 'backups' && path.basename(path.dirname(parent)) === 'generated') {
-      return path.dirname(path.dirname(parent));
+    if (path.basename(snapshotDirectory) === 'data' && path.basename(parent) === 'backup') {
+      return path.dirname(parent);
     }
     return parent;
   }
@@ -144,7 +143,7 @@ function createSourceReader(sourceValue, commit) {
     }
     root = projectRootFromSnapshotDirectory(path.dirname(source));
   } else if (fs.existsSync(path.join(source, 'manifest.json')) &&
-             path.basename(source) === 'senkolib-data') {
+             path.basename(source) === 'data') {
     root = projectRootFromSnapshotDirectory(source);
   }
 

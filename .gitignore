@@ -5,12 +5,12 @@ database-debug.log
 ui-debug.log
 
 node_modules/
-functions/node_modules/
-functions/.env
-functions/.env.*
-!functions/.env.example
-functions/.secret.local
-functions/lib/
+scripts/.env
+scripts/.env.*
+!scripts/.env.example
+scripts/**/.env
+scripts/**/.env.*
+scripts/**/.secret.local
 
 migration-output/
-generated/migrations/
+backup/migrations/

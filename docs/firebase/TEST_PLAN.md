@@ -8,7 +8,7 @@ npm run test:asset-versioning
 npm run test:access-modal
 npm run test:static-backup
 npm run test:firebase-health
-npm --prefix functions run check
+npm run scripts:check
 ```
 
 ## Regras Firestore

@@ -21,7 +21,7 @@ cada tecla: formularios mantem um rascunho local e somente o comando Salvar
 inicia uma transacao. Depois do commit, listeners em tempo real entregam o novo
 documento para todos os clientes autorizados.
 
-O snapshot em `generated/static-backup/` e a fonte publica de contingencia. Ele
+O snapshot em `backup/latest/` e a fonte publica de contingencia. Ele
 contem somente o estado do ultimo backup concluido, e nunca aceita edicao. Esse
 snapshot e reconstruido pelo fluxo global de backup para GitHub.
 
@@ -67,7 +67,7 @@ banco, e o GitHub nao participa de criar, editar ou excluir conteudo.
 | Ver dados Firebase | sim | sim | sim | nao |
 | Criar, editar e excluir conteudo | sim | sim | sim | nao |
 | Aprovar novo editor | sim | sim | nao | nao |
-| Aprovar novo admin | sim | sim | nao | nao |
+| Aprovar novo admin | sim | nao | nao | nao |
 | Promover ou remover owner | sim | nao | nao | nao |
 | Gerenciar qualquer cargo | sim | limitado | nao | nao |
 | Fazer backup no GitHub | sim | sim | sim | nao |

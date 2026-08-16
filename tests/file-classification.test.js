@@ -4,10 +4,10 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
-const inventoryPath = path.join(root, 'generated/meta/file-classification.json');
+const inventoryPath = path.join(root, 'backup/meta/file-classification.json');
 const acceptedStatuses = new Set(['official', 'generated', 'prototype']);
 
-execFileSync(process.execPath, ['tools/build-file-classification.js'], {
+execFileSync(process.execPath, ['scripts/maintenance/build-file-classification.js'], {
   cwd: root,
   stdio: 'pipe'
 });
@@ -37,9 +37,9 @@ const expected = new Map([
   ['app/features/biblioteca/controllers/index.js', 'official'],
   ['app/features/colecoes/repositories/firebase-repository.js', 'official'],
   ['app/prototype/gamer-preview/register.js', 'prototype'],
-  ['config/firebase/firestore.rules', 'official'],
+  ['firebase/firestore.rules', 'official'],
   ['.vscode/settings.json', 'official'],
-  ['generated/static-backup/manifest.js', 'generated']
+  ['backup/latest/manifest.js', 'generated']
 ]);
 
 const byPath = new Map(inventory.entries.map((entry) => [entry.path, entry.status]));
@@ -62,14 +62,14 @@ const actualRootFiles = gitFiles.filter((filePath) => !filePath.includes('/')).s
 assert.deepStrictEqual(actualRootFiles, expectedRootFiles, 'A raiz possui arquivo nao justificado.');
 
 const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-assert(index.includes('generated/static-backup/manifest.js'), 'Index nao carrega o fallback gerado.');
+assert(index.includes('backup/latest/manifest.js'), 'Index nao carrega o fallback gerado.');
 assert(index.includes('app/tools/session/register.js'), 'Index nao carrega a tool de sessao.');
 assert(!index.includes('app/infrastructure/firebase/senko-firebase-ui.js'), 'Index usa UI Firebase antiga.');
 assert(!index.includes('app/features/access/register.js'), 'Index usa o antigo caminho de Acessos.');
 
 const firebaseConfig = JSON.parse(fs.readFileSync(path.join(root, 'firebase.json'), 'utf8'));
 assert(
-  !firebaseConfig.hosting.ignore.includes('generated/static-backup/**'),
+  !firebaseConfig.hosting.ignore.includes('backup/latest/**'),
   'Firebase Hosting nao pode ignorar o fallback publico.'
 );
 

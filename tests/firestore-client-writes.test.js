@@ -127,7 +127,7 @@ async function testGithubBackup(memberDb, writes) {
     } else if (url.includes('/git/trees/base-tree?recursive=1')) {
       body = {
         truncated: false,
-        tree: [{ path: 'generated/backups/senkolib-data/arquivo-antigo.json', type: 'blob', sha: 'old' }]
+        tree: [{ path: 'backup/data/arquivo-antigo.json', type: 'blob', sha: 'old' }]
       };
     } else if (url.endsWith('/git/trees') && method === 'POST') {
       body = { sha: 'next-tree' };
@@ -195,26 +195,26 @@ async function testGithubBackup(memberDb, writes) {
     const treeBody = JSON.parse(treeRequest.body);
     assert.equal(requests.filter((request) => request.url.endsWith('/git/blobs')).length, 0);
     assert.ok(treeBody.tree.some((entry) =>
-      entry.path === 'generated/backups/senkolib-data/workspaces/senkolib/groups/grupo-backup.json' &&
+      entry.path === 'backup/data/workspaces/senkolib/groups/grupo-backup.json' &&
       typeof entry.content === 'string'
     ));
     assert.ok(treeBody.tree.some((entry) =>
-      entry.path === 'generated/backups/senkolib-data/manifest.json' && typeof entry.content === 'string'
+      entry.path === 'backup/data/manifest.json' && typeof entry.content === 'string'
     ));
     assert.ok(treeBody.tree.some((entry) =>
-      entry.path === 'generated/static-backup/manifest.js' &&
+      entry.path === 'backup/latest/manifest.js' &&
       entry.content.includes('dataVersion')
     ));
     assert.ok(treeBody.tree.some((entry) =>
-      entry.path === 'generated/static-backup/biblioteca.js' &&
+      entry.path === 'backup/latest/biblioteca.js' &&
       typeof entry.content === 'string'
     ));
     assert.ok(treeBody.tree.some((entry) =>
-      entry.path === 'generated/static-backup/colecoes.js' &&
+      entry.path === 'backup/latest/colecoes.js' &&
       entry.content.includes('Grupo do backup')
     ));
     assert.ok(treeBody.tree.some((entry) =>
-      entry.path === 'generated/backups/senkolib-data/arquivo-antigo.json' && entry.sha === null
+      entry.path === 'backup/data/arquivo-antigo.json' && entry.sha === null
     ));
 
     const workspace = await firestore.getDoc(firestore.doc(
@@ -261,7 +261,7 @@ async function main() {
   const testEnvironment = await initializeTestEnvironment({
     projectId: PROJECT_ID,
     firestore: {
-      rules: fs.readFileSync(path.join(__dirname, '..', 'config/firebase/firestore.rules'), 'utf8')
+      rules: fs.readFileSync(path.join(__dirname, '..', 'firebase/firestore.rules'), 'utf8')
     }
   });
 

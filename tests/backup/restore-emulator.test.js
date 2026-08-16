@@ -10,9 +10,9 @@ const firestoreHost = process.env.FIRESTORE_EMULATOR_HOST || '127.0.0.1:8080';
 process.env.FIRESTORE_EMULATOR_HOST = firestoreHost;
 const workspaceId = `restore-test-${Date.now()}`;
 const sourceWorkspaceId = 'senkolib';
-const snapshotRoot = 'generated/backups/senkolib-data';
+const snapshotRoot = 'backup/data';
 const timestamp = '2026-08-15T12:00:00.000Z';
-const scriptPath = path.join(__dirname, 'restore-github-snapshot.js');
+const scriptPath = path.resolve(__dirname, '../../scripts/backup/restore-github-snapshot.js');
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -153,7 +153,7 @@ async function main() {
     runGit(tempRoot, ['init', '--quiet']);
     runGit(tempRoot, ['config', 'user.name', 'SenkoLib Test']);
     runGit(tempRoot, ['config', 'user.email', 'senkolib-test@example.invalid']);
-    runGit(tempRoot, ['add', 'generated/backups/senkolib-data']);
+    runGit(tempRoot, ['add', 'backup/data']);
     runGit(tempRoot, ['commit', '--quiet', '-m', 'Snapshot fixture']);
     const commitDryRun = runRestore(tempRoot, ['--commit', 'HEAD', '--dry-run'], 0);
     assert(commitDryRun.includes('@ HEAD'), 'O snapshot nao foi lido pelo commit Git.');

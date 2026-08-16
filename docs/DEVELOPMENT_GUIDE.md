@@ -5,7 +5,7 @@
 1. Leia `README.md` e `docs/PRODUCT_SPECIFICATION.md`.
 2. Veja `docs/architecture/STRUCTURE.md` para localizar o dono da mudanca.
 3. Leia o `register.js` da area antes dos controllers.
-4. Rode `npm install` na raiz e em `functions/` quando usar scripts operacionais.
+4. Rode `npm install` na raiz. Todas as dependencias estao centralizadas nela.
 5. Inicie os emuladores com `npm run firebase:emulators`.
 6. Abra um servidor HTTP simples para o frontend.
 
@@ -40,7 +40,7 @@ npm run test:asset-versioning
 npm run test:access-modal
 npm run test:static-backup
 npm run test:firebase-health
-npm --prefix functions run check
+npm run scripts:check
 ```
 
 Testes de regras usam emuladores. Veja `docs/firebase/TEST_PLAN.md` para os
@@ -54,7 +54,7 @@ comandos e cenarios completos.
 - leitura Firebase: `repositories/firebase-repository.js`;
 - leitura de contingencia: `repositories/static-repository.js`;
 - transacao de escrita: infraestrutura Firebase;
-- formato autorizado: `config/firebase/firestore.rules`.
+- formato autorizado: `firebase/firestore.rules`.
 
 Uma alteracao de campo quase sempre exige revisar repository, escrita, regra,
 teste e documentacao do modelo de dados.
@@ -76,7 +76,7 @@ acao para quem nao possui cargo.
 ## Alterar backup
 
 O bundle estatico e gerado. Nao edite arquivos em
-`generated/static-backup/` manualmente. Altere o builder, rode o teste e gere
+`backup/latest/` manualmente. Altere o builder, rode o teste e gere
 um novo backup por meio do fluxo oficial.
 
 Tokens pessoais nunca devem aparecer em fixtures, screenshots versionados,

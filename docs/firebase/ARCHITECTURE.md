@@ -47,9 +47,8 @@ GitHub Actions.
 | GitHub | Receber snapshot restauravel e bundle publico de leitura | Ser usado pelo CRUD normal |
 | SenkoDataMode | Escolher Firebase `ready` ou backup estatico | Permitir escrita no modo publico |
 
-`functions/` conserva o nome para manter comandos existentes, mas contem apenas
-scripts administrativos locais de membros, restauracao e testes. O frontend de
-producao nao importa o SDK de Cloud Functions.
+`scripts/` concentra operacoes locais de administracao, backup e manutencao.
+O frontend de producao nao importa o SDK de Cloud Functions.
 
 ## Arquivos principais
 
@@ -63,15 +62,15 @@ producao nao importa o SDK de Cloud Functions.
 | `app/tools/github-backup/register.js` | Janela global do backup manual |
 | `app/infrastructure/static-backup/senko-data-mode.js` | Estado global `firebase`, `static` ou `unavailable` |
 | `app/infrastructure/static-backup/senko-static-backup-builder.js` | Converte o snapshot tecnico em dados publicos atuais |
-| `generated/static-backup/{manifest,biblioteca,colecoes}.js` | Bundle gerado e servido sem consultar Firebase |
+| `backup/latest/{manifest,biblioteca,colecoes}.js` | Bundle gerado e servido sem consultar Firebase |
 | `app/features/biblioteca/repositories/firebase-repository.js` | Adaptador Firebase da Biblioteca |
 | `app/features/biblioteca/repositories/static-repository.js` | Adaptador somente leitura da Biblioteca |
 | `app/features/colecoes/repositories/firebase-repository.js` | Adaptador Firebase de Colecoes e grupos |
 | `app/features/colecoes/repositories/static-repository.js` | Adaptador somente leitura de Colecoes e grupos |
 | `app/tools/access/` | Modal global de solicitacoes, membros, cargos e atividade administrativa |
-| `config/firebase/firestore.rules` | Autoridade de seguranca para leituras e escritas |
-| `config/firebase/database.rules.json` | Permissoes de presenca |
-| `config/firebase/storage.rules` | Bloqueio atual de uploads |
+| `firebase/firestore.rules` | Autoridade de seguranca para leituras e escritas |
+| `firebase/database.rules.json` | Permissoes de presenca |
+| `firebase/storage.rules` | Bloqueio atual de uploads |
 | `tests/firestore-client-writes.test.js` | Teste integrado das transacoes e regras |
 
 ## Limites entre camadas

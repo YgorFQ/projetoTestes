@@ -2,8 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
-const root = path.resolve(__dirname, '..');
-const outputPath = 'generated/meta/file-classification.json';
+const root = path.resolve(__dirname, '../..');
+const outputPath = 'backup/meta/file-classification.json';
 
 /*
  * Inventario reconstruivel do repositorio.
@@ -29,7 +29,7 @@ function listGitFiles() {
 
 function classify(filePath) {
   if (
-    filePath.startsWith('generated/') ||
+    filePath.startsWith('backup/') ||
     filePath === 'package-lock.json' ||
     filePath.endsWith('/package-lock.json')
   ) return 'generated';
@@ -55,7 +55,7 @@ const counts = entries.reduce((result, entry) => {
 
 const inventory = {
   schemaVersion: 1,
-  source: 'tools/build-file-classification.js',
+  source: 'scripts/maintenance/build-file-classification.js',
   statuses: ['official', 'generated', 'prototype'],
   counts,
   entries

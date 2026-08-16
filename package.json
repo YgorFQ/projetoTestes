@@ -9,19 +9,25 @@
     "firebase:emulators": "firebase emulators:start",
     "firebase:deploy:rules": "firebase deploy --only firestore:rules,firestore:indexes,database",
     "firebase:deploy:hosting": "firebase deploy --only hosting",
-    "backup:build-static": "node tools/build-static-backup.js",
-    "inventory:build": "node tools/build-file-classification.js",
+    "backup:build-static": "node scripts/backup/build-static-backup.js",
+    "backup:restore": "node scripts/backup/restore-github-snapshot.js",
+    "backup:restore:cli-auth": "node scripts/backup/restore-github-snapshot-cli-auth.js",
+    "admin:add-member": "node scripts/admin/add-member-cli-auth.js",
+    "scripts:check": "node --check scripts/admin/add-member-cli-auth.js && node --check scripts/backup/build-static-backup.js && node --check scripts/backup/restore-github-snapshot.js && node --check scripts/backup/restore-github-snapshot-cli-auth.js && node --check scripts/maintenance/build-file-classification.js",
+    "inventory:build": "node scripts/maintenance/build-file-classification.js",
     "test:asset-versioning": "node tests/asset-versioning.test.js",
     "test:access-modal": "node tests/access-modal-shell.test.js",
     "test:structure": "node tests/file-classification.test.js",
     "test:static-backup": "node tests/static-backup-builder.test.js",
     "test:firebase-health": "node tests/firebase-service-health.test.js",
     "test:firestore-rules": "firebase emulators:exec --only firestore --project senkolib-rules-test \"node tests/firestore-client-writes.test.js\"",
-    "test:database-rules": "firebase emulators:exec --only database --project senkolib-database-rules-test \"node tests/database-member-management.test.js\""
+    "test:database-rules": "firebase emulators:exec --only database --project senkolib-database-rules-test \"node tests/database-member-management.test.js\"",
+    "test:restore-emulator": "node tests/backup/restore-emulator.test.js"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^5.0.0",
     "firebase": "^12.17.0",
+    "firebase-admin": "14.2.0",
     "firebase-tools": "15.25.0"
   }
 }

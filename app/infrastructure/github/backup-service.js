@@ -1,7 +1,7 @@
 (function () {
   var CONFIG_KEY = 'senkolib_github_config';
   var TOKEN_KEY = 'senkolib_github_token';
-  var DATA_ROOT = 'generated/backups/senkolib-data/';
+  var DATA_ROOT = 'backup/data/';
   var isRunning = false;
 
   function appError(message, code) {
