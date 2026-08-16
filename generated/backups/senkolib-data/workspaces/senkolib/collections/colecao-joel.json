@@ -1,0 +1,17 @@
+{
+  "updatedBy": "legacy-import",
+  "createdBy": "legacy-import",
+  "version": 1,
+  "nameKey": "colecao joel",
+  "legacyId": "colecao-joel",
+  "id": "colecao-joel",
+  "updatedByName": "Importacao inicial",
+  "tags": [
+    "Responsivo"
+  ],
+  "groupId": "joel",
+  "createdAt": "2026-08-15T15:14:08.218Z",
+  "name": "Coleção Joel",
+  "workspaceId": "senkolib",
+  "updatedAt": "2026-08-15T15:14:08.218Z"
+}

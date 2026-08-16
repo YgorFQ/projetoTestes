@@ -1,0 +1,20 @@
+{
+  "workspaceId": "senkolib",
+  "createdAt": "2026-08-15T15:14:08.167Z",
+  "id": "teste2",
+  "currentRevisionId": "legacy-import-v1",
+  "legacyId": "teste2",
+  "kind": "collectionLayout",
+  "parentId": "colecao-joel",
+  "updatedAt": "2026-08-15T15:14:08.167Z",
+  "html": "teste2",
+  "updatedBy": "legacy-import",
+  "tags": [],
+  "name": "teste2",
+  "updatedByName": "Importacao inicial",
+  "css": "",
+  "collectionId": "colecao-joel",
+  "createdBy": "legacy-import",
+  "nameKey": "teste2",
+  "version": 1
+}

@@ -1,0 +1,17 @@
+{
+  "createdAt": "2026-08-15T15:14:08.186Z",
+  "version": 1,
+  "nameKey": "franca",
+  "id": "franca",
+  "updatedAt": "2026-08-15T15:14:08.186Z",
+  "updatedByName": "Importacao inicial",
+  "updatedBy": "legacy-import",
+  "legacyId": "franca",
+  "workspaceId": "senkolib",
+  "tags": [
+    "catalogo"
+  ],
+  "groupId": "selecao-francesa",
+  "name": "França",
+  "createdBy": "legacy-import"
+}

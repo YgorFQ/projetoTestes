@@ -1,0 +1,18 @@
+{
+  "createdAt": "2026-08-15T15:14:08.211Z",
+  "id": "carneiro-colecoes",
+  "workspaceId": "senkolib",
+  "updatedByName": "Importacao inicial",
+  "updatedAt": "2026-08-15T15:14:08.211Z",
+  "tags": [
+    "Responsivo",
+    "adaptativos"
+  ],
+  "groupId": "ygor",
+  "name": "Ygor Coleções",
+  "updatedBy": "legacy-import",
+  "version": 1,
+  "nameKey": "ygor colecoes",
+  "legacyId": "carneiro-colecoes",
+  "createdBy": "legacy-import"
+}
