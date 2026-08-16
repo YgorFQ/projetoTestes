@@ -199,7 +199,7 @@ e repete ate tres vezes. Depois disso, falha sem criar commit. O membro pode
 aguardar alguns segundos e clicar novamente.
 
 Este mecanismo depende de todo CRUD incrementar `dataVersion`; por isso essa
-regra e validada em `firestore.rules`.
+regra e validada em `config/firebase/firestore.rules`.
 
 ## Como verificar um backup
 

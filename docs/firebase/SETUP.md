@@ -122,7 +122,7 @@ Authentication responde apenas quem e a pessoa. A permissao vem do documento
 5. Conclua.
 
 Nao use as regras temporarias abertas do modo de teste. O arquivo oficial e
-`firestore.rules`.
+`config/firebase/firestore.rules`.
 
 O Firestore guarda:
 
@@ -151,7 +151,7 @@ conteudo.
 ## Parte 6 - Storage
 
 Storage nao e usado pelas features atuais. Se o Console permitir ativar no
-plano escolhido, mantenha `storage.rules` implantado. Se a ativacao pedir
+plano escolhido, mantenha `config/firebase/storage.rules` implantado. Se a ativacao pedir
 faturamento, pule esta parte: isso nao bloqueia Biblioteca, Colecoes ou backup.
 
 Nao adapte layouts para Storage sem atualizar arquitetura, modelo de dados,

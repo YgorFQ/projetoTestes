@@ -261,7 +261,7 @@ async function main() {
   const testEnvironment = await initializeTestEnvironment({
     projectId: PROJECT_ID,
     firestore: {
-      rules: fs.readFileSync(path.join(__dirname, '..', 'firestore.rules'), 'utf8')
+      rules: fs.readFileSync(path.join(__dirname, '..', 'config/firebase/firestore.rules'), 'utf8')
     }
   });
 

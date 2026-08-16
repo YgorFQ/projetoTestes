@@ -253,7 +253,26 @@
             'app/prototype: telas em teste ou beta.',
             'legacy: implementacoes antigas preservadas.',
             'generated: arquivos produzidos por scripts ou backups.',
+            'config/firebase: regras, indices e exemplo de configuracao.',
+            '.vscode/settings.json: configuracao local do Live Server.',
             'docs: toda a documentacao canonica e historica.'
+          ]
+        },
+        {
+          title: 'Arquivos que ficam na raiz',
+          badge: 'raiz',
+          terms: 'raiz root index firebase package sw readme agents gitignore obrigatorio',
+          paragraphs: [
+            'A raiz guarda somente pontos de entrada e arquivos procurados diretamente pelas ferramentas.'
+          ],
+          bullets: [
+            'index.html e a entrada do GitHub Pages.',
+            'sw.js fica na raiz para controlar todo o escopo do site.',
+            'firebase.json e .firebaserc sao procurados pela Firebase CLI.',
+            'package.json e package-lock.json pertencem ao npm da raiz.',
+            'README.md, AGENTS.md e .gitignore possuem funcoes convencionais do repositorio.',
+            'Logs dos emuladores sao locais, ignorados e nunca devem ser enviados ao GitHub.',
+            'Explicacao completa: docs/architecture/ROOT_FILES.md.'
           ]
         },
         {
@@ -270,7 +289,8 @@
             'Mudanca de Imagens: app/features/imagens.',
             'Mudanca de Sources: app/features/sources.',
             'Mudanca de ferramenta global: app/tools/[nome].',
-            'Mudanca de Firebase ou GitHub: app/infrastructure.',
+            'Mudanca do cliente Firebase ou GitHub: app/infrastructure.',
+            'Mudanca de regras e indices Firebase: config/firebase.',
             'Experimento: app/prototype.'
           ]
         }

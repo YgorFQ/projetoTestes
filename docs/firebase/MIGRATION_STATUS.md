@@ -79,6 +79,10 @@ O corte Firebase original continua marcado por tag Git.
 - [x] Snapshots e bundles movidos para `generated`.
 - [x] Documentacao canonica centralizada em `docs`.
 - [x] Inventario por arquivo com estados oficial, gerado, prototipo e legado.
+- [x] Raiz reduzida aos pontos de entrada e arquivos exigidos pelas ferramentas.
+- [x] Regras e indices movidos para `config/firebase`.
+- [x] Configuracao do Live Server movida para `.vscode/settings.json`.
+- [x] Logs dos emuladores removidos do versionamento.
 
 ## Em validacao
 
@@ -184,3 +188,4 @@ Adicione novas rodadas sem apagar as anteriores.
 | 2026-08-15 | UI local e GitHub Pages | 80aefb2 | Aprovado | Menu de ferramentas agrupou acoes globais sem recria-las; Notas, tema, fechamento, permissoes e responsividade em desktop e 390x844 foram validados |
 | 2026-08-15 | UI local e harness owner | alteracoes locais | Aprovado | Menu promovido a oficial; criacao rapida ficou a esquerda do hamburguer; Acessos deixou de ser aba e abriu como modal sem overflow em desktop e 390x844; botao, fundo e Escape fecham e restauram o foco |
 | 2026-08-16 | Estrutura local | 2026.08.16.1 | Aprovado | Tools globais, features, legacy, generated e docs reorganizados; 454 arquivos classificados; testes unitarios, regras Firestore/Realtime, fallback, Biblioteca, Colecoes, menu, Guide responsivo e modal de backup validados |
+| 2026-08-16 | Raiz e configuracao | 2026.08.16.2 | Aprovado | Raiz versionada reduzida a nove arquivos obrigatorios; regras movidas para `config/firebase`; Firestore compilou no dry-run e regras Firestore/Realtime passaram nos emuladores |

@@ -161,7 +161,7 @@ equivalente no servidor.
 2. Implemente a transacao em `senko-firestore-writes.js`.
 3. Leia o documento de membro dentro da transacao para detectar remocao de acesso.
 4. Valide IDs, nomes, limites, versao e relacionamento pai-filho no cliente.
-5. Repita em `firestore.rules` tudo que protege integridade ou acesso.
+5. Repita em `config/firebase/firestore.rules` tudo que protege integridade ou acesso.
 6. Incremente `workspace.dataVersion` junto da alteracao.
 7. Exponha um metodo pequeno no repositorio da feature.
 8. Preserve o rascunho quando houver `aborted`.

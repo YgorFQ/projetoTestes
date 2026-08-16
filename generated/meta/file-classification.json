@@ -19,11 +19,11 @@
       "status": "official"
     },
     {
-      "path": ".firebaserc.example",
+      "path": ".gitignore",
       "status": "official"
     },
     {
-      "path": ".gitignore",
+      "path": ".vscode/settings.json",
       "status": "official"
     },
     {
@@ -367,15 +367,31 @@
       "status": "official"
     },
     {
-      "path": "database-debug.log",
+      "path": "config/firebase/database.rules.json",
       "status": "official"
     },
     {
-      "path": "database.rules.json",
+      "path": "config/firebase/firebaserc.example",
+      "status": "official"
+    },
+    {
+      "path": "config/firebase/firestore.indexes.json",
+      "status": "official"
+    },
+    {
+      "path": "config/firebase/firestore.rules",
+      "status": "official"
+    },
+    {
+      "path": "config/firebase/storage.rules",
       "status": "official"
     },
     {
       "path": "docs/architecture/FILE_CLASSIFICATION.md",
+      "status": "official"
+    },
+    {
+      "path": "docs/architecture/ROOT_FILES.md",
       "status": "official"
     },
     {
@@ -440,14 +456,6 @@
     },
     {
       "path": "firebase.json",
-      "status": "official"
-    },
-    {
-      "path": "firestore.indexes.json",
-      "status": "official"
-    },
-    {
-      "path": "firestore.rules",
       "status": "official"
     },
     {
@@ -1764,14 +1772,6 @@
     },
     {
       "path": "README.md",
-      "status": "official"
-    },
-    {
-      "path": "settings.json",
-      "status": "official"
-    },
-    {
-      "path": "storage.rules",
       "status": "official"
     },
     {

@@ -19,6 +19,8 @@ indicado, em um ambiente de producao controlado.
 - [ ] Biblioteca e Colecoes carregam apenas caminhos oficiais ou compatibilidades em `legacy` declaradas no `register.js`.
 - [ ] `generated/static-backup` continua publicado; snapshots tecnicos, migracoes e docs nao entram no Firebase Hosting.
 - [ ] Nenhuma documentacao canonica aponta para um caminho removido.
+- [ ] A raiz contem somente os arquivos justificados em `docs/architecture/ROOT_FILES.md`.
+- [ ] A Firebase CLI encontra regras e indices em `config/firebase`.
 
 ## Autenticacao e membros
 

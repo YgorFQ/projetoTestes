@@ -37,6 +37,8 @@ const expected = new Map([
   ['app/features/biblioteca/controllers/index.js', 'official'],
   ['app/features/colecoes/repositories/firebase-repository.js', 'official'],
   ['app/prototype/gamer-preview/register.js', 'prototype'],
+  ['config/firebase/firestore.rules', 'official'],
+  ['.vscode/settings.json', 'official'],
   ['legacy/biblioteca/data/manifest.js', 'legacy'],
   ['generated/static-backup/manifest.js', 'generated']
 ]);
@@ -45,6 +47,20 @@ const byPath = new Map(inventory.entries.map((entry) => [entry.path, entry.statu
 for (const [filePath, status] of expected) {
   assert.strictEqual(byPath.get(filePath), status, `${filePath} deveria ser ${status}.`);
 }
+
+const expectedRootFiles = [
+  '.firebaserc',
+  '.gitignore',
+  'AGENTS.md',
+  'README.md',
+  'firebase.json',
+  'index.html',
+  'package-lock.json',
+  'package.json',
+  'sw.js'
+];
+const actualRootFiles = gitFiles.filter((filePath) => !filePath.includes('/')).sort();
+assert.deepStrictEqual(actualRootFiles, expectedRootFiles, 'A raiz possui arquivo nao justificado.');
 
 const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 assert(index.includes('generated/static-backup/manifest.js'), 'Index nao carrega o fallback gerado.');

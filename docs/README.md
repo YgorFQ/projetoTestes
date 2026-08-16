@@ -8,14 +8,15 @@ alterar o codigo.
 
 1. [Estrutura do projeto](architecture/STRUCTURE.md): onde cada tipo de codigo fica.
 2. [Classificacao dos arquivos](architecture/FILE_CLASSIFICATION.md): oficial, gerado, prototipo ou legado.
-3. [Configuracao do Firebase](firebase/SETUP.md): tutorial inicial para quem nunca usou Firebase.
-4. [Arquitetura Firebase](firebase/ARCHITECTURE.md): componentes e fluxos.
-5. [Modelo de dados](firebase/DATA_MODEL.md): caminhos e campos do banco.
-6. [Desenvolvimento local](firebase/DEVELOPMENT.md): como iniciar e depurar.
-7. [Plano de testes](firebase/TEST_PLAN.md): comportamentos que devem passar.
-8. [Operacao e producao](firebase/OPERATIONS.md): deploy, membros e rollback.
-9. [Backup e restauracao](firebase/BACKUP_AND_RESTORE.md): GitHub e recuperacao.
-10. [Estado da migracao](firebase/MIGRATION_STATUS.md): pronto, pendente e riscos.
+3. [Arquivos da raiz](architecture/ROOT_FILES.md): por que alguns arquivos nao podem ser movidos.
+4. [Configuracao do Firebase](firebase/SETUP.md): tutorial inicial para quem nunca usou Firebase.
+5. [Arquitetura Firebase](firebase/ARCHITECTURE.md): componentes e fluxos.
+6. [Modelo de dados](firebase/DATA_MODEL.md): caminhos e campos do banco.
+7. [Desenvolvimento local](firebase/DEVELOPMENT.md): como iniciar e depurar.
+8. [Plano de testes](firebase/TEST_PLAN.md): comportamentos que devem passar.
+9. [Operacao e producao](firebase/OPERATIONS.md): deploy, membros e rollback.
+10. [Backup e restauracao](firebase/BACKUP_AND_RESTORE.md): GitHub e recuperacao.
+11. [Estado da migracao](firebase/MIGRATION_STATUS.md): pronto, pendente e riscos.
 
 ## Qual documento tem prioridade
 

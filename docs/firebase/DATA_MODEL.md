@@ -8,7 +8,7 @@
 - O ID de grupo e fornecido pela feature e validado pelo cliente e regras.
 - Datas de escrita usam `serverTimestamp()`.
 - Membros escrevem pelo SDK Web dentro de transacoes.
-- `firestore.rules` valida identidade, campos, versoes e limites.
+- `config/firebase/firestore.rules` valida identidade, campos, versoes e limites.
 - `nameKey` e uma versao normalizada do nome usada para ordenacao e unicidade.
 
 ## Arvore do Firestore

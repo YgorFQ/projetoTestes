@@ -1,6 +1,6 @@
 # SenkoLib - Estrutura do projeto
 
-Esta e a organizacao oficial desde a versao `2026.08.16.1`. O objetivo e
+Esta e a organizacao oficial desde a versao `2026.08.16.2`. O objetivo e
 separar codigo executado, ferramentas globais, material historico e arquivos
 que podem ser regenerados.
 
@@ -44,14 +44,20 @@ SenkoLib/
 |   |-- architecture/                 - estrutura e decisoes gerais
 |   |-- firebase/                     - operacao atual do backend
 |   `-- legacy/                       - documentos historicos
+|-- config/firebase/                  - regras, indices e exemplo do projeto
+|-- .vscode/settings.json             - configuracao local do Live Server
 |-- functions/                        - CLI administrativa e backend anterior
 |-- tests/                            - testes automatizados e fixtures visuais
 |-- tools/                            - scripts executados pelo desenvolvedor
+|-- .firebaserc                       - projeto selecionado pela CLI Firebase
+|-- .gitignore                        - arquivos locais fora do Git
+|-- AGENTS.md                         - regras para agentes de desenvolvimento
+|-- README.md                         - entrada da documentacao no GitHub
 |-- index.html                        - entrada principal e ordem de carga
 |-- firebase.json                     - deploy e emuladores
-|-- firestore.rules                   - seguranca do conteudo
-|-- database.rules.json               - seguranca da presenca
-`-- storage.rules                     - seguranca de arquivos
+|-- package.json                      - comandos e dependencias npm
+|-- package-lock.json                 - versoes exatas das dependencias
+`-- sw.js                             - Service Worker com escopo da aplicacao
 ```
 
 ## Responsabilidades
@@ -91,6 +97,13 @@ funcionalidades.
 snapshot tecnico em `generated/backups/senkolib-data/` e o fallback publico em
 `generated/static-backup/`. O segundo e necessario no deploy; os demais podem
 ser excluidos do Firebase Hosting.
+
+### `config` e arquivos da raiz
+
+As regras e os indices do Firebase ficam em `config/firebase/`; `firebase.json`
+aponta para esses caminhos. A raiz preserva somente arquivos exigidos pelas
+ferramentas ou pontos de entrada do site. Consulte
+[Arquivos da raiz](ROOT_FILES.md) antes de mover qualquer um deles.
 
 ## Regras para novos arquivos
 

@@ -69,9 +69,9 @@ depende dessas Functions.
 | `app/features/colecoes/repositories/firebase-repository.js` | Adaptador Firebase de Colecoes e grupos |
 | `app/features/colecoes/repositories/static-repository.js` | Adaptador somente leitura de Colecoes e grupos |
 | `app/tools/access/` | Modal global de solicitacoes, membros, cargos e atividade administrativa |
-| `firestore.rules` | Autoridade de seguranca para leituras e escritas |
-| `database.rules.json` | Permissoes de presenca |
-| `storage.rules` | Bloqueio atual de uploads |
+| `config/firebase/firestore.rules` | Autoridade de seguranca para leituras e escritas |
+| `config/firebase/database.rules.json` | Permissoes de presenca |
+| `config/firebase/storage.rules` | Bloqueio atual de uploads |
 | `tests/firestore-client-writes.test.js` | Teste integrado das transacoes e regras |
 
 ## Limites entre camadas
