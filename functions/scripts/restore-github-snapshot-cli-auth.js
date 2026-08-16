@@ -24,7 +24,7 @@ function printHelp() {
   node scripts/restore-github-snapshot-cli-auth.js --source <pasta> [opcoes]
 
 Opcoes:
-  --commit <sha-ou-ref>   Le senkolib-data diretamente de um commit Git local
+  --commit <sha-ou-ref>   Le generated/backups/senkolib-data de um commit Git local
   --workspace <id>        Restaura em outro workspace (padrao: workspace do backup)
   --dry-run               Valida e mostra o plano sem acessar o Firebase
   --help                  Mostra esta ajuda

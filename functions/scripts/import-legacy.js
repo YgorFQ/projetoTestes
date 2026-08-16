@@ -11,7 +11,8 @@ const functionsDirectory = path.resolve(__dirname, '..');
 const projectRoot = path.resolve(functionsDirectory, '..');
 const snapshotPath = path.join(
   projectRoot,
-  'migration-output',
+  'generated',
+  'migrations',
   'senkolib-legacy.json'
 );
 const projectId = process.env.SENKO_FIREBASE_PROJECT_ID;

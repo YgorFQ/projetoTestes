@@ -5,7 +5,7 @@
   /*
    * Este arquivo contem somente a configuracao publica do app Web.
    * As chaves privadas do GitHub e credenciais administrativas nunca entram
-   * aqui. Consulte FIREBASE_SETUP.md antes de ativar.
+   * aqui. Consulte docs/firebase/SETUP.md antes de ativar.
    */
   window.SenkoFirebaseConfig = {
     enabled: true,

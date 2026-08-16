@@ -9,8 +9,8 @@ SenkoLib continuam no Firebase normalmente.
 O backup atual e exclusivamente manual. Nao existe GitHub Actions, agendamento
 de 30 minutos nem Cloud Function de producao.
 
-O mesmo commit possui duas representacoes. `senkolib-data/` e o snapshot
-tecnico completo para restauracao e auditoria. `app/infrastructure/static-backup/`
+O mesmo commit possui duas representacoes. `generated/backups/senkolib-data/` e o snapshot
+tecnico completo para restauracao e auditoria. `generated/static-backup/`
 e a ultima versao publica usada pelo aplicativo quando Firebase nao esta
 disponivel ou a pessoa nao entrou.
 
@@ -122,7 +122,7 @@ externo no futuro.
 O commit grava JSON em:
 
 ```text
-senkolib-data/
+generated/backups/senkolib-data/
 |-- manifest.json
 `-- workspaces/senkolib/
     |-- groups/{groupId}.json
@@ -144,7 +144,7 @@ Cada documento Firestore vira um JSON. Timestamps viram texto ISO 8601. O
 - `dataVersion`;
 - lista exata de arquivos do snapshot.
 
-Arquivos antigos dentro de `senkolib-data/` que nao fazem parte do novo
+Arquivos antigos dentro de `generated/backups/senkolib-data/` que nao fazem parte do novo
 snapshot sao removidos no mesmo commit. Isso faz uma exclusao no Firebase
 tambem desaparecer do backup mais recente, enquanto commits anteriores
 continuam preservando o estado antigo.
@@ -164,7 +164,7 @@ Nao sao exportados:
 O bundle publico gerado no mesmo commit fica em:
 
 ```text
-app/infrastructure/static-backup/
+generated/static-backup/
 |-- manifest.js
 |-- biblioteca.js
 `-- colecoes.js
@@ -178,7 +178,7 @@ de produto.
 
 O gerador compartilhado fica em
 `app/infrastructure/static-backup/senko-static-backup-builder.js`. Para
-reconstruir o bundle a partir de `senkolib-data/` sem acessar Firebase:
+reconstruir o bundle a partir de `generated/backups/senkolib-data/` sem acessar Firebase:
 
 ```powershell
 npm run backup:build-static
@@ -206,7 +206,7 @@ regra e validada em `firestore.rules`.
 1. Confirme a mensagem de sucesso no SenkoLib.
 2. Abra a pagina de commits do repositorio.
 3. Localize `SenkoLib backup vN (nome da pessoa)`.
-4. Abra `senkolib-data/manifest.json` no commit.
+4. Abra `generated/backups/senkolib-data/manifest.json` no commit.
 5. Compare `dataVersion` com o campo do workspace.
 6. Confira uma amostra de grupo, layout, variacao, colecao e layout interno.
 7. Confirme que HTML e CSS estao completos.
@@ -282,9 +282,9 @@ npm --prefix functions run restore:github -- --source <pasta> [opcoes]
 
 Origens aceitas:
 
-- raiz de um repositorio que contenha `senkolib-data/`;
-- propria pasta `senkolib-data/`;
-- caminho de `senkolib-data/manifest.json`;
+- raiz de um repositorio que contenha `generated/backups/senkolib-data/`;
+- propria pasta `generated/backups/senkolib-data/`;
+- caminho de `generated/backups/senkolib-data/manifest.json`;
 - commit de um repositorio Git local, com `--commit`.
 
 Exemplo de validacao sem escrever:

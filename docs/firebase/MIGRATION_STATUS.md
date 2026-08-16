@@ -1,6 +1,6 @@
 # Estado da migracao Firebase
 
-Ultima revisao documental: **2026-08-15**.
+Ultima revisao documental: **2026-08-16**.
 
 ## Resumo
 
@@ -39,7 +39,7 @@ O corte Firebase original continua marcado por tag Git.
 - [x] Login e verificacao do documento de membro.
 - [x] Registro seguro de contas autenticadas sem acesso em `accessRequests`.
 - [x] Papeis `owner`, `admin` e `editor` protegidos por Security Rules.
-- [x] Feature independente para solicitacoes, membros e atividade.
+- [x] Tool independente para solicitacoes, membros e atividade.
 - [x] Bootstrap de membro somente no emulador.
 - [x] Firestore como fonte local da Biblioteca e Colecoes.
 - [x] Gravacoes diretas com transacoes no SDK Web.
@@ -61,7 +61,7 @@ O corte Firebase original continua marcado por tag Git.
 - [x] Janela responsiva com destino GitHub fixo do projeto e token individual.
 - [x] Snapshot consistente com tres tentativas por `dataVersion`.
 - [x] Commit atomico pela Git Data API sem `force`.
-- [x] Remocao no commit de arquivos obsoletos em `senkolib-data/`.
+- [x] Remocao no commit de arquivos obsoletos em `generated/backups/senkolib-data/`.
 - [x] Log de exportacao e metadados do ultimo commit no Firestore.
 - [x] Protecao contra `localStorage` antigo enviando backup para outro repositorio.
 - [x] Teste do exportador com API GitHub simulada.
@@ -73,6 +73,12 @@ O corte Firebase original continua marcado por tag Git.
 - [x] Estado global alternando Firebase e backup somente leitura.
 - [x] Snapshot publico inicial com as contagens do ultimo backup tecnico.
 - [x] Teste que exclui revisoes antigas, membros, e-mails e autoria do bundle.
+- [x] Ferramentas globais reunidas em `app/tools`.
+- [x] Biblioteca e Colecoes padronizadas com `controllers`, `core` e `repositories`.
+- [x] Dados e integracoes antigos isolados em `legacy`.
+- [x] Snapshots e bundles movidos para `generated`.
+- [x] Documentacao canonica centralizada em `docs`.
+- [x] Inventario por arquivo com estados oficial, gerado, prototipo e legado.
 
 ## Em validacao
 
@@ -146,8 +152,8 @@ nao possui warnings.
 
 ## Observacao sobre GitHub Pages
 
-O commit de backup grava `senkolib-data/` para recuperacao e tambem gera os
-arquivos publicos em `app/infrastructure/static-backup/`. Membros autorizados
+O commit de backup grava `generated/backups/senkolib-data/` para recuperacao e tambem gera os
+arquivos publicos em `generated/static-backup/`. Membros autorizados
 veem Firebase ao vivo. Pessoas sem login ou com Firebase indisponivel veem o
 ultimo backup, com comandos de escrita bloqueados.
 
@@ -162,7 +168,7 @@ Adicione novas rodadas sem apagar as anteriores.
 | 2026-08-15 | Firestore Emulator | alteracoes locais | Aprovado | Cliente direto, regras, conflitos, exclusao recursiva e bloqueios de seguranca passaram |
 | 2026-08-15 | GitHub simulado | alteracoes locais | Aprovado | Snapshot, tree, exclusao de arquivo antigo, commit e log Firestore passaram sem trafego externo |
 | 2026-08-15 | UI local | alteracoes locais | Aprovado | Janela global de backup conferida em desktop e 390x844 |
-| 2026-08-15 | GitHub real | d9e63426514bee66ac997b608dff706922551c86 | Aprovado | Primeiro backup real criado pelo botao global; 197 arquivos em `senkolib-data/` |
+| 2026-08-15 | GitHub real | d9e63426514bee66ac997b608dff706922551c86 | Aprovado | Primeiro backup real criado pelo botao global; 197 arquivos em `generated/backups/senkolib-data/` |
 | 2026-08-15 | Firestore Emulator | d9e63426514bee66ac997b608dff706922551c86 | Aprovado | Backup real restaurado em `senkolib-restauracao-d9e6342`; contagens conferidas: 5 grupos, 34 layouts, 11 variacoes, 5 colecoes, 48 layouts internos |
 | 2026-08-15 | Firebase real | d9e63426514bee66ac997b608dff706922551c86 | Aprovado | Regras Firestore/Realtime publicadas, `ygorfq.github.io` autorizado e backup restaurado no workspace `senkolib`; contagens reais conferidas |
 | 2026-08-15 | GitHub Pages | 4812d098921a8f960fccba78eca5c36bbcf31065 | Parcial aprovado | Codigo do corte publicado e `firebase-config.js` servido com `enabled: true`; aguardando primeiro membro real para smoke test autenticado |
@@ -177,3 +183,4 @@ Adicione novas rodadas sem apagar as anteriores.
 | 2026-08-15 | GitHub Pages e cache local | 66ef971 | Aprovado | F5 deixou de forcar rede para todo CSS/JS; dois reloads mediram 142 ms e 109 ms, codigo usou a versao do release e os tres arquivos do backup permaneceram sempre frescos |
 | 2026-08-15 | UI local e GitHub Pages | 80aefb2 | Aprovado | Menu de ferramentas agrupou acoes globais sem recria-las; Notas, tema, fechamento, permissoes e responsividade em desktop e 390x844 foram validados |
 | 2026-08-15 | UI local e harness owner | alteracoes locais | Aprovado | Menu promovido a oficial; criacao rapida ficou a esquerda do hamburguer; Acessos deixou de ser aba e abriu como modal sem overflow em desktop e 390x844; botao, fundo e Escape fecham e restauram o foco |
+| 2026-08-16 | Estrutura local | 2026.08.16.1 | Aprovado | Tools globais, features, legacy, generated e docs reorganizados; 454 arquivos classificados; testes unitarios, regras Firestore/Realtime, fallback, Biblioteca, Colecoes, menu, Guide responsivo e modal de backup validados |

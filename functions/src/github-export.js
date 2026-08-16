@@ -118,11 +118,11 @@ async function buildWorkspaceFiles(workspaceId, metadata) {
     await collectCollection(
       workspace.collection(collectionName),
       output,
-      `senkolib-data/workspaces/${workspaceId}/${collectionName}`
+      `generated/backups/senkolib-data/workspaces/${workspaceId}/${collectionName}`
     );
   }
 
-  output['senkolib-data/manifest.json'] = `${JSON.stringify({
+  output['generated/backups/senkolib-data/manifest.json'] = `${JSON.stringify({
     schemaVersion: 1,
     workspaceId,
     exportedAt: new Date().toISOString(),
@@ -231,7 +231,7 @@ async function commitFilesToGithub(files, message, settings) {
   const nextPaths = new Set(fileEntries.map(([path]) => path));
   const removals = (currentTree.tree || [])
     .filter((entry) => entry.type === 'blob')
-    .filter((entry) => entry.path.startsWith('senkolib-data/'))
+    .filter((entry) => entry.path.startsWith('generated/backups/senkolib-data/'))
     .filter((entry) => !nextPaths.has(entry.path))
     .map((entry) => ({
       path: entry.path,

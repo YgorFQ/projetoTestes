@@ -3,10 +3,11 @@ const path = require('node:path');
 const builder = require('../app/infrastructure/static-backup/senko-static-backup-builder.js');
 
 const projectRoot = path.resolve(__dirname, '..');
-const manifestPath = path.join(projectRoot, 'senkolib-data', 'manifest.json');
+const dataRoot = 'generated/backups/senkolib-data';
+const manifestPath = path.join(projectRoot, dataRoot, 'manifest.json');
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const files = {
-  'senkolib-data/manifest.json': fs.readFileSync(manifestPath, 'utf8')
+  [`${dataRoot}/manifest.json`]: fs.readFileSync(manifestPath, 'utf8')
 };
 
 manifest.files.forEach((relativePath) => {

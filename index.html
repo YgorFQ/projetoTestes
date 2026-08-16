@@ -5,7 +5,7 @@
   REGRA DE MANUTENCAO DO GUIA:
   - Toda alteracao de arquitetura, feature, fluxo, erro conhecido, GitHub,
     estilos globais ou regra de dados deve atualizar tambem o guia oficial em
-    app/shell/scripts/senko-guide.js.
+    app/tools/guide/register.js.
   - O guia e prioridade maxima para manutencao: se o codigo mudou e o guia
     ficou desatualizado, a mudanca ainda nao esta completa.
 
@@ -25,7 +25,7 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="senko-release" content="2026.08.15.4" />
+  <meta name="senko-release" content="2026.08.16.1" />
   <title>SenkoLib</title>
   <script>(function () { try { var t = localStorage.getItem('senkolib_theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) { } })();</script>
   <script>
@@ -44,7 +44,7 @@
 
       function needsOpeningToken(path) {
         if (isLocalDevelopment) return true;
-        return /^app\/infrastructure\/static-backup\/(manifest|biblioteca|colecoes)\.js$/
+        return /^generated\/static-backup\/(manifest|biblioteca|colecoes)\.js$/
           .test(String(path || '').replace(/^\.\//, ''));
       }
 
@@ -108,9 +108,10 @@
     SenkoFreshAssets.writeStyle('app/shared/styles/senko-tokens.css');
     SenkoFreshAssets.writeStyle('app/shared/styles/senko-components.css');
     SenkoFreshAssets.writeStyle('app/shell/styles/styles.css');
-    SenkoFreshAssets.writeStyle('app/shell/styles/senko-quick-create.css');
-    SenkoFreshAssets.writeStyle('app/shell/styles/senko-guide.css');
-    SenkoFreshAssets.writeStyle('app/infrastructure/firebase/senko-firebase.css');
+    SenkoFreshAssets.writeStyle('app/tools/quick-create/styles.css');
+    SenkoFreshAssets.writeStyle('app/tools/guide/styles.css');
+    SenkoFreshAssets.writeStyle('app/tools/session/styles.css');
+    SenkoFreshAssets.writeStyle('app/tools/github-backup/styles.css');
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -188,22 +189,23 @@
 
   <script>
     SenkoFreshAssets.writeScript('app/infrastructure/firebase/firebase-config.js');
-    SenkoFreshAssets.writeScript('app/infrastructure/static-backup/manifest.js');
-    SenkoFreshAssets.writeScript('app/infrastructure/static-backup/biblioteca.js');
-    SenkoFreshAssets.writeScript('app/infrastructure/static-backup/colecoes.js');
+    SenkoFreshAssets.writeScript('generated/static-backup/manifest.js');
+    SenkoFreshAssets.writeScript('generated/static-backup/biblioteca.js');
+    SenkoFreshAssets.writeScript('generated/static-backup/colecoes.js');
     SenkoFreshAssets.writeScript('app/infrastructure/static-backup/senko-static-backup-builder.js');
     SenkoFreshAssets.writeScript('app/infrastructure/firebase/senko-firebase.js');
     SenkoFreshAssets.writeScript('app/infrastructure/static-backup/senko-data-mode.js');
     SenkoFreshAssets.writeScript('app/infrastructure/firebase/senko-firestore-writes.js');
-    SenkoFreshAssets.writeScript('app/infrastructure/firebase/senko-github-backup.js');
-    SenkoFreshAssets.writeScript('app/infrastructure/firebase/senko-firebase-ui.js');
+    SenkoFreshAssets.writeScript('app/infrastructure/github/backup-service.js');
     SenkoFreshAssets.writeScript('app/shell/scripts/senko-shell.js');
-    SenkoFreshAssets.writeScript('app/shell/scripts/senko-quick-create.js');
-    SenkoFreshAssets.writeScript('app/shell/scripts/senko-guide.js');
-    SenkoFreshAssets.writeScript('app/prototype/team-notes/register.js');
+    SenkoFreshAssets.writeScript('app/tools/session/register.js');
+    SenkoFreshAssets.writeScript('app/tools/github-backup/register.js');
+    SenkoFreshAssets.writeScript('app/tools/quick-create/register.js');
+    SenkoFreshAssets.writeScript('app/tools/guide/register.js');
+    SenkoFreshAssets.writeScript('app/tools/team-notes/register.js');
+    SenkoFreshAssets.writeScript('app/tools/access/register.js');
     SenkoFreshAssets.writeScript('app/features/biblioteca/register.js');
     SenkoFreshAssets.writeScript('app/features/colecoes/register.js');
-    SenkoFreshAssets.writeScript('app/features/access/register.js');
     SenkoFreshAssets.writeScript('app/features/imagens/scripts/register.js');
     SenkoFreshAssets.writeScript('app/features/sources/scripts/register.js');
     SenkoFreshAssets.writeScript('app/prototype/gamer-preview/register.js');

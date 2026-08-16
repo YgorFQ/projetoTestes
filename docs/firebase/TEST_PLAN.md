@@ -12,6 +12,14 @@ indicado, em um ambiente de producao controlado.
 - Uma terceira janela usando a mesma conta para testar sessoes.
 - Console do navegador aberto para observar erros.
 
+## Estrutura do repositorio
+
+- [ ] `npm run inventory:build` termina sem erro.
+- [ ] Todo arquivo listado possui exatamente um dos quatro estados aceitos.
+- [ ] Biblioteca e Colecoes carregam apenas caminhos oficiais ou compatibilidades em `legacy` declaradas no `register.js`.
+- [ ] `generated/static-backup` continua publicado; snapshots tecnicos, migracoes e docs nao entram no Firebase Hosting.
+- [ ] Nenhuma documentacao canonica aponta para um caminho removido.
+
 ## Autenticacao e membros
 
 - [ ] Pessoa deslogada ve a opcao de entrar e nao carrega dados.
@@ -131,7 +139,7 @@ da implementacao administrativa anterior. A interface ainda deve ser conferida.
 ## GitHub
 
 - [ ] Botao manual cria um unico commit de snapshot.
-- [ ] Commit contem manifesto e todos os recursos esperados.
+- [ ] Commit contem `generated/backups/senkolib-data/manifest.json` e todos os recursos esperados.
 - [ ] Token individual possui acesso somente ao repositorio e Contents write.
 - [ ] Token nao aparece no Firestore, commit ou logs.
 - [ ] Arquivo excluido no Firebase some do snapshot mais recente.
@@ -139,7 +147,7 @@ da implementacao administrativa anterior. A interface ainda deve ser conferida.
 - [ ] Save do Firebase continua funcionando quando GitHub falha.
 - [ ] Falha cria documento `exports/{id}` com estado `failed`.
 - [ ] Restauracao em workspace vazio foi executada e comparada com a origem.
-- [ ] Commit atualiza `manifest.js`, `biblioteca.js` e `colecoes.js` juntos.
+- [ ] Commit atualiza os tres arquivos em `generated/static-backup/` juntos.
 - [ ] Bundle publico contem a ultima versao, sem documentos de revisao antiga.
 - [ ] Bundle publico nao contem membros, e-mails, tokens, presenca ou autoria.
 - [ ] Sem login, Biblioteca e Colecoes usam o bundle em modo somente leitura.

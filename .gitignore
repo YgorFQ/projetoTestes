@@ -12,3 +12,4 @@ functions/.secret.local
 functions/lib/
 
 migration-output/
+generated/migrations/

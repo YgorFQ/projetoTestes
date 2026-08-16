@@ -152,7 +152,7 @@
     if (missing.length) {
       throw new Error(
         'Configuracao Firebase incompleta: ' + missing.join(', ') +
-        '. Consulte FIREBASE_SETUP.md.'
+        '. Consulte docs/firebase/SETUP.md.'
       );
     }
   }

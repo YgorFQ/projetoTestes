@@ -39,7 +39,7 @@ function createFreshAssets(hostname, protocol) {
 
 const production = createFreshAssets('ygorfq.github.io', 'https:');
 const codeUrl = new URL(production.url('app/shell/scripts/senko-shell.js'));
-const manifestUrl = new URL(production.url('app/infrastructure/static-backup/manifest.js'));
+const manifestUrl = new URL(production.url('generated/static-backup/manifest.js'));
 
 assert.equal(codeUrl.searchParams.get('_senko_reload'), releaseToken);
 assert.equal(manifestUrl.searchParams.get('_senko_reload'), production.openingToken);

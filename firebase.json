@@ -29,8 +29,12 @@
       "**/node_modules/**",
       "functions/**",
       "tests/**",
-      "migration-output/**",
-      "Guia e documentação/**"
+      "tools/**",
+      "docs/**",
+      "legacy/**",
+      "generated/backups/**",
+      "generated/meta/**",
+      "generated/migrations/**"
     ],
     "headers": [
       {

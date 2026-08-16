@@ -127,7 +127,7 @@ async function testGithubBackup(memberDb, writes) {
     } else if (url.includes('/git/trees/base-tree?recursive=1')) {
       body = {
         truncated: false,
-        tree: [{ path: 'senkolib-data/arquivo-antigo.json', type: 'blob', sha: 'old' }]
+        tree: [{ path: 'generated/backups/senkolib-data/arquivo-antigo.json', type: 'blob', sha: 'old' }]
       };
     } else if (url.endsWith('/git/trees') && method === 'POST') {
       body = { sha: 'next-tree' };
@@ -154,8 +154,8 @@ async function testGithubBackup(memberDb, writes) {
       REPO: 'wrong-repo',
       BRANCH: 'wrong-branch'
     }));
-    delete require.cache[require.resolve('../app/infrastructure/firebase/senko-github-backup.js')];
-    require('../app/infrastructure/firebase/senko-github-backup.js');
+    delete require.cache[require.resolve('../app/infrastructure/github/backup-service.js')];
+    require('../app/infrastructure/github/backup-service.js');
     assert.deepEqual(global.window.SenkoGithubBackup.getDefaults(), {
       owner: 'example',
       repo: 'repo',
@@ -195,26 +195,26 @@ async function testGithubBackup(memberDb, writes) {
     const treeBody = JSON.parse(treeRequest.body);
     assert.equal(requests.filter((request) => request.url.endsWith('/git/blobs')).length, 0);
     assert.ok(treeBody.tree.some((entry) =>
-      entry.path === 'senkolib-data/workspaces/senkolib/groups/grupo-backup.json' &&
+      entry.path === 'generated/backups/senkolib-data/workspaces/senkolib/groups/grupo-backup.json' &&
       typeof entry.content === 'string'
     ));
     assert.ok(treeBody.tree.some((entry) =>
-      entry.path === 'senkolib-data/manifest.json' && typeof entry.content === 'string'
+      entry.path === 'generated/backups/senkolib-data/manifest.json' && typeof entry.content === 'string'
     ));
     assert.ok(treeBody.tree.some((entry) =>
-      entry.path === 'app/infrastructure/static-backup/manifest.js' &&
+      entry.path === 'generated/static-backup/manifest.js' &&
       entry.content.includes('dataVersion')
     ));
     assert.ok(treeBody.tree.some((entry) =>
-      entry.path === 'app/infrastructure/static-backup/biblioteca.js' &&
+      entry.path === 'generated/static-backup/biblioteca.js' &&
       typeof entry.content === 'string'
     ));
     assert.ok(treeBody.tree.some((entry) =>
-      entry.path === 'app/infrastructure/static-backup/colecoes.js' &&
+      entry.path === 'generated/static-backup/colecoes.js' &&
       entry.content.includes('Grupo do backup')
     ));
     assert.ok(treeBody.tree.some((entry) =>
-      entry.path === 'senkolib-data/arquivo-antigo.json' && entry.sha === null
+      entry.path === 'generated/backups/senkolib-data/arquivo-antigo.json' && entry.sha === null
     ));
 
     const workspace = await firestore.getDoc(firestore.doc(

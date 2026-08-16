@@ -89,7 +89,7 @@
      * dados carregados por ela. Ele e um script local para funcionar tambem
      * via file://, onde o navegador bloqueia fetch de arquivos JSON.
      */
-    return loadScript('data/manifest.js?v=20260614-local-file').then(function () {
+    return loadScript('../../../legacy/biblioteca/data/manifest.js?v=20260816-structure').then(function () {
       var manifest = window.SenkoBibliotecaManifest;
       if (!manifest || !Array.isArray(manifest.layouts)) {
         throw new Error('Manifesto da Biblioteca indisponivel');
@@ -127,7 +127,7 @@
            * integracoes sejam carregados. A falha fica identificada no
            * console e as demais variantes continuam disponiveis.
            */
-          return loadScript('data/' + path).catch(function (error) {
+          return loadScript('../../../legacy/biblioteca/data/' + path).catch(function (error) {
             console.error('[Biblioteca] Variante ignorada (' + path + '):', error);
             return null;
           });
@@ -142,14 +142,14 @@
          * editar, salvar e excluir continuam acessiveis mesmo quando uma
          * variante catalogada estiver temporariamente indisponivel.
          */
-        var githubReady = loadScript('integrations/github/senko-github-v2.js?v=20260730-local-controls').then(function () {
+        var githubReady = loadScript('../../../legacy/biblioteca/github/senko-github-v2.js?v=20260816-structure').then(function () {
           if (window.SenkoBibliotecaGithubV2) {
             window.SenkoBibliotecaGithubV2.init();
           }
 
           return Promise.all([
-            loadScript('integrations/github/senko-github-variants.js?v=20260730-local-controls'),
-            loadScript('integrations/github/senko-github-delete.js?v=20260730-local-controls')
+            loadScript('../../../legacy/biblioteca/github/senko-github-variants.js?v=20260816-structure'),
+            loadScript('../../../legacy/biblioteca/github/senko-github-delete.js?v=20260816-structure')
           ]);
         }).then(function () {
           if (window.SenkoBibliotecaGithubVariants) {
@@ -286,15 +286,15 @@
     if (loadPromise) return loadPromise;
 
     loadPromise = (async function () {
-      loadStyle('styles/biblioteca.css?v=20260613-library-scroll');
+      loadStyle('styles/index.css?v=20260816-structure');
       loadStyle('styles/layout-editor.css?v=20260801-presence');
       loadStyle('styles/copy-base-editor.css?v=20260723-official-editor');
 
       var initialResources = await Promise.all([
         loadScript('view.js?v=20260613-fast-load'),
-        loadScript('scripts/senkolib-core.js?v=20260613-fast-load'),
-        loadScript('data/firebase-repository.js?v=20260730-parent-listeners'),
-        loadScript('data/static-repository.js?v=20260815-public-backup'),
+        loadScript('core/index.js?v=20260816-structure'),
+        loadScript('repositories/firebase-repository.js?v=20260816-structure'),
+        loadScript('repositories/static-repository.js?v=20260816-structure'),
         loadManifest()
       ]);
       var manifest = initialResources[4];
@@ -306,18 +306,18 @@
       var layoutDataReady = usesFirebaseData() || staticLoaded
         ? Promise.resolve()
         : Promise.all(layouts.map(function (path) {
-            return loadScript('data/' + path).catch(function (error) {
+            return loadScript('../../../legacy/biblioteca/data/' + path).catch(function (error) {
               console.error('[Biblioteca] Layout nao carregado:', path, error);
               return false;
             });
           }));
       await Promise.all([
         layoutDataReady,
-        loadScript('scripts/layout-editor.js?v=20260801-presence-sessions'),
-        loadScript('scripts/copy-base-editor.js?v=20260723-official-editor'),
-        loadScript('scripts/script.js?v=20260730-firebase-create'),
-        loadScript('scripts/copy-base-template.js?v=20260723-copy-base-editor').then(function () {
-          return loadScript('scripts/copy-base.js?v=20260723-copy-base-editor');
+        loadScript('controllers/layout-editor.js?v=20260816-structure'),
+        loadScript('controllers/copy-base-editor.js?v=20260816-structure'),
+        loadScript('controllers/index.js?v=20260816-structure'),
+        loadScript('controllers/copy-base-template.js?v=20260816-structure').then(function () {
+          return loadScript('controllers/copy-base.js?v=20260816-structure');
         })
       ]);
 

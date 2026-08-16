@@ -1,6 +1,6 @@
 # SenkoLib - Regras Para Manutencao
 
-O guia oficial em `app/shell/scripts/senko-guide.js` e prioridade maxima.
+O guia oficial em `app/tools/guide/register.js` e prioridade maxima.
 
 A documentacao tecnica canonica do Firebase fica em `docs/firebase/`. Antes de
 alterar persistencia, autenticacao, permissoes, modelo de dados, Functions,
@@ -18,7 +18,10 @@ Regras principais:
 - `shared` deve guardar apenas tokens, componentes neutros e assets globais.
 - O shell nao deve conhecer regras internas de Biblioteca, Colecoes, Imagens,
   Sources ou Preview.
-- Integracoes GitHub devem ficar separadas por feature.
+- A integracao GitHub ativa deve ficar em `app/infrastructure/github`; as
+  integracoes antigas por feature ficam isoladas em `legacy/`.
+- Todo arquivo do projeto deve aparecer em
+  `generated/meta/file-classification.json` com um unico estado.
 - Nomes duplicados devem ser bloqueados ao criar e ao editar.
 - Ao finalizar qualquer alteracao relevante, revise o guia antes de responder
   que o trabalho terminou.

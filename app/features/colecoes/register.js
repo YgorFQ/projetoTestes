@@ -88,7 +88,7 @@
      * colecao pelo GitHub modifica somente este manifesto da feature. Como o
      * catalogo e um script, ele tambem pode ser carregado via file://.
      */
-    return loadScript('data/manifest.js?v=20260614-local-file').then(function () {
+    return loadScript('../../../legacy/colecoes/data/manifest.js?v=20260816-structure').then(function () {
       var manifest = window.SenkoColecoesManifest;
       if (!manifest || !Array.isArray(manifest.collections)) {
         throw new Error('Manifesto de Colecoes indisponivel');
@@ -161,10 +161,10 @@
       return Promise.reject(new Error('Arquivo da colecao nao catalogado: ' + normalizedSlug));
     }
 
-    collectionLoadPromises[normalizedSlug] = loadScript('data/' + file).then(function () {
+    collectionLoadPromises[normalizedSlug] = loadScript('../../../legacy/colecoes/data/' + file).then(function () {
       var layoutFiles = collectionLayoutFilesBySlug[normalizedSlug] || [];
       return Promise.all(layoutFiles.map(function (layoutFile) {
-        return loadScript('data/' + layoutFile);
+        return loadScript('../../../legacy/colecoes/data/' + layoutFile);
       }));
     }).then(function () {
       var loaded = ColLib.getBySlug(normalizedSlug);
@@ -190,7 +190,7 @@
 
     var run = function () {
       Object.keys(collectionFilesBySlug).forEach(function (slug) {
-        var href = featureUrl('data/' + collectionFilesBySlug[slug]);
+        var href = featureUrl('../../../legacy/colecoes/data/' + collectionFilesBySlug[slug]);
         if (document.querySelector('link[data-senko-collection-prefetch="' + href + '"]')) {
           return;
         }
@@ -222,7 +222,7 @@
 
     githubLoadPromise = new Promise(function (resolve) {
       var run = function () {
-        loadScript('integrations/github/colecoes-github.js?v=20260613-fast-load')
+        loadScript('../../../legacy/colecoes/github/colecoes-github.js?v=20260816-structure')
           .then(function () {
             if (window.SenkoColecoesGithub) window.SenkoColecoesGithub.init();
             resolve();
@@ -395,33 +395,33 @@
     if (loadPromise) return loadPromise;
 
     loadPromise = (async function () {
-      loadStyle('styles/col-styles.css?v=20260815-group-manager');
-      loadStyle('styles/col-layout-editor.css?v=20260801-presence');
+      loadStyle('styles/index.css?v=20260816-structure');
+      loadStyle('styles/layout-editor.css?v=20260816-structure');
 
       var firstResources = await Promise.all([
         loadScript('view.js?v=20260613-fast-load'),
-        loadScript('scripts/col-groups.js?v=20260815-group-manager'),
+        loadScript('controllers/groups.js?v=20260816-structure'),
         loadManifest()
       ]);
       var manifest = firstResources[2];
       panel.replaceChildren(window.SenkoColecoes.createView());
 
       await Promise.all([
-        loadScript('data/col-groups-data.js?v=20260613-fast-load'),
-        loadScript('data/firebase-repository.js?v=20260815-group-manager'),
-        loadScript('data/static-repository.js?v=20260815-public-backup'),
-        loadScript('scripts/col-core.js?v=20260613-fast-load'),
-        loadScript('scripts/col-script.js?v=20260815-group-manager'),
-        loadScript('scripts/col-modals.js?v=20260815-group-manager'),
-        loadScript('scripts/col-layout-editor.js?v=20260801-presence-sessions'),
-        loadScript('scripts/firebase-controls.js?v=20260801-layout-feedback')
+        loadScript('../../../legacy/colecoes/data/col-groups-data.js?v=20260816-structure'),
+        loadScript('repositories/firebase-repository.js?v=20260816-structure'),
+        loadScript('repositories/static-repository.js?v=20260816-structure'),
+        loadScript('core/index.js?v=20260816-structure'),
+        loadScript('controllers/index.js?v=20260816-structure'),
+        loadScript('controllers/modals.js?v=20260816-structure'),
+        loadScript('controllers/layout-editor.js?v=20260816-structure'),
+        loadScript('controllers/firebase-controls.js?v=20260816-structure')
       ]);
 
       var staticLoaded = loadStaticSnapshot();
       if (!usesFirebaseData() && !staticLoaded) {
         var legacyFiles = registerCollectionCatalog(manifest);
         await Promise.all(legacyFiles.map(function (file) {
-          return loadScript('data/' + file);
+          return loadScript('../../../legacy/colecoes/data/' + file);
         }));
       }
 

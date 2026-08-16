@@ -1,0 +1,1834 @@
+{
+  "schemaVersion": 1,
+  "source": "tools/build-file-classification.js",
+  "statuses": [
+    "official",
+    "generated",
+    "prototype",
+    "legacy"
+  ],
+  "counts": {
+    "official": 125,
+    "generated": 208,
+    "prototype": 7,
+    "legacy": 114
+  },
+  "entries": [
+    {
+      "path": ".firebaserc",
+      "status": "official"
+    },
+    {
+      "path": ".firebaserc.example",
+      "status": "official"
+    },
+    {
+      "path": ".gitignore",
+      "status": "official"
+    },
+    {
+      "path": "AGENTS.md",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/controllers/copy-base-editor.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/controllers/copy-base-template.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/controllers/copy-base.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/controllers/index.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/controllers/layout-editor.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/core/index.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/register.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/repositories/firebase-repository.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/repositories/static-repository.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/styles/copy-base-editor.css",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/styles/index.css",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/styles/layout-editor.css",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/view.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/colecoes/controllers/firebase-controls.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/colecoes/controllers/groups.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/colecoes/controllers/index.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/colecoes/controllers/layout-editor.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/colecoes/controllers/modals.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/colecoes/core/index.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/colecoes/register.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/colecoes/repositories/firebase-repository.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/colecoes/repositories/static-repository.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/colecoes/styles/index.css",
+      "status": "official"
+    },
+    {
+      "path": "app/features/colecoes/styles/layout-editor.css",
+      "status": "official"
+    },
+    {
+      "path": "app/features/colecoes/view.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/imagens/index.html",
+      "status": "official"
+    },
+    {
+      "path": "app/features/imagens/scripts/compressor.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/imagens/scripts/imagens-app.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/imagens/scripts/imagens-utils.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/imagens/scripts/imagens-view.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/imagens/scripts/register.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/imagens/scripts/resizer.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/imagens/styles/imagens.css",
+      "status": "official"
+    },
+    {
+      "path": "app/features/imagens/vendor/browser-image-compression.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/imagens/vendor/jszip.min.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/imagens/vendor/UPNG.min.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/sources/index.html",
+      "status": "official"
+    },
+    {
+      "path": "app/features/sources/scripts/picture.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/sources/scripts/register.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/sources/scripts/sources-app.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/sources/scripts/sources-utils.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/sources/scripts/sources-view.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/sources/styles/sources.css",
+      "status": "official"
+    },
+    {
+      "path": "app/infrastructure/firebase/firebase-config.js",
+      "status": "official"
+    },
+    {
+      "path": "app/infrastructure/firebase/senko-firebase.js",
+      "status": "official"
+    },
+    {
+      "path": "app/infrastructure/firebase/senko-firestore-writes.js",
+      "status": "official"
+    },
+    {
+      "path": "app/infrastructure/github/backup-service.js",
+      "status": "official"
+    },
+    {
+      "path": "app/infrastructure/static-backup/senko-data-mode.js",
+      "status": "official"
+    },
+    {
+      "path": "app/infrastructure/static-backup/senko-static-backup-builder.js",
+      "status": "official"
+    },
+    {
+      "path": "app/prototype/gamer-base.html",
+      "status": "prototype"
+    },
+    {
+      "path": "app/prototype/gamer-preview/Cafeteira Expresso Arno DGS1 Dolce Gusto (24_05_2026 11：31：47).html",
+      "status": "prototype"
+    },
+    {
+      "path": "app/prototype/gamer-preview/index.html",
+      "status": "prototype"
+    },
+    {
+      "path": "app/prototype/gamer-preview/register.js",
+      "status": "prototype"
+    },
+    {
+      "path": "app/prototype/gamer-preview/script.js",
+      "status": "prototype"
+    },
+    {
+      "path": "app/prototype/gamer-preview/styles.css",
+      "status": "prototype"
+    },
+    {
+      "path": "app/prototype/gamer-preview/view.js",
+      "status": "prototype"
+    },
+    {
+      "path": "app/shared/assets/senko.ico",
+      "status": "official"
+    },
+    {
+      "path": "app/shared/assets/senko.png",
+      "status": "official"
+    },
+    {
+      "path": "app/shared/assets/Thumbs.db",
+      "status": "official"
+    },
+    {
+      "path": "app/shared/scripts/img-tools-utils.js",
+      "status": "official"
+    },
+    {
+      "path": "app/shared/styles/img-tools.css",
+      "status": "official"
+    },
+    {
+      "path": "app/shared/styles/senko-components.css",
+      "status": "official"
+    },
+    {
+      "path": "app/shared/styles/senko-tokens.css",
+      "status": "official"
+    },
+    {
+      "path": "app/shell/scripts/senko-shell.js",
+      "status": "official"
+    },
+    {
+      "path": "app/shell/scripts/senko-utility-menu.js",
+      "status": "official"
+    },
+    {
+      "path": "app/shell/styles/styles.css",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/access/data/firebase-repository.js",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/access/register.js",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/access/scripts/access.js",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/access/styles/access.css",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/github-backup/register.js",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/github-backup/styles.css",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/guide/register.js",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/guide/styles.css",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/quick-create/register.js",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/quick-create/styles.css",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/session/register.js",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/session/styles.css",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/team-notes/data/manifest.js",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/team-notes/data/notes/padronizacao-html-2.js",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/team-notes/data/notes/padronizacao-html.js",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/team-notes/data/notes/teste.js",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/team-notes/register.js",
+      "status": "official"
+    },
+    {
+      "path": "app/tools/team-notes/styles.css",
+      "status": "official"
+    },
+    {
+      "path": "database-debug.log",
+      "status": "official"
+    },
+    {
+      "path": "database.rules.json",
+      "status": "official"
+    },
+    {
+      "path": "docs/architecture/FILE_CLASSIFICATION.md",
+      "status": "official"
+    },
+    {
+      "path": "docs/architecture/STRUCTURE.md",
+      "status": "official"
+    },
+    {
+      "path": "docs/architecture/STYLE_TOKENS_AUDIT.md",
+      "status": "official"
+    },
+    {
+      "path": "docs/firebase/ARCHITECTURE.md",
+      "status": "official"
+    },
+    {
+      "path": "docs/firebase/BACKUP_AND_RESTORE.md",
+      "status": "official"
+    },
+    {
+      "path": "docs/firebase/DATA_MODEL.md",
+      "status": "official"
+    },
+    {
+      "path": "docs/firebase/DEVELOPMENT.md",
+      "status": "official"
+    },
+    {
+      "path": "docs/firebase/MIGRATION_STATUS.md",
+      "status": "official"
+    },
+    {
+      "path": "docs/firebase/OPERATIONS.md",
+      "status": "official"
+    },
+    {
+      "path": "docs/firebase/SETUP.md",
+      "status": "official"
+    },
+    {
+      "path": "docs/firebase/TEST_PLAN.md",
+      "status": "official"
+    },
+    {
+      "path": "docs/legacy/1 Como funciona a arquitetura.txt",
+      "status": "legacy"
+    },
+    {
+      "path": "docs/legacy/README.md",
+      "status": "legacy"
+    },
+    {
+      "path": "docs/legacy/SenkoLib - Documentacao Completa.md",
+      "status": "legacy"
+    },
+    {
+      "path": "docs/legacy/SenkoLib - Documentacao Completa.txt",
+      "status": "legacy"
+    },
+    {
+      "path": "docs/README.md",
+      "status": "official"
+    },
+    {
+      "path": "firebase.json",
+      "status": "official"
+    },
+    {
+      "path": "firestore.indexes.json",
+      "status": "official"
+    },
+    {
+      "path": "firestore.rules",
+      "status": "official"
+    },
+    {
+      "path": "functions/.env.example",
+      "status": "official"
+    },
+    {
+      "path": "functions/package-lock.json",
+      "status": "generated"
+    },
+    {
+      "path": "functions/package.json",
+      "status": "official"
+    },
+    {
+      "path": "functions/scripts/add-member-cli-auth.js",
+      "status": "official"
+    },
+    {
+      "path": "functions/scripts/import-legacy.js",
+      "status": "official"
+    },
+    {
+      "path": "functions/scripts/restore-github-snapshot-cli-auth.js",
+      "status": "official"
+    },
+    {
+      "path": "functions/scripts/restore-github-snapshot.js",
+      "status": "official"
+    },
+    {
+      "path": "functions/scripts/test-groups-emulator.js",
+      "status": "official"
+    },
+    {
+      "path": "functions/scripts/test-restore-emulator.js",
+      "status": "official"
+    },
+    {
+      "path": "functions/src/content.js",
+      "status": "legacy"
+    },
+    {
+      "path": "functions/src/github-export.js",
+      "status": "legacy"
+    },
+    {
+      "path": "functions/src/index.js",
+      "status": "legacy"
+    },
+    {
+      "path": "generated/backups/senkolib-data/manifest.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section 39.1 (caderno).json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section 39.1 (caderno)/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section 39.2 (caderno).json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section 39.2 (caderno)/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section 39.3 (caderno).json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section 39.3 (caderno)/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-1/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-1/variants/variacao1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-1/variants/variacao1/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-10.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-10/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-10/variants/variao-1-animado.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-10/variants/variao-1-animado/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-11.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-11/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-12.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-12/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-13.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-13/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-14.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-14/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-15.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-15/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-15/variants/varicao-1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-15/variants/varicao-1/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-16.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-16/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-17.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-17/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-19.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-19/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-2.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-2/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-2/variants/variacao1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-2/variants/variacao1/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-20.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-20/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-21.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-21/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-21/variants/variante-2.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-21/variants/variante-2/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-21/variants/variante1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-21/variants/variante1/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-22.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-22/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-23.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-23/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-24.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-24/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-25.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-25/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-26.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-26/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-27.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-27/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-27/variants/variante-1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-27/variants/variante-1/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-28.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-28/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-3.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-3/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-32.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-32/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-32/variants/variacao1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-32/variants/variacao1/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-32/variants/varicao-2.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-32/variants/varicao-2/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-33.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-33/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-33/variants/section-33-1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-33/variants/section-33-1/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-4.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-4/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-41.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/kJLQVJ8AOZwunkCdJQ2r.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/raWpQqEmjqKFBgU2nbXZ.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/WUAa2ZMhTYhUaQhnSkjK.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/zaPQ2NjGffEgvxZiCSQB.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-46.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-46/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-5.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-5/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-6.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-6/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-6/variants/section-6-1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-6/variants/section-6-1/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-7.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-7/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-8.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-8/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-9.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/bibliotecaLayouts/section-9/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/modelo2.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/modelo2/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao-4.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao-4/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao-5-cabos.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao-5-cabos/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao-7-sucos.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao-7-sucos/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao-7.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao-7/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao-8.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao-8/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao-9.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao-9/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao1/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao3.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao3/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao6.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao6/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-11.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-11/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-12.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-12/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-13.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-13/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-14.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-14/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-15.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-15/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-16.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-16/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-17.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-17/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-18.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-18/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-19.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-19/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-20.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-20/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-21.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-21/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-22.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-22/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-23.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-23/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-24.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-24/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-25.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-25/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-26.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-26/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-27.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-27/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-29.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-29/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-30.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variacao-30/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variao-28.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/carneiro-colecoes/layouts/variao-28/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-joel.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-joel/layouts/padrao-conteudo-joel2.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-joel/layouts/padrao-conteudo-joel2/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-joel/layouts/padraoconteudo-joel.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-joel/layouts/padraoconteudo-joel/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-joel/layouts/test.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-joel/layouts/test/revisions/drk6uWzRpWzlxFUpRI5r.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-joel/layouts/test/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-joel/layouts/teste2.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-joel/layouts/teste2/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-pedro.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-pedro/layouts/3-blocos-com-ytb-18-no-meio-e-faq-embutido-corrigido.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-pedro/layouts/3-blocos-com-ytb-18-no-meio-e-faq-embutido-corrigido/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-pedro/layouts/comp-3-blocos-product-header-faq-embutido-e-tabela.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-pedro/layouts/comp-3-blocos-product-header-faq-embutido-e-tabela/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-pedro/layouts/comp-p-3b-faqe-vh-tb.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-pedro/layouts/comp-p-3b-faqe-vh-tb/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-pedro/layouts/prod-header-1bs-feat-3bs-faq-emb-manual.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-pedro/layouts/prod-header-1bs-feat-3bs-faq-emb-manual/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-pedro/layouts/prod-header-1bs-feat-ytb-3bs-faq-emb-manual.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-pedro/layouts/prod-header-1bs-feat-ytb-3bs-faq-emb-manual/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-pedro/layouts/video-header-ytb-4bs-faq-emb.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/colecao-pedro/layouts/video-header-ytb-4bs-faq-emb/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/franca.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/franca/layouts/padrao-1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/franca/layouts/padrao-1/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/franca/layouts/padrao-2.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/franca/layouts/padrao-2/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/franca/layouts/video-telefone.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/franca/layouts/video-telefone/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/maicon-colecoes.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/maicon-colecoes/layouts/padrao-1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/maicon-colecoes/layouts/padrao-1/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/maicon-colecoes/layouts/padrao-2.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/maicon-colecoes/layouts/padrao-2/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/maicon-colecoes/layouts/padrao-3.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/maicon-colecoes/layouts/padrao-3/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/maicon-colecoes/layouts/padrao-4.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/maicon-colecoes/layouts/padrao-4/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/maicon-colecoes/layouts/padrao-5.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/collections/maicon-colecoes/layouts/padrao-5/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/groups/joel.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/groups/maicon.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/groups/pedro.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/groups/selecao-francesa.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/backups/senkolib-data/workspaces/senkolib/groups/ygor.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/meta/file-classification.json",
+      "status": "generated"
+    },
+    {
+      "path": "generated/static-backup/biblioteca.js",
+      "status": "generated"
+    },
+    {
+      "path": "generated/static-backup/colecoes.js",
+      "status": "generated"
+    },
+    {
+      "path": "generated/static-backup/manifest.js",
+      "status": "generated"
+    },
+    {
+      "path": "index.html",
+      "status": "official"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-1.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-10.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-11.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-12.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-13.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-14.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-15.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-16.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-17.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-19.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-2.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-20.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-21.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-22.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-23.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-24.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-25.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-26.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-27.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-28.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-3.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-32.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-33.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-34.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-39-1-caderno.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-39-2-caderno.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-39-3-caderno.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-4.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-41.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-46.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-5.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-6.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-7.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-8.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/layouts/section-9.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/manifest.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/variants/section-1/variacao1.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/variants/section-10/variao-1-animado.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/variants/section-15/varicao-1.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/variants/section-2/variacao1.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/variants/section-21/variante-2.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/variants/section-21/variante1.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/variants/section-27/variante-1.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/variants/section-32/variacao1.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/variants/section-32/varicao-2.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/variants/section-33/section-33-1.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/data/variants/section-6/section-6-1.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/github/senko-github-delete.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/github/senko-github-v2.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/biblioteca/github/senko-github-variants.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/col-groups-data.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/collection.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/modelo2.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/padrao-4.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/padrao-5-cabos.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/padrao-7-sucos.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/padrao-7.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/padrao-8.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/padrao-9.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/padrao1.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/padrao3.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/padrao6.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-11.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-12.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-13.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-14.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-15.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-16.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-17.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-18.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-19.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-20.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-21.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-22.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-23.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-24.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-25.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-26.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-27.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-29.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variacao-30.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/carneiro-colecoes/layouts/variao-28.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/colecao-joel/collection.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/colecao-joel/layouts/padrao-conteudo-joel2.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/colecao-joel/layouts/padraoconteudo-joel.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/colecao-joel/layouts/test.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/colecao-joel/layouts/teste2.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/colecao-pedro/collection.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/colecao-pedro/layouts/3-blocos-com-ytb-18-no-meio-e-faq-embutido-corrigido.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/colecao-pedro/layouts/comp-3-blocos-product-header-faq-embutido-e-tabela.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/colecao-pedro/layouts/comp-p-3b-faqe-vh-tb.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/colecao-pedro/layouts/prod-header-1bs-feat-3bs-faq-emb-manual.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/colecao-pedro/layouts/prod-header-1bs-feat-ytb-3bs-faq-emb-manual.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/colecao-pedro/layouts/video-header-ytb-4bs-faq-emb.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/franca/collection.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/franca/layouts/padrao-1.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/franca/layouts/padrao-2.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/franca/layouts/video-telefone.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/maicon-colecoes/collection.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/maicon-colecoes/layouts/cole-1.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/maicon-colecoes/layouts/padrao-1.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/maicon-colecoes/layouts/padrao-2.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/maicon-colecoes/layouts/padrao-3.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/maicon-colecoes/layouts/padrao-4.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/collections/maicon-colecoes/layouts/padrao-5.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/data/manifest.js",
+      "status": "legacy"
+    },
+    {
+      "path": "legacy/colecoes/github/colecoes-github.js",
+      "status": "legacy"
+    },
+    {
+      "path": "package-lock.json",
+      "status": "generated"
+    },
+    {
+      "path": "package.json",
+      "status": "official"
+    },
+    {
+      "path": "README.md",
+      "status": "official"
+    },
+    {
+      "path": "settings.json",
+      "status": "official"
+    },
+    {
+      "path": "storage.rules",
+      "status": "official"
+    },
+    {
+      "path": "sw.js",
+      "status": "official"
+    },
+    {
+      "path": "tests/access-modal-shell.test.js",
+      "status": "official"
+    },
+    {
+      "path": "tests/asset-versioning.test.js",
+      "status": "official"
+    },
+    {
+      "path": "tests/database-member-management.test.js",
+      "status": "official"
+    },
+    {
+      "path": "tests/file-classification.test.js",
+      "status": "official"
+    },
+    {
+      "path": "tests/firebase-service-health.test.js",
+      "status": "official"
+    },
+    {
+      "path": "tests/firestore-client-writes.test.js",
+      "status": "official"
+    },
+    {
+      "path": "tests/fixtures/access-modal-harness.html",
+      "status": "official"
+    },
+    {
+      "path": "tests/fixtures/firebase-status-harness.html",
+      "status": "official"
+    },
+    {
+      "path": "tests/fixtures/github-backup-ui.html",
+      "status": "official"
+    },
+    {
+      "path": "tests/static-backup-builder.test.js",
+      "status": "official"
+    },
+    {
+      "path": "tools/build-file-classification.js",
+      "status": "official"
+    },
+    {
+      "path": "tools/build-legacy-snapshot.js",
+      "status": "official"
+    },
+    {
+      "path": "tools/build-static-backup.js",
+      "status": "official"
+    }
+  ]
+}

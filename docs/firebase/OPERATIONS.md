@@ -211,7 +211,7 @@ Confira o commit e `exports/{id}` depois de cada backup importante. Consulte
 `BACKUP_AND_RESTORE.md` para configuracao e erros.
 
 Cada backup tambem atualiza o bundle publico em
-`app/infrastructure/static-backup/`. A pagina sem login permanece na versao do
+`generated/static-backup/`. A pagina sem login permanece na versao do
 ultimo backup, mesmo que o Firestore tenha mudancas mais novas.
 
 ## Verificar o modo publico
@@ -299,7 +299,7 @@ Locais principais:
 - Emulator UI: documentos, regras e Functions locais;
 - Firestore `exports`: inicio, sucesso e falha de backups;
 - historico de commits: snapshot externo;
-- `app/infrastructure/static-backup/manifest.js`: versao e contagens publicas;
+- `generated/static-backup/manifest.js`: versao e contagens publicas;
 - `firebase-debug.log` e logs de emuladores: inicializacao local.
 
 Para um incidente, registre:

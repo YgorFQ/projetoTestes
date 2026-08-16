@@ -58,16 +58,17 @@ depende dessas Functions.
 | `app/infrastructure/firebase/firebase-config.js` | Projeto, workspace, emuladores e destino publico do backup |
 | `app/infrastructure/firebase/senko-firebase.js` | SDK, login, listeners e presenca |
 | `app/infrastructure/firebase/senko-firestore-writes.js` | Validacao do cliente e transacoes de CRUD |
-| `app/infrastructure/firebase/senko-github-backup.js` | Snapshot Firestore e commit GitHub pelo navegador |
-| `app/infrastructure/firebase/senko-firebase-ui.js` | Login, conta e janela do backup global |
+| `app/infrastructure/github/backup-service.js` | Snapshot Firestore e commit GitHub pelo navegador |
+| `app/tools/session/register.js` | Login, conta e avisos do estado Firebase |
+| `app/tools/github-backup/register.js` | Janela global do backup manual |
 | `app/infrastructure/static-backup/senko-data-mode.js` | Estado global `firebase`, `static` ou `unavailable` |
 | `app/infrastructure/static-backup/senko-static-backup-builder.js` | Converte o snapshot tecnico em dados publicos atuais |
-| `app/infrastructure/static-backup/{manifest,biblioteca,colecoes}.js` | Bundle gerado e servido sem consultar Firebase |
-| `app/features/biblioteca/data/firebase-repository.js` | Adaptador Firebase da Biblioteca |
-| `app/features/biblioteca/data/static-repository.js` | Adaptador somente leitura da Biblioteca |
-| `app/features/colecoes/data/firebase-repository.js` | Adaptador Firebase de Colecoes e grupos |
-| `app/features/colecoes/data/static-repository.js` | Adaptador somente leitura de Colecoes e grupos |
-| `app/features/access/` | Modal global de solicitacoes, membros, cargos e atividade administrativa |
+| `generated/static-backup/{manifest,biblioteca,colecoes}.js` | Bundle gerado e servido sem consultar Firebase |
+| `app/features/biblioteca/repositories/firebase-repository.js` | Adaptador Firebase da Biblioteca |
+| `app/features/biblioteca/repositories/static-repository.js` | Adaptador somente leitura da Biblioteca |
+| `app/features/colecoes/repositories/firebase-repository.js` | Adaptador Firebase de Colecoes e grupos |
+| `app/features/colecoes/repositories/static-repository.js` | Adaptador somente leitura de Colecoes e grupos |
+| `app/tools/access/` | Modal global de solicitacoes, membros, cargos e atividade administrativa |
 | `firestore.rules` | Autoridade de seguranca para leituras e escritas |
 | `database.rules.json` | Permissoes de presenca |
 | `storage.rules` | Bloqueio atual de uploads |
@@ -88,7 +89,7 @@ Cada feature possui adaptadores independentes para Firebase e para o snapshot
 estatico. Ambos entregam o formato que a interface entende; a interface nao
 monta caminhos Firestore nem interpreta os arquivos gerados.
 
-`senko-github-backup.js` e infraestrutura separada. Uma falha do GitHub nao
+`app/infrastructure/github/backup-service.js` e infraestrutura separada. Uma falha do GitHub nao
 desfaz nem impede um save que ja ocorreu no Firestore.
 
 ## Inicializacao

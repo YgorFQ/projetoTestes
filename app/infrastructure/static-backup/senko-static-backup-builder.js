@@ -3,8 +3,8 @@
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.SenkoStaticBackupBuilder = api;
 })(typeof window !== 'undefined' ? window : null, function () {
-  var DATA_ROOT = 'senkolib-data/';
-  var PUBLIC_ROOT = 'app/infrastructure/static-backup/';
+  var DATA_ROOT = 'generated/backups/senkolib-data/';
+  var PUBLIC_ROOT = 'generated/static-backup/';
 
   function parseJson(content, path) {
     try {

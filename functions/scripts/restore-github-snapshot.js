@@ -9,7 +9,11 @@ const {
   getFirestore
 } = require('firebase-admin/firestore');
 
-const MANIFEST_PATH = 'senkolib-data/manifest.json';
+const SNAPSHOT_ROOTS = [
+  'generated/backups/senkolib-data',
+  'senkolib-data'
+];
+const MANIFEST_PATHS = SNAPSHOT_ROOTS.map((root) => `${root}/manifest.json`);
 const MANAGED_COLLECTIONS = [
   'groups',
   'bibliotecaLayouts',
@@ -52,7 +56,7 @@ function printHelp() {
   node scripts/restore-github-snapshot.js --source <pasta> [opcoes]
 
 Opcoes:
-  --commit <sha-ou-ref>   Le senkolib-data diretamente de um commit Git local
+  --commit <sha-ou-ref>   Le generated/backups/senkolib-data de um commit Git local
   --workspace <id>        Restaura em outro workspace (padrao: workspace do backup)
   --dry-run               Valida e mostra o plano sem acessar o Firebase
   --force                 Substitui o conteudo gerenciado de um workspace preenchido
@@ -125,15 +129,23 @@ function createSourceReader(sourceValue, commit) {
     };
   }
 
+  function projectRootFromSnapshotDirectory(snapshotDirectory) {
+    const parent = path.dirname(snapshotDirectory);
+    if (path.basename(parent) === 'backups' && path.basename(path.dirname(parent)) === 'generated') {
+      return path.dirname(path.dirname(parent));
+    }
+    return parent;
+  }
+
   let root = source;
   if (fs.statSync(source).isFile()) {
     if (path.basename(source) !== 'manifest.json') {
       throw new Error('Quando --source for arquivo, ele precisa ser manifest.json.');
     }
-    root = path.dirname(path.dirname(source));
+    root = projectRootFromSnapshotDirectory(path.dirname(source));
   } else if (fs.existsSync(path.join(source, 'manifest.json')) &&
              path.basename(source) === 'senkolib-data') {
-    root = path.dirname(source);
+    root = projectRootFromSnapshotDirectory(source);
   }
 
   return {
@@ -158,8 +170,10 @@ function parseDocumentPath(filePath, sourceWorkspaceId) {
     throw new Error(`Caminho invalido no manifesto: ${filePath}`);
   }
 
-  const prefix = `senkolib-data/workspaces/${sourceWorkspaceId}/`;
-  if (!filePath.startsWith(prefix)) {
+  const prefix = SNAPSHOT_ROOTS
+    .map((root) => `${root}/workspaces/${sourceWorkspaceId}/`)
+    .find((candidate) => filePath.startsWith(candidate));
+  if (!prefix) {
     throw new Error(`Arquivo fora do workspace ${sourceWorkspaceId}: ${filePath}`);
   }
 
@@ -349,7 +363,20 @@ function validateRelationships(entries) {
 }
 
 function loadSnapshot(reader, targetWorkspaceValue) {
-  const manifest = parseJson(reader.read(MANIFEST_PATH), MANIFEST_PATH);
+  let manifestPath = '';
+  let manifestContents = '';
+  let lastError;
+  for (const candidate of MANIFEST_PATHS) {
+    try {
+      manifestContents = reader.read(candidate);
+      manifestPath = candidate;
+      break;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  if (!manifestPath) throw lastError || new Error('Manifesto do snapshot nao encontrado.');
+  const manifest = parseJson(manifestContents, manifestPath);
   if (manifest.schemaVersion !== 1) {
     throw new Error(`schemaVersion nao suportada: ${manifest.schemaVersion}`);
   }

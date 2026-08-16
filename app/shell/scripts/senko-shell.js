@@ -4,7 +4,7 @@
    *
    * REGRA DE MANUTENCAO DO GUIA:
    * - Toda alteracao relevante no projeto deve atualizar o guia interno em
-   *   app/shell/scripts/senko-guide.js.
+   *   app/tools/guide/register.js.
    * - Se uma IA ou outra pessoa mexer no shell, em features, GitHub, estilos,
    *   dados ou erros conhecidos, ela tambem precisa revisar o guia.
    * - O guia e prioridade maxima: codigo atualizado com guia desatualizado

@@ -10,6 +10,7 @@ const firestoreHost = process.env.FIRESTORE_EMULATOR_HOST || '127.0.0.1:8080';
 process.env.FIRESTORE_EMULATOR_HOST = firestoreHost;
 const workspaceId = `restore-test-${Date.now()}`;
 const sourceWorkspaceId = 'senkolib';
+const snapshotRoot = 'generated/backups/senkolib-data';
 const timestamp = '2026-08-15T12:00:00.000Z';
 const scriptPath = path.join(__dirname, 'restore-github-snapshot.js');
 
@@ -52,9 +53,9 @@ function revisionData(resourceId, revisionId, kind, name) {
 
 function buildFixture(root) {
   const files = new Map([
-    [`senkolib-data/workspaces/${sourceWorkspaceId}/groups/interface.json`,
+    [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/groups/interface.json`,
       namedData('interface', 'Interface', { color: '#336699' })],
-    [`senkolib-data/workspaces/${sourceWorkspaceId}/bibliotecaLayouts/layout-a.json`,
+    [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/bibliotecaLayouts/layout-a.json`,
       namedData('layout-a', 'Layout A', {
         kind: 'libraryLayout',
         parentId: null,
@@ -63,9 +64,9 @@ function buildFixture(root) {
         css: '',
         currentRevisionId: 'revision-1'
       })],
-    [`senkolib-data/workspaces/${sourceWorkspaceId}/bibliotecaLayouts/layout-a/revisions/revision-1.json`,
+    [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/bibliotecaLayouts/layout-a/revisions/revision-1.json`,
       revisionData('layout-a', 'revision-1', 'libraryLayout', 'Layout A')],
-    [`senkolib-data/workspaces/${sourceWorkspaceId}/bibliotecaLayouts/layout-a/variants/variant-a.json`,
+    [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/bibliotecaLayouts/layout-a/variants/variant-a.json`,
       namedData('variant-a', 'Variant A', {
         kind: 'libraryVariant',
         parentId: 'layout-a',
@@ -74,15 +75,15 @@ function buildFixture(root) {
         css: '',
         currentRevisionId: 'revision-1'
       })],
-    [`senkolib-data/workspaces/${sourceWorkspaceId}/bibliotecaLayouts/layout-a/variants/variant-a/revisions/revision-1.json`,
+    [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/bibliotecaLayouts/layout-a/variants/variant-a/revisions/revision-1.json`,
       revisionData('variant-a', 'revision-1', 'libraryVariant', 'Variant A')],
-    [`senkolib-data/workspaces/${sourceWorkspaceId}/collections/collection-a.json`,
+    [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/collections/collection-a.json`,
       namedData('collection-a', 'Collection A', {
         legacyId: null,
         groupId: 'interface',
         tags: ['teste']
       })],
-    [`senkolib-data/workspaces/${sourceWorkspaceId}/collections/collection-a/layouts/internal-a.json`,
+    [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/collections/collection-a/layouts/internal-a.json`,
       namedData('internal-a', 'Internal A', {
         kind: 'collectionLayout',
         parentId: 'collection-a',
@@ -92,7 +93,7 @@ function buildFixture(root) {
         css: '',
         currentRevisionId: 'revision-1'
       })],
-    [`senkolib-data/workspaces/${sourceWorkspaceId}/collections/collection-a/layouts/internal-a/revisions/revision-1.json`,
+    [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/collections/collection-a/layouts/internal-a/revisions/revision-1.json`,
       revisionData('internal-a', 'revision-1', 'collectionLayout', 'Internal A')]
   ]);
 
@@ -109,7 +110,7 @@ function buildFixture(root) {
     dataVersion: 42,
     files: [...files.keys()].sort()
   };
-  const manifestPath = path.join(root, 'senkolib-data', 'manifest.json');
+  const manifestPath = path.join(root, ...snapshotRoot.split('/'), 'manifest.json');
   fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
 }
 
@@ -153,7 +154,7 @@ async function main() {
     runGit(tempRoot, ['init', '--quiet']);
     runGit(tempRoot, ['config', 'user.name', 'SenkoLib Test']);
     runGit(tempRoot, ['config', 'user.email', 'senkolib-test@example.invalid']);
-    runGit(tempRoot, ['add', 'senkolib-data']);
+    runGit(tempRoot, ['add', 'generated/backups/senkolib-data']);
     runGit(tempRoot, ['commit', '--quiet', '-m', 'Snapshot fixture']);
     const commitDryRun = runRestore(tempRoot, ['--commit', 'HEAD', '--dry-run'], 0);
     assert(commitDryRun.includes('@ HEAD'), 'O snapshot nao foi lido pelo commit Git.');

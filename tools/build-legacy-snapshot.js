@@ -3,7 +3,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const root = path.resolve(__dirname, '..');
-const outputDirectory = path.join(root, 'migration-output');
+const outputDirectory = path.join(root, 'generated', 'migrations');
 const outputPath = path.join(outputDirectory, 'senkolib-legacy.json');
 const checkOnly = process.argv.includes('--check');
 
@@ -41,11 +41,11 @@ function loadBiblioteca(manifest, warnings) {
 
   for (const entry of manifest.layouts || []) {
     const file = typeof entry === 'string' ? entry : entry.file;
-    run(`app/features/biblioteca/data/${file}`, sandbox);
+    run(`legacy/biblioteca/data/${file}`, sandbox);
   }
   for (const entry of manifest.variants || []) {
     const file = typeof entry === 'string' ? entry : entry.file;
-    run(`app/features/biblioteca/data/${file}`, sandbox);
+    run(`legacy/biblioteca/data/${file}`, sandbox);
   }
 
   const layoutIds = new Set(layouts.map((layout) => layout.id));
@@ -74,7 +74,7 @@ function loadBiblioteca(manifest, warnings) {
 
 function loadGroups() {
   let groups = [];
-  run('app/features/colecoes/data/col-groups-data.js', {
+  run('legacy/colecoes/data/col-groups-data.js', {
     console,
     ColGroups: {
       load(value) {
@@ -105,14 +105,14 @@ function loadCollections(manifest) {
 
   for (const entry of manifest.collections || []) {
     const collectionFile = typeof entry === 'string' ? entry : entry.file;
-    run(`app/features/colecoes/data/${collectionFile}`, sandbox);
+    run(`legacy/colecoes/data/${collectionFile}`, sandbox);
 
     if (typeof entry !== 'string') {
       for (const layoutEntry of entry.layouts || []) {
         const layoutFile = typeof layoutEntry === 'string'
           ? layoutEntry
           : layoutEntry.file;
-        run(`app/features/colecoes/data/${layoutFile}`, sandbox);
+        run(`legacy/colecoes/data/${layoutFile}`, sandbox);
       }
     }
   }
@@ -136,11 +136,11 @@ function countCollectionLayouts(collections) {
 function main() {
   const warnings = [];
   const bibliotecaManifest = loadManifest(
-    'app/features/biblioteca/data/manifest.js',
+    'legacy/biblioteca/data/manifest.js',
     'SenkoBibliotecaManifest'
   );
   const colecoesManifest = loadManifest(
-    'app/features/colecoes/data/manifest.js',
+    'legacy/colecoes/data/manifest.js',
     'SenkoColecoesManifest'
   );
 
