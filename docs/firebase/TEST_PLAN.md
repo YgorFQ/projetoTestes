@@ -1,177 +1,123 @@
-# Plano de testes Firebase
+# Plano de testes
 
-Este plano e a definicao minima de qualidade para regressao Firebase,
-manutencao e novos cortes. Cada linha deve ser testada no emulador e, quando
-indicado, em um ambiente de producao controlado.
+## Bateria rapida
 
-## Preparacao
+```powershell
+npm run test:structure
+npm run test:asset-versioning
+npm run test:access-modal
+npm run test:static-backup
+npm run test:firebase-health
+npm --prefix functions run check
+```
 
-- Emuladores iniciados sem erros.
-- Snapshot legado importado.
-- Duas contas locais diferentes criadas.
-- Uma terceira janela usando a mesma conta para testar sessoes.
-- Console do navegador aberto para observar erros.
+## Regras Firestore
 
-## Estrutura do repositorio
+Com o emulador ativo:
 
-- [ ] `npm run inventory:build` termina sem erro.
-- [ ] Todo arquivo listado possui exatamente um dos quatro estados aceitos.
-- [ ] Biblioteca e Colecoes carregam apenas caminhos oficiais ou compatibilidades em `legacy` declaradas no `register.js`.
-- [ ] `generated/static-backup` continua publicado; snapshots tecnicos, migracoes e docs nao entram no Firebase Hosting.
-- [ ] Nenhuma documentacao canonica aponta para um caminho removido.
-- [ ] A raiz contem somente os arquivos justificados em `docs/architecture/ROOT_FILES.md`.
-- [ ] A Firebase CLI encontra regras e indices em `config/firebase`.
+```powershell
+$env:FIRESTORE_EMULATOR_HOST='127.0.0.1:8080'
+$env:GCLOUD_PROJECT='senkolib-rules-test'
+node tests/firestore-client-writes.test.js
+```
 
-## Autenticacao e membros
+Cenarios obrigatorios:
 
-- [ ] Pessoa deslogada ve a opcao de entrar e nao carrega dados.
-- [ ] Primeiro usuario local vira membro automaticamente.
-- [ ] Usuario real sem documento de membro recebe estado `unauthorized`.
-- [ ] Usuario sem acesso cria ou incrementa somente a propria solicitacao.
-- [ ] Usuario real cadastrado como membro consegue ler o workspace.
-- [ ] Remover o documento de membro impede a proxima escrita.
-- [ ] Sair limpa o estado visual e impede novas operacoes.
-- [ ] Proprietario ve Acessos no menu; editor nao ve a acao nem lista seus dados.
-- [ ] Admin aprova e remove editor, mas nao cria admin ou proprietario.
-- [ ] Proprietario promove cargos e nao consegue remover a propria conta.
-- [ ] Aprovacao aparece ao vivo para a conta que aguardava acesso.
-- [ ] Falha de sincronizacao da presenca pode ser reparada pelo botao.
+- membro cria layout valido;
+- visitante e recusado;
+- schema com campo inesperado e recusado;
+- nome reservado impede duplicata;
+- versao atrasada e recusada;
+- documento, revisao, reserva e dataVersion mudam juntos;
+- owner/admin/editor mantem conteudo;
+- regras administrativas respeitam cargos.
 
-## Shell e menu de ferramentas
+## Regras Realtime Database
 
-- [x] Header exibe o menu oficial para as acoes globais.
-- [x] Menu fecha ao escolher uma acao, clicar fora ou pressionar Escape.
-- [x] Notas abre seu modal original depois de ser movida para o menu.
-- [x] Painel cabe em desktop e em `390x844` sem overflow horizontal.
-- [x] Membro autorizado ve criacao rapida fixa a esquerda do menu e backup habilitado dentro dele.
-- [ ] Proprietario abre o modal Acessos; admin tambem abre e editor nao ve a acao.
-- [x] Modal Acessos abre e fecha sem overflow, restaura o foco e cabe em desktop e `390x844`.
-- [x] Modal Acessos fecha tambem pelo fundo e pela tecla Escape.
+```powershell
+$env:FIREBASE_DATABASE_EMULATOR_HOST='127.0.0.1:9000'
+$env:GCLOUD_PROJECT='senkolib-database-rules-test'
+node tests/database-member-management.test.js
+```
 
-## Biblioteca
+Validar presenca propria, leitura por membro, bloqueio de visitante, owner,
+admin e tentativa de promover owner sem permissao.
 
-- [ ] Lista todos os layouts importados.
-- [ ] Lista variacoes sob o layout correto.
-- [ ] Cria layout com ID automatico.
-- [ ] Cria variacao com ID automatico.
-- [ ] Edita nome, tags, HTML e CSS de layout.
-- [ ] Edita nome, HTML e CSS de variacao.
-- [ ] Recarregar a pagina preserva o ultimo save.
-- [ ] Nome duplicado e bloqueado, inclusive com acentos/caixa diferentes.
-- [ ] Excluir variacao remove o documento e suas revisoes.
-- [ ] Excluir layout remove tambem suas variacoes e revisoes.
+## Smoke test de Biblioteca
 
-## Colecoes
+- abre e mostra contagem;
+- pesquisa por nome e tag;
+- preview renderiza;
+- copiar HTML/CSS funciona;
+- cria layout;
+- edita layout;
+- cria e edita variacao;
+- exclui variacao e layout;
+- nomes equivalentes sao recusados;
+- ID tecnico nao e campo editavel;
+- outro navegador recebe a mudanca.
 
-- [ ] Lista grupos e mantem grupos vazios.
-- [ ] Cria e edita grupo com nome e cor validos.
-- [ ] Exclui grupo manualmente sem excluir automaticamente suas colecoes.
-- [ ] Cria e edita colecao.
-- [ ] Cria e edita layout dentro de colecao.
-- [ ] Layout aparece somente na colecao correta.
-- [ ] Nome duplicado de colecao e bloqueado.
-- [ ] Nome duplicado de layout e bloqueado dentro da mesma colecao.
-- [ ] Mesmo nome de layout e permitido em colecoes diferentes.
-- [ ] Excluir layout interno remove suas revisoes.
-- [ ] Excluir colecao remove layouts e revisoes filhos.
+## Smoke test de Colecoes
 
-Teste automatizado: `tests/firestore-client-writes.test.js` cobre o gravador
-atual; `npm --prefix functions run test:groups:emulator` preserva a verificacao
-da implementacao administrativa anterior. A interface ainda deve ser conferida.
+- abre e mostra grupos/colecoes;
+- cria grupo;
+- cria colecao no grupo;
+- cria layout interno;
+- edita layout completo;
+- grupo vazio pode ser excluido;
+- grupo em uso nao pode ser excluido;
+- exclusao remove reservas relacionadas;
+- outro navegador recebe a mudanca.
 
-## Tempo real e concorrencia
+## Acessos
 
-- [ ] Computador A digita sem salvar; computador B nao muda.
-- [ ] Computador A salva; computador B recebe a mudanca.
-- [ ] Editor limpo aplica a mudanca remota imediatamente.
-- [ ] Editor com rascunho preserva o rascunho e mostra aviso.
-- [ ] Salvar a partir de uma revisao antiga retorna conflito.
-- [ ] Nenhum conflito sobrescreve silenciosamente o save mais recente.
-- [ ] Cada save cria exatamente uma revisao nova.
+- conta desconhecida gera pendencia;
+- owner aprova editor, admin ou owner;
+- admin aprova editor/admin, nunca owner;
+- editor nao abre gestao;
+- rebaixamento e remocao respeitam limites;
+- evento mostra ator, alvo, cargo e horario;
+- modal fecha por botao, fundo e Escape;
+- foco volta ao trigger.
 
-## Presenca
+## Concorrencia
 
-- [ ] Uma sessao mostra `So voce neste editor`.
-- [ ] Duas contas no mesmo item mostram a outra pessoa.
-- [ ] Duas sessoes da mesma conta mostram `Outra sessao sua`.
-- [ ] Pessoas em itens diferentes nao aparecem juntas.
-- [ ] Layout e variacao do mesmo layout usam salas diferentes.
-- [ ] Fechar o editor remove a sessao.
-- [ ] Encerrar a conexao remove a sessao por `onDisconnect`.
+Abra o mesmo item em dois navegadores. Salve no primeiro e tente salvar no
+segundo. Esperado: segundo recebe conflito, rascunho fica recuperavel e o dado
+do primeiro permanece no Firestore.
 
-## Validacao e limites
+## Modo estatico
 
-- [x] `resource-exhausted` e mensagem de cota sao classificados como `quota`.
-- [x] Navegador offline e indisponibilidade do Firestore possuem avisos distintos.
-- [x] Aviso de limite informa que o ultimo backup esta em somente leitura.
-- [ ] Teste manual real apos a renovacao da cota confirma retorno ao Firebase.
-- [ ] Nome com menos de 2 caracteres e recusado.
-- [ ] Nome acima de 160 caracteres e recusado.
-- [ ] ID vazio, com `/` ou acima de 180 caracteres e recusado.
-- [ ] Cor de grupo fora de `#rrggbb` e recusada.
-- [ ] No maximo 40 tags sao persistidas.
-- [ ] Cada tag e limitada a 80 caracteres.
-- [ ] HTML acima de 750.000 caracteres e recusado.
-- [ ] CSS acima de 250.000 caracteres e recusado.
-- [ ] Criar filho de pai excluido retorna `not-found`.
+- Firebase indisponivel usa snapshot;
+- badge informa somente leitura;
+- criar, editar e excluir ficam bloqueados;
+- pesquisa, preview e copia continuam;
+- nenhuma feature tenta carregar fonte adicional;
+- sem snapshot, estado vazio e visivel.
 
-## Seguranca
+## Backup
 
-- [ ] Firestore nega leitura sem autenticacao.
-- [ ] Firestore nega leitura para nao membro.
-- [ ] Firestore permite escrita valida somente para membro.
-- [ ] Firestore recusa schema, versao ou ator invalidos.
-- [ ] Firestore impede o navegador de escrever em `members`.
-- [ ] Firestore impede listar solicitacoes ou gravar solicitacao para outro UID.
-- [ ] Alteracao de conteudo sem incremento de `dataVersion` e recusada.
-- [ ] Realtime Database permite escrever apenas a propria sessao.
-- [ ] Realtime Database nega presenca sem `presenceAccess`.
-- [ ] Realtime Database permite owner sincronizar cargos e admin apenas editores.
-- [ ] Storage nega escrita no estado atual.
-- [ ] Nenhuma chave administrativa aparece no frontend ou no Git.
+- token nao aparece em payload gerado;
+- um commit contem snapshot tecnico e publico;
+- manifestos possuem contagens coerentes;
+- mudanca de dataVersion durante exportacao causa nova tentativa;
+- erro 401/403/404/rede possui mensagem util;
+- falha do GitHub nao altera Firestore.
 
-## Migracao
+## Responsividade e acessibilidade
 
-- [ ] `npm run migration:build` produz contagens esperadas.
-- [ ] Inconsistencias interrompem importacao sem `--allow-warnings`.
-- [ ] Workspace preenchido interrompe importacao sem `--force`.
-- [ ] Importacao cria recursos, revisoes e reservas de nome, inclusive para grupos.
-- [ ] Contagens do Firestore correspondem ao snapshot validado.
+Teste desktop e mobile:
 
-## GitHub
+- menu nao sobrepoe criacao rapida;
+- modais cabem na altura e rolam internamente;
+- texto nao vaza de botoes;
+- foco e visivel;
+- Escape fecha overlays permitidos;
+- labels e nomes acessiveis existem;
+- tema claro e escuro mantem contraste.
 
-- [ ] Botao manual cria um unico commit de snapshot.
-- [ ] Commit contem `generated/backups/senkolib-data/manifest.json` e todos os recursos esperados.
-- [ ] Token individual possui acesso somente ao repositorio e Contents write.
-- [ ] Token nao aparece no Firestore, commit ou logs.
-- [ ] Arquivo excluido no Firebase some do snapshot mais recente.
-- [ ] Commit atualiza a branch sem `force`.
-- [ ] Save do Firebase continua funcionando quando GitHub falha.
-- [ ] Falha cria documento `exports/{id}` com estado `failed`.
-- [ ] Restauracao em workspace vazio foi executada e comparada com a origem.
-- [ ] Commit atualiza os tres arquivos em `generated/static-backup/` juntos.
-- [ ] Bundle publico contem a ultima versao, sem documentos de revisao antiga.
-- [ ] Bundle publico nao contem membros, e-mails, tokens, presenca ou autoria.
-- [ ] Sem login, Biblioteca e Colecoes usam o bundle em modo somente leitura.
-- [ ] Live Server mostra preview e permite copiar codigo sem acessar Firebase.
-- [ ] Criacao, edicao, exclusao e backup ficam indisponiveis no modo publico.
-- [ ] Login autorizado troca o bundle pelos listeners Firebase sem recarregar.
-- [ ] Logout volta ao ultimo bundle publico e encerra listeners das features.
+## Registro de uma rodada
 
-`tests/static-backup-builder.test.js` cobre o formato publico e a exclusao de
-revisoes e dados privados. `tests/firestore-client-writes.test.js` cobre
-snapshot, tree, remocao obsoleta, commit e log usando API GitHub simulada.
-`test:restore:emulator` cobre modelo
-completo, protecao contra sobrescrita e preservacao de membros. O item final
-exige um commit real criado pelo botao e verificacao visual da restauracao.
-
-## Evidencia do teste
-
-Para cada rodada, registre em `MIGRATION_STATUS.md`:
-
-- data;
-- ambiente;
-- pessoa que testou;
-- itens aprovados;
-- falhas encontradas;
-- commit ou versao testada.
+Anote commit, ambiente, navegadores, testes executados, falhas conhecidas e
+resultado do smoke test. Nao declare producao aprovada quando um teste de regra
+foi substituido apenas por verificacao visual.

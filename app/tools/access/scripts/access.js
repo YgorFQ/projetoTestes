@@ -1,4 +1,12 @@
 (function () {
+  /*
+   * Controller visual do modal Acessos.
+   *
+   * O estado abaixo e uma projeção dos tres listeners do repository. Render
+   * nunca consulta Firebase diretamente: cada snapshot substitui sua lista e
+   * redesenha apenas a aba ativa. Todos os unsubscribers sao guardados para
+   * que fechar/reabrir o modal nao multiplique leituras.
+   */
   var state = {
     requests: [],
     members: [],
@@ -7,6 +15,9 @@
     busy: false,
     unsubscribers: []
   };
+
+  // Todo texto vindo de perfil, email ou evento passa por escape antes de ser
+  // inserido como HTML. Nomes de contas sao dados externos, nao markup seguro.
 
   function escapeHtml(value) {
     return String(value == null ? '' : value)
@@ -57,6 +68,9 @@
     });
   }
 
+  // -----------------------------------------------------------------------
+  // Projecoes das tres abas
+  // -----------------------------------------------------------------------
   function renderRequests() {
     var container = document.getElementById('senkoAccessRequests');
     if (!container) return;
@@ -159,6 +173,8 @@
     return state.members.find(function (member) { return member.uid === uid; });
   }
 
+  // Toda mutacao bloqueia os controles enquanto a Promise esta pendente. Isso
+  // evita dois commits para um clique duplo e mantem a mensagem junto da lista.
   function runAction(button, action, successMessage) {
     if (state.busy) return;
     state.busy = true;
@@ -236,6 +252,9 @@
     }, 'Cargo atualizado.');
   }
 
+  // -----------------------------------------------------------------------
+  // Ciclo de vida dos listeners
+  // -----------------------------------------------------------------------
   function stop() {
     state.unsubscribers.splice(0).forEach(function (unsubscribe) {
       if (typeof unsubscribe === 'function') unsubscribe();

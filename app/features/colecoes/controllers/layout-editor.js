@@ -27,14 +27,14 @@
       + '</head><body>' + (html || '') + '</body></html>';
   }
 
-  function mergeLegacyCssIntoHtml(html, css) {
+  function mergeSeparateCssIntoHtml(html, css) {
     var nextHtml = html || '';
-    var legacyCss = (css || '').trim();
-    if (!legacyCss) return nextHtml;
+    var separateCss = (css || '').trim();
+    if (!separateCss) return nextHtml;
 
-    var styleBlock = /<style(?:\s|>)/i.test(legacyCss)
-      ? legacyCss
-      : '<style data-senko-legacy-css>\n' + legacyCss + '\n</style>';
+    var styleBlock = /<style(?:\s|>)/i.test(separateCss)
+      ? separateCss
+      : '<style data-senko-inline-css>\n' + separateCss + '\n</style>';
     if (/<\/head\s*>/i.test(nextHtml)) {
       return nextHtml.replace(/<\/head\s*>/i, styleBlock + '\n</head>');
     }
@@ -395,7 +395,7 @@
     ensure();
     state.collection = collection;
     state.layout = layout;
-    state.html = mergeLegacyCssIntoHtml(
+    state.html = mergeSeparateCssIntoHtml(
       layout && layout.html ? layout.html : '',
       layout && layout.css ? layout.css : ''
     );
@@ -490,7 +490,7 @@
       state.layout.css = remote.css || '';
       state.layout._firebaseRevisionId = remote._firebaseRevisionId || null;
       state.layout._firebaseVersion = Number(remote._firebaseVersion || 0);
-      state.html = mergeLegacyCssIntoHtml(state.layout.html, state.layout.css);
+      state.html = mergeSeparateCssIntoHtml(state.layout.html, state.layout.css);
       state.originalName = state.layout.name;
       state.originalHtml = state.html;
       document.getElementById('colEditLayoutName').value = state.originalName;

@@ -165,16 +165,14 @@
       import(base + 'firebase-app.js'),
       import(base + 'firebase-auth.js'),
       import(base + 'firebase-firestore.js'),
-      import(base + 'firebase-functions.js'),
       import(base + 'firebase-database.js'),
       import(base + 'firebase-storage.js')
     ]).then(function (loaded) {
       modules.app = loaded[0];
       modules.auth = loaded[1];
       modules.firestore = loaded[2];
-      modules.functions = loaded[3];
-      modules.database = loaded[4];
-      modules.storage = loaded[5];
+      modules.database = loaded[3];
+      modules.storage = loaded[4];
     });
   }
 
@@ -191,7 +189,6 @@
       disableWarnings: true
     });
     modules.firestore.connectFirestoreEmulator(services.db, '127.0.0.1', 8080);
-    modules.functions.connectFunctionsEmulator(services.functions, '127.0.0.1', 5001);
     modules.database.connectDatabaseEmulator(services.realtime, '127.0.0.1', 9000);
     modules.storage.connectStorageEmulator(services.storage, '127.0.0.1', 9199);
     state.usingEmulators = true;
@@ -266,31 +263,6 @@
   function checkMembership(user) {
     var reference = modules.firestore.doc(services.db, memberPath(user.uid));
     return modules.firestore.getDoc(reference).then(function (memberSnapshot) {
-      if (!memberSnapshot.exists() && state.usingEmulators) {
-        return callFunction('bootstrapEmulatorMember', {
-          workspaceId: getWorkspaceId()
-        }).then(function () {
-          return modules.firestore.getDoc(reference);
-        }).then(function (createdMemberSnapshot) {
-          if (!createdMemberSnapshot.exists()) {
-            throw new Error('O emulador nao conseguiu criar o membro local.');
-          }
-          publish({
-            status: 'ready',
-            user: user,
-            member: normalizeMember(Object.assign({
-              id: createdMemberSnapshot.id
-            }, createdMemberSnapshot.data())),
-            error: null,
-            serviceIssue: null
-          });
-          startMemberListener(user, reference);
-          return callFunction('ensurePresenceAccess', {
-            workspaceId: getWorkspaceId()
-          });
-        });
-      }
-
       if (!memberSnapshot.exists()) {
         publish({
           status: 'unauthorized',
@@ -316,17 +288,6 @@
         serviceIssue: null
       });
       startMemberListener(user, reference);
-
-      /*
-       * A Function replica a permissao no Realtime Database. Se as Functions
-       * ainda nao tiverem sido implantadas, a autenticacao principal continua
-       * funcionando e somente a presenca fica indisponivel.
-       */
-      callFunction('ensurePresenceAccess', {
-        workspaceId: getWorkspaceId()
-      }).catch(function (error) {
-        console.warn('[SenkoFirebase] Presenca ainda nao configurada:', error.message || error);
-      });
     });
   }
 
@@ -345,10 +306,6 @@
         services.app = modules.app.initializeApp(config.firebase);
         services.auth = modules.auth.getAuth(services.app);
         services.db = modules.firestore.getFirestore(services.app);
-        services.functions = modules.functions.getFunctions(
-          services.app,
-          config.region || 'southamerica-east1'
-        );
         services.realtime = modules.database.getDatabase(services.app);
         services.storage = modules.storage.getStorage(services.app);
 
@@ -423,18 +380,6 @@
     if (state.status !== 'ready') {
       throw new Error('Entre com uma conta autorizada antes de acessar os dados.');
     }
-  }
-
-  function callFunction(name, data) {
-    if (!services.functions) {
-      return initialize().then(function () {
-        return callFunction(name, data);
-      });
-    }
-    var callable = modules.functions.httpsCallable(services.functions, name);
-    return callable(data || {}).then(function (result) {
-      return result.data;
-    });
   }
 
   function getClientContext() {
@@ -601,7 +546,6 @@
     whenAuthorized: whenAuthorized,
     signInWithGoogle: signInWithGoogle,
     signOut: signOut,
-    call: callFunction,
     getClientContext: getClientContext,
     listenCollection: listenCollection,
     listenCollectionGroup: listenCollectionGroup,

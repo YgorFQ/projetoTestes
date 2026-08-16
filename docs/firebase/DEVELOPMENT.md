@@ -1,208 +1,91 @@
 # Desenvolvimento local com Firebase
 
-## Pre-requisitos
+## Objetivo
 
-- Node.js compativel com o Firebase CLI.
-- JDK 21 para os emuladores.
-- Dependencias da raiz e de `functions` instaladas.
-- Firebase CLI autenticada no projeto de testes.
+O ambiente local permite testar autenticacao, regras, concorrencia, presenca e
+fallback sem alterar producao. O frontend usa os mesmos modulos do site; apenas
+os endpoints do SDK mudam para os emuladores.
 
-Confira no PowerShell:
+## Iniciar
 
-```powershell
-node --version
-npm --version
-java -version
-npx firebase-tools --version
-```
-
-## Preparacao inicial
-
-```powershell
-cd D:\Cursos\Repositorios\projetoTestes
-npm install
-npm --prefix functions install
-npx firebase-tools login
-npx firebase-tools use
-```
-
-O projeto esperado em `.firebaserc` e `senkolibtestes`.
-
-## Iniciar o ambiente
+Terminal 1:
 
 ```powershell
 npm run firebase:emulators
 ```
 
-Portas configuradas:
-
-| Servico | URL/porta |
-| --- | --- |
-| Aplicativo | `http://127.0.0.1:5000/` |
-| Emulator UI | `http://127.0.0.1:4000/` |
-| Functions | `127.0.0.1:5001` |
-| Firestore | `127.0.0.1:8080` |
-| Realtime Database | `127.0.0.1:9000` |
-| Authentication | `127.0.0.1:9099` |
-| Storage | `127.0.0.1:9199` |
-
-Nao abra o projeto por `file://` para testar Firebase. Modulos dinamicos,
-Authentication e Hosting precisam de HTTP.
-
-## Primeiro login local
-
-1. Abra o aplicativo na porta 5000.
-2. Use **Entrar com Google**.
-3. O emulador mostra uma tela de identidade simulada.
-4. Informe nome, e-mail e, opcionalmente, foto.
-5. `bootstrapEmulatorMember` cria automaticamente o membro local.
-6. `ensurePresenceAccess` libera a presenca no Realtime Database.
-
-Esse usuario nao e uma conta Google real e existe apenas no emulador.
-
-## Persistencia dos emuladores
-
-O comando atual inicia os emuladores sem `--import` e sem
-`--export-on-exit`. Portanto, os dados locais podem desaparecer quando o
-processo e encerrado.
-
-Para guardar um estado de teste antes de fechar:
+Terminal 2, quando quiser outra porta:
 
 ```powershell
-npx firebase-tools emulators:export .firebase\emulator-data
+python -m http.server 4173 --bind 127.0.0.1
 ```
 
-Para iniciar carregando esse estado:
+Abra `http://127.0.0.1:5000/` para Hosting Emulator ou
+`http://127.0.0.1:4173/` para o servidor estatico.
 
-```powershell
-npx firebase-tools emulators:start --import .firebase\emulator-data
-```
+## Preparar uma conta local
 
-`.firebase/` esta no `.gitignore` e nao deve ser usado como migracao oficial.
+O app nao cria owner automaticamente. Isso aproxima desenvolvimento da
+seguranca real. Crie usuario no Auth Emulator e cadastre o membro com o script
+administrativo ou importe uma fixture de teste. A interface Emulator UI mostra
+os documentos e usuarios locais.
 
-## Importar os dados legados no emulador
+## Estado que desaparece
 
-Primeiro gere e revise o snapshot:
+Sem `--import` e `--export-on-exit`, dados de emulador podem desaparecer ao
+encerrar. Nao confunda isso com exclusao em producao. Para cenarios automatizados,
+os testes criam e limpam seus proprios projetos isolados.
 
-```powershell
-npm run migration:build
-```
+## Fluxo recomendado de uma alteracao
 
-O comando informa contagens e inconsistencias. Depois, com o emulador aberto
-em outro PowerShell:
+1. Inicie emuladores.
+2. Abra duas janelas ou dois perfis.
+3. Reproduza o comportamento atual.
+4. Faça a mudanca no dono correto.
+5. Teste sucesso e uma falha relevante.
+6. Rode os testes automatizados.
+7. Atualize docs e Guide.
+8. Confira modo estatico antes de publicar.
 
-```powershell
-$env:SENKO_FIREBASE_PROJECT_ID='senkolibtestes'
-$env:FIRESTORE_EMULATOR_HOST='127.0.0.1:8080'
-npm --prefix functions run migrate:legacy
-```
+## Ler logs
 
-O snapshot atual nao possui warnings. Nao use `--allow-warnings` nem `--force`
-sem investigar a inconsistencia e conferir se o workspace possui dados.
+- console do navegador: carga, listeners e erros traduzidos;
+- Emulator UI: documentos, requests e usuarios;
+- `firestore-debug.log`: detalhes locais ignorados pelo Git;
+- `database-debug.log`: Realtime Database local ignorado pelo Git.
 
-## Onde observar os dados
+Nunca versione logs. Eles podem conter emails, IDs, caminhos e payloads.
 
-Na Emulator UI:
+## Testar tempo real
 
-- **Authentication**: contas locais.
-- **Firestore**: workspace, membros, conteudo e revisoes.
-- **Realtime Database**: acesso e sessoes de presenca.
-- **Functions**: somente bootstrap local, presenca e testes administrativos.
-- **Logs**: falhas de regra, validacao e conexao.
+1. Entre com duas contas autorizadas.
+2. Abra a mesma feature.
+3. Salve em uma janela.
+4. Confirme que a outra atualiza sem F5.
+5. Abra o mesmo editor nas duas.
+6. Salve na primeira.
+7. Tente salvar o rascunho atrasado na segunda.
+8. Confirme aviso e ausencia de sobrescrita.
 
-## Ciclo de uma alteracao
+## Testar contingencia
 
-1. Identifique a camada dona do comportamento.
-2. Atualize a feature, infraestrutura ou regra dona da operacao.
-3. Atualize o documento correspondente em `docs/firebase/`.
-4. Atualize `MIGRATION_STATUS.md`.
-5. Execute `npm --prefix functions run check` se mexeu nas ferramentas administrativas.
-6. Execute `node --check arquivo.js` nos scripts de frontend alterados.
-7. Rode os casos relacionados de `TEST_PLAN.md`.
-8. Confira `git diff --check` e `git status --short`.
+O snapshot publico e carregado antes do Firebase. Para verificar o modo de
+leitura, desative temporariamente Firebase pela configuracao local ou simule
+falha de rede, sem editar o bundle gerado. Confirme:
 
-Para validar a integracao oficial entre header, menu e modal administrativo:
+- badge identifica snapshot;
+- dados aparecem;
+- criacao e edicao sao recusadas;
+- busca, preview e copia continuam funcionando.
 
-```powershell
-npm run test:access-modal
-```
+## Regras
 
-O teste visual com um proprietario simulado fica em
-`tests/fixtures/access-modal-harness.html`. Ele nao acessa Firebase real nem
-altera membros; existe somente para conferir o shell em desktop e mobile.
+Regras devem ser testadas no Emulator Suite. Nao use apenas a tela para provar
+seguranca: qualquer pessoa pode chamar o SDK pelo console. Os testes exercitam
+owner, admin, editor, visitante, schema invalido e conflito.
 
-Para repetir o teste de integracao de grupos com os emuladores abertos:
+## Dependencias
 
-```powershell
-$env:FIRESTORE_EMULATOR_HOST='127.0.0.1:8080'
-node tests/firestore-client-writes.test.js
-npm --prefix functions run test:groups:emulator
-npm --prefix functions run test:restore:emulator
-```
-
-O primeiro teste usa exatamente `senko-firestore-writes.js` contra as Security
-Rules: cobre CRUD, conflito, exclusao recursiva, bloqueios e backup GitHub
-simulado. Os testes em `functions` cobrem a implementacao administrativa
-anterior e a restauracao. Detalhes estao em `BACKUP_AND_RESTORE.md`.
-
-Para o teste de regras iniciar e encerrar seu proprio Firestore Emulator,
-feche o conjunto de emuladores e use:
-
-```powershell
-npm run test:firestore-rules
-```
-
-## Como adicionar uma operacao de escrita
-
-No plano Spark, escritas de produto usam o SDK Web e precisam de uma regra
-equivalente no servidor.
-
-1. Defina caminhos, campos e limites em `DATA_MODEL.md`.
-2. Implemente a transacao em `senko-firestore-writes.js`.
-3. Leia o documento de membro dentro da transacao para detectar remocao de acesso.
-4. Valide IDs, nomes, limites, versao e relacionamento pai-filho no cliente.
-5. Repita em `config/firebase/firestore.rules` tudo que protege integridade ou acesso.
-6. Incremente `workspace.dataVersion` junto da alteracao.
-7. Exponha um metodo pequeno no repositorio da feature.
-8. Preserve o rascunho quando houver `aborted`.
-9. Adicione caso positivo, visitante e dado malformado ao teste de regras.
-10. Compile regras com `firebase deploy --only firestore:rules --dry-run`.
-
-Security Rules nao executam consultas arbitrarias nem SHA-256. Se uma regra de
-negocio nao puder ser garantida nas Rules, documente o limite e reavalie se o
-recurso exige backend antes de libera-lo para membros nao confiaveis.
-
-## Erros comuns
-
-### `unauthenticated`
-
-Nao existe login valido. Entre novamente e confira o emulador de Auth.
-
-### `permission-denied`
-
-O UID nao possui documento em `workspaces/senkolib/members`, ou a permissao
-foi removida durante a operacao.
-
-### `aborted`
-
-Conflito de revisao ou versao. Isso e protecao de concorrencia, nao falha de
-rede. Preserve o rascunho e compare com a versao atual.
-
-### `already-exists`
-
-Outro item no mesmo escopo ja reservou o nome normalizado.
-
-### `not-found`
-
-O recurso pai foi excluido ou o ID nao existe mais.
-
-### `Failed to fetch dynamically imported module`
-
-Confirme que o Hosting esta aberto na porta 5000 e faca recarga forcada. Nao
-use `file://`.
-
-### A presenca nao aparece
-
-Confira `presenceAccess`, as regras do Realtime Database e se as duas pessoas
-abriram exatamente o mesmo item. No emulador, confira tambem a Function local
-`ensurePresenceAccess`; em producao Spark, cadastre o acesso manualmente.
+`functions/` conserva o nome por estabilidade dos comandos, mas contem apenas
+scripts administrativos locais. O frontend nao chama Cloud Functions. Depois
+de mudar dependencias dessa pasta, rode `npm install` nela e versione o lockfile.

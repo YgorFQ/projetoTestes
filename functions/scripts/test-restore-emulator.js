@@ -79,7 +79,6 @@ function buildFixture(root) {
       revisionData('variant-a', 'revision-1', 'libraryVariant', 'Variant A')],
     [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/collections/collection-a.json`,
       namedData('collection-a', 'Collection A', {
-        legacyId: null,
         groupId: 'interface',
         tags: ['teste']
       })],

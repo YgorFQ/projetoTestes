@@ -13,10 +13,6 @@
     : new URL('app/features/colecoes/', document.baseURI).href;
   var panel;
   var loadPromise;
-  var githubLoadPromise;
-  var collectionFilesBySlug = {};
-  var collectionLayoutFilesBySlug = {};
-  var collectionLoadPromises = {};
   var firebaseSyncPromise;
   var firebaseCollections = [];
   var firebaseLayouts = [];
@@ -80,167 +76,6 @@
       };
       if (!existing) document.head.appendChild(script);
     });
-  }
-
-  function loadManifest() {
-    /*
-     * Colecoes possui seu proprio catalogo de arquivos. Criar ou excluir uma
-     * colecao pelo GitHub modifica somente este manifesto da feature. Como o
-     * catalogo e um script, ele tambem pode ser carregado via file://.
-     */
-    return loadScript('../../../legacy/colecoes/data/manifest.js?v=20260816-structure').then(function () {
-      var manifest = window.SenkoColecoesManifest;
-      if (!manifest || !Array.isArray(manifest.collections)) {
-        throw new Error('Manifesto de Colecoes indisponivel');
-      }
-      return manifest;
-    });
-  }
-
-  function getManifestFile(entry) {
-    if (typeof entry === 'string') return entry;
-    if (entry && typeof entry.file === 'string') return entry.file;
-    return '';
-  }
-
-  function getManifestFiles(entries) {
-    return (Array.isArray(entries) ? entries : [])
-      .map(getManifestFile)
-      .filter(Boolean);
-  }
-
-  function registerCollectionCatalog(manifest) {
-    var entries = Array.isArray(manifest.collections) ? manifest.collections : [];
-    var legacyFiles = [];
-
-    entries.forEach(function (entry) {
-      /*
-       * Manifestos antigos continham apenas nomes de arquivo. Eles continuam
-       * funcionando e sao carregados em paralelo; entradas novas trazem os
-       * metadados necessarios para desenhar o card sem baixar HTML/CSS.
-       */
-      if (typeof entry === 'string') {
-        legacyFiles.push(entry);
-        return;
-      }
-      if (!entry || !entry.file || !entry.slug) return;
-
-      var slug = entry.slug.toLowerCase();
-      collectionFilesBySlug[slug] = entry.file;
-      collectionLayoutFilesBySlug[slug] = getManifestFiles(entry.layouts);
-      ColLib.registerCollection({
-        slug: slug,
-        name: entry.name || slug,
-        group: entry.group || '',
-        tags: Array.isArray(entry.tags) ? entry.tags : [],
-        layouts: [],
-        layoutCount: Number(entry.layoutCount) || collectionLayoutFilesBySlug[slug].length || 0,
-        _senkoLazy: true
-      });
-    });
-
-    return legacyFiles;
-  }
-
-  function ensureCollectionLoaded(slug) {
-    var normalizedSlug = String(slug || '').toLowerCase();
-    var current = typeof ColLib !== 'undefined'
-      ? ColLib.getBySlug(normalizedSlug)
-      : null;
-
-    if (!current) {
-      return Promise.reject(new Error('Colecao nao encontrada: ' + normalizedSlug));
-    }
-    if (!current._senkoLazy) return Promise.resolve(current);
-    if (collectionLoadPromises[normalizedSlug]) {
-      return collectionLoadPromises[normalizedSlug];
-    }
-
-    var file = collectionFilesBySlug[normalizedSlug];
-    if (!file) {
-      return Promise.reject(new Error('Arquivo da colecao nao catalogado: ' + normalizedSlug));
-    }
-
-    collectionLoadPromises[normalizedSlug] = loadScript('../../../legacy/colecoes/data/' + file).then(function () {
-      var layoutFiles = collectionLayoutFilesBySlug[normalizedSlug] || [];
-      return Promise.all(layoutFiles.map(function (layoutFile) {
-        return loadScript('../../../legacy/colecoes/data/' + layoutFile);
-      }));
-    }).then(function () {
-      var loaded = ColLib.getBySlug(normalizedSlug);
-      if (!loaded) throw new Error('Colecao nao foi registrada: ' + normalizedSlug);
-      loaded.layoutCount = (loaded.layouts || []).length;
-      loaded._senkoLazy = false;
-      return loaded;
-    }).catch(function (error) {
-      delete collectionLoadPromises[normalizedSlug];
-      throw error;
-    });
-
-    return collectionLoadPromises[normalizedSlug];
-  }
-
-  function prefetchCollectionData() {
-    /*
-     * Depois que os cards aparecem, o navegador pode baixar os arquivos em
-     * baixa prioridade. Eles continuam sem executar ate o usuario abrir uma
-     * colecao, mas o clique normalmente encontra o recurso no cache.
-     */
-    if (window.location.protocol === 'file:') return;
-
-    var run = function () {
-      Object.keys(collectionFilesBySlug).forEach(function (slug) {
-        var href = featureUrl('../../../legacy/colecoes/data/' + collectionFilesBySlug[slug]);
-        if (document.querySelector('link[data-senko-collection-prefetch="' + href + '"]')) {
-          return;
-        }
-
-        var link = document.createElement('link');
-        link.rel = 'prefetch';
-        link.as = 'script';
-        link.href = href;
-        link.dataset.senkoCollectionPrefetch = href;
-        document.head.appendChild(link);
-      });
-    };
-
-    window.setTimeout(function () {
-      if ('requestIdleCallback' in window) {
-        window.requestIdleCallback(run, { timeout: 1500 });
-      } else {
-        run();
-      }
-    }, 400);
-  }
-
-  window.SenkoColecoesData = {
-    ensureLoaded: ensureCollectionLoaded
-  };
-
-  function loadGithubIntegration() {
-    if (githubLoadPromise) return githubLoadPromise;
-
-    githubLoadPromise = new Promise(function (resolve) {
-      var run = function () {
-        loadScript('../../../legacy/colecoes/github/colecoes-github.js?v=20260816-structure')
-          .then(function () {
-            if (window.SenkoColecoesGithub) window.SenkoColecoesGithub.init();
-            resolve();
-          })
-          .catch(function (error) {
-            console.error('[Colecoes] Falha ao carregar integracao GitHub:', error);
-            resolve();
-          });
-      };
-
-      if ('requestIdleCallback' in window) {
-        window.requestIdleCallback(run, { timeout: 500 });
-      } else {
-        window.setTimeout(run, 0);
-      }
-    });
-
-    return githubLoadPromise;
   }
 
   function applyFirebaseSnapshot() {
@@ -398,16 +233,13 @@
       loadStyle('styles/index.css?v=20260816-structure');
       loadStyle('styles/layout-editor.css?v=20260816-structure');
 
-      var firstResources = await Promise.all([
+      await Promise.all([
         loadScript('view.js?v=20260613-fast-load'),
-        loadScript('controllers/groups.js?v=20260816-structure'),
-        loadManifest()
+        loadScript('controllers/groups.js?v=20260816-structure')
       ]);
-      var manifest = firstResources[2];
       panel.replaceChildren(window.SenkoColecoes.createView());
 
       await Promise.all([
-        loadScript('../../../legacy/colecoes/data/col-groups-data.js?v=20260816-structure'),
         loadScript('repositories/firebase-repository.js?v=20260816-structure'),
         loadScript('repositories/static-repository.js?v=20260816-structure'),
         loadScript('core/index.js?v=20260816-structure'),
@@ -417,13 +249,11 @@
         loadScript('controllers/firebase-controls.js?v=20260816-structure')
       ]);
 
+      /*
+       * Colecoes possui exatamente duas fontes: listeners do Firebase para o
+       * modo editavel e o snapshot gerado para o modo publico de leitura.
+       */
       var staticLoaded = loadStaticSnapshot();
-      if (!usesFirebaseData() && !staticLoaded) {
-        var legacyFiles = registerCollectionCatalog(manifest);
-        await Promise.all(legacyFiles.map(function (file) {
-          return loadScript('../../../legacy/colecoes/data/' + file);
-        }));
-      }
 
       if (!window.SenkoColecoes || typeof window.SenkoColecoes.init !== 'function') {
         throw new Error('Inicializador de Colecoes indisponivel');
@@ -435,8 +265,7 @@
       bindDataMode();
       if (window.SenkoDataMode && window.SenkoDataMode.isFirebase()) startFirebaseSync();
       else if (!staticLoaded) {
-        loadGithubIntegration();
-        prefetchCollectionData();
+        console.warn('[Colecoes] Nenhuma fonte de dados disponivel.');
       }
       return panel;
     })().catch(function (error) {

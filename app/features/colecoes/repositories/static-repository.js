@@ -1,4 +1,9 @@
 (function () {
+  /*
+   * Adaptador somente leitura do snapshot publico para Colecoes.
+   * Converte o bundle gerado para o mesmo formato entregue pelo repository
+   * Firebase; por isso controllers nao precisam de ramificacoes por fonte.
+   */
   function source() {
     return (window.SenkoStaticBackup || {}).colecoes || null;
   }

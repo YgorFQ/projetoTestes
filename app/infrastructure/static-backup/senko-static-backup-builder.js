@@ -1,8 +1,18 @@
 (function (root, factory) {
+  /*
+   * Builder puro do snapshot publico.
+   *
+   * Funciona no navegador e no Node para que o mesmo algoritmo seja usado no
+   * botao de backup, nos testes e no script operacional. Recebe um mapa de
+   * arquivos tecnicos e devolve outro mapa; nao acessa rede nem disco. Essa
+   * pureza torna contagens, ordenacao e serializacao reproduziveis.
+   */
   var api = factory();
   if (typeof module === 'object' && module.exports) module.exports = api;
   if (root) root.SenkoStaticBackupBuilder = api;
 })(typeof window !== 'undefined' ? window : null, function () {
+  // O snapshot tecnico prioriza restauracao completa. O bundle publico contem
+  // apenas o necessario para renderizar Biblioteca e Colecoes em leitura.
   var DATA_ROOT = 'generated/backups/senkolib-data/';
   var PUBLIC_ROOT = 'generated/static-backup/';
 
@@ -69,6 +79,8 @@
       '})();\n';
   }
 
+  // A lista de arquivos do manifesto e autoritativa. Caminhos extras recebidos
+  // sao ignorados para que um arquivo solto nao apareca no site por acidente.
   function buildPublicSnapshot(files) {
     var technicalManifestPath = DATA_ROOT + 'manifest.json';
     var manifest = parseJson(files[technicalManifestPath] || '{}', technicalManifestPath);
@@ -142,6 +154,8 @@
     };
   }
 
+  // Serializacao em tres scripts preserva carregamento sem fetch e tambem
+  // funciona quando o projeto e servido por um servidor HTTP minimo.
   function buildPublicFiles(files) {
     var snapshot = buildPublicSnapshot(files);
     var output = {};

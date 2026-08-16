@@ -9,7 +9,6 @@
     "firebase:emulators": "firebase emulators:start",
     "firebase:deploy:rules": "firebase deploy --only firestore:rules,firestore:indexes,database",
     "firebase:deploy:hosting": "firebase deploy --only hosting",
-    "migration:build": "node tools/build-legacy-snapshot.js",
     "backup:build-static": "node tools/build-static-backup.js",
     "inventory:build": "node tools/build-file-classification.js",
     "test:asset-versioning": "node tests/asset-versioning.test.js",

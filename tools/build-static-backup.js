@@ -2,6 +2,15 @@ const fs = require('node:fs');
 const path = require('node:path');
 const builder = require('../app/infrastructure/static-backup/senko-static-backup-builder.js');
 
+/*
+ * Adaptador de disco para o builder puro do snapshot publico.
+ *
+ * Este script nao consulta Firebase. Ele le o snapshot tecnico que ja existe,
+ * valida todos os arquivos declarados no manifesto e grava somente a saida
+ * reconstruivel em generated/static-backup. Use o botao do app quando o
+ * objetivo for capturar dados atuais do banco e publicar no GitHub.
+ */
+
 const projectRoot = path.resolve(__dirname, '..');
 const dataRoot = 'generated/backups/senkolib-data';
 const manifestPath = path.join(projectRoot, dataRoot, 'manifest.json');

@@ -25,7 +25,7 @@ scripts pertencem a pastas especificas.
 - documentacao: `docs/`;
 - scripts de manutencao: `tools/`;
 - snapshots e inventarios: `generated/`;
-- implementacoes antigas: `legacy/`.
+- snapshots e inventarios: `generated/`.
 
 ## Logs locais
 

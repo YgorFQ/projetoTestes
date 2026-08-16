@@ -581,7 +581,6 @@
     if (firebaseRepository) {
       firebaseRepository.saveLayout({
         id: data.id,
-        legacyId: data.layout && data.layout.legacyId,
         name: data.name,
         tags: data.tags,
         html: data.html,
@@ -654,7 +653,6 @@
     if (firebaseRepository) {
       firebaseRepository.saveVariant(data.id, {
         id: data.variant && data.variant.id,
-        legacyId: data.variant && data.variant.legacyId,
         name: data.name,
         html: data.html,
         css: data.css,

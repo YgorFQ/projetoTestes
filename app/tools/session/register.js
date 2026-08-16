@@ -1,4 +1,11 @@
 (function () {
+  /*
+   * Traduz o estado tecnico do Firebase para a experiencia de sessao.
+   *
+   * A tool possui quatro superficies: gate de login, menu da conta, badge da
+   * fonte de dados e alerta de servico. Ela nao decide autorizacao; apenas
+   * observa SenkoFirebase e SenkoDataMode e apresenta a proxima acao valida.
+   */
   var gate;
   var panelTitle;
   var panelMessage;

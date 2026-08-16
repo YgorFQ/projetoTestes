@@ -1,4 +1,12 @@
 (function () {
+  /*
+   * Menu global de ferramentas do shell.
+   *
+   * Os botoes continuam pertencendo as respectivas tools. Este modulo move
+   * os elementos existentes para o painel, preservando IDs, listeners,
+   * atributos hidden/disabled e regras de cargo. MutationObserver sincroniza
+   * mudancas de disponibilidade feitas depois da montagem.
+   */
   var menu;
   var trigger;
   var items;

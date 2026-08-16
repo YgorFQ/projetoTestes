@@ -2,6 +2,8 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Funcoes pequenas tornam a politica auditavel: cada match abaixo deve
+    // expressar "quem", "qual formato" e "qual alteracao" separadamente.
     function signedIn() {
       return request.auth != null;
     }
@@ -135,12 +137,6 @@ service cloud.firestore {
           'version', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy',
           'updatedByName'
         ])
-        && data.keys().hasOnly([
-          'id', 'legacyId', 'workspaceId', 'kind', 'parentId', 'collectionId',
-          'name', 'nameKey', 'tags', 'html', 'css', 'currentRevisionId',
-          'version', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy',
-          'updatedByName', 'deleting'
-        ])
         && data.id == resourceId
         && data.workspaceId == workspaceId
         && data.kind == kind
@@ -164,6 +160,14 @@ service cloud.firestore {
 
     function validVersionedCreate(workspaceId, resourceId, kind) {
       return validVersionedDocument(request.resource.data, workspaceId, resourceId, kind)
+        // Creates use a closed schema. Updates below may retain an unchanged
+        // field from an older document, but can never add or modify one.
+        && request.resource.data.keys().hasOnly([
+          'id', 'workspaceId', 'kind', 'parentId', 'collectionId',
+          'name', 'nameKey', 'tags', 'html', 'css', 'currentRevisionId',
+          'version', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy',
+          'updatedByName'
+        ])
         && request.resource.data.version == 1
         && request.resource.data.createdAt == request.time
         && request.resource.data.updatedAt == request.time
@@ -252,11 +256,6 @@ service cloud.firestore {
       return data.keys().hasAll([
           'id', 'workspaceId', 'name', 'nameKey', 'groupId', 'tags', 'version',
           'createdAt', 'createdBy', 'updatedAt', 'updatedBy', 'updatedByName'
-        ])
-        && data.keys().hasOnly([
-          'id', 'legacyId', 'workspaceId', 'name', 'nameKey', 'groupId', 'tags',
-          'version', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy',
-          'updatedByName', 'deleting'
         ])
         && data.id == collectionId
         && data.workspaceId == workspaceId
@@ -453,6 +452,11 @@ service cloud.firestore {
         allow read: if isMember(workspaceId);
         allow create: if isMember(workspaceId)
           && validCollection(request.resource.data, workspaceId, collectionId)
+          && request.resource.data.keys().hasOnly([
+            'id', 'workspaceId', 'name', 'nameKey', 'groupId', 'tags',
+            'version', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy',
+            'updatedByName'
+          ])
           && request.resource.data.version == 1
           && request.resource.data.createdAt == request.time
           && request.resource.data.updatedAt == request.time

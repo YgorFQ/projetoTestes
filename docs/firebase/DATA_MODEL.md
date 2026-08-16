@@ -115,7 +115,6 @@ Caminho: `workspaces/{workspaceId}/bibliotecaLayouts/{layoutId}`
 | Campo | Tipo | Uso |
 | --- | --- | --- |
 | `id` | string | ID tecnico atual |
-| `legacyId` | string ou null | ID anterior a migracao |
 | `kind` | string | Sempre `libraryLayout` |
 | `name` / `nameKey` | string | Exibicao e unicidade |
 | `tags` | string[] | Ate 40 tags de 80 caracteres |
@@ -143,7 +142,7 @@ Usa os mesmos campos do layout, com estas diferencas:
 
 Caminho: `workspaces/{workspaceId}/collections/{collectionId}`
 
-Campos principais: `id`, `legacyId`, `workspaceId`, `name`, `nameKey`,
+Campos principais: `id`, `workspaceId`, `name`, `nameKey`,
 `groupId`, `tags`, `version`, campos de criacao e campos de atualizacao.
 
 Colecoes nao possuem revisoes imutaveis porque guardam apenas metadados. A

@@ -66,7 +66,7 @@
        * Sources entrega sua propria view ao shell. Nenhum HTML de outra tela
        * e consultado durante a troca de feature.
        */
-      await loadScript('scripts/sources-view.js?v=20260613-remove-legacy-header');
+      await loadScript('scripts/sources-view.js?v=20260816-official-shell');
       var content = window.SenkoSources.createView();
       shadow.appendChild(content);
 

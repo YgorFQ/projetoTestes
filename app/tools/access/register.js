@@ -1,4 +1,11 @@
 (function () {
+  /*
+   * Composition root do modal global Acessos.
+   *
+   * Cria trigger e overlay uma vez, carrega view/repository/controller sob
+   * demanda e preserva o foco ao fechar. O shell so conhece o botao global;
+   * regras de cargos permanecem dentro desta tool e no Firebase.
+   */
   if (!window.SenkoFirebase) return;
 
   var currentScript = document.currentScript;

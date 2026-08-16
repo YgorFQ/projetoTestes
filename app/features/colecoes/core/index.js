@@ -32,9 +32,8 @@
      }
 
    ORDEM DE CARREGAMENTO:
-     Deve ser carregado antes de col-script.js, col-modals.js
-     e dos arquivos preservados em legacy/colecoes/data/.
-     Deve ser carregado APÓS col-groups.js.
+     O register.js carrega este motor antes dos controladores de tela e depois
+     do motor de grupos. Repositories alimentam o estado por replaceAll.
 ═══════════════════════════════════════════════════════════════════════ */
 
 var ColLib = (function () {
@@ -157,8 +156,8 @@ var ColLib = (function () {
 
     /* ─────────────────────────────────────────────────────────────────
        register(obj)
-       Chamado por cada arquivo legacy/colecoes/data/[slug].js ao carregar.
-       Se o slug já existir (ex: hot-reload), substitui sem duplicar.
+       Entrada publica para registrar ou substituir uma colecao em memoria.
+       Se o slug ja existir, substitui sem duplicar.
     ───────────────────────────────────────────────────────────────── */
     register: function (obj) {
       return _registerCollection(obj);

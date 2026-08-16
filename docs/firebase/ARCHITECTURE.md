@@ -47,9 +47,9 @@ GitHub Actions.
 | GitHub | Receber snapshot restauravel e bundle publico de leitura | Ser usado pelo CRUD normal |
 | SenkoDataMode | Escolher Firebase `ready` ou backup estatico | Permitir escrita no modo publico |
 
-`functions/` continua no repositorio porque contem importadores, restauracao,
-testes e a implementacao anterior. No plano Spark, o frontend de producao nao
-depende dessas Functions.
+`functions/` conserva o nome para manter comandos existentes, mas contem apenas
+scripts administrativos locais de membros, restauracao e testes. O frontend de
+producao nao importa o SDK de Cloud Functions.
 
 ## Arquivos principais
 
@@ -322,8 +322,7 @@ somente o uso de emuladores:
 - `localhost` e `127.0.0.1`: Firebase ativo usando emuladores;
 - GitHub Pages e outros hosts autorizados: Firebase ativo no projeto real;
 - sem sessao `ready`: bundle do ultimo backup em modo somente leitura;
-- os arquivos legados ficam preservados temporariamente para seguranca da
-  migracao, mas nao sao a fonte normal do fallback novo.
+- o Git preserva implementacoes removidas sem mante-las no runtime atual.
 
 Qualquer novo ambiente publico precisa ser adicionado aos dominios autorizados
 do Firebase Authentication antes do login funcionar.

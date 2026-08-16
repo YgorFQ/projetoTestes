@@ -78,7 +78,6 @@
         setBusy(button, true, 'Salvando...');
         repo.saveCollection({
           slug: null,
-          legacyId: data.slug,
           name: data.name,
           group: data.group,
           tags: data.tags,
@@ -188,7 +187,6 @@
         setBusy(button, true, 'Salvando...');
         repo.saveLayout(collection.slug, {
           id: null,
-          legacyId: data.id,
           name: data.name,
           html: data.html,
           css: data.css,

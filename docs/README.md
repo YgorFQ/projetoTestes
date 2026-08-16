@@ -1,22 +1,22 @@
 # Documentacao tecnica do SenkoLib
 
-Esta pasta e a referencia tecnica canonica da integracao Firebase. Ela existe
-para permitir que uma pessoa nova no projeto entenda a arquitetura antes de
-alterar o codigo.
+Esta pasta e a referencia canonica do produto e da implementacao. Ela existe
+para uma pessoa nova entender o SenkoLib antes de alterar o codigo.
 
 ## Ordem de leitura recomendada
 
-1. [Estrutura do projeto](architecture/STRUCTURE.md): onde cada tipo de codigo fica.
-2. [Classificacao dos arquivos](architecture/FILE_CLASSIFICATION.md): oficial, gerado, prototipo ou legado.
-3. [Arquivos da raiz](architecture/ROOT_FILES.md): por que alguns arquivos nao podem ser movidos.
-4. [Configuracao do Firebase](firebase/SETUP.md): tutorial inicial para quem nunca usou Firebase.
-5. [Arquitetura Firebase](firebase/ARCHITECTURE.md): componentes e fluxos.
-6. [Modelo de dados](firebase/DATA_MODEL.md): caminhos e campos do banco.
-7. [Desenvolvimento local](firebase/DEVELOPMENT.md): como iniciar e depurar.
-8. [Plano de testes](firebase/TEST_PLAN.md): comportamentos que devem passar.
-9. [Operacao e producao](firebase/OPERATIONS.md): deploy, membros e rollback.
-10. [Backup e restauracao](firebase/BACKUP_AND_RESTORE.md): GitHub e recuperacao.
-11. [Estado da migracao](firebase/MIGRATION_STATUS.md): pronto, pendente e riscos.
+1. [Especificacao do produto](PRODUCT_SPECIFICATION.md): comportamento, cargos e estados.
+2. [Guia de desenvolvimento](DEVELOPMENT_GUIDE.md): primeiros passos, comandos e depuracao.
+3. [Estrutura do projeto](architecture/STRUCTURE.md): onde cada tipo de codigo fica.
+4. [Fluxo de execucao](architecture/RUNTIME_FLOW.md): inicializacao, listeners e backup.
+5. [Contratos entre modulos](architecture/MODULE_CONTRACTS.md): limites de cada camada.
+6. [Classificacao dos arquivos](architecture/FILE_CLASSIFICATION.md): oficial, gerado ou prototipo.
+7. [Arquivos da raiz](architecture/ROOT_FILES.md): por que alguns arquivos nao podem ser movidos.
+8. [Configuracao do Firebase](firebase/SETUP.md): tutorial inicial para quem nunca usou Firebase.
+9. [Arquitetura Firebase](firebase/ARCHITECTURE.md): componentes e seguranca.
+10. [Modelo de dados](firebase/DATA_MODEL.md): caminhos e campos do banco.
+11. [Plano de testes](firebase/TEST_PLAN.md): comportamentos que devem passar.
+12. [Operacao e producao](firebase/OPERATIONS.md): deploy, membros e recuperacao.
 
 ## Qual documento tem prioridade
 
@@ -26,8 +26,6 @@ Quando houver divergencia, use esta ordem:
 2. Documentos em `docs/firebase/`.
 3. Documentos em `docs/architecture/`.
 4. Guia interno em `app/tools/guide/register.js`.
-5. `docs/legacy/SenkoLib - Documentacao Completa.md`, que descreve
-   principalmente a arquitetura legada baseada em arquivos e GitHub.
 
 Uma divergencia nao deve ser mantida. Abra uma tarefa e atualize o documento
 afetado junto com o codigo.
@@ -50,16 +48,16 @@ afetado junto com o codigo.
   commits reais e restaurados primeiro em workspace descartavel quando forem
   usados para recuperacao.
 
-Consulte [MIGRATION_STATUS.md](firebase/MIGRATION_STATUS.md) antes de continuar
-a implementacao.
+O corte para Firebase foi concluido. Nao adicione outra fonte editavel; dados
+atuais pertencem ao Firestore e contingencia pertence ao snapshot gerado.
 
 ## Regra de manutencao
 
-Toda mudanca que altere dados, seguranca, fluxo de salvamento, nomes de
-Functions, configuracao, comandos, backup ou comportamento colaborativo deve:
+Toda mudanca que altere dados, seguranca, fluxo de salvamento, configuracao,
+comandos, backup ou comportamento colaborativo deve:
 
 1. Atualizar o documento tecnico correspondente.
-2. Atualizar `MIGRATION_STATUS.md`.
+2. Atualizar `PRODUCT_SPECIFICATION.md` quando mudar o contrato do produto.
 3. Atualizar o Senko Guide quando houver impacto para quem usa o aplicativo.
 4. Executar os testes relacionados em `TEST_PLAN.md`.
 

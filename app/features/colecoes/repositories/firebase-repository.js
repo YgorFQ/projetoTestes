@@ -129,7 +129,6 @@
     return window.SenkoFirestoreWrites.saveCollection({
       workspaceId: window.SenkoFirebase.getWorkspaceId(),
       collectionId: collection.slug || null,
-      legacyId: collection.legacyId || collection.slug || null,
       name: collection.name,
       groupId: collection.group || null,
       tags: collection.tags || [],
@@ -165,7 +164,6 @@
       kind: 'collectionLayout',
       parentId: collectionId,
       resourceId: layout.id || null,
-      legacyId: layout.legacyId || layout.id || null,
       name: layout.name,
       html: layout.html || '',
       css: layout.css || '',

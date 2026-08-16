@@ -1,7 +1,7 @@
 (function () {
   /*
    * Adaptador Firebase exclusivo da Biblioteca. A feature usa este contrato
-   * sem conhecer SDK, Auth, Functions ou caminhos globais do projeto.
+   * sem conhecer SDK, Auth ou caminhos globais do projeto.
    */
   function firebaseReady() {
     return Boolean(window.SenkoFirebase && window.SenkoFirebase.isReady());
@@ -111,7 +111,6 @@
       workspaceId: window.SenkoFirebase.getWorkspaceId(),
       kind: 'libraryLayout',
       resourceId: layout.id || null,
-      legacyId: layout.legacyId || layout.id || null,
       name: layout.name,
       tags: layout.tags || [],
       html: layout.html || '',
@@ -128,7 +127,6 @@
       kind: 'libraryVariant',
       parentId: layoutId,
       resourceId: variant.id || null,
-      legacyId: variant.legacyId || variant.id || null,
       name: variant.name,
       html: variant.html || '',
       css: variant.css || '',

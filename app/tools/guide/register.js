@@ -166,15 +166,15 @@
           badge: 'dados',
           terms: 'manifest data indice arquivos carregar layouts colecoes variantes',
           paragraphs: [
-            'Os dados atuais vem do Firestore ou do bundle em generated/static-backup; os manifests antigos ficaram em legacy.',
-            'O inventario generated/meta/file-classification.json marca cada arquivo como official, generated, prototype ou legacy.'
+            'Os dados atuais vem do Firestore ou do bundle em generated/static-backup. Nao existe uma terceira fonte.',
+            'O inventario generated/meta/file-classification.json marca cada arquivo como official, generated ou prototype.'
           ],
           bullets: [
             'Execute npm run inventory:build depois de criar, mover ou remover arquivos.',
             'generated/static-backup/manifest.js informa a versao e as contagens do fallback publico.',
-            'legacy/biblioteca/data/manifest.js e legacy/colecoes/data/manifest.js existem somente para compatibilidade.'
+            'Manifestos gerados sao saida do backup e nunca cadastro manual.'
           ],
-          note: 'Nao use um manifest legado para cadastrar conteudo novo.'
+          note: 'Conteudo novo e criado pela interface e persistido no Firestore.'
         },
         {
           title: 'Shared',
@@ -205,7 +205,6 @@
             'app/features -> guarda features finais, cada uma com seus arquivos proprios.',
             'app/prototype -> guarda somente ideias beta, como Preview.',
             'app/infrastructure -> conversa com Firebase, GitHub e o modo de dados.',
-            'legacy -> preserva dados e integracoes antigas sem receber funcionalidades novas.',
             'generated -> recebe snapshots, fallback publico e inventarios reconstruiveis.'
           ],
           note: 'Analogia: index e a porta de entrada, shell e a recepcao, shared e o almoxarifado, features sao as salas de trabalho.'
@@ -251,11 +250,10 @@
             'app/shared: tokens, componentes e assets globais.',
             'app/features: features principais.',
             'app/prototype: telas em teste ou beta.',
-            'legacy: implementacoes antigas preservadas.',
             'generated: arquivos produzidos por scripts ou backups.',
             'config/firebase: regras, indices e exemplo de configuracao.',
             '.vscode/settings.json: configuracao local do Live Server.',
-            'docs: toda a documentacao canonica e historica.'
+            'docs: toda a documentacao canonica do produto e da implementacao.'
           ]
         },
         {
@@ -305,19 +303,17 @@
           badge: 'layouts',
           terms: 'biblioteca layout variacao variante senkolib register variants layout-editor editor oficial id manifest html basico copy base',
           paragraphs: [
-            'A Biblioteca guarda layouts e variantes de layouts no Firestore e le o ultimo snapshot publico quando o Firebase nao esta disponivel.',
-            'Os antigos arquivos JS individuais continuam em legacy/biblioteca somente para compatibilidade e consulta.'
+            'A Biblioteca guarda layouts e variantes no Firestore e le o ultimo snapshot publico quando o Firebase nao esta disponivel.',
+            'Firebase e snapshot gerado sao as duas unicas fontes de dados.'
           ],
           bullets: [
             'Motor: core/index.js.',
             'UI: controllers/index.js.',
             'Editor oficial: controllers/layout-editor.js.',
-            'Editor do HTML Basico: controllers/copy-base-editor.js.',
             'Template do HTML Basico: controllers/copy-base-template.js.',
             'Persistencia: repositories/firebase-repository.js.',
             'Fallback: repositories/static-repository.js.',
-            'Estilos do editor: styles/layout-editor.css.',
-            'Estilos do editor do HTML Basico: styles/copy-base-editor.css.'
+            'Estilos do editor: styles/layout-editor.css.'
           ],
           note: 'O editor oficial nao fica mais em prototype. Ele pertence a Biblioteca e nao deve oferecer campo editavel para o ID tecnico.'
         },
@@ -328,7 +324,7 @@
           paragraphs: [
             'Colecoes organiza layouts dentro de colecoes e grupos no Firestore.',
             'Os grupos sao cadastro proprio e nao devem ser apagados so porque ficaram vazios.',
-            'Os antigos arquivos de colecao continuam em legacy/colecoes somente para compatibilidade e consulta.'
+            'Firebase e snapshot gerado sao as duas unicas fontes de dados.'
           ],
           bullets: [
             'Motor de colecoes: core/index.js.',
@@ -450,7 +446,7 @@
             'Preview: prototipo beta em app/prototype.',
             'Senko Guide: ferramenta oficial do shell e prioridade maxima de manutencao.',
             'Editor da Biblioteca: oficial, integrado em app/features/biblioteca/controllers/layout-editor.js.',
-            'Editor do HTML Basico: oficial, integrado em app/features/biblioteca/controllers/copy-base-editor.js.'
+            'HTML Basico: template oficial somente para copia em app/features/biblioteca/controllers/copy-base-template.js.'
           ]
         },
         {
@@ -478,14 +474,14 @@
         {
           title: 'Firebase e continuidade publica',
           badge: 'dados',
-          terms: 'firebase firestore transicao legado enabled config banco principal',
+          terms: 'firebase firestore continuidade enabled config banco principal',
           paragraphs: [
             'Firebase e a fonte principal editavel de Biblioteca e Colecoes. Sem uma sessao autorizada, o SenkoLib mostra o ultimo backup publico em modo somente leitura.',
             'A configuracao fica em app/infrastructure/firebase/firebase-config.js e o passo a passo completo fica em docs/firebase/SETUP.md.'
           ],
           bullets: [
             'Documentacao canonica: docs/README.md e docs/firebase/.',
-            'Estado e pendencias: docs/firebase/MIGRATION_STATUS.md.',
+            'Contrato do produto: docs/PRODUCT_SPECIFICATION.md.',
             'Firestore guarda conteudo, metadados e revisoes.',
             'Variantes e layouts de colecao sao observados nas subcolecoes de cada documento pai.',
             'O navegador executa transacoes e Firestore Rules valida membro, campos, versoes e limites.',
@@ -529,7 +525,7 @@
             'Um Live Server simples na raiz e suportado; file:// nao e requisito.',
             'Ao entrar como membro, os listeners Firebase substituem o snapshot estatico.',
             'Ao sair, as features encerram listeners e voltam ao ultimo backup.',
-            'Arquivos legados permanecem preservados ate a ultima etapa da reforma.'
+            'Sem nenhuma das duas fontes, a feature abre vazia e informa indisponibilidade.'
           ]
         },
         {
@@ -565,26 +561,7 @@
             'Owner gerencia qualquer cargo; admin aprova e remove somente editores; editor nao convida pessoas.',
             'Acessos fica no menu global e mostra solicitacoes, membros e atividade somente para owner/admin.',
             'O primeiro owner e cadastrado por procedimento administrativo; os proximos cargos usam a interface.',
-            'Nos emuladores, o primeiro usuario local e cadastrado automaticamente.'
-          ]
-        },
-        {
-          title: 'Migracao dos arquivos atuais',
-          badge: 'importar',
-          terms: 'migracao snapshot legacy manifest importar service account',
-          paragraphs: [
-            'A migracao e uma operacao unica: os arquivos JS atuais viram um snapshot validado e depois documentos do Firestore.',
-            'O extrator nao modifica os arquivos originais e o importador recusa sobrescrever um workspace preenchido sem --force.'
-          ],
-          bullets: [
-            'Gerar: npm run migration:build.',
-            'Saida: generated/migrations/senkolib-legacy.json.',
-            'As duas antigas variacoes orfas foram promovidas a layouts independentes sem perda de conteudo.',
-            'O snapshot atual possui 34 layouts, 11 variacoes e nenhum warning.',
-            'Grupos importados recebem campos completos, auditoria e reserva de nome.',
-            'No emulador, defina FIRESTORE_EMULATOR_HOST antes de importar.',
-            'Importar: npm --prefix functions run migrate:legacy. Use --allow-warnings somente depois de investigar cada warning.',
-            'Chave administrativa deve ficar fora do repositorio e ser revogada depois.'
+            'Nos emuladores, crie o usuario local e cadastre o membro com o script administrativo.'
           ]
         },
         {
@@ -592,7 +569,7 @@
           badge: 'local',
           terms: 'ambiente desenvolvimento producao emulator localhost java',
           paragraphs: [
-            'Emuladores sao copias locais de Auth, Firestore, Functions, Realtime Database, Storage e Hosting.',
+            'Emuladores sao copias locais de Auth, Firestore, Realtime Database, Storage e Hosting.',
             'Eles permitem testar login, regras e salvamento sem alterar dados reais.'
           ],
           bullets: [
@@ -626,7 +603,7 @@
             'Formato tecnico: JSON em generated/backups/senkolib-data/.',
             'Formato publico: arquivos JS gerados em generated/static-backup/.',
             'A restauracao administrativa existe e deve ser testada primeiro em workspace descartavel.',
-            'A chave senkolib_github_token guarda o token; senkolib_github_config fica apenas como fallback legado.'
+            'A chave senkolib_github_token guarda o token pessoal no navegador; ela nunca entra no commit.'
           ]
         },
         {
@@ -655,7 +632,7 @@
             'O historico Git preserva snapshots anteriores mesmo quando um item e excluido.',
             'Se dataVersion mudar durante a leitura, o exportador descarta a tentativa e le novamente antes de criar o commit.',
             'O mesmo commit gera o snapshot restauravel completo e o bundle publico apenas com a versao atual.',
-            'As integracoes Contents API por feature permanecem somente no modo legado historico.'
+            'Features nao escrevem no GitHub; somente a ferramenta global executa o backup.'
           ]
         },
         {
@@ -723,7 +700,7 @@
           terms: 'adicionar layout biblioteca arquivo individual manifest senkolib register registerLayout sintaxe duplicado',
           paragraphs: [
             'Layouts novos sao criados pela interface e persistidos no Firestore somente quando a pessoa confirma Salvar.',
-            'Nao crie arquivos em legacy/biblioteca para cadastrar conteudo novo.'
+            'Nao crie arquivos de dados manuais para cadastrar conteudo novo.'
           ],
           bullets: [
             'Entrar com uma conta membro e usar Criacao rapida > Layout.',
@@ -747,7 +724,7 @@
             'Conferir qual layout e dono da variante.',
             'Abrir o layout dono e usar a acao de criar ou editar variante.',
             'Salvar pelo editor oficial para manter revisao e deteccao de conflito.',
-            'Nao editar os arquivos em legacy/biblioteca/data/variants.',
+            'Variacoes pertencem a subcolecao do layout no Firestore.',
             'Bloquear nome repetido ao criar e ao editar.',
             'As variantes aparecem em ordem alfabetica/natural pelo nome, sem reordenar o manifest.',
             'Testar abrir o layout, selecionar variante, editar, salvar e recarregar.'
@@ -759,7 +736,7 @@
           terms: 'adicionar colecao arquivo individual collib registerCollection manifest grupos slug',
           paragraphs: [
             'Colecoes novas sao criadas pela interface e persistidas no Firestore.',
-            'Os arquivos antigos em legacy/colecoes nao sao o banco atual.'
+            'O snapshot gerado e somente leitura e nunca substitui o banco atual.'
           ],
           bullets: [
             'Entrar como membro e usar Criacao rapida > Colecao.',
@@ -816,27 +793,10 @@
             'Script: app/features/colecoes/controllers/layout-editor.js.',
             'CSS: app/features/colecoes/styles/layout-editor.css.',
             'Persistencia: app/features/colecoes/repositories/firebase-repository.js.',
-            'O editor trabalha somente com HTML completo e incorpora CSS legado ao HTML quando necessario.',
+            'O editor trabalha com HTML completo e incorpora CSS separado ao HTML quando necessario.',
             'Nunca importar o editor ou os estilos da Biblioteca para oferecer esta tela.'
           ],
           note: 'Experiencia consistente nao significa dependencia entre features: cada editor continua funcionando se a outra feature for removida.'
-        },
-        {
-          title: 'Editar o HTML Basico',
-          badge: 'biblioteca',
-          terms: 'editar html basico copy base template github botao lapis',
-          paragraphs: [
-            'O editor do HTML Basico e uma ferramenta oficial da Biblioteca.',
-            'Ele altera o conteudo copiado pelo botao HTML Basico. Este fluxo ainda usa a integracao legada ate receber um modelo proprio no Firebase.'
-          ],
-          bullets: [
-            'Botao e modal: app/features/biblioteca/view.js.',
-            'Comportamento: app/features/biblioteca/controllers/copy-base-editor.js.',
-            'Template persistido: app/features/biblioteca/controllers/copy-base-template.js.',
-            'Estilos: app/features/biblioteca/styles/copy-base-editor.css.',
-            'Persistencia legada: legacy/biblioteca/github/senko-github-v2.js.',
-            'Apos salvar, copy-base.js recebe o novo HTML em memoria sem exigir recarga.'
-          ]
         },
         {
           title: 'Alterar estilos',
@@ -861,7 +821,7 @@
             'GitHub precisa ser tratado com cuidado porque mexe em arquivos reais do repositorio.'
           ],
           bullets: [
-            'Confirmar se a mudanca pertence ao exportador global Firebase ou a uma integracao legada de feature.',
+            'Confirmar se a mudanca pertence ao exportador global Firebase ou a ferramenta de backup.',
             'Verificar owner, repo e branch configurados.',
             'Testar sem token para ver se a tela de erro aparece.',
             'Testar com fine-grained token limitado ao repositorio e Contents read/write.',
@@ -937,7 +897,7 @@
             'Em firebase, conferir erros de listener, permissao e consulta no console.',
             'Em static, fazer novo backup GitHub para publicar a ultima alteracao.',
             'Confirmar que generated/static-backup foi atualizado no commit.',
-            'Nao alterar os manifests em legacy para tentar corrigir dados atuais.'
+            'Nao editar o snapshot gerado para tentar corrigir dados atuais.'
           ]
         },
         {
@@ -1020,7 +980,7 @@
           badge: 'mensagem',
           terms: 'mensagem token nao encontrado ausente github configurar credenciais',
           paragraphs: [
-            'Acontece quando o backup ou uma integracao legada tenta usar o GitHub sem token configurado.'
+            'Acontece quando a ferramenta de backup tenta usar o GitHub sem token configurado.'
           ],
           bullets: [
             'Abrir o botao global de GitHub.',
@@ -1165,6 +1125,190 @@
       ]
     },
     {
+      id: 'product-spec',
+      label: 'Especificacao',
+      items: [
+        {
+          title: 'Fonte de verdade',
+          badge: 'contrato',
+          terms: 'fonte verdade firebase firestore snapshot static dados',
+          paragraphs: [
+            'Firestore e a unica fonte editavel. O snapshot em generated/static-backup e a unica fonte de contingencia e funciona somente para leitura.',
+            'O GitHub armazena o resultado do backup, mas nao participa do salvamento diario de layouts ou colecoes.'
+          ],
+          bullets: [
+            'Firebase pronto: listeners em tempo real alimentam as features.',
+            'Firebase indisponivel: o ultimo snapshot publico alimenta as features.',
+            'Sem Firebase e sem snapshot: a feature abre vazia e informa a falha.',
+            'Nunca codificar dados atuais dentro de controller, view ou core.'
+          ]
+        },
+        {
+          title: 'Quando uma alteracao e enviada',
+          badge: 'salvar',
+          terms: 'salvar tecla rascunho enviar firestore tempo real',
+          paragraphs: [
+            'Digitar em um editor altera somente o rascunho daquele navegador. O Firestore recebe dados quando a pessoa confirma Salvar.',
+            'Depois do commit, os listeners atualizam outros computadores automaticamente.'
+          ],
+          note: 'Nao adicione autosave por tecla: ele aumenta leituras/escritas, dificulta conflito e muda uma decisao central do produto.'
+        },
+        {
+          title: 'Conflito de edicao',
+          badge: 'concorrencia',
+          terms: 'conflito revisao baseRevisionId sobrescrita duas pessoas',
+          paragraphs: [
+            'Duas pessoas podem abrir o mesmo item. Cada editor guarda a revisao usada como base e a transacao compara esse valor ao servidor.',
+            'Se outra pessoa salvou primeiro, a segunda tentativa e recusada; nenhuma sobrescrita silenciosa e permitida.'
+          ],
+          bullets: [
+            'currentRevisionId identifica a versao atual.',
+            'baseRevisionId identifica a versao aberta pelo editor.',
+            'Erro aborted significa que o usuario precisa comparar ou recarregar.',
+            'O rascunho local deve ser preservado enquanto o aviso estiver visivel.'
+          ]
+        },
+        {
+          title: 'Cargos e limites',
+          badge: 'seguranca',
+          terms: 'owner admin editor permissoes aprovar promover excluir',
+          paragraphs: [
+            'Owner, admin e editor podem manter conteudo. A diferenca aparece na gestao de pessoas.'
+          ],
+          bullets: [
+            'Owner gerencia todos os cargos e pode criar outro owner.',
+            'Admin aprova editores e admins, mas nao cria nem remove owner.',
+            'Editor nao concede acesso a outras contas.',
+            'Esconder botao nao basta: Security Rules repetem esses limites.',
+            'Cargo do Console Firebase nao substitui o documento de membro do SenkoLib.'
+          ]
+        },
+        {
+          title: 'Exclusao',
+          badge: 'dados',
+          terms: 'excluir apagar revisoes reserva grupo vazio',
+          paragraphs: [
+            'Exclusoes sao diretas depois da confirmacao. O fluxo remove filhos, revisoes e reserva de nome relacionados ao recurso.',
+            'Grupos so podem ser excluidos quando nenhuma colecao os utiliza.'
+          ]
+        },
+        {
+          title: 'Estados do Firebase',
+          badge: 'saude',
+          terms: 'firebase ready degraded unavailable static status limite leituras',
+          bullets: [
+            'Pronto: sessao autorizada e listeners ativos.',
+            'Degradado: uma operacao falhou; o status continua visivel e o erro nao e escondido.',
+            'Indisponivel com snapshot: interface publica somente leitura.',
+            'Indisponivel sem snapshot: conteudo vazio com aviso.',
+            'Atingir a cota pode causar recusas ate a renovacao do limite; nao existe leitura ilimitada local escondida.'
+          ]
+        },
+        {
+          title: 'Criterio de pronto',
+          badge: 'entrega',
+          terms: 'pronto done teste documentacao guide regra erro permissao',
+          bullets: [
+            'Comportamento principal funciona.',
+            'Estado de erro foi exercitado.',
+            'Permissao existe na UI e nas regras.',
+            'Teste cobre o contrato de maior risco.',
+            'Documentacao canonica e Guide ensinam o comportamento atual.',
+            'Inventario foi reconstruido quando arquivos mudaram.'
+          ]
+        }
+      ]
+    },
+    {
+      id: 'developer-flow',
+      label: 'Desenvolvimento',
+      items: [
+        {
+          title: 'Como ler uma feature',
+          badge: 'junior',
+          terms: 'ler feature register view core repository controller ordem',
+          paragraphs: [
+            'Comece no register.js para entender a ordem e as dependencias. Depois leia view, core, repository e por ultimo o controller do fluxo que sera alterado.'
+          ],
+          bullets: [
+            'register.js responde o que carrega e quando.',
+            'view.js responde quais elementos existem.',
+            'core responde quais invariantes vivem em memoria.',
+            'repository responde de onde os dados vem.',
+            'controller responde como a pessoa interage.'
+          ]
+        },
+        {
+          title: 'Seguir um salvamento',
+          badge: 'debug',
+          terms: 'seguir salvar debug controller repository writes rules listener',
+          bullets: [
+            'Encontre o click no controller.',
+            'Confira o payload enviado ao repository.',
+            'Siga para senko-firestore-writes.js.',
+            'Compare os campos com config/firebase/firestore.rules.',
+            'Confira o mapper do repository de leitura.',
+            'Verifique o listener que chama render ou atualiza o editor.'
+          ]
+        },
+        {
+          title: 'Comentarios de qualidade',
+          badge: 'codigo',
+          terms: 'comentarios documentar motivo contrato invariante manutencao',
+          paragraphs: [
+            'Comente motivo, contrato, ordem, seguranca e risco. Nao repita em portugues uma atribuicao que ja e obvia no codigo.'
+          ],
+          bullets: [
+            'Todo modulo complexo deve ter cabecalho de responsabilidade e limites.',
+            'Fluxos atomicos ou assincronos devem explicar por que a ordem importa.',
+            'Listeners devem explicar quando sao cancelados.',
+            'HTML de dados externos deve trazer comentario de escape/sanitizacao.',
+            'Workaround deve explicar quando pode ser removido.'
+          ]
+        },
+        {
+          title: 'Mudanca de campo Firestore',
+          badge: 'checklist',
+          terms: 'campo firestore schema mapper rules teste documentacao',
+          bullets: [
+            'Atualizar payload de escrita.',
+            'Atualizar mapper de leitura.',
+            'Atualizar Security Rules e limites.',
+            'Considerar documentos existentes antes de fechar o schema.',
+            'Atualizar teste de regras.',
+            'Atualizar DATA_MODEL.md e especificacao quando for comportamento de produto.'
+          ]
+        },
+        {
+          title: 'Arquivos gerados',
+          badge: 'nao editar',
+          terms: 'generated snapshot inventario package lock editar gerar',
+          paragraphs: [
+            'Arquivos em generated e lockfiles sao resultados de processos. Altere a fonte ou o gerador e reconstrua a saida.'
+          ],
+          bullets: [
+            'Inventario: npm run inventory:build.',
+            'Snapshot publico: fluxo de backup ou npm run backup:build-static sobre um snapshot tecnico valido.',
+            'package-lock: npm install.',
+            'Nunca corrigir dado atual editando generated/static-backup manualmente.'
+          ]
+        },
+        {
+          title: 'Documentos para consultar',
+          badge: 'docs',
+          terms: 'documentos especificacao runtime contratos development guide docs',
+          bullets: [
+            'docs/PRODUCT_SPECIFICATION.md: contrato do produto.',
+            'docs/DEVELOPMENT_GUIDE.md: rotina e depuracao.',
+            'docs/architecture/RUNTIME_FLOW.md: inicio, listeners e backup.',
+            'docs/architecture/MODULE_CONTRACTS.md: limites entre camadas.',
+            'docs/firebase/DATA_MODEL.md: caminhos e campos.',
+            'docs/firebase/TEST_PLAN.md: regressao e regras.'
+          ]
+        }
+      ]
+    },
+    {
       id: 'rules',
       label: 'Regras',
       items: [
@@ -1185,7 +1329,6 @@
             'Nao permitir nomes duplicados.',
             'Grupos de Colecoes nao devem ser apagados automaticamente.',
             'Novos dados editaveis pertencem ao Firestore; o backup gera automaticamente o bundle publico.',
-            'Arquivos legados e manifests antigos nao devem ser removidos antes da regressao final.',
             'ID tecnico nao deve ser editado como campo comum.',
             'Ordenacao alfabetica deve acontecer na renderizacao, sem reescrever dados so para ordenar.',
             'Toda alteracao precisa ser testada em mais de uma aba.',

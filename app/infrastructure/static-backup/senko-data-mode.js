@@ -1,4 +1,12 @@
 (function () {
+  /*
+   * Maquina de estados da fonte de dados.
+   *
+   * Estados possiveis: firebase, static e unavailable. A decisao e central
+   * para impedir que cada feature invente um fallback diferente. Mudancas sao
+   * publicadas para listeners e cada register.js inicia ou encerra sua propria
+   * sincronizacao.
+   */
   var listeners = [];
   var mode = 'unavailable';
 
@@ -12,6 +20,8 @@
   }
 
   function calculateMode(firebaseState) {
+    // Firebase saudavel sempre vence. O snapshot so assume quando o servico
+    // principal nao esta pronto e possui todas as secoes obrigatorias.
     if (firebaseState && firebaseState.status === 'ready') return 'firebase';
     if (hasStaticSnapshot()) return 'static';
     return 'unavailable';

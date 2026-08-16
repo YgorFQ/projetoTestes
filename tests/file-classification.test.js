@@ -5,7 +5,7 @@ const { execFileSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
 const inventoryPath = path.join(root, 'generated/meta/file-classification.json');
-const acceptedStatuses = new Set(['official', 'generated', 'prototype', 'legacy']);
+const acceptedStatuses = new Set(['official', 'generated', 'prototype']);
 
 execFileSync(process.execPath, ['tools/build-file-classification.js'], {
   cwd: root,
@@ -39,7 +39,6 @@ const expected = new Map([
   ['app/prototype/gamer-preview/register.js', 'prototype'],
   ['config/firebase/firestore.rules', 'official'],
   ['.vscode/settings.json', 'official'],
-  ['legacy/biblioteca/data/manifest.js', 'legacy'],
   ['generated/static-backup/manifest.js', 'generated']
 ]);
 

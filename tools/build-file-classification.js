@@ -5,6 +5,15 @@ const { execFileSync } = require('child_process');
 const root = path.resolve(__dirname, '..');
 const outputPath = 'generated/meta/file-classification.json';
 
+/*
+ * Inventario reconstruivel do repositorio.
+ *
+ * A lista parte do Git para incluir arquivos rastreados e novos arquivos ainda
+ * nao commitados, mas ignora tudo coberto por .gitignore. As regras abaixo sao
+ * deliberadamente baseadas em pasta: classificacao nao pode depender de uma
+ * planilha manual que fique desatualizada depois de um move.
+ */
+
 function normalize(filePath) {
   return filePath.split(path.sep).join('/').replace(/^\.\//, '');
 }
@@ -27,12 +36,6 @@ function classify(filePath) {
 
   if (filePath.startsWith('app/prototype/')) return 'prototype';
 
-  if (
-    filePath.startsWith('legacy/') ||
-    filePath.startsWith('docs/legacy/') ||
-    filePath.startsWith('functions/src/')
-  ) return 'legacy';
-
   return 'official';
 }
 
@@ -48,12 +51,12 @@ const entries = [...files]
 const counts = entries.reduce((result, entry) => {
   result[entry.status] += 1;
   return result;
-}, { official: 0, generated: 0, prototype: 0, legacy: 0 });
+}, { official: 0, generated: 0, prototype: 0 });
 
 const inventory = {
   schemaVersion: 1,
   source: 'tools/build-file-classification.js',
-  statuses: ['official', 'generated', 'prototype', 'legacy'],
+  statuses: ['official', 'generated', 'prototype'],
   counts,
   entries
 };

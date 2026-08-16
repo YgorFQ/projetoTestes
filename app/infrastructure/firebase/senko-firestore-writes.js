@@ -1,4 +1,27 @@
 (function () {
+  /*
+   * Escritas oficiais do SenkoLib no Firestore.
+   *
+   * Este modulo concentra validacao, controle otimista de concorrencia,
+   * reserva de nomes e incremento de dataVersion. Os controladores de tela
+   * entregam dados simples; somente este arquivo conhece a forma atomica de
+   * transforma-los em documentos e revisoes.
+   *
+   * CONTRATO DE SALVAMENTO:
+   * 1. validar e normalizar a entrada;
+   * 2. confirmar que o usuario ainda e membro;
+   * 3. comparar baseRevisionId/version dentro da transacao;
+   * 4. reservar o nome no mesmo commit;
+   * 5. gravar documento, revisao e nova dataVersion juntos.
+   *
+   * Nao mova partes desse fluxo para modais ou repositories de leitura. Uma
+   * escrita parcial pode criar nomes duplicados ou sobrescrever outra pessoa.
+   */
+  // -----------------------------------------------------------------------
+  // Normalizacao de entrada
+  // -----------------------------------------------------------------------
+  // Esses helpers rejeitam cedo valores que excederiam as regras. A validacao
+  // no cliente melhora a mensagem; as Security Rules continuam obrigatorias.
   function appError(code, message) {
     var error = new Error(message);
     error.code = 'functions/' + code;
@@ -59,6 +82,8 @@
     return color.toLowerCase();
   }
 
+  // Reservas usam hash porque nome normalizado pode conter caracteres que nao
+  // sao adequados a um ID Firestore e pode ultrapassar o tamanho confortavel.
   function sha256(value) {
     if (!window.crypto || !window.crypto.subtle) {
       return Promise.reject(appError(
@@ -84,6 +109,9 @@
     return context.user.displayName || context.user.email || 'Membro';
   }
 
+  // -----------------------------------------------------------------------
+  // Contexto e referencias
+  // -----------------------------------------------------------------------
   function withContext(operation) {
     return window.SenkoFirebase.whenAuthorized().then(function () {
       return operation(window.SenkoFirebase.getClientContext());
@@ -157,6 +185,12 @@
     }
   }
 
+  // -----------------------------------------------------------------------
+  // Layouts, variacoes e layouts internos
+  // -----------------------------------------------------------------------
+  // Os tres tipos compartilham revisao e concorrencia. resolveVersioned muda
+  // apenas colecao, pai e escopo da reserva, mantendo uma unica implementacao
+  // do protocolo de salvamento.
   function saveVersionedContent(data) {
     return withContext(function (context) {
       var base = refs(context);
@@ -237,9 +271,6 @@
             if (!existing) {
               resourceData.createdAt = now;
               resourceData.createdBy = context.user.uid;
-              resourceData.legacyId = data.legacyId
-                ? cleanId(data.legacyId, 'ID legado')
-                : null;
             }
 
             transaction.set(resourceRef, resourceData, { merge: true });
@@ -287,6 +318,11 @@
     });
   }
 
+  // -----------------------------------------------------------------------
+  // Colecoes
+  // -----------------------------------------------------------------------
+  // Colecao nao possui subdocumento de revisao, mas continua versionada e usa
+  // a mesma reserva de nome para impedir duplicata entre clientes.
   function saveCollection(data) {
     return withContext(function (context) {
       var base = refs(context);
@@ -354,9 +390,6 @@
             if (!existing) {
               collectionData.createdAt = now;
               collectionData.createdBy = context.user.uid;
-              collectionData.legacyId = data.legacyId
-                ? cleanId(data.legacyId, 'ID legado')
-                : null;
             }
 
             transaction.set(collectionRef, collectionData, { merge: true });
@@ -390,6 +423,11 @@
     });
   }
 
+  // -----------------------------------------------------------------------
+  // Grupos
+  // -----------------------------------------------------------------------
+  // Grupos sao entidades independentes. Excluir uma colecao nao deve remover
+  // seu grupo; deleteGroup confirma separadamente se ainda existe uso.
   function saveGroup(data) {
     return withContext(function (context) {
       var base = refs(context);
@@ -481,6 +519,8 @@
     });
   }
 
+  // A consulta de colecoes acontece dentro do fluxo de exclusao para recusar
+  // grupo em uso mesmo se a tela estiver com uma lista desatualizada.
   function deleteGroup(data) {
     return withContext(function (context) {
       var base = refs(context);
@@ -534,6 +574,9 @@
     });
   }
 
+  // -----------------------------------------------------------------------
+  // Exclusao em cascata
+  // -----------------------------------------------------------------------
   function resolveDeleteTarget(context, data) {
     var base = refs(context);
     if (data.kind === 'collection') {
@@ -555,6 +598,8 @@
     };
   }
 
+  // Firestore nao exclui subcolecoes automaticamente. Primeiro reunimos todos
+  // os filhos e revisoes; depois os lotes removem folhas antes do documento pai.
   function collectDeleteReferences(target) {
     var sdk = target.base.sdk;
     var references = [];
@@ -599,6 +644,8 @@
     });
   }
 
+  // Mantemos folga abaixo do limite de 500 operacoes por batch para que uma
+  // futura operacao auxiliar possa ser adicionada sem estourar o commit.
   function deleteInBatches(context, references) {
     var sdk = context.firestore;
     var sequence = Promise.resolve();

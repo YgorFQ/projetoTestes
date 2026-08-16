@@ -1,4 +1,9 @@
 (function () {
+  /*
+   * Adaptador somente leitura do snapshot publico para a Biblioteca.
+   * Clones impedem que filtros, editores ou previews alterem o objeto global
+   * que tambem pode ser consumido por outras montagens da feature.
+   */
   function source() {
     return (window.SenkoStaticBackup || {}).biblioteca || null;
   }

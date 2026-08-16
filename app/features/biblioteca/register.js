@@ -17,7 +17,6 @@
     : new URL('app/features/biblioteca/', document.baseURI).href;
   var panel;
   var loadPromise;
-  var secondaryLoadPromise;
   var firebaseSyncPromise;
   var firebaseUnsubscribers = [];
   var firebaseVariantUnsubscribe;
@@ -81,101 +80,6 @@
 
       if (!existing) document.head.appendChild(script);
     });
-  }
-
-  function loadManifest() {
-    /*
-     * O manifesto pertence a Biblioteca e e a unica lista de pacotes de
-     * dados carregados por ela. Ele e um script local para funcionar tambem
-     * via file://, onde o navegador bloqueia fetch de arquivos JSON.
-     */
-    return loadScript('../../../legacy/biblioteca/data/manifest.js?v=20260816-structure').then(function () {
-      var manifest = window.SenkoBibliotecaManifest;
-      if (!manifest || !Array.isArray(manifest.layouts)) {
-        throw new Error('Manifesto da Biblioteca indisponivel');
-      }
-      return manifest;
-    });
-  }
-
-  function getManifestFile(entry) {
-    if (typeof entry === 'string') return entry;
-    if (entry && typeof entry.file === 'string') return entry.file;
-    return '';
-  }
-
-  function getManifestFiles(entries) {
-    return (Array.isArray(entries) ? entries : [])
-      .map(getManifestFile)
-      .filter(Boolean);
-  }
-
-  function loadSecondaryModules(manifest) {
-    if (secondaryLoadPromise) return secondaryLoadPromise;
-
-    /*
-     * Variantes e integracoes nao sao necessarias para mostrar o grid. Elas
-     * entram depois da primeira renderizacao para nao segurar a abertura da
-     * Biblioteca, mas continuam pertencendo e sendo inicializadas aqui.
-     */
-    secondaryLoadPromise = new Promise(function (resolve) {
-      var run = function () {
-        var variants = getManifestFiles(manifest.variants);
-        var variantLoads = variants.map(function (path) {
-          /*
-           * Um arquivo de dado ausente nao pode impedir que editores e
-           * integracoes sejam carregados. A falha fica identificada no
-           * console e as demais variantes continuam disponiveis.
-           */
-          return loadScript('../../../legacy/biblioteca/data/' + path).catch(function (error) {
-            console.error('[Biblioteca] Variante ignorada (' + path + '):', error);
-            return null;
-          });
-        });
-
-        var variantsReady = Promise.all(variantLoads).then(function () {
-          if (window.SenkoBiblioteca) window.SenkoBiblioteca.render(true);
-        });
-
-        /*
-         * GitHub carrega em paralelo aos dados opcionais. Assim, criar,
-         * editar, salvar e excluir continuam acessiveis mesmo quando uma
-         * variante catalogada estiver temporariamente indisponivel.
-         */
-        var githubReady = loadScript('../../../legacy/biblioteca/github/senko-github-v2.js?v=20260816-structure').then(function () {
-          if (window.SenkoBibliotecaGithubV2) {
-            window.SenkoBibliotecaGithubV2.init();
-          }
-
-          return Promise.all([
-            loadScript('../../../legacy/biblioteca/github/senko-github-variants.js?v=20260816-structure'),
-            loadScript('../../../legacy/biblioteca/github/senko-github-delete.js?v=20260816-structure')
-          ]);
-        }).then(function () {
-          if (window.SenkoBibliotecaGithubVariants) {
-            window.SenkoBibliotecaGithubVariants.init();
-          }
-          if (window.SenkoBibliotecaGithubDelete) {
-            window.SenkoBibliotecaGithubDelete.init();
-          }
-        });
-
-        Promise.all([variantsReady, githubReady]).then(function () {
-          resolve();
-        }).catch(function (error) {
-          /*
-           * Uma falha em ferramenta secundaria nao derruba layouts, busca ou
-           * copia. O erro permanece visivel no console para diagnostico.
-           */
-          console.error('[Biblioteca] Falha ao carregar ferramentas secundarias:', error);
-          resolve();
-        });
-      };
-
-      window.setTimeout(run, 0);
-    });
-
-    return secondaryLoadPromise;
   }
 
   function notifyStaleEditor(kind, documents) {
@@ -288,33 +192,25 @@
     loadPromise = (async function () {
       loadStyle('styles/index.css?v=20260816-structure');
       loadStyle('styles/layout-editor.css?v=20260801-presence');
-      loadStyle('styles/copy-base-editor.css?v=20260723-official-editor');
 
-      var initialResources = await Promise.all([
+      await Promise.all([
         loadScript('view.js?v=20260613-fast-load'),
         loadScript('core/index.js?v=20260816-structure'),
         loadScript('repositories/firebase-repository.js?v=20260816-structure'),
-        loadScript('repositories/static-repository.js?v=20260816-structure'),
-        loadManifest()
+        loadScript('repositories/static-repository.js?v=20260816-structure')
       ]);
-      var manifest = initialResources[4];
       var content = window.SenkoBiblioteca.createView();
       panel.replaceChildren(content);
 
-      var layouts = getManifestFiles(manifest.layouts);
+      /*
+       * O snapshot e aplicado antes dos controladores para a primeira pintura
+       * ja conter dados quando o Firebase estiver indisponivel. Se nao houver
+       * snapshot, o core permanece vazio ate os listeners entregarem a fonte
+       * principal. Nao existe uma terceira fonte oculta de dados.
+       */
       var staticLoaded = loadStaticSnapshot();
-      var layoutDataReady = usesFirebaseData() || staticLoaded
-        ? Promise.resolve()
-        : Promise.all(layouts.map(function (path) {
-            return loadScript('../../../legacy/biblioteca/data/' + path).catch(function (error) {
-              console.error('[Biblioteca] Layout nao carregado:', path, error);
-              return false;
-            });
-          }));
       await Promise.all([
-        layoutDataReady,
         loadScript('controllers/layout-editor.js?v=20260816-structure'),
-        loadScript('controllers/copy-base-editor.js?v=20260816-structure'),
         loadScript('controllers/index.js?v=20260816-structure'),
         loadScript('controllers/copy-base-template.js?v=20260816-structure').then(function () {
           return loadScript('controllers/copy-base.js?v=20260816-structure');
@@ -327,12 +223,16 @@
 
       window.SenkoBiblioteca.init();
       if (window.SenkoBibliotecaCopyBase) window.SenkoBibliotecaCopyBase.init();
-      if (window.SenkoBibliotecaCopyBaseEditor) {
-        window.SenkoBibliotecaCopyBaseEditor.init();
-      }
       bindDataMode();
       if (window.SenkoDataMode && window.SenkoDataMode.isFirebase()) startFirebaseSync();
-      if (!usesFirebaseData() && !staticLoaded) loadSecondaryModules(manifest);
+
+      /*
+       * Ausencia simultanea de Firebase e snapshot e um estado valido, mas
+       * visivel: a Biblioteca abre vazia em vez de buscar arquivos antigos.
+       */
+      if (!usesFirebaseData() && !staticLoaded) {
+        console.warn('[Biblioteca] Nenhuma fonte de dados disponivel.');
+      }
 
       return panel;
     })().catch(function (error) {

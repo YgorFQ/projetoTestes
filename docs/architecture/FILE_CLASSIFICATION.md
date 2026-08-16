@@ -11,7 +11,6 @@ ou da memoria de quem reorganizou as pastas.
 | `official` | Codigo, configuracao, teste ou documento usado e mantido pelo projeto | Sim |
 | `generated` | Saida reconstruida por script, backup ou gerenciador de pacotes | Somente quando o processo gerador exigir |
 | `prototype` | Experimento ainda fora do contrato oficial do SenkoLib | Sim, sem criar dependencia oficial |
-| `legacy` | Implementacao antiga preservada para consulta, compatibilidade ou migracao | Apenas para corrigir compatibilidade |
 
 ## Atualizacao
 
@@ -31,7 +30,8 @@ Pastas comunicam a intencao principal:
 
 - `app/`, `tests/`, `tools/` e `docs/` sao oficiais por padrao;
 - `generated/` e sempre gerado;
-- `app/prototype/` e sempre prototipo;
-- `legacy/` e `docs/legacy/` sao sempre legados;
-- `functions/src/` e legado da implementacao anterior de Cloud Functions,
-  mantido junto das ferramentas administrativas existentes.
+- `app/prototype/` e sempre prototipo.
+
+O projeto nao mantem uma categoria historica executavel. Quando uma
+implementacao deixa de ter funcao depois da regressao, ela e removida. O Git
+preserva o historico sem aumentar a superficie do runtime atual.

@@ -1,4 +1,12 @@
 (function () {
+  /*
+   * Interface do backup manual para GitHub.
+   *
+   * O dialogo coleta destino e token pessoal, chama a API publica de backup e
+   * descarta a UI ao terminar. O token nunca entra nos arquivos gerados nem em
+   * mensagens de erro. Backup e independente do salvamento Firestore: falha
+   * no GitHub nao desfaz nem bloqueia uma alteracao ja salva.
+   */
   var registered = false;
 
   function showToast(message, isError) {

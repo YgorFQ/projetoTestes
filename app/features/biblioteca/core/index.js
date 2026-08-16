@@ -7,7 +7,7 @@
      Todos os outros módulos dependem deste arquivo.
 
    EXPÕE (via objeto global SenkoLib):
-     register legado                     -> mantido apenas para compatibilidade
+     SenkoLib.register(obj)              → registra lotes recebidos por uma fonte
      SenkoLib.registerLayout(obj)          → registra um layout individual
      SenkoLib.getAll()                    → retorna todos os layouts registrados
      SenkoLib.updateLayout(id, patch)      → edita um layout validando o nome
@@ -17,8 +17,8 @@
      SenkoLib.updateVariant(name, v, patch) → edita variante validando o nome
 
    ORDEM DE CARREGAMENTO:
-     Deve ser o primeiro <script> carregado no index.html,
-     antes dos arquivos de layouts, variantes e do script.js.
+     O register.js da Biblioteca carrega este motor antes dos repositories e
+     controladores. Dados entram por replaceLayouts/replaceVariants.
 ═══════════════════════════════════════════════════════════════════════ */
 var SenkoLib = (function () {
   var _layouts  = [];

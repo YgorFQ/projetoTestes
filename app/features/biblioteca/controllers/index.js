@@ -538,9 +538,8 @@ function closeAddModal() {
 }
 
 /*
- * Gera o objeto de layout exatamente no formato esperado por
- * legacy/biblioteca/data/layouts/*.js. O texto tambem serve como
- * payload para o botao GitHub quando a integracao esta ativa.
+ * Gera a visualizacao textual do layout enquanto o formulario e preenchido.
+ * A persistencia real usa o repository Firebase e nao interpreta esse texto.
  */
 function updateGeneratedCode() {
   var name    = senkoGetMetadataInputValue('addName', false).trim();
@@ -856,8 +855,8 @@ function openEditVariantModal(v) {
     return;
   }
 
-  var legacyOverlay = document.getElementById('editVarOverlay');
-  if (!legacyOverlay) {
+  var fallbackOverlay = document.getElementById('editVarOverlay');
+  if (!fallbackOverlay) {
     alert('Editor de variacoes indisponivel.');
     return;
   }
@@ -905,9 +904,9 @@ function openEditVariantModal(v) {
 }
 
 function closeEditVariantModal() {
-  var legacyOverlay = document.getElementById('editVarOverlay');
-  if (legacyOverlay) legacyOverlay.classList.add('hidden');
-  if (!legacyOverlay && window.SenkoLayoutEditor && window.SenkoLayoutEditor.isOpen()) {
+  var fallbackOverlay = document.getElementById('editVarOverlay');
+  if (fallbackOverlay) fallbackOverlay.classList.add('hidden');
+  if (!fallbackOverlay && window.SenkoLayoutEditor && window.SenkoLayoutEditor.isOpen()) {
     window.SenkoLayoutEditor.close();
     return;
   }
@@ -1042,8 +1041,8 @@ function openEditModal(layout) {
     return;
   }
 
-  var legacyOverlay = document.getElementById('editModalOverlay');
-  if (!legacyOverlay) {
+  var fallbackOverlay = document.getElementById('editModalOverlay');
+  if (!fallbackOverlay) {
     alert('Editor de layouts indisponivel.');
     return;
   }
@@ -1080,9 +1079,9 @@ function switchEditMode(mode) {
 }
 
 function closeEditModal() {
-  var legacyOverlay = document.getElementById('editModalOverlay');
-  if (legacyOverlay) legacyOverlay.classList.add('hidden');
-  if (!legacyOverlay && window.SenkoLayoutEditor && window.SenkoLayoutEditor.isOpen()) {
+  var fallbackOverlay = document.getElementById('editModalOverlay');
+  if (fallbackOverlay) fallbackOverlay.classList.add('hidden');
+  if (!fallbackOverlay && window.SenkoLayoutEditor && window.SenkoLayoutEditor.isOpen()) {
     window.SenkoLayoutEditor.close();
   }
   if (state._editFromVariant) {
@@ -1194,7 +1193,6 @@ function senkoInitFirebaseCreationControls() {
       if (layoutButton.disabled) return;
 
       var name = senkoGetMetadataInputValue('addName', false).trim();
-      var legacyId = document.getElementById('addId').value.trim().toLowerCase();
       var tags = senkoParseMetadataTags(senkoGetMetadataInputValue('addTags', true));
       var html = document.getElementById('addHtml').value;
       var css = document.getElementById('addCss').value;
@@ -1202,7 +1200,6 @@ function senkoInitFirebaseCreationControls() {
       senkoSetCreationButtonState(layoutButton, true, 'Salvando...');
       repository.saveLayout({
         id: null,
-        legacyId: legacyId || null,
         name: name,
         tags: tags,
         html: html,
@@ -1239,7 +1236,6 @@ function senkoInitFirebaseCreationControls() {
       senkoSetCreationButtonState(variantButton, true, 'Salvando...');
       repository.saveVariant(parent.id, {
         id: null,
-        legacyId: name || null,
         name: name,
         html: html,
         css: css,
@@ -1344,7 +1340,7 @@ bibliotecaApi.init = function initBiblioteca() {
   });
 
 
-  /* Compatibilidade com o modal antigo, quando existir em builds legados. */
+  /* Elementos opcionais sao ligados apenas quando a view os fornece. */
   var editVarClose = document.getElementById('editVarClose');
   var editVarOverlay = document.getElementById('editVarOverlay');
   if (editVarClose && editVarOverlay) {

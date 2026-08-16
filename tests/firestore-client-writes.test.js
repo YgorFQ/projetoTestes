@@ -292,7 +292,6 @@ async function main() {
 
     const collection = await writes.saveCollection({
       collectionId: 'colecao-teste',
-      legacyId: 'colecao-teste',
       name: 'Colecao teste',
       groupId: 'grupo-teste',
       tags: ['firebase'],
@@ -304,7 +303,6 @@ async function main() {
       kind: 'libraryLayout',
       resourceId: null,
       parentId: null,
-      legacyId: null,
       name: 'Layout de teste',
       tags: ['layout'],
       html: '<section>Teste</section>',

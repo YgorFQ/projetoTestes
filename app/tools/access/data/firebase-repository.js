@@ -1,4 +1,15 @@
 (function () {
+  /*
+   * Repository da ferramenta Acessos.
+   *
+   * Concentra consultas e mutacoes de membros, solicitacoes e auditoria. A
+   * tela recebe objetos simples e nao conhece caminhos Firestore. As funcoes
+   * assertManager/assertOwner existem tambem no cliente para feedback rapido;
+   * a seguranca efetiva continua nas regras do Firebase.
+   *
+   * Invariante: admin pode administrar admin/editor, mas somente owner pode
+   * criar, promover, rebaixar ou remover outro owner.
+   */
   function context() {
     return window.SenkoFirebase.getClientContext();
   }
@@ -37,6 +48,8 @@
     return (client.user && (client.user.displayName || client.user.email)) || 'Administrador';
   }
 
+  // Eventos sao gravados na mesma transacao da mudanca administrativa. Assim
+  // nunca existe um cargo alterado sem trilha correspondente no app.
   function eventData(client, eventRef, action, target, targetRole) {
     return {
       id: eventRef.id,
@@ -50,6 +63,9 @@
     };
   }
 
+  // Firestore e Realtime Database nao oferecem transacao cruzada. O Firestore
+  // confirma o cargo primeiro; se o espelho de presenca falhar, a UI oferece
+  // reparo explicito sem desfazer a autorizacao principal.
   function syncRealtime(uid, role) {
     return window.SenkoFirebase.syncMemberRealtimeAccess(uid, role).then(function () {
       return { realtimeSynced: true };
@@ -92,6 +108,8 @@
     );
   }
 
+  // Aprovar cria o membro, fecha a solicitacao e registra auditoria no mesmo
+  // commit Firestore. A sincronizacao de presenca acontece somente depois.
   function approveRequest(request, role) {
     assertManager();
     assertAssignable(role);
@@ -159,6 +177,8 @@
     });
   }
 
+  // A transacao relê o alvo para impedir que uma tela antiga rebaixe um owner
+  // que foi promovido por outra pessoa alguns segundos antes.
   function changeRole(member, role) {
     assertManager();
     assertAssignable(role);

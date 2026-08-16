@@ -1,8 +1,7 @@
 # SenkoLib - Estrutura do projeto
 
-Esta e a organizacao oficial desde a versao `2026.08.16.2`. O objetivo e
-separar codigo executado, ferramentas globais, material historico e arquivos
-que podem ser regenerados.
+Esta e a organizacao oficial desde a versao `2026.08.16.3`. O objetivo e
+separar codigo executado, ferramentas globais e arquivos regeneraveis.
 
 ```text
 SenkoLib/
@@ -32,21 +31,16 @@ SenkoLib/
 |   |   `-- static-backup/            - motor que le e constroi o fallback
 |   |-- shared/                       - recursos usados por mais de uma area
 |   `-- prototype/                    - experiencias ainda nao oficiais
-|-- legacy/
-|   |-- biblioteca/                   - dados JS e integracoes antigas
-|   `-- colecoes/                     - dados JS e integracoes antigas
 |-- generated/
 |   |-- backups/senkolib-data/        - snapshot tecnico do ultimo backup
 |   |-- static-backup/                - bundle publico carregado pelo site
-|   |-- migrations/                   - snapshot local de importacao, ignorado
 |   `-- meta/                         - inventarios gerados do repositorio
 |-- docs/
 |   |-- architecture/                 - estrutura e decisoes gerais
-|   |-- firebase/                     - operacao atual do backend
-|   `-- legacy/                       - documentos historicos
+|   `-- firebase/                     - operacao atual do backend
 |-- config/firebase/                  - regras, indices e exemplo do projeto
 |-- .vscode/settings.json             - configuracao local do Live Server
-|-- functions/                        - CLI administrativa e backend anterior
+|-- functions/                        - scripts administrativos e restauracao
 |-- tests/                            - testes automatizados e fixtures visuais
 |-- tools/                            - scripts executados pelo desenvolvedor
 |-- .firebaserc                       - projeto selecionado pela CLI Firebase
@@ -87,11 +81,7 @@ nao renderiza janelas de produto. Por isso a interface de login fica em
 `app/tools/session`, enquanto o cliente Firebase permanece em
 `app/infrastructure/firebase`.
 
-### `legacy` e `generated`
-
-`legacy/` e codigo historico preservado. Ele ainda pode ser carregado como
-compatibilidade enquanto a migracao nao for encerrada, mas nao recebe novas
-funcionalidades.
+### `generated`
 
 `generated/` nao e fonte para edicao manual. O backup GitHub escreve o
 snapshot tecnico em `generated/backups/senkolib-data/` e o fallback publico em
@@ -112,10 +102,8 @@ ferramentas ou pontos de entrada do site. Consulte
 2. Nao crie uma pasta `scripts` generica dentro de Biblioteca ou Colecoes;
    use `controllers`, `core` ou `repositories` conforme a responsabilidade.
 3. Nao grave snapshots junto do codigo executado.
-4. Nao importe novos modulos a partir de `legacy/` salvo para manter uma
-   compatibilidade que esteja documentada.
-5. Atualize o inventario com `npm run inventory:build`.
-6. Atualize a documentacao e o guia interno junto da alteracao.
+4. Atualize o inventario com `npm run inventory:build`.
+5. Atualize a documentacao e o guia interno junto da alteracao.
 
 ## Ordem de carga
 
