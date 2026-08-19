@@ -14,3 +14,7 @@ scripts/**/.secret.local
 
 migration-output/
 backup/migrations/
+
+# Entradas locais usadas como referencia pelo prototipo de FAQ.
+/Untitled-1.html
+/faq-acordeon-2-versoes.html

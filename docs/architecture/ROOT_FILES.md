@@ -33,3 +33,10 @@ scripts pertencem a pastas especificas.
 `ui-debug.log` podem ser criados automaticamente pelos emuladores. Eles nao
 fazem parte do projeto, ficam ignorados pelo Git e nao aparecem no GitHub. Um
 log pode continuar visivel no computador enquanto o emulador estiver aberto.
+
+## Referencias locais de prototipos
+
+Arquivos HTML soltos usados apenas como entrada de comparacao devem permanecer
+locais e ignorados pelo Git. O prototipo de FAQ, por exemplo, pode consultar
+`Untitled-1.html` e `faq-acordeon-2-versoes.html` durante o desenvolvimento sem
+transformar essas referencias em novos pontos de entrada da raiz.

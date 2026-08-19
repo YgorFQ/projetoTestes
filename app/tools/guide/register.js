@@ -30,7 +30,7 @@
         {
           title: 'O que e o SenkoLib',
           badge: 'inicio',
-          terms: 'senkolib projeto ferramenta app layouts colecoes imagens sources preview',
+          terms: 'senkolib projeto ferramenta app layouts colecoes imagens sources preview teste faq',
           paragraphs: [
             'O SenkoLib e uma ferramenta web/local para organizar layouts, colecoes, imagens, sources e previews em uma mesma interface.',
             'Pense nele como uma oficina: cada bancada faz uma tarefa diferente, mas todas ficam dentro do mesmo lugar.'
@@ -41,6 +41,7 @@
             'Imagens comprime e redimensiona arquivos.',
             'Sources gera picture, source e ims.',
             'Preview e uma area beta para testes.',
+            'Teste e um prototipo para montar e validar FAQs de eFacil, Martins e sites genericos.',
             'Criacao rapida e a entrada oficial para iniciar criacoes em qualquer aba.',
             'Notas da equipe e uma ferramenta global oficial para guardar prompts, regras, guias e padroes em arquivos proprios.',
             'No fluxo atual, Biblioteca cria layouts e variacoes; Colecoes cria colecoes e layouts dentro de uma colecao existente.'
@@ -414,9 +415,9 @@
         {
           title: 'Ferramentas oficiais e areas beta',
           badge: 'beta',
-          terms: 'preview beta prototype gamer teste prototipo notas equipe team notes',
+          terms: 'preview beta prototype gamer teste faq multissite prototipo notas equipe team notes',
           paragraphs: [
-            'Notas da equipe agora e uma tool oficial; somente o Preview continua em app/prototype.',
+            'Notas da equipe agora e uma tool oficial; Preview e Teste continuam em app/prototype.',
             'Tudo que ainda esta em teste deve comecar em prototype antes de virar feature final.'
           ],
           bullets: [
@@ -425,9 +426,29 @@
             'A experiencia de Notas da equipe organiza busca, filtros, lista e editor em areas claras, sinaliza alteracoes nao salvas e pede confirmacao antes de descarta-las.',
             'Cada nota criada pelo Team Notes deve virar um arquivo proprio em app/tools/team-notes/data/notes e entrar no manifest.js.',
             'Preview: app/prototype/gamer-preview/.',
+            'Teste: app/prototype/faq-teste/.',
             'Senko Guide e Team Notes nao sao prototipos; ambos ficam em app/tools/.',
             'Editor de layout da Biblioteca nao e mais prototipo; ele fica em app/features/biblioteca/.'
           ]
+        },
+        {
+          title: 'Teste: FAQ multissite',
+          badge: 'prototipo',
+          terms: 'teste faq efacil martins generico canonical perguntas respostas abas compacto q a h3 p',
+          paragraphs: [
+            'Teste monta tres conjuntos independentes de perguntas e respostas e gera uma unica entrega em HTML e CSS puro.',
+            'O canonical da pagina mostra o FAQ eFacil ou Martins; quando nenhum dominio conhecido aparece, o FAQ generico funciona como fallback.'
+          ],
+          bullets: [
+            'A entrada aceita pares q/a e h3/p, inclusive os dois formatos na mesma colagem.',
+            'Cada site possui editor proprio, inclusao manual e exclusao de perguntas.',
+            'A interface compacta separa Entrada, Perguntas, Simular e Codigo em quatro abas; apenas uma area principal aparece por vez.',
+            'O simulador troca o canonical do preview sem alterar o codigo final e monta somente o FAQ reconhecido.',
+            'A janela lateral de redirecionamentos foi removida; links continuam preservados no conteudo e no codigo final.',
+            'O rascunho fica somente no localStorage deste navegador e nao grava Firebase ou GitHub.',
+            'A entrega final continua em HTML e CSS puro e preserva os links escritos nas respostas.'
+          ],
+          note: 'Enquanto o fluxo estiver sendo refinado, a aba deve permanecer em app/prototype e usar o nome temporario Teste.'
         }
       ]
     },
@@ -450,6 +471,7 @@
             'Criacao rapida: ferramenta oficial do shell com providers registrados pelas features.',
             'Notas da equipe: ferramenta oficial em app/tools, com arquivos individuais e salvamento via GitHub.',
             'Preview: prototipo beta em app/prototype.',
+            'Teste: prototipo beta de FAQ multissite em app/prototype.',
             'Senko Guide: ferramenta oficial do shell e prioridade maxima de manutencao.',
             'Editor da Biblioteca: oficial, integrado em app/features/biblioteca/controllers/layout-editor.js.',
             'HTML Basico: template oficial somente para copia em app/features/biblioteca/controllers/copy-base-template.js.'

@@ -7,9 +7,9 @@
     "prototype"
   ],
   "counts": {
-    "official": 122,
+    "official": 123,
     "generated": 210,
-    "prototype": 7
+    "prototype": 12
   },
   "entries": [
     {
@@ -215,6 +215,26 @@
     {
       "path": "app/infrastructure/static-backup/senko-static-backup-builder.js",
       "status": "official"
+    },
+    {
+      "path": "app/prototype/faq-teste/core.js",
+      "status": "prototype"
+    },
+    {
+      "path": "app/prototype/faq-teste/register.js",
+      "status": "prototype"
+    },
+    {
+      "path": "app/prototype/faq-teste/script.js",
+      "status": "prototype"
+    },
+    {
+      "path": "app/prototype/faq-teste/styles.css",
+      "status": "prototype"
+    },
+    {
+      "path": "app/prototype/faq-teste/view.js",
+      "status": "prototype"
     },
     {
       "path": "app/prototype/gamer-base.html",
@@ -1338,6 +1358,10 @@
     },
     {
       "path": "tests/database-member-management.test.js",
+      "status": "official"
+    },
+    {
+      "path": "tests/faq-test-prototype.test.js",
       "status": "official"
     },
     {

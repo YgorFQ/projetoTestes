@@ -8,6 +8,7 @@ npm run test:asset-versioning
 npm run test:access-modal
 npm run test:static-backup
 npm run test:firebase-health
+npm run test:faq-prototype
 npm run scripts:check
 ```
 
@@ -115,6 +116,18 @@ Teste desktop e mobile:
 - Escape fecha overlays permitidos;
 - labels e nomes acessiveis existem;
 - tema claro e escuro mantem contraste.
+
+## Prototipo Teste - FAQ multissite
+
+- entrada aceita pares `<q>/<a>` e `<h3>/<p>`;
+- importacao acrescenta perguntas somente ao site selecionado;
+- edicao, inclusao e exclusao atualizam preview e codigo final;
+- canonical eFacil, Martins e desconhecido mostram a versao correta;
+- Entrada, Perguntas, Simular e Codigo alternam uma unica area principal por vez;
+- a janela nao cria rolagem horizontal e o painel lateral de redirecionamentos nao existe;
+- preview nao navega ao clicar nos links presentes nas respostas;
+- entrega copiada contem somente HTML e CSS;
+- tema claro e escuro preservam legibilidade da janela.
 
 ## Registro de uma rodada
 

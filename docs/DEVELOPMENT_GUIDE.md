@@ -40,6 +40,7 @@ npm run test:asset-versioning
 npm run test:access-modal
 npm run test:static-backup
 npm run test:firebase-health
+npm run test:faq-prototype
 npm run scripts:check
 ```
 
