@@ -17,22 +17,6 @@
       .replace(/'/g, '&#039;');
   }
 
-  function parseTags(value) {
-    return String(value || '').split(',').map(function (tag) {
-      return tag.trim();
-    }).filter(Boolean);
-  }
-
-  function typeLabel(type) {
-    return {
-      prompt: 'Prompt',
-      regra: 'Regra',
-      guia: 'Guia',
-      padrao: 'Padrão',
-      geral: 'Geral'
-    }[type] || 'Geral';
-  }
-
   function formatDate(value) {
     if (!value) return 'Ainda não salva';
     var date = new Date(value);
@@ -77,9 +61,17 @@
 
   function renderSections() {
     var sections = model.listSections();
-    ui.sectionCount.textContent = String(sections.length);
-    ui.sectionList.innerHTML = sections.map(function (section) {
-      var count = model.listPages(section.id, '', '').length;
+    var query = String(ui.sectionSearch.value || '').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    var filtered = sections.filter(function (section) {
+      return !query || section.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').indexOf(query) !== -1;
+    });
+    ui.sectionCount.textContent = filtered.length === sections.length ? String(sections.length) : filtered.length + '/' + sections.length;
+    if (!filtered.length) {
+      ui.sectionList.innerHTML = '<div class="team-notes-workspace-empty"><strong>Nenhuma seção encontrada</strong><span>Tente outro termo de busca.</span></div>';
+      return;
+    }
+    ui.sectionList.innerHTML = filtered.map(function (section) {
+      var count = model.listPages(section.id, '').length;
       return (
         '<button class="team-notes-workspace-section' + (section.id === selectedSectionId ? ' is-selected' : '') + '" type="button" data-section-id="' + escapeHtml(section.id) + '"' +
         (section.id === selectedSectionId ? ' aria-current="true"' : '') + '>' +
@@ -92,8 +84,8 @@
 
   function renderPages() {
     var section = sectionById(selectedSectionId);
-    var pages = section ? model.listPages(selectedSectionId, ui.search.value, ui.filter.value) : [];
-    var total = section ? model.listPages(selectedSectionId, '', '').length : 0;
+    var pages = section ? model.listPages(selectedSectionId, ui.search.value) : [];
+    var total = section ? model.listPages(selectedSectionId, '').length : 0;
     ui.pagesTitle.textContent = section ? section.name : 'Selecione uma seção';
     ui.pagesCount.textContent = pages.length === total ? String(total) : pages.length + '/' + total;
     ui.addPage.disabled = !section;
@@ -106,12 +98,10 @@
     }
 
     ui.pageList.innerHTML = pages.map(function (page) {
-      var preview = String(page.content || '').replace(/\s+/g, ' ').trim() || 'Página em branco';
       return (
         '<button class="team-notes-workspace-page-item' + (page.id === selectedPageId ? ' is-selected' : '') + '" type="button" data-page-id="' + escapeHtml(page.id) + '"' +
         (page.id === selectedPageId ? ' aria-current="page"' : '') + '>' +
-        '  <span class="team-notes-workspace-page-item__top"><strong>' + escapeHtml(page.title) + '</strong><small>' + escapeHtml(typeLabel(page.type)) + '</small></span>' +
-        '  <span class="team-notes-workspace-page-item__preview">' + escapeHtml(preview) + '</span>' +
+        '  <strong class="team-notes-workspace-page-item__title">' + escapeHtml(page.title) + '</strong>' +
         '  <span class="team-notes-workspace-page-item__date">' + escapeHtml(formatDate(page.updatedAt)) + '</span>' +
         '</button>'
       );
@@ -119,7 +109,7 @@
   }
 
   function setEditorEnabled(enabled) {
-    [ui.title, ui.type, ui.tags, ui.content, ui.delete, ui.copy, ui.save].forEach(function (control) {
+    [ui.title, ui.content, ui.delete, ui.copy, ui.save].forEach(function (control) {
       control.disabled = !enabled;
     });
   }
@@ -133,8 +123,6 @@
     var section = page ? sectionById(page.sectionId) : null;
     setEditorEnabled(Boolean(page));
     ui.title.value = page ? page.title : '';
-    ui.type.value = page ? page.type : 'geral';
-    ui.tags.value = page ? (page.tags || []).join(', ') : '';
     ui.content.value = page ? page.content : '';
     ui.editorSection.textContent = section ? section.name : 'Seção';
     ui.editorPage.textContent = page ? page.title : 'Página';
@@ -162,9 +150,8 @@
     selectedSectionId = sectionId;
     selectedPageId = '';
     ui.search.value = '';
-    ui.filter.value = '';
     renderSections();
-    var pages = model.listPages(sectionId, '', '');
+    var pages = model.listPages(sectionId, '');
     renderPages();
     if (pages.length) selectPage(pages[0].id, true);
     else fillEditor(null);
@@ -176,7 +163,6 @@
       var page = model.createPage(selectedSectionId);
       selectedPageId = page.id;
       ui.search.value = '';
-      ui.filter.value = '';
       renderSections();
       renderPages();
       fillEditor(page);
@@ -195,8 +181,6 @@
       id: page.id,
       sectionId: page.sectionId,
       title: ui.title.value,
-      type: ui.type.value,
-      tags: parseTags(ui.tags.value),
       content: ui.content.value
     };
   }
@@ -223,7 +207,7 @@
     if (!window.confirm('Excluir a página "' + page.title + '" deste protótipo?')) return;
     model.deletePage(page.id);
     selectedPageId = '';
-    var pages = model.listPages(selectedSectionId, '', '');
+    var pages = model.listPages(selectedSectionId, '');
     renderSections();
     renderPages();
     if (pages.length) selectPage(pages[0].id, true);
@@ -262,6 +246,7 @@
     try {
       var section = model.createSection(ui.sectionName.value);
       closeSectionForm();
+      ui.sectionSearch.value = '';
       renderSections();
       selectSection(section.id);
       setToast('Seção criada neste protótipo.', 'ok');
@@ -281,6 +266,7 @@
   function collectUi() {
     ui.sectionCount = root.getElementById('team-notes-sections-count');
     ui.sectionList = root.getElementById('team-notes-section-list');
+    ui.sectionSearch = root.getElementById('team-notes-section-search');
     ui.addSection = root.getElementById('team-notes-add-section');
     ui.sectionForm = root.getElementById('team-notes-section-form');
     ui.sectionName = root.getElementById('team-notes-section-name');
@@ -288,7 +274,6 @@
     ui.pagesCount = root.getElementById('team-notes-pages-count');
     ui.addPage = root.getElementById('team-notes-add-page');
     ui.search = root.getElementById('team-notes-search');
-    ui.filter = root.getElementById('team-notes-filter');
     ui.pageList = root.getElementById('team-notes-page-list');
     ui.editor = root.getElementById('team-notes-editor');
     ui.editorSection = root.getElementById('team-notes-editor-section');
@@ -296,8 +281,6 @@
     ui.saveState = root.getElementById('team-notes-save-state');
     ui.title = root.getElementById('team-notes-title');
     ui.date = root.getElementById('team-notes-date');
-    ui.type = root.getElementById('team-notes-type');
-    ui.tags = root.getElementById('team-notes-tags');
     ui.content = root.getElementById('team-notes-content');
     ui.characterCount = root.getElementById('team-notes-character-count');
     ui.version = root.getElementById('team-notes-version');
@@ -319,9 +302,9 @@
     ui.addSection.addEventListener('click', openSectionForm);
     ui.sectionForm.addEventListener('submit', createSection);
     ui.sectionForm.querySelector('[data-cancel-section]').addEventListener('click', closeSectionForm);
+    ui.sectionSearch.addEventListener('input', renderSections);
     ui.addPage.addEventListener('click', createPage);
     ui.search.addEventListener('input', renderPages);
-    ui.filter.addEventListener('change', renderPages);
     ui.editor.addEventListener('submit', savePage);
     ui.editor.addEventListener('input', markEditorDirty);
     ui.editor.addEventListener('change', markEditorDirty);
@@ -337,7 +320,7 @@
     selectedSectionId = sections[0] ? sections[0].id : '';
     renderSections();
     renderPages();
-    var pages = selectedSectionId ? model.listPages(selectedSectionId, '', '') : [];
+    var pages = selectedSectionId ? model.listPages(selectedSectionId, '') : [];
     if (pages.length) selectPage(pages[0].id, true);
     else fillEditor(null);
   };

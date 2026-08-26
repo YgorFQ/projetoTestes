@@ -3,10 +3,9 @@
 Este prototipo transforma o modal atual de Notas da equipe em uma tela completa,
 com a hierarquia visual de um caderno digital:
 
-1. caderno compartilhado;
-2. secoes;
-3. paginas da secao selecionada;
-4. editor da pagina.
+1. secoes;
+2. paginas da secao selecionada;
+3. editor da pagina.
 
 O visual usa os tokens do SenkoLib. A referencia do OneNote orienta apenas a
 separacao e a hierarquia; cores, tipografia, botoes e estados seguem o produto.
@@ -14,16 +13,19 @@ separacao e a hierarquia; cores, tipografia, botoes e estados seguem o produto.
 ## O que foi preservado do modal atual
 
 - criacao de notas;
-- pesquisa por titulo, tipo, tags e conteudo;
-- filtro por tipo;
-- edicao de titulo, tipo, tags e conteudo;
+- pesquisa de secoes e paginas;
+- edicao de titulo e conteudo;
 - contador de caracteres e estado de alteracoes nao salvas;
 - copia, salvamento e exclusao;
 - confirmacao antes de descartar um rascunho.
 
 O prototipo acrescenta secoes, paginas vinculadas a uma secao, breadcrumb e uma
-area de edicao permanente. Os dados ficam somente na memoria da aba. O selo
-`Firebase previsto` e as mensagens de salvamento deixam essa limitacao explicita.
+area de edicao permanente. A feature ocupa toda a area abaixo do header global,
+sem hero, moldura de modal ou barra de caderno. Os dados ficam somente na
+memoria da aba e a mensagem de salvamento deixa essa limitacao explicita.
+
+Tipo e tags foram removidos. A lista de paginas mostra apenas titulo e data;
+nenhum trecho do conteudo e revelado antes de abrir a pagina.
 
 ## Diagnostico da implementacao atual
 
@@ -55,7 +57,7 @@ id, workspaceId, name, nameKey, order, createdAt, createdBy, updatedAt, updatedB
 Campos principais de pagina:
 
 ```text
-id, workspaceId, sectionId, title, titleKey, type, tags, content, version,
+id, workspaceId, sectionId, title, titleKey, content, version,
 createdAt, createdBy, updatedAt, updatedBy, updatedByName
 ```
 

@@ -12,8 +12,6 @@
         id: 'padronizacao-html-2',
         sectionId: 'padroes-prompts',
         title: 'Padronização HTML 2',
-        type: 'prompt',
-        tags: ['semântico', 'responsivo', 'wai aria'],
         content: 'Use este espaço para concentrar o prompt oficial de padronização HTML da equipe.\n\nA versão final deve manter regras escaneáveis, exemplos curtos e decisões que possam ser encontradas rapidamente.',
         version: 4,
         createdAt: '2026-08-18T13:20:00.000Z',
@@ -23,8 +21,6 @@
         id: 'prompt-pdp',
         sectionId: 'padroes-prompts',
         title: 'Prompt para PDP',
-        type: 'prompt',
-        tags: ['pdp', 'conteúdo rico'],
         content: 'Modelo de prompt para começar uma sessão de conteúdo rico sem perder as regras de marca e de acessibilidade.',
         version: 2,
         createdAt: '2026-08-20T09:00:00.000Z',
@@ -34,8 +30,6 @@
         id: 'checklist-acessibilidade',
         sectionId: 'padroes-prompts',
         title: 'Checklist de acessibilidade',
-        type: 'regra',
-        tags: ['a11y', 'revisão'],
         content: '1. Conferir a hierarquia dos títulos.\n2. Validar nomes acessíveis.\n3. Preservar foco visível.\n4. Testar navegação por teclado.',
         version: 1,
         createdAt: '2026-08-22T10:45:00.000Z',
@@ -45,8 +39,6 @@
         id: 'ordem-execucao',
         sectionId: 'processos',
         title: 'Ordem de execução',
-        type: 'guia',
-        tags: ['processo', 'qualidade'],
         content: '1. Ler a ficha e o HTML herdado.\n2. Mapear limites protegidos.\n3. Implementar a alteração.\n4. Comparar antes e depois.\n5. Validar no navegador.',
         version: 3,
         createdAt: '2026-08-21T14:10:00.000Z',
@@ -56,8 +48,6 @@
         id: 'fluxo-revisao',
         sectionId: 'processos',
         title: 'Fluxo de revisão',
-        type: 'guia',
-        tags: ['aprovação', 'entrega'],
         content: 'Checklist rápido para revisar uma entrega antes de publicar no ambiente principal.',
         version: 1,
         createdAt: '2026-08-23T16:00:00.000Z',
@@ -67,8 +57,6 @@
         id: 'links-ferramentas',
         sectionId: 'referencias',
         title: 'Links e ferramentas',
-        type: 'geral',
-        tags: ['atalhos', 'equipe'],
         content: 'Centralize aqui links internos, ferramentas de apoio e referências que a equipe consulta com frequência.',
         version: 1,
         createdAt: '2026-08-19T08:30:00.000Z',
@@ -127,16 +115,13 @@
     }));
   }
 
-  function listPages(sectionId, query, type) {
+  function listPages(sectionId, query) {
     var normalizedQuery = normalizeSearch(query);
     return clone(state.pages.filter(function (page) {
       if (page.sectionId !== sectionId) return false;
-      if (type && page.type !== type) return false;
       if (!normalizedQuery) return true;
       return normalizeSearch([
         page.title,
-        page.type,
-        (page.tags || []).join(' '),
         page.content
       ].join(' ')).indexOf(normalizedQuery) !== -1;
     }).sort(function (left, right) {
@@ -169,8 +154,6 @@
       id: uniqueId('nova-pagina', state.pages),
       sectionId: sectionId,
       title: 'Nova página',
-      type: 'geral',
-      tags: [],
       content: '',
       version: 0,
       createdAt: now,
@@ -199,8 +182,6 @@
       id: current.id,
       sectionId: current.sectionId,
       title: title,
-      type: normalizeText(safe.type) || 'geral',
-      tags: Array.isArray(safe.tags) ? safe.tags.map(normalizeText).filter(Boolean) : [],
       content: content,
       version: Number(current.version || 0) + 1,
       createdAt: current.createdAt,
