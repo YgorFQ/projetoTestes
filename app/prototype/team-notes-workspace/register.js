@@ -42,17 +42,17 @@
 
     var stylesheet = document.createElement('link');
     stylesheet.rel = 'stylesheet';
-    stylesheet.href = featureUrl('styles.css?v=20260826-team-notes-2');
+    stylesheet.href = featureUrl('styles.css?v=20260826-team-notes-3');
     root.appendChild(stylesheet);
   }
 
   function loadPanel() {
     if (loadPromise) return loadPromise;
     loadPromise = (async function () {
-      await loadScript('core.js?v=20260826-team-notes-2');
-      await loadScript('view.js?v=20260826-team-notes-2');
+      await loadScript('core.js?v=20260826-team-notes-3');
+      await loadScript('view.js?v=20260826-team-notes-3');
       shadow.appendChild(window.SenkoTeamNotesWorkspace.createView());
-      await loadScript('script.js?v=20260826-team-notes-2');
+      await loadScript('script.js?v=20260826-team-notes-3');
       window.SenkoTeamNotesWorkspace.init(shadow);
     })().catch(function (error) {
       console.error('[Notas beta] Falha ao carregar o protótipo:', error);

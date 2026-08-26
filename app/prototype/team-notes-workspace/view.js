@@ -69,12 +69,11 @@
                   <span id="team-notes-character-count">0 caracteres</span>
                   <span aria-hidden="true">·</span>
                   <span id="team-notes-version">versão 0</span>
-                  <span class="team-notes-workspace-save-state" id="team-notes-save-state">Salva</span>
                 </div>
                 <div class="team-notes-workspace-editor-actions">
                   <button class="team-notes-workspace-btn team-notes-workspace-btn--danger" id="team-notes-delete" type="button">Excluir</button>
-                  <button class="team-notes-workspace-btn" id="team-notes-copy" type="button">Copiar conteúdo</button>
-                  <button class="team-notes-workspace-btn team-notes-workspace-btn--primary" id="team-notes-save" type="submit">Salvar página</button>
+                  <button class="team-notes-workspace-btn" id="team-notes-copy" type="button">Copiar</button>
+                  <button class="team-notes-workspace-btn team-notes-workspace-btn--primary" id="team-notes-save" type="submit">Salvar</button>
                 </div>
               </div>
             </div>

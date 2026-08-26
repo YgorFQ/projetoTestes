@@ -48,7 +48,7 @@ button {
 
 .team-notes-workspace-layout {
   display: grid;
-  grid-template-columns: 200px 285px minmax(460px, 1fr);
+  grid-template-columns: 285px 285px minmax(460px, 1fr);
 }
 
 .team-notes-workspace-sections,
@@ -252,31 +252,49 @@ button {
   overflow: auto;
 }
 
-.team-notes-workspace-section {
+.team-notes-workspace-section-row {
   width: 100%;
   min-height: 52px;
   display: grid;
-  grid-template-columns: 4px minmax(0, 1fr);
-  gap: .65rem;
-  align-items: stretch;
-  padding: .5rem .6rem .5rem .3rem;
+  grid-template-columns: minmax(0, 1fr) 32px;
+  align-items: center;
   border: 1px solid transparent;
   border-radius: var(--radius);
   background: transparent;
   color: var(--text2);
+}
+
+.team-notes-workspace-section {
+  min-width: 0;
+  min-height: 50px;
+  display: grid;
+  grid-template-columns: 4px minmax(0, 1fr);
+  gap: .65rem;
+  align-items: stretch;
+  padding: .5rem .3rem .5rem .3rem;
+  border: 0;
+  border-radius: var(--radius) 0 0 var(--radius);
+  background: transparent;
+  color: inherit;
   text-align: left;
 }
 
-.team-notes-workspace-section:hover,
-.team-notes-workspace-section:focus-visible {
+.team-notes-workspace-section-row:hover,
+.team-notes-workspace-section-row:focus-within {
   border-color: var(--border);
   background: var(--bg3);
 }
 
-.team-notes-workspace-section.is-selected {
+.team-notes-workspace-section-row.is-selected {
   border-color: var(--accent-border);
   background: var(--accent-bg);
   color: var(--text);
+}
+
+.team-notes-workspace-section:focus-visible,
+.team-notes-workspace-section-delete:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
 }
 
 .team-notes-workspace-section__marker {
@@ -284,7 +302,7 @@ button {
   background: var(--border2);
 }
 
-.team-notes-workspace-section.is-selected .team-notes-workspace-section__marker {
+.team-notes-workspace-section-row.is-selected .team-notes-workspace-section__marker {
   background: var(--accent);
 }
 
@@ -310,6 +328,29 @@ button {
   color: var(--text3);
   font-size: .64rem;
   font-weight: 700;
+}
+
+.team-notes-workspace-section-delete {
+  width: 32px;
+  height: 32px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text3);
+}
+
+.team-notes-workspace-section-delete:hover,
+.team-notes-workspace-section-delete:focus-visible {
+  background: rgba(224, 48, 48, .08);
+  color: var(--red);
+}
+
+.team-notes-workspace-section-delete svg {
+  width: 15px;
+  height: 15px;
 }
 
 .team-notes-workspace-page-item {
@@ -437,20 +478,6 @@ button {
   color: var(--text3);
   font-size: .62rem;
   font-weight: 800;
-}
-
-.team-notes-workspace-save-state {
-  padding: .22rem .5rem;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
-  background: var(--bg2);
-  color: var(--text3);
-}
-
-.team-notes-workspace-save-state.is-dirty {
-  border-color: var(--accent-border);
-  background: var(--accent-bg);
-  color: var(--accent);
 }
 
 .team-notes-workspace-editor-actions {
@@ -622,7 +649,7 @@ button {
 
 @media (max-width: 1180px) {
   .team-notes-workspace-layout {
-    grid-template-columns: 180px 250px minmax(390px, 1fr);
+    grid-template-columns: 250px 250px minmax(390px, 1fr);
   }
 
   .team-notes-workspace-editor-head {
@@ -647,7 +674,7 @@ button {
   }
 
   .team-notes-workspace-layout {
-    grid-template-columns: minmax(190px, .75fr) minmax(260px, 1.25fr);
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
     grid-template-rows: 430px 620px;
   }
 

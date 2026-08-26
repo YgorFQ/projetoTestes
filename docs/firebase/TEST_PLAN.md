@@ -139,11 +139,13 @@ Teste desktop e mobile:
 
 - a tela ocupa toda a area da feature e separa secoes, paginas e editor em tres colunas continuas;
 - criar secao bloqueia nome duplicado;
+- excluir secao pede confirmacao, remove suas paginas e seleciona outra secao disponivel;
 - criar, editar, copiar, salvar e excluir pagina atualizam o estado do prototipo;
 - busca de secoes considera o nome e busca de paginas considera titulo e conteudo;
 - tipo, tags e filtro de tipo nao aparecem no prototipo;
 - itens da lista de paginas mostram somente titulo e data, sem previa do conteudo;
 - navegar com alteracoes nao salvas pede confirmacao;
+- as colunas de secoes e paginas possuem a mesma largura e o indicador visual de salvamento nao aparece;
 - a mensagem de salvamento deixa claro que nao ha escrita Firebase real;
 - desktop, tablet e mobile permanecem navegaveis sem rolagem horizontal.
 

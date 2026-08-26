@@ -430,7 +430,7 @@
             'Cada nota criada pelo Team Notes deve virar um arquivo proprio em app/tools/team-notes/data/notes e entrar no manifest.js.',
             'Preview: app/prototype/gamer-preview/.',
             'Teste: app/prototype/faq-teste/.',
-            'Notas beta: app/prototype/team-notes-workspace/. A tela testa a hierarquia caderno, secoes, paginas e editor com dados apenas na memoria.',
+            'Notas beta: app/prototype/team-notes-workspace/. A tela testa a hierarquia caderno, secoes, paginas e editor com dados apenas na memoria; secoes podem ser excluidas junto com suas paginas vinculadas.',
             'Senko Guide e Team Notes nao sao prototipos; ambos ficam em app/tools/.',
             'Editor de layout da Biblioteca nao e mais prototipo; ele fica em app/features/biblioteca/.'
           ]

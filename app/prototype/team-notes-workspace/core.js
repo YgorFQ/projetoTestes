@@ -164,6 +164,14 @@
     return clone(page);
   }
 
+  function deleteSection(sectionId) {
+    var previousLength = state.sections.length;
+    state.sections = state.sections.filter(function (section) { return section.id !== sectionId; });
+    if (state.sections.length === previousLength) return false;
+    state.pages = state.pages.filter(function (page) { return page.sectionId !== sectionId; });
+    return true;
+  }
+
   function savePage(input) {
     var safe = input || {};
     var title = normalizeText(safe.title);
@@ -208,6 +216,7 @@
     listPages: listPages,
     getPage: getPage,
     createSection: createSection,
+    deleteSection: deleteSection,
     createPage: createPage,
     savePage: savePage,
     deletePage: deletePage,

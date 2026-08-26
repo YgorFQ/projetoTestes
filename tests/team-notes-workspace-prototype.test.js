@@ -37,6 +37,13 @@ assert.equal(model.getPage(saved.id).content, 'Usar Firestore como fonte editáv
 assert.equal(model.deletePage(saved.id), true);
 assert.equal(model.getPage(saved.id), null);
 
+const removableSection = model.createSection('Seção temporária');
+const removablePage = model.createPage(removableSection.id);
+assert.equal(model.deleteSection(removableSection.id), true);
+assert.equal(model.listSections().some((item) => item.id === removableSection.id), false);
+assert.equal(model.getPage(removablePage.id), null);
+assert.equal(model.deleteSection('secao-inexistente'), false);
+
 const register = read('app/prototype/team-notes-workspace/register.js');
 const view = read('app/prototype/team-notes-workspace/view.js');
 const script = read('app/prototype/team-notes-workspace/script.js');
@@ -51,11 +58,14 @@ assert.match(view, /id="team-notes-editor"/);
 assert.doesNotMatch(view, /team-notes-(?:type|tags|filter)/);
 assert.doesNotMatch(view, /team-notes-workspace-(?:hero|notebook|metadata|editor-footer)/);
 assert.match(script, /model\.createSection/);
+assert.match(script, /model\.deleteSection/);
 assert.match(script, /model\.createPage/);
 assert.match(script, /model\.savePage/);
 assert.match(script, /navigator\.clipboard\.writeText/);
 assert.doesNotMatch(script, /page-item__preview/);
-assert.match(styles, /grid-template-columns:\s*200px 285px/);
+assert.match(view, /id="team-notes-copy" type="button">Copiar<\/button>/);
+assert.match(view, /id="team-notes-save" type="submit">Salvar<\/button>/);
+assert.match(styles, /grid-template-columns:\s*285px 285px/);
 assert.match(index, /app\/prototype\/team-notes-workspace\/register\.js/);
 
 console.log('Team Notes workspace prototype test: OK');

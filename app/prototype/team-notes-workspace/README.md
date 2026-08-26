@@ -15,8 +15,9 @@ separacao e a hierarquia; cores, tipografia, botoes e estados seguem o produto.
 - criacao de notas;
 - pesquisa de secoes e paginas;
 - edicao de titulo e conteudo;
-- contador de caracteres e estado de alteracoes nao salvas;
+- contador de caracteres e confirmacao antes de descartar alteracoes nao salvas;
 - copia, salvamento e exclusao;
+- exclusao de secoes e de suas paginas vinculadas;
 - confirmacao antes de descartar um rascunho.
 
 O prototipo acrescenta secoes, paginas vinculadas a uma secao, breadcrumb e uma
@@ -26,6 +27,7 @@ memoria da aba e a mensagem de salvamento deixa essa limitacao explicita.
 
 Tipo e tags foram removidos. A lista de paginas mostra apenas titulo e data;
 nenhum trecho do conteudo e revelado antes de abrir a pagina.
+As colunas de secoes e paginas possuem a mesma largura em cada breakpoint.
 
 ## Diagnostico da implementacao atual
 

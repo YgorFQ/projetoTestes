@@ -46,8 +46,6 @@
 
   function setDirty(nextDirty) {
     dirty = Boolean(nextDirty);
-    ui.saveState.textContent = dirty ? 'Alterações não salvas' : (selectedPageId ? 'Salva' : 'Sem página');
-    ui.saveState.classList.toggle('is-dirty', dirty);
     ui.save.disabled = !selectedPageId || !dirty;
   }
 
@@ -73,11 +71,16 @@
     ui.sectionList.innerHTML = filtered.map(function (section) {
       var count = model.listPages(section.id, '').length;
       return (
-        '<button class="team-notes-workspace-section' + (section.id === selectedSectionId ? ' is-selected' : '') + '" type="button" data-section-id="' + escapeHtml(section.id) + '"' +
+        '<div class="team-notes-workspace-section-row' + (section.id === selectedSectionId ? ' is-selected' : '') + '">' +
+        '  <button class="team-notes-workspace-section" type="button" data-section-id="' + escapeHtml(section.id) + '"' +
         (section.id === selectedSectionId ? ' aria-current="true"' : '') + '>' +
-        '  <span class="team-notes-workspace-section__marker" aria-hidden="true"></span>' +
-        '  <span><strong>' + escapeHtml(section.name) + '</strong><small>' + count + (count === 1 ? ' página' : ' páginas') + '</small></span>' +
-        '</button>'
+        '    <span class="team-notes-workspace-section__marker" aria-hidden="true"></span>' +
+        '    <span><strong>' + escapeHtml(section.name) + '</strong><small>' + count + (count === 1 ? ' página' : ' páginas') + '</small></span>' +
+        '  </button>' +
+        '  <button class="team-notes-workspace-section-delete" type="button" data-delete-section-id="' + escapeHtml(section.id) + '" title="Excluir seção" aria-label="Excluir seção ' + escapeHtml(section.name) + '">' +
+        '    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 14H6L5 6"/><path d="M10 11v5M14 11v5"/></svg>' +
+        '  </button>' +
+        '</div>'
       );
     }).join('');
   }
@@ -172,6 +175,39 @@
     } catch (error) {
       setToast(error.message, 'error');
     }
+  }
+
+  function deleteSection(sectionId) {
+    var section = sectionById(sectionId);
+    if (!section) return;
+    var deletingSelected = sectionId === selectedSectionId;
+    if (deletingSelected && !canLeavePage()) return;
+    var sectionPages = model.listPages(sectionId, '');
+    var pageMessage = sectionPages.length
+      ? ' As ' + sectionPages.length + (sectionPages.length === 1 ? ' página vinculada também será excluída.' : ' páginas vinculadas também serão excluídas.')
+      : '';
+    if (!window.confirm('Excluir a seção "' + section.name + '"?' + pageMessage)) return;
+
+    var sectionsBeforeDelete = model.listSections();
+    var deletedIndex = sectionsBeforeDelete.findIndex(function (item) { return item.id === sectionId; });
+    if (!model.deleteSection(sectionId)) return;
+
+    if (deletingSelected) {
+      var remainingSections = model.listSections();
+      var fallbackSection = remainingSections[Math.min(deletedIndex, remainingSections.length - 1)] || null;
+      selectedSectionId = fallbackSection ? fallbackSection.id : '';
+      selectedPageId = '';
+      ui.search.value = '';
+    }
+
+    renderSections();
+    renderPages();
+    if (deletingSelected) {
+      var pages = selectedSectionId ? model.listPages(selectedSectionId, '') : [];
+      if (pages.length) selectPage(pages[0].id, true);
+      else fillEditor(null);
+    }
+    setToast('Seção excluída do protótipo.', 'ok');
   }
 
   function readEditorPage() {
@@ -278,7 +314,6 @@
     ui.editor = root.getElementById('team-notes-editor');
     ui.editorSection = root.getElementById('team-notes-editor-section');
     ui.editorPage = root.getElementById('team-notes-editor-page');
-    ui.saveState = root.getElementById('team-notes-save-state');
     ui.title = root.getElementById('team-notes-title');
     ui.date = root.getElementById('team-notes-date');
     ui.content = root.getElementById('team-notes-content');
@@ -292,6 +327,11 @@
 
   function bindEvents() {
     ui.sectionList.addEventListener('click', function (event) {
+      var deleteButton = event.target.closest('[data-delete-section-id]');
+      if (deleteButton) {
+        deleteSection(deleteButton.dataset.deleteSectionId);
+        return;
+      }
       var button = event.target.closest('[data-section-id]');
       if (button) selectSection(button.dataset.sectionId);
     });
