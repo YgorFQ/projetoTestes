@@ -7,6 +7,8 @@
   var selectedPageId = '';
   var dirty = false;
   var toastTimer = null;
+  var confirmAction = null;
+  var confirmTrigger = null;
 
   function escapeHtml(value) {
     return String(value == null ? '' : value)
@@ -51,6 +53,36 @@
 
   function canLeavePage() {
     return !dirty || window.confirm('Descartar as alterações não salvas desta página?');
+  }
+
+  function closeDeleteConfirm(restoreFocus) {
+    ui.confirmOverlay.hidden = true;
+    ui.shell.inert = false;
+    confirmAction = null;
+    if (restoreFocus !== false && confirmTrigger && confirmTrigger.isConnected) confirmTrigger.focus();
+    confirmTrigger = null;
+  }
+
+  function openDeleteConfirm(options) {
+    var safe = options || {};
+    confirmTrigger = root.activeElement;
+    confirmAction = typeof safe.onConfirm === 'function' ? safe.onConfirm : null;
+    ui.confirmTitle.textContent = safe.title || 'Confirmar exclusão';
+    ui.confirmDescription.textContent = safe.description || 'Confirme para excluir o item selecionado.';
+    ui.confirmTargetLabel.textContent = safe.targetLabel || 'Item selecionado';
+    ui.confirmTargetName.textContent = safe.targetName || '';
+    ui.confirmTargetDetail.textContent = safe.targetDetail || '';
+    ui.confirmTargetDetail.hidden = !safe.targetDetail;
+    ui.confirmDelete.textContent = safe.confirmLabel || 'Excluir';
+    ui.confirmOverlay.hidden = false;
+    ui.shell.inert = true;
+    ui.confirmDelete.focus();
+  }
+
+  function confirmDelete() {
+    var action = confirmAction;
+    closeDeleteConfirm(false);
+    if (action) action();
   }
 
   function selectedPage() {
@@ -181,33 +213,39 @@
     var section = sectionById(sectionId);
     if (!section) return;
     var deletingSelected = sectionId === selectedSectionId;
-    if (deletingSelected && !canLeavePage()) return;
     var sectionPages = model.listPages(sectionId, '');
-    var pageMessage = sectionPages.length
-      ? ' As ' + sectionPages.length + (sectionPages.length === 1 ? ' página vinculada também será excluída.' : ' páginas vinculadas também serão excluídas.')
-      : '';
-    if (!window.confirm('Excluir a seção "' + section.name + '"?' + pageMessage)) return;
-
     var sectionsBeforeDelete = model.listSections();
     var deletedIndex = sectionsBeforeDelete.findIndex(function (item) { return item.id === sectionId; });
-    if (!model.deleteSection(sectionId)) return;
+    openDeleteConfirm({
+      title: 'Excluir esta seção?',
+      description: sectionPages.length
+        ? 'A seção e todo o conteúdo organizado dentro dela serão removidos.'
+        : 'A seção será removida da organização das notas.',
+      targetLabel: 'Seção',
+      targetName: section.name,
+      targetDetail: sectionPages.length + (sectionPages.length === 1 ? ' página vinculada' : ' páginas vinculadas'),
+      confirmLabel: 'Excluir seção',
+      onConfirm: function () {
+        if (!model.deleteSection(sectionId)) return;
 
-    if (deletingSelected) {
-      var remainingSections = model.listSections();
-      var fallbackSection = remainingSections[Math.min(deletedIndex, remainingSections.length - 1)] || null;
-      selectedSectionId = fallbackSection ? fallbackSection.id : '';
-      selectedPageId = '';
-      ui.search.value = '';
-    }
+        if (deletingSelected) {
+          var remainingSections = model.listSections();
+          var fallbackSection = remainingSections[Math.min(deletedIndex, remainingSections.length - 1)] || null;
+          selectedSectionId = fallbackSection ? fallbackSection.id : '';
+          selectedPageId = '';
+          ui.search.value = '';
+        }
 
-    renderSections();
-    renderPages();
-    if (deletingSelected) {
-      var pages = selectedSectionId ? model.listPages(selectedSectionId, '') : [];
-      if (pages.length) selectPage(pages[0].id, true);
-      else fillEditor(null);
-    }
-    setToast('Seção excluída do protótipo.', 'ok');
+        renderSections();
+        renderPages();
+        if (deletingSelected) {
+          var pages = selectedSectionId ? model.listPages(selectedSectionId, '') : [];
+          if (pages.length) selectPage(pages[0].id, true);
+          else fillEditor(null);
+        }
+        setToast('Seção excluída do protótipo.', 'ok');
+      }
+    });
   }
 
   function readEditorPage() {
@@ -240,15 +278,25 @@
   function deletePage() {
     var page = selectedPage();
     if (!page) return;
-    if (!window.confirm('Excluir a página "' + page.title + '" deste protótipo?')) return;
-    model.deletePage(page.id);
-    selectedPageId = '';
-    var pages = model.listPages(selectedSectionId, '');
-    renderSections();
-    renderPages();
-    if (pages.length) selectPage(pages[0].id, true);
-    else fillEditor(null);
-    setToast('Página excluída do protótipo.', 'ok');
+    var section = sectionById(page.sectionId);
+    openDeleteConfirm({
+      title: 'Excluir esta página?',
+      description: 'A página deixará de fazer parte das notas desta seção.',
+      targetLabel: 'Página',
+      targetName: page.title,
+      targetDetail: section ? 'Seção: ' + section.name : '',
+      confirmLabel: 'Excluir página',
+      onConfirm: function () {
+        model.deletePage(page.id);
+        selectedPageId = '';
+        var pages = model.listPages(selectedSectionId, '');
+        renderSections();
+        renderPages();
+        if (pages.length) selectPage(pages[0].id, true);
+        else fillEditor(null);
+        setToast('Página excluída do protótipo.', 'ok');
+      }
+    });
   }
 
   function copyContent() {
@@ -322,6 +370,16 @@
     ui.delete = root.getElementById('team-notes-delete');
     ui.copy = root.getElementById('team-notes-copy');
     ui.save = root.getElementById('team-notes-save');
+    ui.shell = root.querySelector('.team-notes-workspace-shell');
+    ui.confirmOverlay = root.getElementById('team-notes-confirm-overlay');
+    ui.confirmTitle = root.getElementById('team-notes-confirm-title');
+    ui.confirmDescription = root.getElementById('team-notes-confirm-description');
+    ui.confirmTargetLabel = root.getElementById('team-notes-confirm-target-label');
+    ui.confirmTargetName = root.getElementById('team-notes-confirm-target-name');
+    ui.confirmTargetDetail = root.getElementById('team-notes-confirm-target-detail');
+    ui.confirmClose = root.getElementById('team-notes-confirm-close');
+    ui.confirmCancel = root.getElementById('team-notes-confirm-cancel');
+    ui.confirmDelete = root.getElementById('team-notes-confirm-delete');
     ui.toast = root.getElementById('team-notes-toast');
   }
 
@@ -350,6 +408,30 @@
     ui.editor.addEventListener('change', markEditorDirty);
     ui.delete.addEventListener('click', deletePage);
     ui.copy.addEventListener('click', copyContent);
+    ui.confirmClose.addEventListener('click', closeDeleteConfirm);
+    ui.confirmCancel.addEventListener('click', closeDeleteConfirm);
+    ui.confirmDelete.addEventListener('click', confirmDelete);
+    ui.confirmOverlay.addEventListener('click', function (event) {
+      if (event.target === ui.confirmOverlay) closeDeleteConfirm();
+    });
+    root.addEventListener('keydown', function (event) {
+      if (ui.confirmOverlay.hidden) return;
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeDeleteConfirm();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+      var focusable = [ui.confirmClose, ui.confirmCancel, ui.confirmDelete];
+      var currentIndex = focusable.indexOf(root.activeElement);
+      if (event.shiftKey && currentIndex <= 0) {
+        event.preventDefault();
+        focusable[focusable.length - 1].focus();
+      } else if (!event.shiftKey && currentIndex === focusable.length - 1) {
+        event.preventDefault();
+        focusable[0].focus();
+      }
+    });
   }
 
   api.init = function init(shadowRoot) {

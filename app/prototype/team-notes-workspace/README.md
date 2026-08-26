@@ -18,6 +18,7 @@ separacao e a hierarquia; cores, tipografia, botoes e estados seguem o produto.
 - contador de caracteres e confirmacao antes de descartar alteracoes nao salvas;
 - copia, salvamento e exclusao;
 - exclusao de secoes e de suas paginas vinculadas;
+- modal de exclusao exclusivo das Notas para secoes e paginas;
 - confirmacao antes de descartar um rascunho.
 
 O prototipo acrescenta secoes, paginas vinculadas a uma secao, breadcrumb e uma

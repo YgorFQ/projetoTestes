@@ -94,6 +94,34 @@
         </div>
       </section>
 
+      <div class="team-notes-workspace-confirm-overlay" id="team-notes-confirm-overlay" hidden>
+        <div class="team-notes-workspace-confirm" role="alertdialog" aria-modal="true" aria-labelledby="team-notes-confirm-title" aria-describedby="team-notes-confirm-description">
+          <button class="team-notes-workspace-confirm__close" id="team-notes-confirm-close" type="button" aria-label="Fechar confirmação">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+          <div class="team-notes-workspace-confirm__intro">
+            <span class="team-notes-workspace-confirm__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 14H6L5 6"/><path d="M10 11v5M14 11v5"/></svg>
+            </span>
+            <div>
+              <span class="team-notes-workspace-confirm__eyebrow">Notas beta</span>
+              <h2 id="team-notes-confirm-title">Confirmar exclusão</h2>
+            </div>
+          </div>
+          <p class="team-notes-workspace-confirm__description" id="team-notes-confirm-description"></p>
+          <div class="team-notes-workspace-confirm__target">
+            <span id="team-notes-confirm-target-label">Item selecionado</span>
+            <strong id="team-notes-confirm-target-name"></strong>
+            <small id="team-notes-confirm-target-detail"></small>
+          </div>
+          <p class="team-notes-workspace-confirm__warning">Esta ação é permanente e não poderá ser desfeita.</p>
+          <div class="team-notes-workspace-confirm__actions">
+            <button class="team-notes-workspace-confirm__cancel" id="team-notes-confirm-cancel" type="button">Cancelar</button>
+            <button class="team-notes-workspace-confirm__delete" id="team-notes-confirm-delete" type="button">Excluir</button>
+          </div>
+        </div>
+      </div>
+
       <div class="team-notes-workspace-toast" id="team-notes-toast" role="status" aria-live="polite"></div>
     `;
     return wrapper;

@@ -141,6 +141,7 @@ Teste desktop e mobile:
 - criar secao bloqueia nome duplicado;
 - excluir secao pede confirmacao, remove suas paginas e seleciona outra secao disponivel;
 - criar, editar, copiar, salvar e excluir pagina atualizam o estado do prototipo;
+- exclusoes de secao e pagina usam o modal proprio das Notas, com foco contido, Escape e cancelamento pelo fundo;
 - busca de secoes considera o nome e busca de paginas considera titulo e conteudo;
 - tipo, tags e filtro de tipo nao aparecem no prototipo;
 - itens da lista de paginas mostram somente titulo e data, sem previa do conteudo;
