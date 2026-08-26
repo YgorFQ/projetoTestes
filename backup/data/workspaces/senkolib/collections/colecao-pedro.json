@@ -1,15 +1,15 @@
 {
-  "updatedBy": "legacy-import",
-  "workspaceId": "senkolib",
-  "groupId": "pedro",
-  "tags": [],
-  "id": "colecao-pedro",
-  "createdBy": "legacy-import",
-  "name": "Coleção Pedro",
-  "createdAt": "2026-08-15T15:14:08.167Z",
-  "version": 1,
-  "nameKey": "colecao pedro",
   "updatedByName": "Importacao inicial",
+  "name": "Coleção Pedro",
+  "groupId": "pedro",
+  "createdAt": "2026-08-15T15:14:08.167Z",
+  "nameKey": "colecao pedro",
+  "workspaceId": "senkolib",
+  "tags": [],
   "updatedAt": "2026-08-15T15:14:08.167Z",
-  "legacyId": "colecao-pedro"
+  "id": "colecao-pedro",
+  "version": 1,
+  "legacyId": "colecao-pedro",
+  "createdBy": "legacy-import",
+  "updatedBy": "legacy-import"
 }

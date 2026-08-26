@@ -1,14 +1,14 @@
 {
-  "css": "",
-  "name": "teste2",
-  "baseRevisionId": null,
-  "createdByName": "Importacao inicial",
   "createdAt": "2026-08-15T15:14:08.167Z",
-  "workspaceId": "senkolib",
-  "tags": [],
+  "createdByName": "Importacao inicial",
   "createdBy": "legacy-import",
-  "kind": "collectionLayout",
+  "tags": [],
   "html": "teste2",
+  "name": "teste2",
+  "workspaceId": "senkolib",
+  "resourceId": "teste2",
+  "css": "",
+  "baseRevisionId": null,
   "revisionId": "legacy-import-v1",
-  "resourceId": "teste2"
+  "kind": "collectionLayout"
 }

@@ -1,18 +1,18 @@
 {
-  "revisionId": "legacy-import-v1",
-  "resourceId": "section-6",
-  "baseRevisionId": null,
+  "workspaceId": "senkolib",
+  "html": "        <section class=\"section-6\">\n            <picture>\n                <source media=\"(max-width: 760px)\"\n                    srcset=\"https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/section-49-2.png\"\n                    width=\"780\" height=\"450\">\n                <img class=\"section-6__image\" width=\"1600\" height=\"650\" loading=\"lazy\" fetchpriority=\"low\"\n                    decoding=\"async\"\n                    src=\"https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/section-49-1.png\"\n                    alt=\"TEXTO ALT\">\n            </picture>\n            <div class=\"section-6__content\">\n                <h2 class=\"section-6__title\">Caderno Funny Cat</h2>\n                <p class=\"section-6__description\">Organize seus estudos com fofura e estilo!</p>\n            </div>\n        </section>",
   "tags": [
     "Section 6",
     "Hero",
     "6"
   ],
-  "createdAt": "2026-08-15T15:14:08.140Z",
-  "name": "Section-6",
-  "workspaceId": "senkolib",
-  "createdByName": "Importacao inicial",
-  "kind": "libraryLayout",
-  "html": "        <section class=\"section-6\">\n            <picture>\n                <source media=\"(max-width: 760px)\"\n                    srcset=\"https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/section-49-2.png\"\n                    width=\"780\" height=\"450\">\n                <img class=\"section-6__image\" width=\"1600\" height=\"650\" loading=\"lazy\" fetchpriority=\"low\"\n                    decoding=\"async\"\n                    src=\"https://static1.efacil.com.br/wcsstore//AuroraStorefrontAssetStore/PDP/EQUIPE_QUALIDADE_CONTEUDO/section-49-1.png\"\n                    alt=\"TEXTO ALT\">\n            </picture>\n            <div class=\"section-6__content\">\n                <h2 class=\"section-6__title\">Caderno Funny Cat</h2>\n                <p class=\"section-6__description\">Organize seus estudos com fofura e estilo!</p>\n            </div>\n        </section>",
+  "createdBy": "legacy-import",
   "css": "    <style>\n        /* ===== HERO SECTION — VARIÁVEIS ===== */\n        .section-6 {\n            --pos-y: 50%;\n            --pos-x: 7%;\n            --color-title: #ffe178;\n            --bg-box: rgba(0, 0, 0, 0.33);\n\n            width: 100%;\n            position: relative;\n            border-radius: 20px;\n            overflow: hidden;\n        }\n\n        /* ===== IMAGEM ===== */\n        .section-6__image {\n            width: 100%;\n            height: auto;\n            display: block;\n            border-radius: 20px;\n        }\n\n        /* ===== CONTEÚDO SOBREPOSTO ===== */\n        .section-6__content {\n            position: absolute;\n            top: var(--pos-y);\n            left: clamp(1%, var(--pos-x), 100%);\n            transform: translateY(-50%);\n            max-width: min(40%, 480px);\n            z-index: 10;\n            background-color: var(--bg-box);\n            padding: clamp(12px, 2vw, 20px);\n            border-radius: 15px;\n            backdrop-filter: blur(4px);\n        }\n\n        .section-6__title {\n            font-size: clamp(1.4rem, 3.5vw, 2.6rem);\n            color: var(--color-title);\n            margin: 0 0 10px;\n            line-height: 1.2;\n            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);\n            font-weight: 800;\n        }\n\n        .section-6__description {\n            font-size: clamp(0.95rem, 2vw, 1.4rem);\n            color: #fff;\n            margin: 0 0 24px;\n            line-height: 1.5;\n            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.35);\n        }\n\n        /* ===== MOBILE ===== */\n        @media (max-width: 760px) {\n            .section-6__ {\n                border-radius: 0;\n            }\n\n            .section-6__content {\n                position: static;\n                transform: none;\n                max-width: 100%;\n                padding: 24px 20px 16px 20px;\n                background: transparent;\n                backdrop-filter: none;\n                text-align: center;\n            }\n\n            .section-6__title {\n                font-size: 1.8rem;\n                color: #333;\n                text-shadow: none;\n            }\n\n            .section-6__description {\n                margin-bottom: 0;\n                font-size: 1.1rem;\n                color: #555;\n                text-shadow: none;\n            }\n\n            .section-6__image {\n                width: 95%;\n                margin: auto;\n                height: auto;\n                display: block;\n                border-radius: 20px;\n            }\n        }\n\n        @media (max-width: 480px) {\n            .section-6__title {\n                font-size: 1.5rem;\n            }\n\n            .section-6__description {\n                font-size: 1rem;\n            }\n        }\n    </style>",
-  "createdBy": "legacy-import"
+  "createdAt": "2026-08-15T15:14:08.140Z",
+  "baseRevisionId": null,
+  "name": "Section-6",
+  "kind": "libraryLayout",
+  "resourceId": "section-6",
+  "revisionId": "legacy-import-v1",
+  "createdByName": "Importacao inicial"
 }

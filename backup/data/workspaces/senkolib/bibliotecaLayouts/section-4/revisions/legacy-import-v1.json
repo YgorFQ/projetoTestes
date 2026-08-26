@@ -1,15 +1,13 @@
 {
+  "name": "Section-4 (Manual de Instrução)",
+  "createdByName": "Importacao inicial",
+  "createdBy": "legacy-import",
+  "baseRevisionId": null,
+  "createdAt": "2026-08-15T15:14:08.138Z",
+  "kind": "libraryLayout",
   "workspaceId": "senkolib",
   "css": "<style>\n  .section-4-manual__container {\n    width: 100%;\n    margin: 0 auto;\n    height: auto;\n  }\n\n  .section-4-manual__figura {\n    margin: 0;\n  }\n\n  .section-4-manual__link {\n    display: flex;\n    align-items: center;\n    text-decoration: none;\n    width: 100%;\n  }\n\n  .section-4-manual__imagem {\n    border-radius: 0.25rem;\n    height: auto;\n    object-fit: cover;\n    width: 100%;\n  }\n\n  .section-4-manual__legenda {\n    font-family: Arial, sans-serif;\n    font-size: 0.75rem;\n    color: #666;\n    margin-top: 0.25rem;\n    text-align: center;\n  }\n\n  .section-4-manual__link:focus-visible {\n  outline: 3px solid #ff9900;\n  outline-offset: 4px;\n  border-radius: 0.25rem;\n}\n\n  @media (min-width: 820px) {\n\n    .section-4-manual__container,\n    .section-4-manual__figura,\n    .section-4-manual__imagem {\n      height: 250px;\n    }\n  }\n</style>",
   "revisionId": "legacy-import-v1",
-  "resourceId": "section-4",
-  "html": "        <section class=\"section-4-manual__container\">\n            <figure class=\"section-4-manual__figura\">\n                <a class=\"section-4-manual__link\" target=\"_blank\" rel=\"noopener noreferrer\"\n                    href=\"https://static1.efacil.com.br/wcsstore/AuroraStorefrontAssetStore/PDP/philips-walita/2209713-manual.pdf\">\n                    <img class=\"section-4-manual__imagem\" width=\"1200\" height=\"250\" loading=\"lazy\" decoding=\"async\"\n                        fetchpriority=\"low\"\n                        src=\"https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/manual-banner.jpg\"\n                        alt=\"Banner com ícone de caderno e texto Manual de Instruções\" />\n\n                </a>\n                <figcaption class=\"section-4-manual__legenda\">\n                    Manual de Instruções — abrir PDF em nova aba\n                </figcaption>\n            </figure>\n        </section>",
-  "kind": "libraryLayout",
-  "createdBy": "legacy-import",
-  "createdByName": "Importacao inicial",
-  "createdAt": "2026-08-15T15:14:08.138Z",
-  "name": "Section-4 (Manual de Instrução)",
-  "baseRevisionId": null,
   "tags": [
     "Section-4",
     "4",
@@ -17,5 +15,7 @@
     "manual de instrução",
     "responsivo",
     "acessível"
-  ]
+  ],
+  "html": "        <section class=\"section-4-manual__container\">\n            <figure class=\"section-4-manual__figura\">\n                <a class=\"section-4-manual__link\" target=\"_blank\" rel=\"noopener noreferrer\"\n                    href=\"https://static1.efacil.com.br/wcsstore/AuroraStorefrontAssetStore/PDP/philips-walita/2209713-manual.pdf\">\n                    <img class=\"section-4-manual__imagem\" width=\"1200\" height=\"250\" loading=\"lazy\" decoding=\"async\"\n                        fetchpriority=\"low\"\n                        src=\"https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/manual-banner.jpg\"\n                        alt=\"Banner com ícone de caderno e texto Manual de Instruções\" />\n\n                </a>\n                <figcaption class=\"section-4-manual__legenda\">\n                    Manual de Instruções — abrir PDF em nova aba\n                </figcaption>\n            </figure>\n        </section>",
+  "resourceId": "section-4"
 }

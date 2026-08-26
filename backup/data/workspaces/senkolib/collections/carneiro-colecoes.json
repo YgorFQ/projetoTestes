@@ -1,18 +1,18 @@
 {
-  "createdAt": "2026-08-15T15:14:08.211Z",
-  "id": "carneiro-colecoes",
-  "workspaceId": "senkolib",
-  "updatedByName": "Importacao inicial",
+  "updatedBy": "legacy-import",
+  "groupId": "ygor",
+  "createdBy": "legacy-import",
   "updatedAt": "2026-08-15T15:14:08.211Z",
+  "name": "Ygor Coleções",
+  "createdAt": "2026-08-15T15:14:08.211Z",
+  "workspaceId": "senkolib",
+  "version": 1,
   "tags": [
     "Responsivo",
     "adaptativos"
   ],
-  "groupId": "ygor",
-  "name": "Ygor Coleções",
-  "updatedBy": "legacy-import",
-  "version": 1,
+  "id": "carneiro-colecoes",
   "nameKey": "ygor colecoes",
-  "legacyId": "carneiro-colecoes",
-  "createdBy": "legacy-import"
+  "updatedByName": "Importacao inicial",
+  "legacyId": "carneiro-colecoes"
 }
