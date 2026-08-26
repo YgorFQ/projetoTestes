@@ -42,6 +42,7 @@
             'Sources gera picture, source e ims.',
             'Preview e uma area beta para testes.',
             'Teste e um prototipo para montar e validar FAQs de eFacil, Martins e sites genericos.',
+            'Notas beta experimenta secoes, paginas e um editor continuo antes de substituir a ferramenta atual.',
             'Criacao rapida e a entrada oficial para iniciar criacoes em qualquer aba.',
             'Notas da equipe e uma ferramenta global oficial para guardar prompts, regras, guias e padroes em arquivos proprios.',
             'No fluxo atual, Biblioteca cria layouts e variacoes; Colecoes cria colecoes e layouts dentro de uma colecao existente.'
@@ -419,7 +420,7 @@
           badge: 'beta',
           terms: 'preview beta prototype gamer teste faq multissite prototipo notas equipe team notes',
           paragraphs: [
-            'Notas da equipe agora e uma tool oficial; Preview e Teste continuam em app/prototype.',
+            'Notas da equipe continua como tool oficial; Preview, Teste e Notas beta ficam em app/prototype enquanto sao avaliados.',
             'Tudo que ainda esta em teste deve comecar em prototype antes de virar feature final.'
           ],
           bullets: [
@@ -429,6 +430,7 @@
             'Cada nota criada pelo Team Notes deve virar um arquivo proprio em app/tools/team-notes/data/notes e entrar no manifest.js.',
             'Preview: app/prototype/gamer-preview/.',
             'Teste: app/prototype/faq-teste/.',
+            'Notas beta: app/prototype/team-notes-workspace/. A tela testa a hierarquia caderno, secoes, paginas e editor com dados apenas na memoria.',
             'Senko Guide e Team Notes nao sao prototipos; ambos ficam em app/tools/.',
             'Editor de layout da Biblioteca nao e mais prototipo; ele fica em app/features/biblioteca/.'
           ]

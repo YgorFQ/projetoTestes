@@ -7,9 +7,9 @@
     "prototype"
   ],
   "counts": {
-    "official": 127,
-    "generated": 210,
-    "prototype": 12
+    "official": 128,
+    "generated": 216,
+    "prototype": 18
   },
   "entries": [
     {
@@ -273,6 +273,30 @@
       "status": "prototype"
     },
     {
+      "path": "app/prototype/team-notes-workspace/core.js",
+      "status": "prototype"
+    },
+    {
+      "path": "app/prototype/team-notes-workspace/README.md",
+      "status": "prototype"
+    },
+    {
+      "path": "app/prototype/team-notes-workspace/register.js",
+      "status": "prototype"
+    },
+    {
+      "path": "app/prototype/team-notes-workspace/script.js",
+      "status": "prototype"
+    },
+    {
+      "path": "app/prototype/team-notes-workspace/styles.css",
+      "status": "prototype"
+    },
+    {
+      "path": "app/prototype/team-notes-workspace/view.js",
+      "status": "prototype"
+    },
+    {
       "path": "app/shared/assets/senko.ico",
       "status": "official"
     },
@@ -389,6 +413,38 @@
       "status": "generated"
     },
     {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/5zlr987NQG00uWJaGKTH.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/5zlr987NQG00uWJaGKTH/revisions/wsWCQX0J0Azz1YIEGOVd.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/5zlr987NQG00uWJaGKTH/variants/YCKlLQluSqFqlIZlqdL8.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/5zlr987NQG00uWJaGKTH/variants/YCKlLQluSqFqlIZlqdL8/revisions/M2LDMpPTxQEa8DCxU1xI.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/OHMfwMDRXJPzzWPucyBW.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/OHMfwMDRXJPzzWPucyBW/revisions/TxhxcHvHLREZWUUE0qfF.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/qAXLOZHnkJeHggXz0TEg.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/qAXLOZHnkJeHggXz0TEg/revisions/kaBVFJXjwMQGsHRdOKvG.json",
+      "status": "generated"
+    },
+    {
       "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section 39.1 (caderno).json",
       "status": "generated"
     },
@@ -417,11 +473,19 @@
       "status": "generated"
     },
     {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-1/revisions/5cx3KS7AIayPLtqCL8C7.json",
+      "status": "generated"
+    },
+    {
       "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-1/revisions/legacy-import-v1.json",
       "status": "generated"
     },
     {
       "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-1/variants/variacao1.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-1/variants/variacao1/revisions/9FSH35Z6cQlWtX9px9Lj.json",
       "status": "generated"
     },
     {
@@ -525,11 +589,19 @@
       "status": "generated"
     },
     {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-2/revisions/QdXmugdIGdePibl873Lo.json",
+      "status": "generated"
+    },
+    {
       "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-2/variants/variacao1.json",
       "status": "generated"
     },
     {
       "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-2/variants/variacao1/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-2/variants/variacao1/revisions/Sv3C1GpnMF8O2eJJqvFn.json",
       "status": "generated"
     },
     {
@@ -685,38 +757,6 @@
       "status": "generated"
     },
     {
-      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-41.json",
-      "status": "generated"
-    },
-    {
-      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/ICkL2FPweVzeemkEIj2O.json",
-      "status": "generated"
-    },
-    {
-      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/IIS6zQRnxzfQIfxIiD6W.json",
-      "status": "generated"
-    },
-    {
-      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/kJLQVJ8AOZwunkCdJQ2r.json",
-      "status": "generated"
-    },
-    {
-      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/legacy-import-v1.json",
-      "status": "generated"
-    },
-    {
-      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/raWpQqEmjqKFBgU2nbXZ.json",
-      "status": "generated"
-    },
-    {
-      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/WUAa2ZMhTYhUaQhnSkjK.json",
-      "status": "generated"
-    },
-    {
-      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-41/revisions/zaPQ2NjGffEgvxZiCSQB.json",
-      "status": "generated"
-    },
-    {
       "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-46.json",
       "status": "generated"
     },
@@ -762,6 +802,10 @@
     },
     {
       "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-8/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-8/revisions/rEUThPwj8VPldw8VqBB4.json",
       "status": "generated"
     },
     {
@@ -1205,6 +1249,10 @@
       "status": "generated"
     },
     {
+      "path": "backup/data/workspaces/senkolib/settings/copyBase.json",
+      "status": "generated"
+    },
+    {
       "path": "backup/latest/biblioteca.js",
       "status": "generated"
     },
@@ -1406,6 +1454,10 @@
     },
     {
       "path": "tests/static-backup-builder.test.js",
+      "status": "official"
+    },
+    {
+      "path": "tests/team-notes-workspace-prototype.test.js",
       "status": "official"
     }
   ]

@@ -10,6 +10,7 @@ npm run test:static-backup
 npm run test:copy-base-editor
 npm run test:firebase-health
 npm run test:faq-prototype
+npm run test:team-notes-prototype
 npm run scripts:check
 ```
 
@@ -133,6 +134,17 @@ Teste desktop e mobile:
 - preview nao navega ao clicar nos links presentes nas respostas;
 - entrega copiada contem somente HTML e CSS;
 - tema claro e escuro preservam legibilidade da janela.
+
+## Prototipo Notas da equipe
+
+- a tela separa caderno, secoes, paginas e editor em tres areas reconheciveis;
+- criar secao bloqueia nome duplicado;
+- criar, editar, copiar, salvar e excluir pagina atualizam o estado do prototipo;
+- busca considera titulo, tipo, tags e conteudo da secao selecionada;
+- filtro de tipo nao mistura paginas de outras secoes;
+- navegar com alteracoes nao salvas pede confirmacao;
+- o selo e a mensagem de salvamento deixam claro que nao ha escrita Firebase real;
+- desktop, tablet e mobile permanecem navegaveis sem rolagem horizontal.
 
 ## Registro de uma rodada
 
