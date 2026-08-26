@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="../../">
+  <title>SenkoLib - teste do editor de HTML basico</title>
+  <link rel="stylesheet" href="app/shared/styles/senko-tokens.css">
+  <link rel="stylesheet" href="app/features/biblioteca/styles/index.css">
+  <link rel="stylesheet" href="app/features/biblioteca/styles/copy-base-editor.css">
+</head>
+<body>
+  <div id="harnessRoot"></div>
+
+  <script>
+    window.SenkoCopyBaseDefaultHtml = '<section class="section-1"><h2>HTML basico de teste</h2></section>';
+    window.SenkoDataMode = { isFirebase: function () { return true; } };
+    window.SenkoBibliotecaFirebase = {
+      saveCopyBaseTemplate: function (template) {
+        return Promise.resolve({
+          id: 'copyBase',
+          html: template.html,
+          version: Number(template.expectedVersion || 0) + 1
+        });
+      }
+    };
+  </script>
+  <script src="app/features/biblioteca/view.js"></script>
+  <script src="app/features/biblioteca/controllers/copy-base.js"></script>
+  <script src="app/features/biblioteca/controllers/copy-base-editor.js"></script>
+  <script>
+    document.getElementById('harnessRoot').appendChild(window.SenkoBiblioteca.createView());
+    window.SenkoBibliotecaCopyBase.init();
+    window.SenkoBibliotecaCopyBaseEditor.init();
+  </script>
+</body>
+</html>

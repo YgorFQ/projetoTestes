@@ -1,6 +1,6 @@
 # SenkoLib - Estrutura do projeto
 
-Esta e a organizacao oficial desde a versao `2026.08.19.5`. O objetivo e
+Esta e a organizacao oficial desde a versao `2026.08.26.1`. O objetivo e
 separar codigo executado, ferramentas globais e arquivos regeneraveis.
 
 ```text

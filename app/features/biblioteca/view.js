@@ -22,6 +22,15 @@
       </div>
 
       <div class="feature-toolbar-actions">
+        <button class="copy-base-edit-btn" id="copyBaseEditBtn" type="button" title="Editar HTML básico"
+          aria-label="Editar HTML básico" aria-haspopup="dialog" aria-controls="copyBaseEditorOverlay">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="17" height="17"
+            aria-hidden="true">
+            <path d="M12 20h9" />
+            <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z" />
+          </svg>
+        </button>
+
         <button class="btn-copyall" id="copyAllBtn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14" height="14">
             <rect x="9" y="9" width="13" height="13" rx="2" />
@@ -47,6 +56,43 @@
       <p>Nenhum layout encontrado para <strong id="noResultsQuery"></strong></p>
     </div>
   </main>
+
+  <!-- MODAL EDITAR HTML BASICO -->
+  <div class="copy-base-editor-overlay" id="copyBaseEditorOverlay" hidden>
+    <div class="copy-base-editor-modal" role="dialog" aria-modal="true" aria-labelledby="copyBaseEditorTitle"
+      aria-describedby="copyBaseEditorDescription">
+      <div class="copy-base-editor-header">
+        <div>
+          <span class="copy-base-editor-category">Biblioteca</span>
+          <h2 id="copyBaseEditorTitle">Editar HTML básico</h2>
+          <p id="copyBaseEditorDescription">Este conteúdo é copiado pelo botão HTML Básico.</p>
+        </div>
+        <button class="copy-base-editor-close" id="copyBaseEditorClose" type="button" title="Fechar"
+          aria-label="Fechar editor de HTML básico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div class="copy-base-editor-body">
+        <label for="copyBaseEditorTextarea">HTML básico</label>
+        <textarea id="copyBaseEditorTextarea" spellcheck="false"></textarea>
+      </div>
+      <div class="copy-base-editor-footer">
+        <span class="copy-base-editor-status" id="copyBaseEditorStatus" role="status" aria-live="polite"></span>
+        <div class="copy-base-editor-actions">
+          <button class="copy-base-editor-cancel" id="copyBaseEditorCancel" type="button">Cancelar</button>
+          <button class="copy-base-editor-save" id="copyBaseEditorSave" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M4 4h13l3 3v13H4Z" />
+              <path d="M8 4v6h8V4M8 16h8" />
+            </svg>
+            <span>Salvar no Firebase</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL ADICIONAR -->
   <div class="modal-overlay hidden" id="addModalOverlay">

@@ -7,7 +7,7 @@
     "prototype"
   ],
   "counts": {
-    "official": 123,
+    "official": 127,
     "generated": 210,
     "prototype": 12
   },
@@ -26,6 +26,10 @@
     },
     {
       "path": "AGENTS.md",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/controllers/copy-base-editor.js",
       "status": "official"
     },
     {
@@ -58,6 +62,10 @@
     },
     {
       "path": "app/features/biblioteca/repositories/static-repository.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/styles/copy-base-editor.css",
       "status": "official"
     },
     {
@@ -1357,6 +1365,10 @@
       "status": "official"
     },
     {
+      "path": "tests/copy-base-editor.test.js",
+      "status": "official"
+    },
+    {
       "path": "tests/database-member-management.test.js",
       "status": "official"
     },
@@ -1378,6 +1390,10 @@
     },
     {
       "path": "tests/fixtures/access-modal-harness.html",
+      "status": "official"
+    },
+    {
+      "path": "tests/fixtures/copy-base-editor-harness.html",
       "status": "official"
     },
     {

@@ -92,13 +92,32 @@ async function expectClientError(promise, code) {
   });
 }
 
-async function testGithubBackup(memberDb, writes) {
+async function testGithubBackup(memberDb, outsiderDb, writes) {
   await writes.saveGroup({
     groupId: 'grupo-backup',
     name: 'Grupo do backup',
     color: '#224466',
     expectedVersion: null
   });
+
+  const firstCopyBase = await writes.saveCopyBaseTemplate({
+    html: '<div>Primeira versão do HTML básico</div>',
+    expectedVersion: 0
+  });
+  assert.equal(firstCopyBase.version, 1);
+  await expectClientError(writes.saveCopyBaseTemplate({
+    html: '<div>Conflito</div>',
+    expectedVersion: 0
+  }), 'functions/aborted');
+  const updatedCopyBase = await writes.saveCopyBaseTemplate({
+    html: '<div>HTML básico do Firebase</div>',
+    expectedVersion: firstCopyBase.version
+  });
+  assert.equal(updatedCopyBase.version, 2);
+  await assertFails(firestore.getDoc(firestore.doc(
+    outsiderDb,
+    `workspaces/${WORKSPACE_ID}/settings/copyBase`
+  )));
 
   const requests = [];
   const originalFetch = global.fetch;
@@ -186,8 +205,8 @@ async function testGithubBackup(memberDb, writes) {
     });
 
     assert.equal(result.commitSha, 'commit-sha');
-    assert.equal(result.dataVersion, 10);
-    assert.equal(result.fileCount, 5);
+    assert.equal(result.dataVersion, 12);
+    assert.equal(result.fileCount, 6);
 
     const treeRequest = requests.find((request) =>
       request.method === 'POST' && request.url.endsWith('/git/trees')
@@ -202,12 +221,16 @@ async function testGithubBackup(memberDb, writes) {
       entry.path === 'backup/data/manifest.json' && typeof entry.content === 'string'
     ));
     assert.ok(treeBody.tree.some((entry) =>
+      entry.path === 'backup/data/workspaces/senkolib/settings/copyBase.json' &&
+      entry.content.includes('HTML básico do Firebase')
+    ));
+    assert.ok(treeBody.tree.some((entry) =>
       entry.path === 'backup/latest/manifest.js' &&
       entry.content.includes('dataVersion')
     ));
     assert.ok(treeBody.tree.some((entry) =>
       entry.path === 'backup/latest/biblioteca.js' &&
-      typeof entry.content === 'string'
+      entry.content.includes('HTML básico do Firebase')
     ));
     assert.ok(treeBody.tree.some((entry) =>
       entry.path === 'backup/latest/colecoes.js' &&
@@ -221,7 +244,7 @@ async function testGithubBackup(memberDb, writes) {
       memberDb,
       `workspaces/${WORKSPACE_ID}`
     ));
-    assert.equal(workspace.data().lastGithubExportVersion, 10);
+    assert.equal(workspace.data().lastGithubExportVersion, 12);
     assert.equal(workspace.data().lastGithubCommitSha, 'commit-sha');
 
     global.fetch = async () => new Response(JSON.stringify({
@@ -549,7 +572,7 @@ async function main() {
     const workspace = await firestore.getDoc(workspaceRef);
     assert.equal(workspace.data().dataVersion, 9);
     assert.equal(workspace.data().lastGithubExportVersion, 9);
-    await testGithubBackup(memberDb, writes);
+    await testGithubBackup(memberDb, outsiderDb, writes);
     console.log('Firestore client/rules test: OK');
   } finally {
     await testEnvironment.cleanup();

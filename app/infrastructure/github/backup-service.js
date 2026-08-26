@@ -214,6 +214,16 @@
     });
   }
 
+  function collectCopyBase(context, workspaceRef, workspacePath, files) {
+    var sdk = context.firestore;
+    var copyBaseRef = sdk.doc(workspaceRef, 'settings', 'copyBase');
+    return sdk.getDoc(copyBaseRef).then(function (snapshot) {
+      if (snapshot.exists()) {
+        addDocumentFile(files, workspacePath + '/settings/copyBase', snapshot);
+      }
+    });
+  }
+
   function buildWorkspaceFiles(context, workspaceData) {
     var sdk = context.firestore;
     var workspaceRef = sdk.doc(context.db, 'workspaces/' + context.workspaceId);
@@ -223,7 +233,8 @@
     return Promise.all([
       collectGroups(context, workspaceRef, workspacePath, files),
       collectLibrary(context, workspaceRef, workspacePath, files),
-      collectCollections(context, workspaceRef, workspacePath, files)
+      collectCollections(context, workspaceRef, workspacePath, files),
+      collectCopyBase(context, workspaceRef, workspacePath, files)
     ]).then(function () {
       var dataFiles = Object.keys(files).sort();
       files[DATA_ROOT + 'manifest.json'] = JSON.stringify({

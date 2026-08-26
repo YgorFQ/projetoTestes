@@ -71,6 +71,14 @@
     };
   }
 
+  function publicCopyBase(data) {
+    return {
+      id: 'copyBase',
+      html: data.html || '',
+      version: Number(data.version || 0)
+    };
+  }
+
   function assignmentScript(property, value) {
     return '(function () {\n' +
       "  'use strict';\n" +
@@ -91,6 +99,7 @@
     var collections = [];
     var collectionLayouts = [];
     var groups = [];
+    var copyBase = null;
 
     Object.keys(files).sort().forEach(function (path) {
       if (path.indexOf(workspaceRoot) !== 0 || !path.endsWith('.json')) return;
@@ -103,6 +112,10 @@
 
       if (segments[0] === 'groups' && segments.length === 2) {
         groups.push(publicGroup(segments[1], data));
+        return;
+      }
+      if (segments[0] === 'settings' && segments[1] === 'copyBase' && segments.length === 2) {
+        copyBase = publicCopyBase(data);
         return;
       }
       if (segments[0] === 'bibliotecaLayouts' && segments.length === 2) {
@@ -139,12 +152,14 @@
           bibliotecaVariants: bibliotecaVariants.length,
           collections: collections.length,
           collectionLayouts: collectionLayouts.length,
-          groups: groups.length
+          groups: groups.length,
+          copyBaseTemplates: copyBase ? 1 : 0
         }
       },
       biblioteca: {
         layouts: bibliotecaLayouts,
-        variants: bibliotecaVariants
+        variants: bibliotecaVariants,
+        copyBase: copyBase
       },
       colecoes: {
         collections: collections,

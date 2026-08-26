@@ -13,6 +13,7 @@ const sourceWorkspaceId = 'senkolib';
 const snapshotRoot = 'backup/data';
 const timestamp = '2026-08-15T12:00:00.000Z';
 const scriptPath = path.resolve(__dirname, '../../scripts/backup/restore-github-snapshot.js');
+const dryRunOnly = process.env.SENKO_DRY_RUN_ONLY === '1';
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
@@ -55,6 +56,18 @@ function buildFixture(root) {
   const files = new Map([
     [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/groups/interface.json`,
       namedData('interface', 'Interface', { color: '#336699' })],
+    [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/settings/copyBase.json`, {
+      id: 'copyBase',
+      workspaceId: sourceWorkspaceId,
+      kind: 'copyBaseTemplate',
+      html: '<div>HTML básico restaurado</div>',
+      version: 2,
+      createdAt: timestamp,
+      createdBy: 'restore-fixture',
+      updatedAt: timestamp,
+      updatedBy: 'restore-fixture',
+      updatedByName: 'Fixture'
+    }],
     [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/bibliotecaLayouts/layout-a.json`,
       namedData('layout-a', 'Layout A', {
         kind: 'libraryLayout',
@@ -157,6 +170,10 @@ async function main() {
     runGit(tempRoot, ['commit', '--quiet', '-m', 'Snapshot fixture']);
     const commitDryRun = runRestore(tempRoot, ['--commit', 'HEAD', '--dry-run'], 0);
     assert(commitDryRun.includes('@ HEAD'), 'O snapshot nao foi lido pelo commit Git.');
+    if (dryRunOnly) {
+      console.log('Validacao de snapshot e HTML basico em dry-run: OK');
+      return;
+    }
 
     await workspace.collection('members').doc('member-1').set({
       uid: 'member-1',
@@ -164,10 +181,11 @@ async function main() {
     });
 
     runRestore(tempRoot, [], 0);
-    const [workspaceSnapshot, group, layout, variant, collection, internal, reservations] =
+    const [workspaceSnapshot, group, copyBase, layout, variant, collection, internal, reservations] =
       await Promise.all([
         workspace.get(),
         workspace.collection('groups').doc('interface').get(),
+        workspace.collection('settings').doc('copyBase').get(),
         workspace.collection('bibliotecaLayouts').doc('layout-a').get(),
         workspace.collection('bibliotecaLayouts').doc('layout-a')
           .collection('variants').doc('variant-a').get(),
@@ -180,8 +198,10 @@ async function main() {
     assert(workspaceSnapshot.data().restoreStatus === 'completed',
       'O workspace nao registrou restauracao concluida.');
     assert(workspaceSnapshot.data().dataVersion === 42, 'dataVersion incorreta.');
-    assert(group.exists && layout.exists && variant.exists && collection.exists && internal.exists,
+    assert(group.exists && copyBase.exists && layout.exists && variant.exists && collection.exists && internal.exists,
       'Um recurso esperado nao foi restaurado.');
+    assert(copyBase.data().html === '<div>HTML básico restaurado</div>',
+      'O HTML basico nao foi restaurado corretamente.');
     assert(layout.data().createdAt instanceof Timestamp,
       'createdAt nao voltou a ser Timestamp.');
     assert(reservations.size === 5, 'Quantidade de reservas incorreta.');
@@ -198,7 +218,7 @@ async function main() {
       'Teste de restauracao concluido: dry-run, importacao, protecao e force aprovados.'
     );
   } finally {
-    await db.recursiveDelete(workspace).catch(() => {});
+    if (!dryRunOnly) await db.recursiveDelete(workspace).catch(() => {});
     await deleteApp(app);
     fs.rmSync(tempRoot, { recursive: true, force: true });
   }

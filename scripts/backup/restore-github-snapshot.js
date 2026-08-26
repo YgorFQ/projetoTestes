@@ -17,6 +17,7 @@ const MANAGED_COLLECTIONS = [
   'groups',
   'bibliotecaLayouts',
   'collections',
+  'settings',
   'nameReservations'
 ];
 const TIMESTAMP_FIELDS = new Set(['createdAt', 'updatedAt']);
@@ -189,6 +190,9 @@ function parseDocumentPath(filePath, sourceWorkspaceId) {
 
   if (segments.length === 2 && segments[0] === 'groups') {
     [type, resourceId, scope] = ['group', segments[1], 'grupos'];
+  } else if (segments.length === 2 && segments[0] === 'settings' &&
+             segments[1] === 'copyBase') {
+    [type, resourceId] = ['copyBaseTemplate', segments[1]];
   } else if (segments.length === 2 && segments[0] === 'bibliotecaLayouts') {
     [type, resourceId, scope] = ['libraryLayout', segments[1], 'biblioteca-layouts'];
   } else if (segments.length === 4 && segments[0] === 'bibliotecaLayouts' &&
@@ -255,9 +259,17 @@ function validateDocument(entry, data, sourceWorkspaceId) {
     throw new Error(`${entry.filePath}: workspaceId nao corresponde ao manifesto.`);
   }
 
-  if (!entry.type.endsWith('Revision')) validateNamedDocument(entry, data);
+  if (!entry.type.endsWith('Revision') && entry.type !== 'copyBaseTemplate') {
+    validateNamedDocument(entry, data);
+  }
 
-  if (entry.type === 'group') {
+  if (entry.type === 'copyBaseTemplate') {
+    if (data.id !== 'copyBase' || data.kind !== 'copyBaseTemplate' ||
+        typeof data.html !== 'string' || !data.html.trim() || data.html.length > 750000 ||
+        !Number.isSafeInteger(data.version) || data.version < 1) {
+      throw new Error(`${entry.filePath}: template do HTML basico invalido.`);
+    }
+  } else if (entry.type === 'group') {
     if (!/^#[0-9a-fA-F]{6}$/.test(String(data.color || ''))) {
       throw new Error(`${entry.filePath}: cor de grupo invalida.`);
     }

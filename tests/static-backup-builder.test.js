@@ -41,6 +41,13 @@ const files = {
     name: 'Grupo atual',
     color: '#123456'
   }),
+  [root + 'settings/copyBase.json']: JSON.stringify({
+    id: 'copyBase',
+    kind: 'copyBaseTemplate',
+    html: '<div>HTML básico compartilhado</div>',
+    version: 4,
+    updatedByName: 'Nome privado do editor'
+  }),
   [root + 'members/member-1.json']: JSON.stringify({
     email: 'privado@example.com'
   })
@@ -53,13 +60,17 @@ assert.deepEqual(snapshot.manifest.counts, {
   bibliotecaVariants: 1,
   collections: 1,
   collectionLayouts: 1,
-  groups: 1
+  groups: 1,
+  copyBaseTemplates: 1
 });
 assert.equal(snapshot.biblioteca.layouts[0].html, '<main>atual</main>');
 assert.equal(snapshot.biblioteca.layouts[0].updatedByName, undefined);
 assert.equal(snapshot.biblioteca.layouts[0].revisionId, undefined);
 assert.equal(snapshot.biblioteca.layouts[0].version, undefined);
 assert.equal(snapshot.biblioteca.variants[0].layoutId, 'layout-1');
+assert.equal(snapshot.biblioteca.copyBase.html, '<div>HTML básico compartilhado</div>');
+assert.equal(snapshot.biblioteca.copyBase.version, 4);
+assert.equal(snapshot.biblioteca.copyBase.updatedByName, undefined);
 assert.equal(snapshot.colecoes.layouts[0].collectionId, 'collection-1');
 
 const generated = builder.buildPublicFiles(files);
@@ -68,6 +79,7 @@ assert.ok(generatedText.includes('<main>atual</main>'));
 assert.ok(!generatedText.includes('<main>antigo</main>'));
 assert.ok(!generatedText.includes('privado@example.com'));
 assert.ok(!generatedText.includes('Nome privado'));
+assert.ok(!generatedText.includes('Nome privado do editor'));
 assert.deepEqual(Object.keys(generated).sort(), [
   'backup/latest/biblioteca.js',
   'backup/latest/colecoes.js',

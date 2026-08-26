@@ -39,6 +39,17 @@
     return true;
   }
 
+  function loadStaticCopyBase() {
+    var repository = window.SenkoBibliotecaStatic;
+    var copyApi = window.SenkoBibliotecaCopyBase;
+    if (!repository || !copyApi) return false;
+
+    var template = repository.getCopyBase();
+    if (template) return copyApi.setTemplate(template, 'static');
+    copyApi.resetToDefault();
+    return false;
+  }
+
   function featureUrl(path) {
     var absoluteUrl = new URL(path, featureBaseUrl).href;
     return window.SenkoFreshAssets
@@ -152,6 +163,15 @@
         console.error('[Biblioteca] Falha ao sincronizar layouts:', error);
       }));
 
+      firebaseUnsubscribers.push(repository.watchCopyBase(function (template) {
+        var copyApi = window.SenkoBibliotecaCopyBase;
+        if (!copyApi) return;
+        if (template) copyApi.setTemplate(template, 'firebase');
+        else copyApi.resetToDefault();
+      }, function (error) {
+        console.error('[Biblioteca] Falha ao sincronizar HTML basico:', error);
+      }));
+
       return true;
     }).catch(function (error) {
       console.error('[Biblioteca] Firebase indisponivel:', error);
@@ -183,6 +203,7 @@
       if (loadStaticSnapshot() && window.SenkoBiblioteca) {
         window.SenkoBiblioteca.render(true);
       }
+      loadStaticCopyBase();
     });
   }
 
@@ -192,6 +213,7 @@
     loadPromise = (async function () {
       loadStyle('styles/index.css?v=20260816-structure');
       loadStyle('styles/layout-editor.css?v=20260801-presence');
+      loadStyle('styles/copy-base-editor.css?v=20260826-copy-base-firebase');
 
       await Promise.all([
         loadScript('view.js?v=20260613-fast-load'),
@@ -213,7 +235,9 @@
         loadScript('controllers/layout-editor.js?v=20260816-structure'),
         loadScript('controllers/index.js?v=20260816-structure'),
         loadScript('controllers/copy-base-template.js?v=20260816-structure').then(function () {
-          return loadScript('controllers/copy-base.js?v=20260816-structure');
+          return loadScript('controllers/copy-base.js?v=20260826-copy-base-firebase').then(function () {
+            return loadScript('controllers/copy-base-editor.js?v=20260826-copy-base-firebase');
+          });
         })
       ]);
 
@@ -223,6 +247,8 @@
 
       window.SenkoBiblioteca.init();
       if (window.SenkoBibliotecaCopyBase) window.SenkoBibliotecaCopyBase.init();
+      if (window.SenkoBibliotecaCopyBaseEditor) window.SenkoBibliotecaCopyBaseEditor.init();
+      loadStaticCopyBase();
       bindDataMode();
       if (window.SenkoDataMode && window.SenkoDataMode.isFirebase()) startFirebaseSync();
 

@@ -6,7 +6,7 @@
 
   var api = window.SenkoBibliotecaCopyBase = window.SenkoBibliotecaCopyBase || {};
   var initialized = false;
-  var htmlBasico = window.SenkoCopyBaseDefaultHtml || `<div class="lp-container">
+  var defaultHtml = window.SenkoCopyBaseDefaultHtml || `<div class="lp-container">
     <style>
         * {
             padding: 0;
@@ -231,6 +231,18 @@
 
     </article>
 </div>`;
+  var template = {
+    id: 'copyBase',
+    html: defaultHtml,
+    version: 0,
+    source: 'local'
+  };
+
+  function publishTemplateChange() {
+    window.dispatchEvent(new CustomEvent('senko:copy-base-change', {
+      detail: api.getTemplate()
+    }));
+  }
 
   function copyWithFallback(text) {
     var textarea = document.createElement('textarea');
@@ -247,13 +259,13 @@
 
   function copyBaseHtml() {
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(htmlBasico).catch(function () {
-        copyWithFallback(htmlBasico);
+      navigator.clipboard.writeText(template.html).catch(function () {
+        copyWithFallback(template.html);
       });
       return;
     }
 
-    copyWithFallback(htmlBasico);
+    copyWithFallback(template.html);
   }
 
   api.init = function initCopyBase() {
@@ -265,13 +277,44 @@
   };
 
   api.getHtml = function getCopyBaseHtml() {
-    return htmlBasico;
+    return template.html;
+  };
+
+  api.getTemplate = function getCopyBaseTemplate() {
+    return {
+      id: template.id,
+      html: template.html,
+      version: template.version,
+      source: template.source
+    };
   };
 
   api.setHtml = function setCopyBaseHtml(nextHtml) {
     if (typeof nextHtml !== 'string' || !nextHtml.trim()) return false;
-    htmlBasico = nextHtml;
-    window.SenkoCopyBaseDefaultHtml = nextHtml;
+    return api.setTemplate({ html: nextHtml, version: template.version }, template.source);
+  };
+
+  api.setTemplate = function setCopyBaseTemplate(nextTemplate, source) {
+    if (!nextTemplate || typeof nextTemplate.html !== 'string' || !nextTemplate.html.trim()) {
+      return false;
+    }
+    template = {
+      id: 'copyBase',
+      html: nextTemplate.html,
+      version: Number(nextTemplate.version || 0),
+      source: source || nextTemplate.source || 'firebase'
+    };
+    publishTemplateChange();
     return true;
+  };
+
+  api.resetToDefault = function resetCopyBaseTemplate() {
+    template = {
+      id: 'copyBase',
+      html: defaultHtml,
+      version: 0,
+      source: 'local'
+    };
+    publishTemplateChange();
   };
 })();

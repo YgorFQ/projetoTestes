@@ -19,6 +19,7 @@
     "test:access-modal": "node tests/access-modal-shell.test.js",
     "test:structure": "node tests/file-classification.test.js",
     "test:static-backup": "node tests/static-backup-builder.test.js",
+    "test:copy-base-editor": "node tests/copy-base-editor.test.js",
     "test:firebase-health": "node tests/firebase-service-health.test.js",
     "test:faq-prototype": "node tests/faq-test-prototype.test.js",
     "test:firestore-rules": "firebase emulators:exec --only firestore --project senkolib-rules-test \"node tests/firestore-client-writes.test.js\"",

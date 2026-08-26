@@ -33,12 +33,25 @@
     }) : [];
   }
 
+  function getCopyBase() {
+    var data = source();
+    if (!data || !data.copyBase || typeof data.copyBase.html !== 'string' ||
+        !data.copyBase.html.trim()) return null;
+    return {
+      id: 'copyBase',
+      html: data.copyBase.html,
+      version: Number(data.copyBase.version || 0),
+      _senkoStatic: true
+    };
+  }
+
   window.SenkoBibliotecaStatic = {
     isAvailable: function () {
       var data = source();
       return Boolean(data && Array.isArray(data.layouts) && Array.isArray(data.variants));
     },
     getLayouts: getLayouts,
-    getVariants: getVariants
+    getVariants: getVariants,
+    getCopyBase: getCopyBase
   };
 })();

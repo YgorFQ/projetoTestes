@@ -23,6 +23,7 @@ GitHub Actions.
 - Listeners do Firestore entregam o save aos outros computadores em tempo real.
 - HTML e CSS usam revisao imutavel por save.
 - Colecoes e grupos usam contador de versao.
+- O template compartilhado do HTML Basico usa um singleton com contador de versao.
 - Um save desatualizado falha com `aborted`; nunca ha sobrescrita silenciosa.
 - Todos os documentos em `members` podem alterar conteudo. O campo `role`
   separa governanca em `owner`, `admin` e `editor`.
@@ -65,6 +66,7 @@ O frontend de producao nao importa o SDK de Cloud Functions.
 | `backup/latest/{manifest,biblioteca,colecoes}.js` | Bundle gerado e servido sem consultar Firebase |
 | `app/features/biblioteca/repositories/firebase-repository.js` | Adaptador Firebase da Biblioteca |
 | `app/features/biblioteca/repositories/static-repository.js` | Adaptador somente leitura da Biblioteca |
+| `app/features/biblioteca/controllers/copy-base-editor.js` | Modal e concorrencia do HTML Basico |
 | `app/features/colecoes/repositories/firebase-repository.js` | Adaptador Firebase de Colecoes e grupos |
 | `app/features/colecoes/repositories/static-repository.js` | Adaptador somente leitura de Colecoes e grupos |
 | `app/tools/access/` | Modal global de solicitacoes, membros, cargos e atividade administrativa |
@@ -223,7 +225,8 @@ O `dataVersion` permite detectar uma mudanca no meio da leitura do backup.
 
 ## Concorrencia
 
-Conteudo HTML/CSS usa `currentRevisionId`. Colecoes e grupos usam `version`.
+Conteudo HTML/CSS usa `currentRevisionId`. Colecoes, grupos e o singleton do
+HTML Basico usam `version`.
 O editor guarda a base recebida ao abrir o item e a envia no save.
 
 - Base atual: a transacao grava a nova versao.

@@ -7,6 +7,7 @@ npm run test:structure
 npm run test:asset-versioning
 npm run test:access-modal
 npm run test:static-backup
+npm run test:copy-base-editor
 npm run test:firebase-health
 npm run test:faq-prototype
 npm run scripts:check
@@ -29,6 +30,7 @@ Cenarios obrigatorios:
 - schema com campo inesperado e recusado;
 - nome reservado impede duplicata;
 - versao atrasada e recusada;
+- HTML Basico cria o singleton, incrementa a versao e recusa conflito;
 - documento, revisao, reserva e dataVersion mudam juntos;
 - owner/admin/editor mantem conteudo;
 - regras administrativas respeitam cargos.
@@ -50,6 +52,9 @@ admin e tentativa de promover owner sem permissao.
 - pesquisa por nome e tag;
 - preview renderiza;
 - copiar HTML/CSS funciona;
+- botao de editar HTML Basico abre o modal e carrega o valor atual;
+- primeiro save cria `settings/copyBase` e o seguinte atualiza por versao;
+- conflito preserva o rascunho e o modo estatico bloqueia o save;
 - cria layout;
 - edita layout;
 - cria e edita variacao;

@@ -19,6 +19,7 @@ workspaces/{workspaceId}
 |-- accessRequests/{uid}
 |-- memberEvents/{eventId}
 |-- groups/{groupId}
+|-- settings/copyBase
 |-- bibliotecaLayouts/{layoutId}
 |   |-- revisions/{revisionId}
 |   `-- variants/{variantId}
@@ -107,6 +108,20 @@ O importador cria grupos com modelo completo e reserva de nome. O cliente
 Colecoes nunca sao apagadas junto do grupo. Como todos os membros atuais sao
 editores confiaveis, esta verificacao de uso e uma regra de aplicacao, nao uma
 consulta que Security Rules consigam repetir.
+
+## HTML Basico da Biblioteca
+
+Caminho: `workspaces/{workspaceId}/settings/copyBase`
+
+Documento singleton com `id: copyBase`, `kind: copyBaseTemplate`,
+`workspaceId`, `html`, `version`, campos de criacao e campos de atualizacao.
+`html` deve ser nao vazio e ter no maximo 750.000 caracteres. O documento nao
+precisa existir antes do uso: enquanto ausente, a Biblioteca usa o template
+local; o primeiro salvamento cria a versao 1. Salvamentos seguintes exigem a
+versao aberta pelo editor e recusam concorrencia atrasada com `aborted`.
+
+O singleton entra no backup tecnico, na restauracao e no payload publico da
+Biblioteca. Ele nao usa reserva de nome nem subcolecao de revisoes.
 
 ## Layout da Biblioteca
 

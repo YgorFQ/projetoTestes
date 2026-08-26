@@ -229,6 +229,29 @@ service cloud.firestore {
         && data.createdByName.size() <= 320;
     }
 
+    function validCopyBaseTemplate(data, workspaceId) {
+      return data.keys().hasAll([
+          'id', 'workspaceId', 'kind', 'html', 'version',
+          'createdAt', 'createdBy', 'updatedAt', 'updatedBy', 'updatedByName'
+        ])
+        && data.keys().hasOnly([
+          'id', 'workspaceId', 'kind', 'html', 'version',
+          'createdAt', 'createdBy', 'updatedAt', 'updatedBy', 'updatedByName'
+        ])
+        && data.id == 'copyBase'
+        && data.workspaceId == workspaceId
+        && data.kind == 'copyBaseTemplate'
+        && data.html is string
+        && data.html.size() >= 1
+        && data.html.size() <= 750000
+        && data.version is int
+        && data.version >= 1
+        && data.createdBy is string
+        && data.updatedBy is string
+        && data.updatedByName is string
+        && data.updatedByName.size() <= 320;
+    }
+
     function validGroup(data, workspaceId, groupId) {
       return data.keys().hasAll([
           'id', 'workspaceId', 'name', 'nameKey', 'color', 'version',
@@ -388,6 +411,30 @@ service cloud.firestore {
           && request.resource.data.updatedBy == request.auth.uid
           && dataVersionAdvanced(workspaceId);
         allow delete: if isMember(workspaceId) && dataVersionAdvanced(workspaceId);
+      }
+
+      match /settings/{settingId} {
+        allow read: if isMember(workspaceId) && settingId == 'copyBase';
+        allow create: if isMember(workspaceId)
+          && settingId == 'copyBase'
+          && validCopyBaseTemplate(request.resource.data, workspaceId)
+          && request.resource.data.version == 1
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.createdBy == request.auth.uid
+          && request.resource.data.updatedBy == request.auth.uid
+          && dataVersionAdvanced(workspaceId);
+        allow update: if isMember(workspaceId)
+          && settingId == 'copyBase'
+          && validCopyBaseTemplate(request.resource.data, workspaceId)
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'html', 'version', 'updatedAt', 'updatedBy', 'updatedByName'
+          ])
+          && request.resource.data.version == resource.data.version + 1
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.updatedBy == request.auth.uid
+          && dataVersionAdvanced(workspaceId);
+        allow delete: if false;
       }
 
       match /bibliotecaLayouts/{layoutId} {

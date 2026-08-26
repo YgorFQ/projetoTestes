@@ -126,6 +126,7 @@ backup/data/
 |-- manifest.json
 `-- workspaces/senkolib/
     |-- groups/{groupId}.json
+    |-- settings/copyBase.json
     |-- bibliotecaLayouts/{layoutId}.json
     |   |-- revisions/{revisionId}.json
     |   `-- variants/{variantId}/
@@ -172,7 +173,7 @@ backup/latest/
 
 Esses tres arquivos sao dados gerados. Nao devem ser editados manualmente.
 Eles contem somente a versao atual de layouts, variacoes, colecoes, layouts
-internos e grupos. Nao incluem documentos de revisao, autoria, membros,
+internos, grupos e do HTML Basico compartilhado. Nao incluem documentos de revisao, autoria, membros,
 e-mails, presenca, tokens ou logs. O HTML e o CSS ficam publicos por decisao
 de produto.
 

@@ -319,6 +319,76 @@
   }
 
   // -----------------------------------------------------------------------
+  // Template singleton do HTML Basico
+  // -----------------------------------------------------------------------
+  // O template nao precisa de reserva de nome ou revisoes filhas, mas usa a
+  // mesma concorrencia otimista e incrementa dataVersion no mesmo commit.
+  function saveCopyBaseTemplate(data) {
+    return withContext(function (context) {
+      var base = refs(context);
+      var templateRef = base.sdk.doc(base.workspace, 'settings', 'copyBase');
+      var html = cleanText(data.html, 'HTML basico', 750000);
+      var expectedVersion = Number(data.expectedVersion || 0);
+
+      if (!html.trim()) {
+        throw appError('invalid-argument', 'O HTML basico nao pode ficar vazio.');
+      }
+      if (!Number.isSafeInteger(expectedVersion) || expectedVersion < 0) {
+        throw appError('invalid-argument', 'Versao esperada do HTML basico invalida.');
+      }
+
+      return base.sdk.runTransaction(context.db, function (transaction) {
+        return Promise.all([
+          transaction.get(base.member),
+          transaction.get(templateRef)
+        ]).then(function (snapshots) {
+          requireMemberSnapshot(snapshots[0]);
+          var templateSnapshot = snapshots[1];
+          var existing = templateSnapshot.exists() ? templateSnapshot.data() : null;
+          var currentVersion = existing ? Number(existing.version || 0) : 0;
+
+          if (currentVersion !== expectedVersion) {
+            throw appError(
+              'aborted',
+              'Outra pessoa salvou uma versao mais recente do HTML basico.'
+            );
+          }
+
+          var now = base.sdk.serverTimestamp();
+          var nextVersion = currentVersion + 1;
+          var templateData = {
+            id: 'copyBase',
+            workspaceId: context.workspaceId,
+            kind: 'copyBaseTemplate',
+            html: html,
+            version: nextVersion,
+            updatedAt: now,
+            updatedBy: context.user.uid,
+            updatedByName: actorName(context)
+          };
+          if (!existing) {
+            templateData.createdAt = now;
+            templateData.createdBy = context.user.uid;
+          }
+
+          transaction.set(templateRef, templateData, { merge: true });
+          transaction.set(base.workspace, {
+            dataVersion: base.sdk.increment(1),
+            updatedAt: now,
+            updatedBy: context.user.uid
+          }, { merge: true });
+
+          return {
+            id: 'copyBase',
+            html: html,
+            version: nextVersion
+          };
+        });
+      });
+    });
+  }
+
+  // -----------------------------------------------------------------------
   // Colecoes
   // -----------------------------------------------------------------------
   // Colecao nao possui subdocumento de revisao, mas continua versionada e usa
@@ -718,6 +788,7 @@
 
   window.SenkoFirestoreWrites = {
     saveVersionedContent: saveVersionedContent,
+    saveCopyBaseTemplate: saveCopyBaseTemplate,
     saveCollection: saveCollection,
     saveGroup: saveGroup,
     deleteGroup: deleteGroup,

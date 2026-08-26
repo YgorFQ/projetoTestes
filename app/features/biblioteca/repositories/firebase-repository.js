@@ -37,6 +37,21 @@
     );
   }
 
+  function watchCopyBase(callback, onError) {
+    return window.SenkoFirebase.listenDocument(
+      workspacePath('settings/copyBase'),
+      function (document) {
+        callback(document ? {
+          id: 'copyBase',
+          html: document.html || '',
+          version: Number(document.version || 0),
+          _firebaseUpdatedBy: document.updatedByName || ''
+        } : null);
+      },
+      onError
+    );
+  }
+
   function watchVariantsForLayouts(layoutIds, callback, onError) {
     var ids = Array.from(new Set((layoutIds || []).filter(Boolean))).sort();
     var variantsByLayout = {};
@@ -136,6 +151,14 @@
     });
   }
 
+  function saveCopyBaseTemplate(template) {
+    return window.SenkoFirestoreWrites.saveCopyBaseTemplate({
+      workspaceId: window.SenkoFirebase.getWorkspaceId(),
+      html: template.html || '',
+      expectedVersion: Number(template.expectedVersion || 0)
+    });
+  }
+
   function deleteLayout(layout) {
     return window.SenkoFirestoreWrites.deleteContent({
       workspaceId: window.SenkoFirebase.getWorkspaceId(),
@@ -166,9 +189,11 @@
   window.SenkoBibliotecaFirebase = {
     isActive: firebaseReady,
     watchLayouts: watchLayouts,
+    watchCopyBase: watchCopyBase,
     watchVariantsForLayouts: watchVariantsForLayouts,
     saveLayout: saveLayout,
     saveVariant: saveVariant,
+    saveCopyBaseTemplate: saveCopyBaseTemplate,
     deleteLayout: deleteLayout,
     deleteVariant: deleteVariant,
     enterEditor: enterEditor

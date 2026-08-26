@@ -36,6 +36,7 @@ banco, e o GitHub nao participa de criar, editar ou excluir conteudo.
 - pesquisa por nome, ID e tags;
 - abre preview isolado;
 - copia HTML, CSS ou o conjunto completo;
+- copia e edita o template compartilhado do botao HTML Basico;
 - cria e edita layouts;
 - cria e edita variacoes ligadas a um layout;
 - exclui layouts e variacoes;
@@ -88,6 +89,10 @@ membro no workspace. O produto autoriza pelo documento
 6. Em sucesso, documento, revisao, reserva e `dataVersion` mudam juntos.
 7. Listeners atualizam os clientes conectados.
 8. Um editor aberto recebe a versao remota sem sobrescrita silenciosa.
+
+O HTML Basico e um singleton versionado, nao um layout com revisoes. O editor
+envia `expectedVersion`; o primeiro salvamento cria o documento e os seguintes
+incrementam `version` e `dataVersion` na mesma transacao.
 
 ## 6. Concorrencia
 

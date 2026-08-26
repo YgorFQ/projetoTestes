@@ -310,7 +310,7 @@
           badge: 'layouts',
           terms: 'biblioteca layout variacao variante senkolib register variants layout-editor editor oficial id manifest html basico copy base',
           paragraphs: [
-            'A Biblioteca guarda layouts e variantes no Firestore e le o ultimo snapshot publico quando o Firebase nao esta disponivel.',
+            'A Biblioteca guarda layouts, variantes e o HTML Basico compartilhado no Firestore e le o ultimo snapshot publico quando o Firebase nao esta disponivel.',
             'Firebase e snapshot gerado sao as duas unicas fontes de dados.'
           ],
           bullets: [
@@ -318,6 +318,8 @@
             'UI: controllers/index.js.',
             'Editor oficial: controllers/layout-editor.js.',
             'Template do HTML Basico: controllers/copy-base-template.js.',
+            'Editor do HTML Basico: controllers/copy-base-editor.js.',
+            'Estilo do modal: styles/copy-base-editor.css.',
             'Persistencia: repositories/firebase-repository.js.',
             'Fallback: repositories/static-repository.js.',
             'Estilos do editor: styles/layout-editor.css.'
@@ -474,7 +476,7 @@
             'Teste: prototipo beta de FAQ multissite em app/prototype.',
             'Senko Guide: ferramenta oficial do shell e prioridade maxima de manutencao.',
             'Editor da Biblioteca: oficial, integrado em app/features/biblioteca/controllers/layout-editor.js.',
-            'HTML Basico: template oficial somente para copia em app/features/biblioteca/controllers/copy-base-template.js.'
+            'HTML Basico: template oficial copiavel e editor Firebase em app/features/biblioteca/controllers/copy-base-editor.js.'
           ]
         },
         {
@@ -568,6 +570,7 @@
             'Cada save cria uma revisao imutavel.',
             'baseRevisionId detecta se outra pessoa salvou antes.',
             'O editor oficial da Biblioteca salva layouts e variacoes por transacoes do SDK Web.',
+            'O HTML Basico usa o singleton settings/copyBase e expectedVersion; ele nao cria revisoes ou reserva de nome.',
             'Novos layouts e variacoes recebem IDs de documento gerados pelo Firestore.',
             'Colecoes e seus layouts internos usam o mesmo fluxo de transacoes e revisoes.',
             'Biblioteca e Colecoes mostram quem esta no mesmo editor usando o Realtime Database.',
@@ -738,6 +741,23 @@
             'O GitHub so recebe essa versao quando alguem fizer o backup global.',
             'Testar se aparece no grid.',
             'Testar abrir, copiar, editar e criar variante.'
+          ]
+        },
+        {
+          title: 'Editar o HTML Basico',
+          badge: 'biblioteca',
+          terms: 'html basico copy base editar modal firebase singleton settings copyBase conflito',
+          paragraphs: [
+            'O botao de lapis ao lado de HTML Basico abre o template compartilhado que sera copiado por toda a equipe.',
+            'Enquanto o documento ainda nao existe no Firestore, a Biblioteca usa o template local; o primeiro salvamento cria settings/copyBase.'
+          ],
+          bullets: [
+            'Entrar com uma conta membro e abrir Biblioteca.',
+            'Usar o botao Editar HTML basico, revisar o codigo e salvar no Firebase.',
+            'Cada save incrementa version e dataVersion na mesma transacao.',
+            'Se outra pessoa salvar antes, o rascunho local e preservado e o save atrasado e recusado.',
+            'O proximo backup global inclui o singleton no snapshot tecnico e em backup/latest/biblioteca.js.',
+            'No modo estatico, copiar continua disponivel e editar permanece bloqueado.'
           ]
         },
         {
