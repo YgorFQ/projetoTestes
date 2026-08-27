@@ -14,6 +14,20 @@ ATUALIZACAO 2026-08-27 - NOTAS DA EQUIPE E CONFIRMACAO DE CRIACAO
   uma tree, um commit e um push.
 - O catalogo legado app/tools/team-notes/data foi removido. Firestore e o
   snapshot proprio da feature sao as unicas fontes de Notas.
+- Em Notas, digitar altera apenas o rascunho local. Somente o clique em Salvar
+  grava e distribui a versao confirmada pelos listeners.
+- Save concluido usa check verde junto ao titulo; nome duplicado usa X vermelho
+  junto ao campo. Os dois desaparecem com fade em dois segundos.
+- Os listeners de Notas usam errorScope feature. Falha exclusiva de permissao
+  mostra o backup e o erro somente em Notas, sem manter alerta Firebase global
+  ao navegar para outra area.
+- Secoes e paginas usam version/expectedVersion e reservas de nome, sem
+  revisoes imutaveis. Limite conhecido: um snapshot remoto pode recarregar o
+  editor e substituir visualmente um rascunho ainda nao salvo; a transacao
+  continua recusando o save atrasado.
+- As regras de Notas foram implantadas no projeto senkolibtestes e o fluxo foi
+  validado no site. Testes de regras locais ainda exigem Java/Emulator Suite e
+  nao podem ser substituidos por um teste estrutural de Node.
 - Antes de criar feature, tool, area persistente, integracao ou fluxo de dados,
   uma AI deve explicar dono, pasta e persistencia e perguntar se o usuario
   deseja prosseguir, mesmo quando o pedido inicial ja diz criar, implementar ou
@@ -92,6 +106,7 @@ Colecoes:
 
 Outras features independentes existentes:
 
+- Notas da equipe;
 - Imagens;
 - Sources;
 - prototipos visuais ainda nao oficiais.
@@ -102,7 +117,6 @@ Ferramentas globais do shell:
 - Acessos;
 - Backup no GitHub;
 - Senko Guide;
-- Notas da equipe;
 - Sessao/login;
 - status de disponibilidade do Firebase.
 
@@ -153,10 +167,10 @@ tecla. O comportamento acordado e implementado e:
 - depois do commit, listeners Firestore entregam a mudanca para os outros
   computadores conectados;
 - portanto, outra pessoa ve a alteracao automaticamente sem apertar F5;
-- um editor aberto percebe quando chegou uma versao remota;
-- nenhuma sobrescrita silenciosa e permitida.
+- um editor recebe o documento confirmado quando chega uma versao remota;
+- a transacao nunca permite um save atrasado sobrescrever o servidor.
 
-O sistema usa controle otimista de concorrencia:
+Layouts e variacoes com HTML/CSS usam controle otimista por revisao:
 
 1. O editor guarda currentRevisionId/baseRevisionId da versao aberta.
 2. Ao salvar, a transacao compara essa revisao com a atual no servidor.
@@ -165,6 +179,11 @@ O sistema usa controle otimista de concorrencia:
 5. O segundo save falha com conflito/aborted.
 6. A interface deve preservar o rascunho e explicar que existe uma versao
    mais nova.
+
+Colecoes, grupos, HTML Basico, secoes e paginas de Notas usam version e
+expectedVersion em vez de currentRevisionId. Em Notas, a protecao do Firestore
+esta implementada, mas a protecao visual do rascunho contra a chegada de um
+snapshot remoto ainda e uma limitacao conhecida.
 
 Presenca nao e bloqueio. Duas pessoas podem abrir o mesmo item. Realtime
 Database mostra quem esta no recurso, mas Firestore e revisoes decidem se o
@@ -700,7 +719,8 @@ significados antigos.
 17. ORGANIZACAO INTERNA DAS FEATURES
 ------------------------------------
 
-Biblioteca e Colecoes seguem o mesmo contrato:
+Biblioteca e Colecoes seguem a estrutura em pastas; Notas aplica os mesmos
+papeis em uma forma compacta:
 
 - register.js: composition root, registro no shell e ordem de carga;
 - view.js: cria estrutura DOM;
@@ -708,6 +728,10 @@ Biblioteca e Colecoes seguem o mesmo contrato:
 - core/: estado e invariantes em memoria, sem DOM/Firebase;
 - repositories/: leitura Firebase ou leitura static;
 - styles/: CSS exclusivo da feature.
+
+Em app/features/team-notes, core.js, script.js e styles.css cumprem os papeis
+de core, controller e styles sem criar subpastas vazias. Isso e permitido para
+features pequenas quando as responsabilidades permanecem claras.
 
 Regras:
 

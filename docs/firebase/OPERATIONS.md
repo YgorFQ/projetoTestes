@@ -26,6 +26,8 @@ npm run test:structure
 npm run test:asset-versioning
 npm run test:access-modal
 npm run test:static-backup
+npm run test:static-independence
+npm run test:team-notes
 npm run test:firebase-health
 npm run scripts:check
 ```

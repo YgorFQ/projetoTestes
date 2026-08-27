@@ -7,6 +7,7 @@ npm run test:structure
 npm run test:asset-versioning
 npm run test:access-modal
 npm run test:static-backup
+npm run test:static-independence
 npm run test:copy-base-editor
 npm run test:firebase-health
 npm run test:faq-prototype
@@ -98,6 +99,12 @@ Abra o mesmo item em dois navegadores. Salve no primeiro e tente salvar no
 segundo. Esperado: segundo recebe conflito, rascunho fica recuperavel e o dado
 do primeiro permanece no Firestore.
 
+Para Notas, separe duas verificacoes: a transacao deve recusar
+`expectedVersion` antigo, mas a preservacao visual de um rascunho quando chega
+um snapshot remoto ainda e uma limitacao conhecida. Nao marque essa segunda
+garantia como aprovada enquanto `replaceData()` continuar recarregando o
+editor sem comparar `dirty`.
+
 ## Modo estatico
 
 - Firebase indisponivel usa snapshot;
@@ -105,6 +112,7 @@ do primeiro permanece no Firestore.
 - criar, editar e excluir ficam bloqueados;
 - pesquisa, preview e copia continuam;
 - nenhuma feature tenta carregar fonte adicional;
+- retirar o payload de uma feature nao afeta o fallback das outras;
 - sem snapshot, estado vazio e visivel.
 
 ## Backup
@@ -151,13 +159,29 @@ Teste desktop e mobile:
 - tipo, tags e filtro de tipo nao aparecem na feature;
 - itens da lista de paginas mostram somente titulo e data, sem previa do conteudo;
 - navegar com alteracoes nao salvas pede confirmacao;
+- digitar sem salvar nao grava Firestore nem altera a outra janela;
+- depois do clique em Salvar, a outra janela recebe o documento confirmado;
 - as colunas de secoes e paginas possuem a mesma largura;
 - salvar pagina mostra check ao lado do titulo, e nome duplicado mostra X vermelho, ambos com fade de dois segundos;
 - o modo static usa backup/latest/team-notes/manifest.js e data.js e bloqueia toda mutacao;
 - remover o payload de outra feature nao torna Notas indisponivel;
+- remover o payload de Notas nao torna Biblioteca ou Colecoes indisponiveis;
+- uma falha `permission-denied` exclusiva de Notas nao cria alerta global nem
+  troca as outras features para static;
 - salvar ou excluir nao chama a GitHub Contents API;
 - o backup global inclui secoes e paginas no mesmo commit das demais mudancas;
 - desktop, tablet e mobile permanecem navegaveis sem rolagem horizontal.
+
+Automacao principal:
+
+```powershell
+npm run test:team-notes
+npm run test:static-independence
+```
+
+Os indicadores visuais e a propagacao entre dois clientes ainda exigem smoke
+test no navegador. Testes de regras exigem Java e Emulator Suite; uma rodada
+sem esses requisitos nao e validacao completa de seguranca.
 
 ## Registro de uma rodada
 

@@ -115,8 +115,10 @@ uma configuracao esquecida envie o site publicado para a maquina do dev.
 - primeiro owner cadastrado;
 - regras implantadas e testadas;
 - Firebase real habilitado;
-- Biblioteca e Colecoes carregam;
+- Biblioteca, Colecoes e Notas carregam;
 - salvamento aparece em outro navegador;
+- digitar em Notas sem salvar nao aparece no outro navegador;
+- snapshot ausente de uma feature nao derruba as demais;
 - conflito recusa revisao atrasada;
 - solicitacao de acesso chega ao modal;
 - backup cria commit sem segredo;

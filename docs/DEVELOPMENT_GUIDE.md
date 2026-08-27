@@ -39,14 +39,20 @@ npm run test:structure
 npm run test:asset-versioning
 npm run test:access-modal
 npm run test:static-backup
+npm run test:static-independence
 npm run test:copy-base-editor
 npm run test:firebase-health
 npm run test:faq-prototype
+npm run test:team-notes
 npm run scripts:check
 ```
 
 Testes de regras usam emuladores. Veja `docs/firebase/TEST_PLAN.md` para os
 comandos e cenarios completos.
+
+Os emuladores exigem Java. Se `test:firestore-rules` nao iniciar por falta do
+JDK, registre essa limitacao e nao trate testes de Node ou verificacao visual
+como aprovacao completa das Security Rules.
 
 ## Alterar Biblioteca ou Colecoes
 
@@ -60,6 +66,31 @@ comandos e cenarios completos.
 
 Uma alteracao de campo quase sempre exige revisar repository, escrita, regra,
 teste e documentacao do modelo de dados.
+
+## Alterar Notas da equipe
+
+- estrutura HTML: `app/features/team-notes/view.js`;
+- modelo local e buscas: `app/features/team-notes/core.js`;
+- eventos, editor e feedback: `app/features/team-notes/script.js`;
+- escolha da fonte: `app/features/team-notes/data-source.js`;
+- listeners Firebase: `repositories/firebase-repository.js`;
+- fallback somente leitura: `repositories/static-repository.js`;
+- transacoes: `app/infrastructure/firebase/senko-firestore-writes.js`;
+- schema e permissoes: `firebase/firestore.rules`.
+
+Notas usa `version`/`expectedVersion`, nao revisoes imutaveis. A unicidade e
+garantida por reservas `team-note-sections` e
+`team-note-pages:{sectionId}`. Digitar deve continuar local: somente o clique
+em **Salvar** escreve no Firestore e dispara a atualizacao dos listeners.
+
+Erros `already-exists` usam o X vermelho junto ao campo; sucesso usa check
+verde junto ao titulo. Conflito, permissao e rede continuam textuais. Nao
+converta toda falha em indicador generico.
+
+Ao mexer em Notas, execute `test:team-notes` e
+`test:static-independence`. Teste tambem a falha de permissao: o listener usa
+`errorScope: 'feature'`, portanto o aviso e o fallback devem ficar somente em
+Notas.
 
 ## Alterar acesso
 
@@ -117,7 +148,9 @@ versionamento e `Cache-Control` apropriado.
 - nenhuma chave privada ou token no diff;
 - regras passaram no emulador;
 - fonte Firebase e snapshot testados;
-- Biblioteca e Colecoes abrem e pesquisam;
+- Biblioteca, Colecoes e Notas abrem e pesquisam;
+- Notas foi testada sem o payload de outra feature e vice-versa;
+- digitar em Notas sem salvar nao alterou a outra janela;
 - criar, editar, conflito e excluir foram exercitados quando afetados;
 - menu global e modal de Acessos continuam responsivos;
 - Guide ensina o comportamento novo;

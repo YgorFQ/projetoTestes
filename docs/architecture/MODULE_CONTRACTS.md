@@ -23,7 +23,8 @@ documento Firestore. Ele chama callbacks neutros registrados pelas features.
 Uma tool e uma janela ou comando global. Pode usar APIs publicas do shell e da
 infraestrutura, mas nao deve importar controller interno de feature.
 
-Exemplos: Acessos, Guide, Backup, Notas e Sessao.
+Exemplos: Acessos, Guide, Backup e Sessao. Notas da equipe nao e uma tool: e
+uma feature oficial, embora seu acionador apareca no menu de ferramentas.
 
 ## Feature
 
@@ -33,13 +34,15 @@ Cada feature possui cinco papeis:
 |---|---|
 | `register.js` | compor e registrar |
 | `view.js` | criar estrutura DOM |
-| `core/` | manter estado e invariantes em memoria |
+| `core/` ou `core.js` | manter estado e invariantes em memoria |
 | `repositories/` | converter uma fonte externa para o core |
-| `controllers/` | eventos, modais, renderizacao e casos de uso |
-| `styles/` | aparencia exclusiva da feature |
+| `controllers/` ou script controlador | eventos, modais, renderizacao e casos de uso |
+| `styles/` ou `styles.css` | aparencia exclusiva da feature |
 
 Uma feature nao chama funcoes internas de outra. Quando duas areas precisam do
 mesmo comportamento neutro, ele sobe para `app/shared` ou `app/infrastructure`.
+Features pequenas podem usar arquivos planos, como `core.js`, `script.js` e
+`styles.css`, desde que os papeis continuem separados e documentados.
 
 ## Core
 
@@ -58,7 +61,7 @@ Repository e um adaptador de leitura. Ele:
 - nao mostra modal nem altera HTML.
 
 Escritas compartilhadas ficam no modulo transacional da infraestrutura para
-que Biblioteca e Colecoes usem as mesmas garantias.
+que Biblioteca, Colecoes e Notas usem as mesmas garantias.
 
 ## Controller
 

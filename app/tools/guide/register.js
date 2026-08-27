@@ -82,6 +82,7 @@
           actions: [
             { label: 'Abrir Biblioteca', feature: 'biblioteca' },
             { label: 'Abrir Colecoes', feature: 'colecoes' },
+            { label: 'Abrir Notas', feature: 'team-notes' },
             { label: 'Abrir Imagens', feature: 'imagens' },
             { label: 'Abrir Sources', feature: 'sources' },
             { label: 'Abrir Preview', feature: 'gamer-preview' },
@@ -426,6 +427,7 @@
             'Notas da equipe: app/features/team-notes/.',
             'O acionador de Notas da equipe fica no menu de ferramentas e o painel consome os tokens visuais compartilhados do SenkoLib. A feature mantem classes proprias e nao deve criar uma paleta paralela.',
             'A experiencia de Notas da equipe organiza secoes, paginas, busca e editor, sinaliza alteracoes nao salvas e pede confirmacao antes de descarta-las.',
+            'Digitar fica somente no rascunho local; outras pessoas recebem apenas a versao confirmada depois do clique em Salvar.',
             'Ao salvar uma pagina, um circulo verde com check aparece ao lado do titulo; nome duplicado usa circulo vermelho com X. Ambos desaparecem com fade em dois segundos.',
             'Secoes e paginas sao documentos Firestore; backup/latest/team-notes/ possui manifesto e payload somente leitura gerados pelo backup global.',
             'Preview: app/prototype/gamer-preview/.',
@@ -567,19 +569,21 @@
           terms: 'salvar ao vivo realtime listener revisao conflito rascunho outra pessoa',
           paragraphs: [
             'Digitar no editor altera somente o rascunho local. O Firebase recebe conteudo apenas quando a pessoa usa Salvar.',
-            'Depois do save, listeners atualizam quem esta observando. Um editor com rascunho proprio recebe aviso e nao e sobrescrito.'
+            'Depois do save, listeners atualizam quem esta observando. A estrategia de concorrencia muda conforme o tipo de dado.'
           ],
           bullets: [
-            'Cada save cria uma revisao imutavel.',
-            'baseRevisionId detecta se outra pessoa salvou antes.',
+            'Layouts e variacoes com HTML/CSS criam uma revisao imutavel por save e usam baseRevisionId.',
             'O editor oficial da Biblioteca salva layouts e variacoes por transacoes do SDK Web.',
             'O HTML Basico usa o singleton settings/copyBase e expectedVersion; ele nao cria revisoes ou reserva de nome.',
             'Novos layouts e variacoes recebem IDs de documento gerados pelo Firestore.',
             'Colecoes e seus layouts internos usam o mesmo fluxo de transacoes e revisoes.',
+            'Secoes e paginas de Notas usam version e expectedVersion, sem criar revisoes imutaveis.',
+            'Em Notas, nomes duplicados sao garantidos por reservas dentro da mesma transacao.',
             'Biblioteca e Colecoes mostram quem esta no mesmo editor usando o Realtime Database.',
-            'Um editor sem rascunho aplica a nova versao imediatamente na tela.',
-            'Um editor com alteracoes locais preserva o rascunho, avisa sobre a versao nova e continua usando a revisao antiga para impedir sobrescrita silenciosa.'
-          ]
+            'Editores que implementam protecao de rascunho preservam o texto local e avisam quando chega uma versao nova.',
+            'Limite atual de Notas: um snapshot remoto salvo pode recarregar o editor e substituir visualmente um rascunho ainda nao salvo; a transacao ainda recusa o save atrasado.'
+          ],
+          note: 'Tempo real nao significa transmitir cada tecla. Significa distribuir aos listeners o documento depois que o save foi confirmado.'
         },
         {
           title: 'Membros e seguranca',
@@ -742,6 +746,42 @@
             'Atualizar este guia com a nova feature.'
           ],
           note: 'A feature deve funcionar como uma loja com chave propria: ela usa a entrada do shopping, mas nao depende do estoque da loja vizinha.'
+        },
+        {
+          title: 'Usar Notas da equipe',
+          badge: 'tutorial',
+          terms: 'notas equipe tutorial secao pagina salvar copiar buscar excluir tempo real',
+          paragraphs: [
+            'Notas organiza conteudo compartilhado em secoes e paginas. O editor so envia dados quando a pessoa confirma Salvar.',
+            'O tutorial tecnico completo fica em app/features/team-notes/README.md.'
+          ],
+          bullets: [
+            'Abrir Notas da equipe e criar ou selecionar uma secao.',
+            'Criar uma pagina, preencher titulo e conteudo e clicar Salvar.',
+            'Usar a busca de secoes por nome e a busca de paginas por titulo ou conteudo.',
+            'Usar Copiar sem alterar o documento.',
+            'Excluir pelo dialogo proprio; excluir uma secao remove as paginas vinculadas.',
+            'Check verde confirma save. X vermelho informa nome duplicado. Os dois somem com fade em dois segundos.',
+            'Outras pessoas recebem somente o conteudo salvo, nunca as teclas do rascunho.',
+            'No modo Somente leitura, busca, leitura e copia continuam; criar, salvar e excluir ficam bloqueados.'
+          ]
+        },
+        {
+          title: 'Manter Notas independente',
+          badge: 'arquitetura',
+          terms: 'notas independente backup manifest data firebase erro permissao fallback feature scope',
+          paragraphs: [
+            'Notas possui repositorios Firebase e static proprios e nao le dados internos de Biblioteca ou Colecoes.',
+            'Uma falha exclusiva de Notas deve ficar dentro dela e nunca trocar o estado global das outras features.'
+          ],
+          bullets: [
+            'Fonte editavel: workspaces/{workspaceId}/teamNoteSections e subcolecao pages.',
+            'Fallback: backup/latest/team-notes/manifest.js e data.js.',
+            'Listeners usam errorScope feature para isolar permission-denied e falhas equivalentes.',
+            'Criar, editar e excluir nunca chamam GitHub; somente o backup global publica tudo em um unico commit.',
+            'Executar npm run test:team-notes e npm run test:static-independence.',
+            'Testar a feature sem o payload de outra area e testar outra area sem o payload de Notas.'
+          ]
         },
         {
           title: 'Adicionar layout na Biblioteca',
@@ -927,6 +967,8 @@
             'Verificar console do navegador.',
             'Testar criar, editar e excluir quando a mudanca tocar dados.',
             'Testar nome duplicado.',
+            'Em Notas, confirmar que digitar sem salvar nao altera o outro navegador e que o save confirmado aparece nele.',
+            'Executar npm run test:static-independence quando tocar feature, manifesto ou fallback.',
             'Testar sem token e com token se mexeu no GitHub.',
             'Testar reload comum.'
           ]

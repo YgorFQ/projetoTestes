@@ -24,8 +24,8 @@ Regras principais:
   afirmativa, mesmo quando o pedido inicial ja usa verbos como criar,
   implementar ou adicionar. So pule essa pausa quando o usuario disser
   explicitamente para prosseguir sem perguntar.
-- Toda nova area que cria ou altera dados deve seguir o contrato da Biblioteca
-  e de Colecoes: Firestore como unica fonte editavel, `backup/latest/` como
+- Toda nova area que cria ou altera dados deve seguir o contrato da Biblioteca,
+  de Colecoes e de Notas: Firestore como unica fonte editavel, `backup/latest/` como
   fallback publico somente leitura e inclusao automatica no unico backup global
   para GitHub. Qualquer excecao exige autorizacao explicita do usuario antes da
   implementacao.
@@ -44,6 +44,11 @@ Regras principais:
 - Todo arquivo do projeto deve aparecer em
   `backup/meta/file-classification.json` com um unico estado.
 - Nomes duplicados devem ser bloqueados ao criar e ao editar.
+- Tempo real significa distribuir mudancas confirmadas depois de Salvar. Nunca
+  adicione persistencia ou transmissao por tecla sem autorizacao explicita.
+- Um teste de conflito deve separar a protecao transacional do Firestore da
+  preservacao visual do rascunho. Nao documente a segunda como pronta sem
+  verificar como o editor reage a snapshots remotos enquanto esta sujo.
 - Ao finalizar qualquer alteracao relevante, revise o guia antes de responder
   que o trabalho terminou.
 - Mudancas Firebase devem atualizar o documento tecnico correspondente,

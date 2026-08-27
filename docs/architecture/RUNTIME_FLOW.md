@@ -52,7 +52,7 @@ Firestore snapshot
   -> repository normaliza timestamps e nomes de campos
   -> core substitui arrays/mapas em memoria
   -> controller solicita nova renderizacao
-  -> editor aberto compara revisionId
+  -> editor usa revisionId ou version conforme o tipo
 ```
 
 Listeners sao cancelados quando o modo deixa de ser Firebase. Guardar as
@@ -93,10 +93,28 @@ meio recurso nem uma reserva orfa.
 
 ## 6. Deteccao de conflito
 
-O editor guarda a revisao que serviu de base. Na transacao, o valor e comparado
-ao `currentRevisionId` do servidor. Valores diferentes significam que outro
+Editores de HTML/CSS guardam a revisao que serviu de base e a comparam ao
+`currentRevisionId` do servidor. Colecoes, grupos, HTML Basico e Notas guardam
+`version` e enviam `expectedVersion`. Valores diferentes significam que outro
 salvamento ocorreu. O erro `aborted` chega ao controller e deve ser traduzido
 para uma mensagem humana, sem novo envio automatico.
+
+### Fluxo especifico de Notas
+
+```text
+digitar no editor
+  -> alterar somente o rascunho local
+  -> clicar Salvar
+  -> transacao valida membro, secao, reserva de nome e expectedVersion
+  -> Firestore confirma documento + dataVersion
+  -> listeners entregam apenas a versao salva
+  -> check verde confirma sucesso ou X vermelho informa duplicidade
+```
+
+O listener nao transmite teclas. Limite atual: `replaceData()` recarrega o
+editor quando chega um snapshot, inclusive se houver rascunho local. A
+transacao ainda impede sobrescrever a versao remota, mas a preservacao visual
+desse rascunho e uma melhoria pendente.
 
 ## 7. Presenca
 
@@ -125,7 +143,8 @@ instabilidade ou limites do GitHub em indisponibilidade do editor.
 | sessao expirada | Firebase client | pedir novo login |
 | membro ausente | autorizacao/rules | registrar solicitacao pendente |
 | nome duplicado | transaction/reservation | manter editor aberto |
-| revisao divergente | transaction | avisar conflito |
+| revisao ou versao divergente | transaction | avisar conflito |
+| listener exclusivo de Notas sem permissao | repository/errorScope | fallback e erro somente em Notas |
 | Firebase sem resposta | health/data mode | mostrar status e snapshot |
 | snapshot ausente | register.js | abrir vazio com aviso |
 | token GitHub invalido | cliente GitHub | explicar permissao |

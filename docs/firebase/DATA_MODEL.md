@@ -194,7 +194,9 @@ Caminho da secao:
 `workspaces/{workspaceId}/teamNoteSections/{sectionId}`
 
 Campos: `id`, `workspaceId`, `name`, `nameKey`, `order`, `version` e campos de
-criacao e atualizacao. A unicidade usa o escopo `team-note-sections`.
+criacao e atualizacao. A unicidade usa o escopo `team-note-sections`. A
+infraestrutura e as regras aceitam nomes de 2 a 160 caracteres; a interface
+atual limita o campo de secao a 80.
 
 Caminho da pagina:
 `workspaces/{workspaceId}/teamNoteSections/{sectionId}/pages/{pageId}`
@@ -202,11 +204,16 @@ Caminho da pagina:
 Campos: `id`, `workspaceId`, `sectionId`, `name`, `nameKey`, `content`,
 `version` e campos de criacao e atualizacao. `name` e o titulo mostrado na
 tela; a unicidade usa `team-note-pages:{sectionId}`. O conteudo aceita ate
-750.000 caracteres.
+750.000 caracteres. A infraestrutura e as regras aceitam titulos de 2 a 160
+caracteres; a interface atual limita o campo a 140.
 
 Notas usam versao otimista, mas nao revisoes imutaveis. Excluir uma secao marca
 o pai como `deleting`, remove paginas e reservas por lotes e so entao remove a
 secao. Todas as mutacoes incrementam `workspace.dataVersion` uma vez.
+
+Digitar altera apenas o estado local da interface. O documento e a reserva sao
+gravados quando a pessoa clica em **Salvar**; listeners distribuem somente
+essa versao confirmada.
 
 ## Reservas de nome
 

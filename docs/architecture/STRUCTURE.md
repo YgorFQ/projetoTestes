@@ -1,6 +1,6 @@
 # SenkoLib - Estrutura do projeto
 
-Esta e a organizacao oficial desde a versao `2026.08.27.4`. O objetivo e
+Esta e a organizacao oficial desde a versao `2026.08.27.5`. O objetivo e
 separar codigo executado, ferramentas globais e arquivos regeneraveis.
 
 ```text
@@ -15,7 +15,15 @@ SenkoLib/
 |   |   |   |-- repositories/        - Firebase e fallback estatico
 |   |   |   `-- styles/              - estilos exclusivos
 |   |   |-- colecoes/                 - mesma divisao da Biblioteca
-|   |   |-- team-notes/               - secoes e paginas de notas no Firebase
+|   |   |-- team-notes/               - secoes e paginas independentes
+|   |   |   |-- register.js           - composition root e snapshot proprio
+|   |   |   |-- view.js               - estrutura visual
+|   |   |   |-- core.js               - modelo local e buscas
+|   |   |   |-- script.js             - editor, eventos e feedback
+|   |   |   |-- data-source.js        - alterna Firebase/static
+|   |   |   |-- repositories/         - listeners e fallback somente leitura
+|   |   |   |-- styles.css            - estilos exclusivos
+|   |   |   `-- README.md             - tutorial e contrato da feature
 |   |   |-- imagens/                  - feature independente
 |   |   `-- sources/                  - feature independente
 |   |-- tools/                        - janelas e comandos globais do shell

@@ -74,6 +74,11 @@ Nunca versione logs. Eles podem conter emails, IDs, caminhos e payloads.
 7. Tente salvar o rascunho atrasado na segunda.
 8. Confirme aviso e ausencia de sobrescrita.
 
+Em Notas, confirme antes que digitar na primeira janela nao altera a segunda.
+Somente o clique em **Salvar** deve propagar o documento. A transacao recusa
+versao atrasada, mas a preservacao visual do rascunho quando chega um snapshot
+remoto ainda e uma limitacao conhecida e deve ser registrada separadamente.
+
 ## Testar contingencia
 
 O snapshot publico e carregado antes do Firebase. Para verificar o modo de

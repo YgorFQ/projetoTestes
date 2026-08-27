@@ -148,6 +148,11 @@ somente leitura e exibem um aviso persistente no header. O botao **Tentar
 novamente** recarrega a aplicacao; nenhuma tentativa automatica fica consumindo
 leituras durante o incidente.
 
+Uma falha em colecao exclusiva pode declarar `errorScope: 'feature'`. Nesse
+caso, somente a dona mostra o erro e usa seu snapshot; o estado global e as
+demais features continuam no Firebase. Notas usa esse escopo para que regras
+ou permissoes proprias nao mantenham um alerta global depois de sair da tela.
+
 Estados de dados do aplicativo:
 
 | Estado | Fonte | Escrita |
@@ -163,11 +168,11 @@ sequenceDiagram
     participant GH as "Arquivos no GitHub"
     participant Mode as "SenkoDataMode"
     participant Repo as "Repositorio estatico"
-    participant UI as "Biblioteca ou Colecoes"
+    participant UI as "Biblioteca, Colecoes ou Notas"
 
     GH-->>Mode: manifest.js + dados atuais
     Mode->>Repo: modo static
-    Repo-->>UI: layouts, variacoes, grupos e colecoes
+    Repo-->>UI: dados da feature
     UI-->>UI: esconder criacao, save e exclusao
 ```
 
@@ -179,7 +184,7 @@ tokens, logs ou revisoes antigas.
 
 ```mermaid
 sequenceDiagram
-    participant UI as "Biblioteca ou Colecoes"
+    participant UI as "Biblioteca, Colecoes ou Notas"
     participant Repo as "Repositorio da feature"
     participant Infra as "SenkoFirebase"
     participant DB as "Firestore"
@@ -228,16 +233,22 @@ O `dataVersion` permite detectar uma mudanca no meio da leitura do backup.
 
 ## Concorrencia
 
-Conteudo HTML/CSS usa `currentRevisionId`. Colecoes, grupos e o singleton do
-HTML Basico usam `version`.
+Conteudo HTML/CSS usa `currentRevisionId`. Colecoes, grupos, o singleton do
+HTML Basico, secoes e paginas de Notas usam `version`.
 O editor guarda a base recebida ao abrir o item e a envia no save.
 
 - Base atual: a transacao grava a nova versao.
 - Base antiga: o cliente retorna `functions/aborted`.
 - Editor local limpo: uma atualizacao remota pode aparecer imediatamente.
-- Editor com rascunho: o rascunho e preservado e a interface avisa o conflito.
+- Editor com protecao de rascunho: o texto local e preservado e a interface
+  avisa o conflito.
 
 Nao existe merge automatico de HTML ou CSS. A pessoa compara e decide.
+
+Limite atual de Notas: a transacao recusa `expectedVersion` antigo, mas o
+listener ainda pode recarregar o editor e substituir visualmente um rascunho
+nao salvo. Preservar esse rascunho antes de aplicar o snapshot e uma melhoria
+pendente.
 
 ## Nomes unicos
 
@@ -248,6 +259,8 @@ Exemplos de escopo:
 
 - `biblioteca-layouts`;
 - `biblioteca-variantes:{layoutId}`;
+- `team-note-sections`;
+- `team-note-pages:{sectionId}`;
 - `colecoes`;
 - `colecao-layouts:{collectionId}`;
 - `grupos`.
@@ -304,7 +317,7 @@ sequenceDiagram
     U->>UI: clica Fazer backup
     UI->>B: destino + token pessoal
     B->>DB: ler workspace e dataVersion
-    B->>DB: ler grupos, layouts, variacoes, colecoes e revisoes
+    B->>DB: ler grupos, layouts, variacoes, colecoes, notas e revisoes
     B->>DB: conferir dataVersion novamente
     B->>B: gerar bundle publico sem revisoes antigas
     B->>GH: tree com snapshot tecnico + bundle publico

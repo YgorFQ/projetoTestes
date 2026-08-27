@@ -9,6 +9,12 @@ SenkoLib continuam no Firebase normalmente.
 O backup atual e exclusivamente manual. Nao existe GitHub Actions, agendamento
 de 30 minutos nem Cloud Function de producao.
 
+Notas segue exatamente esse contrato. Uma implementacao antiga com CRUD direto
+no GitHub exigia atualizar pagina e manifesto em operacoes separadas e podia
+deixar os arquivos inconsistentes quando uma requisicao falhava. Por isso a
+feature atual escreve somente no Firestore; o botao global agrega todas as
+mudancas pendentes em uma tree, um commit e uma atualizacao de branch.
+
 O mesmo commit possui duas representacoes. `backup/data/` e o snapshot
 tecnico completo para restauracao e auditoria. `backup/latest/`
 e a ultima versao publica usada pelo aplicativo quando Firebase nao esta

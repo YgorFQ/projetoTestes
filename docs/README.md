@@ -37,6 +37,8 @@ registra as decisoes, o historico da migracao e o estado operacional atual.
 10. [Modelo de dados](firebase/DATA_MODEL.md): caminhos e campos do banco.
 11. [Plano de testes](firebase/TEST_PLAN.md): comportamentos que devem passar.
 12. [Operacao e producao](firebase/OPERATIONS.md): deploy, membros e recuperacao.
+13. [Tutorial de Notas](../app/features/team-notes/README.md): uso, tempo real,
+    persistencia, backup, limites e manutencao da feature.
 
 ## Qual documento tem prioridade
 
@@ -56,7 +58,9 @@ afetado junto com o codigo.
 - No GitHub Pages, Firebase real e a fonte principal depois do corte.
 - Sem login ou quando o Firebase nao inicia, o aplicativo mostra o ultimo
   backup GitHub em modo publico e somente leitura.
-- Biblioteca e Colecoes ja possuem adaptadores Firebase.
+- Biblioteca, Colecoes e Notas possuem adaptadores Firebase e static proprios.
+- Notas compartilha somente alteracoes confirmadas por **Salvar**; digitacao
+  permanece local.
 - Firestore guarda conteudo; Realtime Database guarda presenca.
 - Membros escrevem pelo SDK Web; Security Rules validam identidade, schema,
   versoes e limites no servidor.

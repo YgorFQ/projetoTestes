@@ -62,7 +62,7 @@ banco, e o GitHub nao participa de criar, editar ou excluir conteudo.
 - cria e exclui secoes, incluindo suas paginas vinculadas;
 - cria, edita, copia e exclui paginas;
 - usa versao otimista e reserva de nomes por secao;
-- recebe alteracoes em tempo real no modo Firebase;
+- recebe alteracoes ja salvas em tempo real no modo Firebase;
 - permanece consultavel no ultimo snapshot publico em modo somente leitura.
 
 ### Ferramentas globais
@@ -94,14 +94,19 @@ membro no workspace. O produto autoriza pelo documento
 
 ## 5. Fluxo de salvamento
 
-1. O usuario abre um editor e recebe o `currentRevisionId` atual.
+1. O usuario abre um editor e recebe a revisao ou `version` atual.
 2. Alteracoes ficam apenas no estado do editor.
-3. Ao salvar, o controller envia dados e `baseRevisionId` ao modulo de escritas.
+3. Ao salvar, o controller envia dados e a base de concorrencia correspondente.
 4. Uma transacao le membro, recurso, reserva de nome e item pai quando houver.
-5. A transacao recusa nome duplicado ou revisao desatualizada.
-6. Em sucesso, documento, revisao, reserva e `dataVersion` mudam juntos.
+5. A transacao recusa nome duplicado, revisao ou versao desatualizada.
+6. Em sucesso, documento, reserva, `dataVersion` e revisao quando aplicavel
+   mudam juntos.
 7. Listeners atualizam os clientes conectados.
-8. Um editor aberto recebe a versao remota sem sobrescrita silenciosa.
+8. O comportamento do editor diante da versao remota segue seu contrato de
+   protecao de rascunho.
+
+Layouts e variacoes com HTML/CSS usam `currentRevisionId` e enviam
+`baseRevisionId`; cada save cria uma revisao imutavel.
 
 O HTML Basico e um singleton versionado, nao um layout com revisoes. O editor
 envia `expectedVersion`; o primeiro salvamento cria o documento e os seguintes
@@ -112,6 +117,9 @@ de `dataVersion`, mas nao criam revisoes imutaveis. O titulo da pagina e unico
 dentro da secao. O GitHub recebe as notas somente quando o backup global e
 acionado.
 
+Em Notas, digitar nao escreve cada tecla nem transmite o rascunho. Somente o
+documento confirmado por **Salvar** chega aos listeners de outras pessoas.
+
 ## 6. Concorrencia
 
 O produto usa controle otimista. Nao existe bloqueio que impeça duas pessoas de
@@ -121,7 +129,13 @@ abrirem o mesmo layout. Existe comparacao de revisao no salvamento.
 - Se outra pessoa salvou, a transacao retorna conflito.
 - A tela explica que existe versao mais nova.
 - O listener pode atualizar o preview e os dados remotos visiveis.
-- Um rascunho local nao deve ser descartado sem confirmacao.
+- Editores com protecao de rascunho devem preserva-lo e avisar sobre a versao
+  remota.
+
+Limite atual de Notas: o controle transacional recusa um save atrasado, mas um
+snapshot remoto pode recarregar o editor e substituir visualmente um rascunho
+ainda nao salvo. A protecao desse rascunho antes de aplicar `replaceData()` e
+uma melhoria pendente e nao deve ser descrita como garantia pronta.
 
 ## 7. Exclusao
 
@@ -155,6 +169,11 @@ listeners enquanto a sessao esta saudavel.
 
 O shell mostra o estado do servico. Uma operacao que falhar permanece falha;
 ela nao deve ser convertida silenciosamente em edicao local.
+
+Falhas exclusivas de uma feature, como `permission-denied` em listeners de
+Notas, usam escopo local: somente a feature mostra o erro e usa seu fallback.
+As outras continuam no modo Firebase quando seus proprios listeners estao
+saudaveis.
 
 ### Firebase indisponivel
 
