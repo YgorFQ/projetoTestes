@@ -35,7 +35,7 @@
   function watchSections(callback, onError) {
     return window.SenkoFirebase.listenCollection(
       workspacePath('teamNoteSections'),
-      { orderBy: [['order', 'asc']] },
+      { orderBy: [['order', 'asc']], errorScope: 'feature' },
       function (documents) {
         callback(documents.filter(function (item) { return !item.deleting; }).map(mapSection));
       },
@@ -69,7 +69,7 @@
       pagesBySection[sectionId] = [];
       unsubscribers.push(window.SenkoFirebase.listenCollection(
         workspacePath('teamNoteSections/' + sectionId + '/pages'),
-        { orderBy: [['updatedAt', 'desc']] },
+        { orderBy: [['updatedAt', 'desc']], errorScope: 'feature' },
         function (documents) {
           pagesBySection[sectionId] = documents.filter(function (item) {
             return !item.deleting;

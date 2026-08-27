@@ -97,8 +97,10 @@
     return issue;
   }
 
-  function handleListenerError(error, callback, source) {
-    reportServiceError(error, source, true);
+  function handleListenerError(error, callback, source, options) {
+    if (!options || options.errorScope !== 'feature') {
+      reportServiceError(error, source, true);
+    }
     if (typeof callback === 'function') callback(error);
   }
 
@@ -425,7 +427,7 @@
       });
       callback(documents, snapshot.docChanges());
     }, function (error) {
-      handleListenerError(error, onError, 'collection-listener');
+      handleListenerError(error, onError, 'collection-listener', options);
     });
   }
 

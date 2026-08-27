@@ -551,6 +551,7 @@
           bullets: [
             'O index carrega apenas backup/latest/manifest.js. Cada feature carrega seu proprio manifest.js e data.js em backup/latest/{feature}/.',
             'Adaptadores: repositories/static-repository.js dentro de Biblioteca, Colecoes e Notas da equipe; a ausencia de um snapshot afeta somente sua dona.',
+            'Falhas de permissao em listeners exclusivos usam errorScope feature: o aviso e o fallback ficam dentro da feature e nao derrubam o modo Firebase das demais.',
             'Criar, editar, excluir e fazer backup ficam bloqueados no modo static.',
             'Preview e copia de HTML/CSS continuam disponiveis.',
             'Um Live Server simples na raiz e suportado; file:// nao e requisito.',

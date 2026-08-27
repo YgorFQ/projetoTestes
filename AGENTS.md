@@ -34,6 +34,8 @@ Regras principais:
 - A independencia vale tambem no fallback: cada feature carrega somente
   `backup/latest/{feature}/manifest.js` e `data.js`. `index.html` conhece apenas
   o manifesto global, e a ausencia de uma pasta nao pode indisponibilizar outra.
+- Falhas de permissao ou listener em dados exclusivos de uma feature devem usar
+  fallback e aviso locais; nao podem mudar o Firebase ou o modo de dados global.
 - `shared` deve guardar apenas tokens, componentes neutros e assets globais.
 - O shell nao deve conhecer regras internas de Biblioteca, Colecoes, Imagens,
   Sources ou Preview.

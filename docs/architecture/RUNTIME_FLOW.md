@@ -73,6 +73,10 @@ A disponibilidade e individual: manifesto ou payload ausente deixa somente a
 feature correspondente sem dados. `SenkoDataMode` nao exige que Biblioteca,
 Colecoes e Notas estejam presentes ao mesmo tempo.
 
+Falhas de permissao ou listener em uma colecao exclusiva usam escopo de
+feature. Somente essa area troca para seu proprio snapshot; o estado Firebase
+global e as demais features continuam ativos.
+
 ## 5. Escrita no Firestore
 
 Todas as mutacoes de conteudo passam por

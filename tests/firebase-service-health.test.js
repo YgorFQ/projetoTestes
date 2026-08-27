@@ -8,6 +8,8 @@ const source = fs.readFileSync(
   'utf8'
 );
 
+assert.match(source, /options\.errorScope !== 'feature'/);
+
 const browserListeners = {};
 const context = {
   console,

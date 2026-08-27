@@ -13,7 +13,12 @@
 
   function report(error) {
     console.error('[Notas da equipe] Falha na sincronizacao:', error);
-    if (api.reportDataError) api.reportDataError(error);
+    useStatic();
+    if (api.reportDataError) {
+      api.reportDataError(new Error(
+        'Não foi possível acessar as Notas no Firebase. Exibindo somente o backup desta feature.'
+      ));
+    }
   }
 
   function startFirebase() {

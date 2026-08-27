@@ -55,6 +55,7 @@ const view = read('app/features/team-notes/view.js');
 const script = read('app/features/team-notes/script.js');
 const styles = read('app/features/team-notes/styles.css');
 const firebaseRepository = read('app/features/team-notes/repositories/firebase-repository.js');
+const dataSource = read('app/features/team-notes/data-source.js');
 const backupService = read('app/infrastructure/github/backup-service.js');
 const index = read('index.html');
 
@@ -76,6 +77,7 @@ assert.match(script, /model\.createPage/);
 assert.match(script, /model\.savePage/);
 assert.match(script, /SenkoTeamNotesFirebase\.savePage/);
 assert.match(firebaseRepository, /saveTeamNotePage/);
+assert.match(firebaseRepository, /errorScope:\s*'feature'/);
 assert.match(backupService, /collectTeamNotes/);
 assert.match(script, /navigator\.clipboard\.writeText/);
 assert.doesNotMatch(script, /page-item__preview/);
@@ -88,5 +90,47 @@ assert.doesNotMatch(index, /app\/tools\/team-notes\/register\.js/);
 assert.doesNotMatch(index, /backup\/latest\/team-notes\/(?:manifest|data)\.js/);
 assert.match(register, /backup\/latest\/team-notes\/manifest\.js/);
 assert.match(register, /backup\/latest\/team-notes\/data\.js/);
+
+let sectionError = null;
+let firebaseStopped = false;
+let replacement = null;
+let localError = null;
+const dataContext = {
+  console: { error() {} },
+  Error,
+  window: {
+    SenkoTeamNotesWorkspace: {
+      replaceData(sections, pages, readOnly) {
+        replacement = { sections, pages, readOnly };
+      },
+      reportDataError(error) { localError = error; }
+    },
+    SenkoTeamNotesFirebase: {
+      watchSections(callback, onError) {
+        sectionError = onError;
+        return function () { firebaseStopped = true; };
+      }
+    },
+    SenkoTeamNotesStatic: {
+      isAvailable() { return true; },
+      getSections() { return [{ id: 'backup-section' }]; },
+      getPages() { return [{ id: 'backup-page' }]; }
+    },
+    SenkoDataMode: {
+      onChange(listener) {
+        listener({ mode: 'firebase' });
+        return function () {};
+      }
+    }
+  }
+};
+vm.runInNewContext(dataSource, dataContext, { filename: 'team-notes/data-source.js' });
+dataContext.window.SenkoTeamNotesWorkspace.connectDataSources();
+assert.equal(typeof sectionError, 'function');
+sectionError(new Error('Missing or insufficient permissions.'));
+assert.equal(firebaseStopped, true);
+assert.equal(replacement.readOnly, true);
+assert.equal(replacement.sections[0].id, 'backup-section');
+assert.match(localError.message, /somente o backup desta feature/);
 
 console.log('Team Notes Firebase feature test: OK');
