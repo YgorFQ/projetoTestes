@@ -23,8 +23,14 @@
             </button>
             <form class="team-notes-workspace-section-form" id="team-notes-section-form" hidden>
               <label for="team-notes-section-name">Nome da seção</label>
-              <input id="team-notes-section-name" type="text" maxlength="80" autocomplete="off" placeholder="Ex: Processos">
-              <div>
+              <div class="team-notes-workspace-section-name-row">
+                <input id="team-notes-section-name" type="text" maxlength="80" autocomplete="off" placeholder="Ex: Processos">
+                <span class="team-notes-workspace-inline-status" id="team-notes-section-status" role="status" aria-live="polite" aria-atomic="true" hidden>
+                  <span class="team-notes-workspace-inline-status__icon" aria-hidden="true"></span>
+                  <span class="team-notes-workspace-sr-only"></span>
+                </span>
+              </div>
+              <div class="team-notes-workspace-section-actions">
                 <button type="button" data-cancel-section>Cancelar</button>
                 <button type="submit">Criar</button>
               </div>
@@ -79,10 +85,16 @@
             </div>
 
             <div class="team-notes-workspace-editor-body">
-              <label class="team-notes-workspace-title-field" for="team-notes-title">
-                <span class="team-notes-workspace-sr-only">Título da página</span>
-                <input id="team-notes-title" type="text" maxlength="140" placeholder="Título da página" required>
-              </label>
+              <div class="team-notes-workspace-title-row">
+                <label class="team-notes-workspace-title-field" for="team-notes-title">
+                  <span class="team-notes-workspace-sr-only">Título da página</span>
+                  <input id="team-notes-title" type="text" maxlength="140" placeholder="Título da página" required>
+                </label>
+                <span class="team-notes-workspace-inline-status team-notes-workspace-inline-status--title" id="team-notes-title-status" role="status" aria-live="polite" aria-atomic="true" hidden>
+                  <span class="team-notes-workspace-inline-status__icon" aria-hidden="true"></span>
+                  <span class="team-notes-workspace-sr-only"></span>
+                </span>
+              </div>
               <div class="team-notes-workspace-date" id="team-notes-date">Selecione uma página para começar</div>
               <label class="team-notes-workspace-content-field" for="team-notes-content">
                 <span class="team-notes-workspace-sr-only">Conteúdo da página</span>

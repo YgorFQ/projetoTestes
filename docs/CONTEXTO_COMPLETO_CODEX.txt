@@ -12,8 +12,8 @@ ATUALIZACAO 2026-08-27 - NOTAS DA EQUIPE E CONFIRMACAO DE CRIACAO
 - A feature nao chama GitHub para criar, editar ou excluir. O unico envio ao
   repositorio continua sendo o backup global, que agrega todas as mudancas em
   uma tree, um commit e um push.
-- app/tools/team-notes/data foi preservado apenas como fonte legada de
-  migracao; nao e carregado nem recebe novas escritas.
+- O catalogo legado app/tools/team-notes/data foi removido. Firestore e o
+  snapshot proprio da feature sao as unicas fontes de Notas.
 - Antes de criar feature, tool, area persistente, integracao ou fluxo de dados,
   uma AI deve explicar dono, pasta e persistencia e perguntar se o usuario
   deseja prosseguir, mesmo quando o pedido inicial ja diz criar, implementar ou

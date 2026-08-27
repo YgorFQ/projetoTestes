@@ -426,10 +426,11 @@
             'Notas da equipe: app/features/team-notes/.',
             'O acionador de Notas da equipe fica no menu de ferramentas e o painel consome os tokens visuais compartilhados do SenkoLib. A feature mantem classes proprias e nao deve criar uma paleta paralela.',
             'A experiencia de Notas da equipe organiza secoes, paginas, busca e editor, sinaliza alteracoes nao salvas e pede confirmacao antes de descarta-las.',
+            'Ao salvar uma pagina, um circulo verde com check aparece ao lado do titulo; nome duplicado usa circulo vermelho com X. Ambos desaparecem com fade em dois segundos.',
             'Secoes e paginas sao documentos Firestore; backup/latest/team-notes/ possui manifesto e payload somente leitura gerados pelo backup global.',
             'Preview: app/prototype/gamer-preview/.',
             'Teste: app/prototype/faq-teste/.',
-            'Os arquivos antigos em app/tools/team-notes/data existem apenas como fonte legada de migracao e nao sao carregados como banco.',
+            'O catalogo legado de app/tools/team-notes/data foi removido; Firestore e backup/latest/team-notes sao as unicas fontes.',
             'Senko Guide continua uma tool; Notas da equipe agora e uma feature principal.',
             'Editor de layout da Biblioteca nao e mais prototipo; ele fica em app/features/biblioteca/.'
           ]

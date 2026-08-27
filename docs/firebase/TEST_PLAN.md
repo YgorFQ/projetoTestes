@@ -151,8 +151,8 @@ Teste desktop e mobile:
 - tipo, tags e filtro de tipo nao aparecem na feature;
 - itens da lista de paginas mostram somente titulo e data, sem previa do conteudo;
 - navegar com alteracoes nao salvas pede confirmacao;
-- as colunas de secoes e paginas possuem a mesma largura e o indicador visual de salvamento nao aparece;
-- a mensagem de salvamento confirma o Firebase e informa que a mudanca entra no proximo backup global;
+- as colunas de secoes e paginas possuem a mesma largura;
+- salvar pagina mostra check ao lado do titulo, e nome duplicado mostra X vermelho, ambos com fade de dois segundos;
 - o modo static usa backup/latest/team-notes/manifest.js e data.js e bloqueia toda mutacao;
 - remover o payload de outra feature nao torna Notas indisponivel;
 - salvar ou excluir nao chama a GitHub Contents API;

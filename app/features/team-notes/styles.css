@@ -221,7 +221,19 @@ button {
   padding: 0 .7rem;
 }
 
-.team-notes-workspace-section-form > div {
+.team-notes-workspace-section-name-row {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.team-notes-workspace-section-name-row input {
+  min-width: 0;
+  flex: 1;
+}
+
+.team-notes-workspace-section-actions {
   display: flex;
   justify-content: flex-end;
   gap: .5rem;
@@ -545,6 +557,18 @@ button {
   overflow: auto;
 }
 
+.team-notes-workspace-title-row {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.team-notes-workspace-title-field {
+  min-width: 0;
+  flex: 1;
+}
+
 .team-notes-workspace-title-field input {
   width: 100%;
   min-height: 56px;
@@ -569,6 +593,46 @@ button {
 .team-notes-workspace-title-field input::placeholder,
 .team-notes-workspace-content-field textarea::placeholder {
   color: var(--text3);
+}
+
+.team-notes-workspace-inline-status {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  font-size: .8rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.team-notes-workspace-inline-status[hidden] {
+  display: none;
+}
+
+.team-notes-workspace-inline-status--title {
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+}
+
+.team-notes-workspace-inline-status.is-success {
+  background: var(--green);
+}
+
+.team-notes-workspace-inline-status.is-duplicate {
+  background: var(--red);
+}
+
+.team-notes-workspace-inline-status.is-visible {
+  animation: team-notes-workspace-status-fade 2s linear forwards;
+}
+
+@keyframes team-notes-workspace-status-fade {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 .team-notes-workspace-date {

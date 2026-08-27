@@ -15,8 +15,9 @@ Feature oficial de secoes e paginas compartilhadas.
 `repositories/static-repository.js` adapta o ultimo snapshot publico.
 `data-source.js` troca as fontes conforme `SenkoDataMode`.
 
-## Dados legados
+## Avisos de salvamento
 
-Os arquivos em `app/tools/team-notes/data/` foram preservados apenas como fonte
-legada para uma migracao controlada. Eles nao sao carregados pelo `index.html`,
-nao recebem novas escritas e nao sao uma terceira fonte de dados.
+- pagina salva mostra um circulo verde com check ao lado do titulo;
+- titulo de pagina ou nome de secao duplicado mostra um circulo vermelho com X;
+- os indicadores perdem opacidade e desaparecem em dois segundos;
+- outros erros continuam textuais para manter a causa compreensivel.

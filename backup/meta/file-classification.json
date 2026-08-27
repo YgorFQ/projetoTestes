@@ -7,8 +7,8 @@
     "prototype"
   ],
   "counts": {
-    "official": 137,
-    "generated": 220,
+    "official": 132,
+    "generated": 223,
     "prototype": 12
   },
   "entries": [
@@ -394,26 +394,6 @@
     },
     {
       "path": "app/tools/session/styles.css",
-      "status": "official"
-    },
-    {
-      "path": "app/tools/team-notes/data/manifest.js",
-      "status": "official"
-    },
-    {
-      "path": "app/tools/team-notes/data/notes/padronizacao-html-2.js",
-      "status": "official"
-    },
-    {
-      "path": "app/tools/team-notes/data/notes/padronizacao-html.js",
-      "status": "official"
-    },
-    {
-      "path": "app/tools/team-notes/data/notes/teste.js",
-      "status": "official"
-    },
-    {
-      "path": "app/tools/team-notes/data/README.md",
       "status": "official"
     },
     {
@@ -1258,6 +1238,18 @@
     },
     {
       "path": "backup/data/workspaces/senkolib/settings/copyBase.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/teamNoteSections/teste01-409ccff8f051.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/teamNoteSections/teste01-409ccff8f051/pages/nova-pagina-49caef8a79b3.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/teamNoteSections/teste01-409ccff8f051/pages/nova-pagina-abc41062d1bd.json",
       "status": "generated"
     },
     {

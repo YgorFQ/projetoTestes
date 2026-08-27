@@ -9,6 +9,7 @@
   var readOnly = true;
   var busy = false;
   var toastTimer = null;
+  var inlineStatusTimers = { title: null, section: null };
   var confirmAction = null;
   var confirmTrigger = null;
 
@@ -51,6 +52,40 @@
   function setDirty(nextDirty) {
     dirty = Boolean(nextDirty);
     ui.save.disabled = readOnly || busy || !selectedPageId || !dirty;
+  }
+
+  function hideInlineStatus(target) {
+    var element = target === 'section' ? ui.sectionStatus : ui.titleStatus;
+    if (!element) return;
+    window.clearTimeout(inlineStatusTimers[target]);
+    inlineStatusTimers[target] = null;
+    element.hidden = true;
+    element.className = 'team-notes-workspace-inline-status' +
+      (target === 'title' ? ' team-notes-workspace-inline-status--title' : '');
+    element.querySelector('.team-notes-workspace-inline-status__icon').textContent = '';
+    element.querySelector('.team-notes-workspace-sr-only').textContent = '';
+  }
+
+  function showInlineStatus(target, type, message) {
+    var element = target === 'section' ? ui.sectionStatus : ui.titleStatus;
+    if (!element) return;
+    hideInlineStatus(target);
+    element.querySelector('.team-notes-workspace-inline-status__icon').textContent =
+      type === 'success' ? '✓' : '×';
+    element.querySelector('.team-notes-workspace-sr-only').textContent = message;
+    element.hidden = false;
+    element.className += ' is-' + type;
+    void element.offsetWidth;
+    element.className += ' is-visible';
+    inlineStatusTimers[target] = window.setTimeout(function () {
+      hideInlineStatus(target);
+    }, 2000);
+  }
+
+  function isDuplicateError(error) {
+    var code = String(error && error.code || '').toLowerCase().replace(/^functions\//, '');
+    var message = String(error && error.message || '');
+    return code === 'already-exists' || /j[aá] existe/i.test(message);
   }
 
   function setBusy(nextBusy) {
@@ -296,8 +331,12 @@
       renderSections();
       renderPages();
       fillEditor(model.getPage(result.id) || latest);
-      setToast('Página salva no Firebase. Ela entrará no próximo backup global.', 'ok');
+      showInlineStatus('title', 'success', 'Página salva no Firebase.');
     }).catch(function (error) {
+      if (isDuplicateError(error)) {
+        showInlineStatus('title', 'duplicate', 'Já existe uma página com esse título nesta seção.');
+        return;
+      }
       setToast(error.message || 'Não foi possível salvar a página.', 'error');
     }).finally(function () { setBusy(false); });
   }
@@ -356,6 +395,7 @@
 
   function openSectionForm() {
     if (readOnly || busy) return;
+    hideInlineStatus('section');
     ui.sectionForm.hidden = false;
     ui.addSection.hidden = true;
     ui.sectionName.value = '';
@@ -363,6 +403,7 @@
   }
 
   function closeSectionForm() {
+    hideInlineStatus('section');
     ui.sectionForm.hidden = true;
     ui.addSection.hidden = false;
     ui.sectionName.value = '';
@@ -375,6 +416,11 @@
     try {
       section = model.createSection(ui.sectionName.value);
     } catch (error) {
+      if (isDuplicateError(error)) {
+        showInlineStatus('section', 'duplicate', 'Já existe uma seção com esse nome.');
+        ui.sectionName.focus();
+        return;
+      }
       setToast(error.message, 'error');
       ui.sectionName.focus();
       return;
@@ -394,12 +440,18 @@
     }).catch(function (error) {
       model.deleteSection(section.id);
       renderSections();
+      if (isDuplicateError(error)) {
+        showInlineStatus('section', 'duplicate', 'Já existe uma seção com esse nome.');
+        ui.sectionName.focus();
+        return;
+      }
       setToast(error.message || 'Não foi possível criar a seção.', 'error');
     }).finally(function () { setBusy(false); });
   }
 
   function markEditorDirty() {
     if (!selectedPageId) return;
+    hideInlineStatus('title');
     ui.editorPage.textContent = ui.title.value.trim() || 'Sem título';
     updateCharacterCount();
     setDirty(true);
@@ -412,6 +464,7 @@
     ui.addSection = root.getElementById('team-notes-add-section');
     ui.sectionForm = root.getElementById('team-notes-section-form');
     ui.sectionName = root.getElementById('team-notes-section-name');
+    ui.sectionStatus = root.getElementById('team-notes-section-status');
     ui.pagesTitle = root.getElementById('team-notes-pages-title');
     ui.pagesCount = root.getElementById('team-notes-pages-count');
     ui.addPage = root.getElementById('team-notes-add-page');
@@ -421,6 +474,7 @@
     ui.editorSection = root.getElementById('team-notes-editor-section');
     ui.editorPage = root.getElementById('team-notes-editor-page');
     ui.title = root.getElementById('team-notes-title');
+    ui.titleStatus = root.getElementById('team-notes-title-status');
     ui.date = root.getElementById('team-notes-date');
     ui.content = root.getElementById('team-notes-content');
     ui.characterCount = root.getElementById('team-notes-character-count');
