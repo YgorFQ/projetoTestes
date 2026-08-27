@@ -12,10 +12,14 @@
 
   function hasStaticSnapshot() {
     var backup = window.SenkoStaticBackup || {};
+    return Boolean(backup.manifest);
+  }
+
+  function hasFeatureSnapshot(featureId) {
+    var backup = window.SenkoStaticBackup || {};
     return Boolean(
-      backup.manifest &&
-      backup.biblioteca && Array.isArray(backup.biblioteca.layouts) &&
-      backup.colecoes && Array.isArray(backup.colecoes.collections)
+      backup.featureManifests && backup.featureManifests[featureId] &&
+      backup.features && backup.features[featureId]
     );
   }
 
@@ -74,6 +78,10 @@
     getMode: function () { return mode; },
     getManifest: function () { return snapshot().manifest; },
     hasStaticSnapshot: hasStaticSnapshot,
+    hasFeatureSnapshot: hasFeatureSnapshot,
+    getFeatureManifest: function (featureId) {
+      return ((window.SenkoStaticBackup || {}).featureManifests || {})[featureId] || null;
+    },
     isReadOnly: function () { return mode !== 'firebase'; },
     isFirebase: function () { return mode === 'firebase'; },
     assertWritable: assertWritable,

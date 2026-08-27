@@ -1,25 +1,17 @@
 (function () {
   'use strict';
   var backup = window.SenkoStaticBackup = window.SenkoStaticBackup || {};
-  backup.manifest = {
+  backup.featureManifests = backup.featureManifests || {};
+  backup.featureManifests["colecoes"] = {
   "schemaVersion": 1,
+  "featureId": "colecoes",
   "workspaceId": "senkolib",
   "exportedAt": "2026-08-26T14:57:35.039Z",
   "dataVersion": 19,
-  "features": [
-    "biblioteca",
-    "colecoes",
-    "team-notes"
-  ],
   "counts": {
-    "bibliotecaLayouts": 36,
-    "bibliotecaVariants": 12,
     "collections": 5,
     "collectionLayouts": 48,
-    "groups": 5,
-    "copyBaseTemplates": 1,
-    "teamNoteSections": 0,
-    "teamNotePages": 0
+    "groups": 5
   }
 };
 })();

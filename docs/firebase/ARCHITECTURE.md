@@ -2,14 +2,14 @@
 
 ## Objetivo
 
-O Firebase e a fonte principal de Biblioteca e Colecoes. Criar, editar e
+O Firebase e a fonte principal de Biblioteca, Colecoes e Notas da equipe. Criar, editar e
 excluir altera o Firestore somente quando a pessoa confirma a operacao. O
 GitHub nao participa do CRUD: ele recebe um snapshot completo quando um membro
 clica no botao global de backup.
 
 Para leitura publica, o GitHub tambem guarda uma representacao estatica da
-ultima versao confirmada. Quando a sessao Firebase nao esta `ready`, Biblioteca
-e Colecoes usam esse snapshot em modo somente leitura. O modo publico nao
+ultima versao confirmada. Quando a sessao Firebase nao esta `ready`, Biblioteca,
+Colecoes e Notas usam esse snapshot em modo somente leitura. O modo publico nao
 grava, nao cria fila offline e nao substitui o Firestore como fonte principal.
 
 Esta arquitetura foi escolhida para funcionar no plano gratuito Spark. Ela nao
@@ -23,6 +23,7 @@ GitHub Actions.
 - Listeners do Firestore entregam o save aos outros computadores em tempo real.
 - HTML e CSS usam revisao imutavel por save.
 - Colecoes e grupos usam contador de versao.
+- Secoes e paginas de Notas usam contador de versao e reserva de nomes.
 - O template compartilhado do HTML Basico usa um singleton com contador de versao.
 - Um save desatualizado falha com `aborted`; nunca ha sobrescrita silenciosa.
 - Todos os documentos em `members` podem alterar conteudo. O campo `role`
@@ -63,12 +64,14 @@ O frontend de producao nao importa o SDK de Cloud Functions.
 | `app/tools/github-backup/register.js` | Janela global do backup manual |
 | `app/infrastructure/static-backup/senko-data-mode.js` | Estado global `firebase`, `static` ou `unavailable` |
 | `app/infrastructure/static-backup/senko-static-backup-builder.js` | Converte o snapshot tecnico em dados publicos atuais |
-| `backup/latest/{manifest,biblioteca,colecoes}.js` | Bundle gerado e servido sem consultar Firebase |
+| `backup/latest/manifest.js` | Metadados globais da exportacao, sem dados internos de feature |
+| `backup/latest/{feature}/{manifest,data}.js` | Manifesto e payload independentes carregados pela propria feature |
 | `app/features/biblioteca/repositories/firebase-repository.js` | Adaptador Firebase da Biblioteca |
 | `app/features/biblioteca/repositories/static-repository.js` | Adaptador somente leitura da Biblioteca |
 | `app/features/biblioteca/controllers/copy-base-editor.js` | Modal e concorrencia do HTML Basico |
 | `app/features/colecoes/repositories/firebase-repository.js` | Adaptador Firebase de Colecoes e grupos |
 | `app/features/colecoes/repositories/static-repository.js` | Adaptador somente leitura de Colecoes e grupos |
+| `app/features/team-notes/` | Feature, repositories Firebase/static e editor de secoes e paginas |
 | `app/tools/access/` | Modal global de solicitacoes, membros, cargos e atividade administrativa |
 | `firebase/firestore.rules` | Autoridade de seguranca para leituras e escritas |
 | `firebase/database.rules.json` | Permissoes de presenca |

@@ -93,6 +93,17 @@
     });
   }
 
+  async function loadStaticAssets() {
+    try {
+      await loadScript('../../../backup/latest/biblioteca/manifest.js');
+      await loadScript('../../../backup/latest/biblioteca/data.js');
+      return true;
+    } catch (error) {
+      console.warn('[Biblioteca] Snapshot proprio indisponivel:', error.message || error);
+      return false;
+    }
+  }
+
   function notifyStaleEditor(kind, documents) {
     if (!window.SenkoLayoutEditor || !window.SenkoLayoutEditor.isOpen()) return;
     var current = window.SenkoLayoutEditor.getCurrentData();
@@ -214,6 +225,8 @@
       loadStyle('styles/index.css?v=20260816-structure');
       loadStyle('styles/layout-editor.css?v=20260801-presence');
       loadStyle('styles/copy-base-editor.css?v=20260826-copy-base-firebase');
+
+      await loadStaticAssets();
 
       await Promise.all([
         loadScript('view.js?v=20260613-fast-load'),

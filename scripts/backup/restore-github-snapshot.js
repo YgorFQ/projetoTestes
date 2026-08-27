@@ -17,6 +17,7 @@ const MANAGED_COLLECTIONS = [
   'groups',
   'bibliotecaLayouts',
   'collections',
+  'teamNoteSections',
   'settings',
   'nameReservations'
 ];
@@ -218,6 +219,12 @@ function parseDocumentPath(filePath, sourceWorkspaceId) {
     [type, parentId, resourceId, revisionId] = [
       'collectionLayoutRevision', segments[1], segments[3], segments[5]
     ];
+  } else if (segments.length === 2 && segments[0] === 'teamNoteSections') {
+    [type, resourceId, scope] = ['teamNoteSection', segments[1], 'team-note-sections'];
+  } else if (segments.length === 4 && segments[0] === 'teamNoteSections' &&
+             segments[2] === 'pages') {
+    [type, parentId, resourceId] = ['teamNotePage', segments[1], segments[3]];
+    scope = `team-note-pages:${parentId}`;
   } else {
     throw new Error(`Estrutura de arquivo nao suportada: ${filePath}`);
   }
@@ -283,6 +290,15 @@ function validateDocument(entry, data, sourceWorkspaceId) {
     if (data.kind !== 'collectionLayout' || data.parentId !== entry.parentId) {
       throw new Error(`${entry.filePath}: layout interno possui pai ou kind invalido.`);
     }
+  } else if (entry.type === 'teamNoteSection') {
+    if (typeof data.order !== 'number') {
+      throw new Error(`${entry.filePath}: ordem da secao invalida.`);
+    }
+  } else if (entry.type === 'teamNotePage') {
+    if (data.sectionId !== entry.parentId || typeof data.content !== 'string' ||
+        !data.content.trim() || data.content.length > 750000) {
+      throw new Error(`${entry.filePath}: pagina de notas invalida.`);
+    }
   } else if (entry.type.endsWith('Revision')) {
     if (data.revisionId !== entry.revisionId || data.resourceId !== entry.resourceId) {
       throw new Error(`${entry.filePath}: revisao nao corresponde ao caminho.`);
@@ -324,6 +340,9 @@ function parentKey(entry) {
   }
   if (entry.type === 'collectionLayoutRevision') {
     return `collections/${entry.parentId}/layouts/${entry.resourceId}`;
+  }
+  if (entry.type === 'teamNotePage') {
+    return `teamNoteSections/${entry.parentId}`;
   }
   return '';
 }

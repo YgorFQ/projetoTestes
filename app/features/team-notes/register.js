@@ -4,7 +4,7 @@
   var currentScript = document.currentScript;
   var featureBaseUrl = currentScript && currentScript.src
     ? new URL('./', currentScript.src).href
-    : new URL('app/prototype/team-notes-workspace/', document.baseURI).href;
+    : new URL('app/features/team-notes/', document.baseURI).href;
   var panel;
   var shadow;
   var loadPromise;
@@ -35,6 +35,17 @@
     });
   }
 
+  async function loadStaticAssets() {
+    try {
+      await loadScript('../../../backup/latest/team-notes/manifest.js');
+      await loadScript('../../../backup/latest/team-notes/data.js');
+      return true;
+    } catch (error) {
+      console.warn('[Notas da equipe] Snapshot proprio indisponivel:', error.message || error);
+      return false;
+    }
+  }
+
   function appendStyles(root) {
     var baseStyle = document.createElement('style');
     baseStyle.textContent = ':host{display:block;height:calc(100vh - 70px);min-height:0;min-width:0;overflow:hidden;color:var(--text);}.senko-feature-content{height:100%;min-height:0;min-width:0;}';
@@ -42,23 +53,28 @@
 
     var stylesheet = document.createElement('link');
     stylesheet.rel = 'stylesheet';
-    stylesheet.href = featureUrl('styles.css?v=20260826-team-notes-4');
+    stylesheet.href = featureUrl('styles.css?v=20260827-team-notes-1');
     root.appendChild(stylesheet);
   }
 
   function loadPanel() {
     if (loadPromise) return loadPromise;
     loadPromise = (async function () {
-      await loadScript('core.js?v=20260826-team-notes-4');
-      await loadScript('view.js?v=20260826-team-notes-4');
+      await loadStaticAssets();
+      await loadScript('core.js?v=20260827-team-notes-1');
+      await loadScript('repositories/firebase-repository.js?v=20260827-team-notes-1');
+      await loadScript('repositories/static-repository.js?v=20260827-team-notes-1');
+      await loadScript('view.js?v=20260827-team-notes-1');
       shadow.appendChild(window.SenkoTeamNotesWorkspace.createView());
-      await loadScript('script.js?v=20260826-team-notes-4');
+      await loadScript('script.js?v=20260827-team-notes-1');
+      await loadScript('data-source.js?v=20260827-team-notes-1');
       window.SenkoTeamNotesWorkspace.init(shadow);
+      window.SenkoTeamNotesWorkspace.connectDataSources();
     })().catch(function (error) {
-      console.error('[Notas beta] Falha ao carregar o protótipo:', error);
+      console.error('[Notas da equipe] Falha ao carregar a feature:', error);
       var message = document.createElement('div');
       message.className = 'team-notes-workspace-load-error';
-      message.textContent = 'Não foi possível carregar o protótipo de Notas da equipe.';
+      message.textContent = 'Não foi possível carregar Notas da equipe.';
       shadow.appendChild(message);
     });
     return loadPromise;
@@ -78,9 +94,17 @@
   }
 
   window.SenkoShell.registerFeature({
-    id: 'team-notes-workspace',
-    label: 'Notas beta',
+    id: 'team-notes',
+    label: 'Notas',
     order: 70,
     mount: mountFeature
   });
+
+  var shortcut = document.getElementById('senkoTeamNotesBtn');
+  if (shortcut && !shortcut.dataset.senkoTeamNotesFeatureBound) {
+    shortcut.dataset.senkoTeamNotesFeatureBound = '1';
+    shortcut.addEventListener('click', function () {
+      window.SenkoShell.switchFeature('team-notes');
+    });
+  }
 })();

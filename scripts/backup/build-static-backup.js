@@ -24,6 +24,25 @@ manifest.files.forEach((relativePath) => {
 });
 
 const generated = builder.buildPublicFiles(files);
+const expectedFiles = new Set(Object.keys(generated).map((relativePath) =>
+  path.resolve(projectRoot, relativePath)
+));
+const publicRoot = path.resolve(projectRoot, builder.publicRoot);
+
+function removeObsoleteGeneratedFiles(directory) {
+  if (!fs.existsSync(directory)) return;
+  fs.readdirSync(directory, { withFileTypes: true }).forEach((entry) => {
+    const target = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      removeObsoleteGeneratedFiles(target);
+      if (!fs.readdirSync(target).length) fs.rmdirSync(target);
+      return;
+    }
+    if (!expectedFiles.has(path.resolve(target))) fs.unlinkSync(target);
+  });
+}
+
+removeObsoleteGeneratedFiles(publicRoot);
 Object.entries(generated).forEach(([relativePath, content]) => {
   const target = path.join(projectRoot, relativePath);
   fs.mkdirSync(path.dirname(target), { recursive: true });

@@ -1,7 +1,8 @@
 (function () {
   'use strict';
   var backup = window.SenkoStaticBackup = window.SenkoStaticBackup || {};
-  backup.colecoes = {
+  backup.features = backup.features || {};
+  backup.features["colecoes"] = {
   "collections": [
     {
       "slug": "colecao-joel",

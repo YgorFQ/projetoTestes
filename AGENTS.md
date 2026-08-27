@@ -17,7 +17,23 @@ considerado trabalho incompleto.
 
 Regras principais:
 
+- Antes de criar qualquer feature, tool, area de produto, tipo persistente,
+  integracao ou fluxo de dados, a AI deve explicar resumidamente o que sera
+  criado, onde ficara e como persistira, e perguntar explicitamente ao usuario
+  se deseja prosseguir. A implementacao so comeca depois de uma resposta
+  afirmativa, mesmo quando o pedido inicial ja usa verbos como criar,
+  implementar ou adicionar. So pule essa pausa quando o usuario disser
+  explicitamente para prosseguir sem perguntar.
+- Toda nova area que cria ou altera dados deve seguir o contrato da Biblioteca
+  e de Colecoes: Firestore como unica fonte editavel, `backup/latest/` como
+  fallback publico somente leitura e inclusao automatica no unico backup global
+  para GitHub. Qualquer excecao exige autorizacao explicita do usuario antes da
+  implementacao.
+
 - Cada feature deve continuar independente das outras features.
+- A independencia vale tambem no fallback: cada feature carrega somente
+  `backup/latest/{feature}/manifest.js` e `data.js`. `index.html` conhece apenas
+  o manifesto global, e a ausencia de uma pasta nao pode indisponibilizar outra.
 - `shared` deve guardar apenas tokens, componentes neutros e assets globais.
 - O shell nao deve conhecer regras internas de Biblioteca, Colecoes, Imagens,
   Sources ou Preview.

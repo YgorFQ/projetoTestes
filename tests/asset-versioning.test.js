@@ -40,10 +40,14 @@ function createFreshAssets(hostname, protocol) {
 const production = createFreshAssets('ygorfq.github.io', 'https:');
 const codeUrl = new URL(production.url('app/shell/scripts/senko-shell.js'));
 const manifestUrl = new URL(production.url('backup/latest/manifest.js'));
+const featureDataUrl = new URL(production.url(
+  'https://ygorfq.github.io/projetoTestes/backup/latest/team-notes/data.js'
+));
 
 assert.equal(codeUrl.searchParams.get('_senko_reload'), releaseToken);
 assert.equal(manifestUrl.searchParams.get('_senko_reload'), production.openingToken);
 assert.notEqual(manifestUrl.searchParams.get('_senko_reload'), production.token);
+assert.equal(featureDataUrl.searchParams.get('_senko_reload'), production.openingToken);
 
 const localhost = createFreshAssets('127.0.0.1', 'http:');
 const localCodeUrl = new URL(localhost.url('app/shell/scripts/senko-shell.js'));

@@ -294,6 +294,48 @@ service cloud.firestore {
         && data.updatedByName is string;
     }
 
+    function validTeamNoteSection(data, workspaceId, sectionId) {
+      return data.keys().hasAll([
+          'id', 'workspaceId', 'name', 'nameKey', 'order', 'version',
+          'createdAt', 'createdBy', 'updatedAt', 'updatedBy', 'updatedByName'
+        ])
+        && data.id == sectionId
+        && data.workspaceId == workspaceId
+        && validName(data.name)
+        && data.nameKey is string
+        && data.nameKey.size() >= 1
+        && data.order is number
+        && data.version is int
+        && data.version >= 1
+        && data.createdBy is string
+        && data.updatedBy is string
+        && data.updatedByName is string
+        && data.updatedByName.size() <= 320;
+    }
+
+    function validTeamNotePage(data, workspaceId, sectionId, pageId) {
+      return data.keys().hasAll([
+          'id', 'workspaceId', 'sectionId', 'name', 'nameKey', 'content',
+          'version', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy',
+          'updatedByName'
+        ])
+        && data.id == pageId
+        && data.workspaceId == workspaceId
+        && data.sectionId == sectionId
+        && validName(data.name)
+        && data.nameKey is string
+        && data.nameKey.size() >= 1
+        && data.content is string
+        && data.content.size() >= 1
+        && data.content.size() <= 750000
+        && data.version is int
+        && data.version >= 1
+        && data.createdBy is string
+        && data.updatedBy is string
+        && data.updatedByName is string
+        && data.updatedByName.size() <= 320;
+    }
+
     match /workspaces/{workspaceId} {
       allow read: if isMember(workspaceId);
       allow create, delete: if false;
@@ -568,6 +610,94 @@ service cloud.firestore {
               || get(/databases/$(database)/documents/workspaces/$(workspaceId)/collections/$(collectionId)).data.deleting == true
             );
           }
+        }
+      }
+
+      match /teamNoteSections/{sectionId} {
+        allow read: if isMember(workspaceId);
+        allow create: if isMember(workspaceId)
+          && validTeamNoteSection(request.resource.data, workspaceId, sectionId)
+          && request.resource.data.keys().hasOnly([
+            'id', 'workspaceId', 'name', 'nameKey', 'order', 'version',
+            'createdAt', 'createdBy', 'updatedAt', 'updatedBy', 'updatedByName'
+          ])
+          && request.resource.data.version == 1
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.createdBy == request.auth.uid
+          && request.resource.data.updatedBy == request.auth.uid
+          && dataVersionAdvanced(workspaceId);
+        allow update: if isMember(workspaceId)
+          && validTeamNoteSection(request.resource.data, workspaceId, sectionId)
+          && (
+            (
+              request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+                'name', 'nameKey', 'order', 'version', 'updatedAt',
+                'updatedBy', 'updatedByName'
+              ])
+              && request.resource.data.version == resource.data.version + 1
+              && request.resource.data.updatedAt == request.time
+              && request.resource.data.updatedBy == request.auth.uid
+              && dataVersionAdvanced(workspaceId)
+            )
+            || (
+              request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+                'deleting', 'updatedAt', 'updatedBy'
+              ])
+              && request.resource.data.deleting == true
+              && request.resource.data.version == resource.data.version
+              && request.resource.data.updatedAt == request.time
+              && request.resource.data.updatedBy == request.auth.uid
+              && dataVersionAdvanced(workspaceId)
+            )
+          );
+        allow delete: if isMember(workspaceId) && resource.data.deleting == true;
+
+        match /pages/{pageId} {
+          allow read: if isMember(workspaceId);
+          allow create: if isMember(workspaceId)
+            && validTeamNotePage(request.resource.data, workspaceId, sectionId, pageId)
+            && request.resource.data.keys().hasOnly([
+              'id', 'workspaceId', 'sectionId', 'name', 'nameKey', 'content',
+              'version', 'createdAt', 'createdBy', 'updatedAt', 'updatedBy',
+              'updatedByName'
+            ])
+            && request.resource.data.version == 1
+            && request.resource.data.createdAt == request.time
+            && request.resource.data.updatedAt == request.time
+            && request.resource.data.createdBy == request.auth.uid
+            && request.resource.data.updatedBy == request.auth.uid
+            && getAfter(/databases/$(database)/documents/workspaces/$(workspaceId)/teamNoteSections/$(sectionId)).data.get('deleting', false) == false
+            && dataVersionAdvanced(workspaceId);
+          allow update: if isMember(workspaceId)
+            && validTeamNotePage(request.resource.data, workspaceId, sectionId, pageId)
+            && (
+              (
+                request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+                  'name', 'nameKey', 'content', 'version', 'updatedAt',
+                  'updatedBy', 'updatedByName'
+                ])
+                && request.resource.data.version == resource.data.version + 1
+                && request.resource.data.updatedAt == request.time
+                && request.resource.data.updatedBy == request.auth.uid
+                && getAfter(/databases/$(database)/documents/workspaces/$(workspaceId)/teamNoteSections/$(sectionId)).data.get('deleting', false) == false
+                && dataVersionAdvanced(workspaceId)
+              )
+              || (
+                request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+                  'deleting', 'updatedAt', 'updatedBy'
+                ])
+                && request.resource.data.deleting == true
+                && request.resource.data.version == resource.data.version
+                && request.resource.data.updatedAt == request.time
+                && request.resource.data.updatedBy == request.auth.uid
+                && dataVersionAdvanced(workspaceId)
+              )
+            );
+          allow delete: if isMember(workspaceId) && (
+            resource.data.deleting == true
+            || get(/databases/$(database)/documents/workspaces/$(workspaceId)/teamNoteSections/$(sectionId)).data.deleting == true
+          );
         }
       }
 

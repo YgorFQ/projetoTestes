@@ -1,6 +1,26 @@
 SENKOLIB - CONTEXTO COMPLETO PARA TRANSFERENCIA ENTRE INSTANCIAS DO CODEX
 =======================================================================
 
+ATUALIZACAO 2026-08-27 - NOTAS DA EQUIPE E CONFIRMACAO DE CRIACAO
+
+- Notas da equipe virou feature oficial em app/features/team-notes.
+- Secoes e paginas sao editadas no Firestore e lidas de
+  backup/latest/team-notes/manifest.js e data.js no modo static.
+- O index carrega somente o manifesto global. Biblioteca, Colecoes e Notas
+  carregam seus proprios manifestos e payloads; a ausencia de um deles nao
+  derruba o fallback das demais features.
+- A feature nao chama GitHub para criar, editar ou excluir. O unico envio ao
+  repositorio continua sendo o backup global, que agrega todas as mudancas em
+  uma tree, um commit e um push.
+- app/tools/team-notes/data foi preservado apenas como fonte legada de
+  migracao; nao e carregado nem recebe novas escritas.
+- Antes de criar feature, tool, area persistente, integracao ou fluxo de dados,
+  uma AI deve explicar dono, pasta e persistencia e perguntar se o usuario
+  deseja prosseguir, mesmo quando o pedido inicial ja diz criar, implementar ou
+  adicionar. So pule a pausa se o usuario disser para prosseguir sem perguntar.
+- Toda nova area editavel deve usar Firestore, fallback static e backup global,
+  salvo excecao explicitamente aprovada pelo usuario.
+
 Data deste registro: 2026-08-16
 Projeto: SenkoLib
 Repositorio: https://github.com/YgorFQ/projetoTestes

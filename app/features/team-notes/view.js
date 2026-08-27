@@ -7,7 +7,7 @@
     wrapper.innerHTML = `
       <h1 class="team-notes-workspace-sr-only">Notas da equipe</h1>
 
-      <section class="team-notes-workspace-shell" aria-label="Protótipo do espaço de notas">
+      <section class="team-notes-workspace-shell" aria-label="Espaço de notas da equipe">
         <div class="team-notes-workspace-layout">
           <aside class="team-notes-workspace-sections" aria-labelledby="team-notes-sections-title">
             <div class="team-notes-workspace-pane-head">
@@ -104,7 +104,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m19 6-1 14H6L5 6"/><path d="M10 11v5M14 11v5"/></svg>
             </span>
             <div>
-              <span class="team-notes-workspace-confirm__eyebrow">Notas beta</span>
+              <span class="team-notes-workspace-confirm__eyebrow">Notas da equipe</span>
               <h2 id="team-notes-confirm-title">Confirmar exclusão</h2>
             </div>
           </div>

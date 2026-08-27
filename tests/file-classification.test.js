@@ -26,7 +26,9 @@ const gitFiles = execFileSync(
   'git',
   ['ls-files', '--cached', '--others', '--exclude-standard', '-z'],
   { cwd: root, encoding: 'utf8' }
-).split('\0').filter(Boolean).map((filePath) => filePath.replace(/\\/g, '/'));
+).split('\0').filter(Boolean).map((filePath) => filePath.replace(/\\/g, '/')).filter((filePath) =>
+  fs.existsSync(path.join(root, ...filePath.split('/')))
+);
 
 for (const filePath of gitFiles) {
   assert(paths.has(filePath), `Arquivo sem classificacao: ${filePath}.`);
@@ -39,7 +41,8 @@ const expected = new Map([
   ['app/prototype/gamer-preview/register.js', 'prototype'],
   ['firebase/firestore.rules', 'official'],
   ['.vscode/settings.json', 'official'],
-  ['backup/latest/manifest.js', 'generated']
+  ['backup/latest/manifest.js', 'generated'],
+  ['backup/latest/team-notes/manifest.js', 'generated']
 ]);
 
 const byPath = new Map(inventory.entries.map((entry) => [entry.path, entry.status]));

@@ -1,5 +1,21 @@
 # Documentacao tecnica do SenkoLib
 
+## Regra de criacao e persistencia
+
+Antes de criar nova feature, tool, area persistente, integracao ou fluxo de
+dados, uma AI deve explicar o dono, a pasta e a persistencia e perguntar se o
+usuario deseja prosseguir. Isso vale mesmo quando o pedido inicial ja diz
+criar, implementar ou adicionar. A pausa so pode ser pulada quando o usuario
+mandar explicitamente prosseguir sem perguntar.
+
+O padrao de qualquer nova area editavel e o mesmo de Biblioteca, Colecoes e
+Notas da equipe: Firestore como fonte editavel, `backup/latest/` como fallback
+somente leitura e inclusao no unico commit produzido pelo backup global. Uma
+excecao exige autorizacao explicita antes da implementacao.
+
+No fallback, a independencia tambem e obrigatoria: `index.html` carrega apenas
+o manifesto global e cada feature carrega sua pasta em `backup/latest/`.
+
 Esta pasta e a referencia canonica do produto e da implementacao. Ela existe
 para uma pessoa nova entender o SenkoLib antes de alterar o codigo.
 

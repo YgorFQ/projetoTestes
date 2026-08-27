@@ -6,6 +6,8 @@
   var selectedSectionId = '';
   var selectedPageId = '';
   var dirty = false;
+  var readOnly = true;
+  var busy = false;
   var toastTimer = null;
   var confirmAction = null;
   var confirmTrigger = null;
@@ -48,7 +50,15 @@
 
   function setDirty(nextDirty) {
     dirty = Boolean(nextDirty);
-    ui.save.disabled = !selectedPageId || !dirty;
+    ui.save.disabled = readOnly || busy || !selectedPageId || !dirty;
+  }
+
+  function setBusy(nextBusy) {
+    busy = Boolean(nextBusy);
+    ui.addSection.disabled = readOnly || busy;
+    ui.addPage.disabled = readOnly || busy || !sectionById(selectedSectionId);
+    setEditorEnabled(Boolean(selectedPage()));
+    setDirty(dirty);
   }
 
   function canLeavePage() {
@@ -123,7 +133,7 @@
     var total = section ? model.listPages(selectedSectionId, '').length : 0;
     ui.pagesTitle.textContent = section ? section.name : 'Selecione uma seção';
     ui.pagesCount.textContent = pages.length === total ? String(total) : pages.length + '/' + total;
-    ui.addPage.disabled = !section;
+    ui.addPage.disabled = readOnly || busy || !section;
 
     if (!pages.length) {
       ui.pageList.innerHTML = '<div class="team-notes-workspace-empty"><strong>' +
@@ -144,9 +154,11 @@
   }
 
   function setEditorEnabled(enabled) {
-    [ui.title, ui.content, ui.delete, ui.copy, ui.save].forEach(function (control) {
-      control.disabled = !enabled;
-    });
+    ui.title.disabled = !enabled || readOnly || busy;
+    ui.content.disabled = !enabled || readOnly || busy;
+    ui.delete.disabled = !enabled || readOnly || busy;
+    ui.save.disabled = !enabled || readOnly || busy || !dirty;
+    ui.copy.disabled = !enabled;
   }
 
   function updateCharacterCount() {
@@ -193,7 +205,7 @@
   }
 
   function createPage() {
-    if (!selectedSectionId || !canLeavePage()) return;
+    if (readOnly || busy || !selectedSectionId || !canLeavePage()) return;
     try {
       var page = model.createPage(selectedSectionId);
       selectedPageId = page.id;
@@ -203,7 +215,7 @@
       fillEditor(page);
       setDirty(true);
       ui.title.select();
-      setToast('Nova página criada neste protótipo.', 'info');
+      setToast('Nova página local. Salve para enviar ao Firebase.', 'info');
     } catch (error) {
       setToast(error.message, 'error');
     }
@@ -226,24 +238,30 @@
       targetDetail: sectionPages.length + (sectionPages.length === 1 ? ' página vinculada' : ' páginas vinculadas'),
       confirmLabel: 'Excluir seção',
       onConfirm: function () {
-        if (!model.deleteSection(sectionId)) return;
+        if (readOnly || busy) return;
+        setBusy(true);
+        window.SenkoTeamNotesFirebase.deleteSection(section).then(function () {
+          if (!model.deleteSection(sectionId)) return;
 
-        if (deletingSelected) {
-          var remainingSections = model.listSections();
-          var fallbackSection = remainingSections[Math.min(deletedIndex, remainingSections.length - 1)] || null;
-          selectedSectionId = fallbackSection ? fallbackSection.id : '';
-          selectedPageId = '';
-          ui.search.value = '';
-        }
+          if (deletingSelected) {
+            var remainingSections = model.listSections();
+            var fallbackSection = remainingSections[Math.min(deletedIndex, remainingSections.length - 1)] || null;
+            selectedSectionId = fallbackSection ? fallbackSection.id : '';
+            selectedPageId = '';
+            ui.search.value = '';
+          }
 
-        renderSections();
-        renderPages();
-        if (deletingSelected) {
-          var pages = selectedSectionId ? model.listPages(selectedSectionId, '') : [];
-          if (pages.length) selectPage(pages[0].id, true);
-          else fillEditor(null);
-        }
-        setToast('Seção excluída do protótipo.', 'ok');
+          renderSections();
+          renderPages();
+          if (deletingSelected) {
+            var pages = selectedSectionId ? model.listPages(selectedSectionId, '') : [];
+            if (pages.length) selectPage(pages[0].id, true);
+            else fillEditor(null);
+          }
+          setToast('Seção excluída do Firebase.', 'ok');
+        }).catch(function (error) {
+          setToast(error.message || 'Não foi possível excluir a seção.', 'error');
+        }).finally(function () { setBusy(false); });
       }
     });
   }
@@ -262,17 +280,26 @@
   function savePage(event) {
     event.preventDefault();
     var draft = readEditorPage();
-    if (!draft) return;
-    try {
-      var saved = model.savePage(draft);
-      selectedPageId = saved.id;
+    var current = selectedPage();
+    if (!draft || !current || readOnly || busy) return;
+    if (!draft.title.trim()) return setToast('Informe o título da página.', 'error');
+    if (!draft.content.trim()) return setToast('Escreva algum conteúdo antes de salvar.', 'error');
+    setBusy(true);
+    window.SenkoTeamNotesFirebase.savePage(Object.assign({}, draft, {
+      expectedVersion: current.isDraft ? null : Number(current.version || 0)
+    })).then(function (result) {
+      var latest = model.getPage(draft.id);
+      if (latest && Number(latest.version || 0) < Number(result.version || 0)) {
+        latest = model.savePage(draft);
+      }
+      selectedPageId = result.id;
       renderSections();
       renderPages();
-      fillEditor(saved);
-      setToast('Página salva na memória do protótipo. A integração real será pelo Firebase.', 'ok');
-    } catch (error) {
-      setToast(error.message, 'error');
-    }
+      fillEditor(model.getPage(result.id) || latest);
+      setToast('Página salva no Firebase. Ela entrará no próximo backup global.', 'ok');
+    }).catch(function (error) {
+      setToast(error.message || 'Não foi possível salvar a página.', 'error');
+    }).finally(function () { setBusy(false); });
   }
 
   function deletePage() {
@@ -287,14 +314,29 @@
       targetDetail: section ? 'Seção: ' + section.name : '',
       confirmLabel: 'Excluir página',
       onConfirm: function () {
-        model.deletePage(page.id);
-        selectedPageId = '';
-        var pages = model.listPages(selectedSectionId, '');
-        renderSections();
-        renderPages();
-        if (pages.length) selectPage(pages[0].id, true);
-        else fillEditor(null);
-        setToast('Página excluída do protótipo.', 'ok');
+        if (readOnly || busy) return;
+        if (page.isDraft) {
+          model.deletePage(page.id);
+          selectedPageId = '';
+          renderSections();
+          renderPages();
+          fillEditor(null);
+          setToast('Rascunho descartado.', 'ok');
+          return;
+        }
+        setBusy(true);
+        window.SenkoTeamNotesFirebase.deletePage(page).then(function () {
+          model.deletePage(page.id);
+          selectedPageId = '';
+          var pages = model.listPages(selectedSectionId, '');
+          renderSections();
+          renderPages();
+          if (pages.length) selectPage(pages[0].id, true);
+          else fillEditor(null);
+          setToast('Página excluída do Firebase.', 'ok');
+        }).catch(function (error) {
+          setToast(error.message || 'Não foi possível excluir a página.', 'error');
+        }).finally(function () { setBusy(false); });
       }
     });
   }
@@ -313,6 +355,7 @@
   }
 
   function openSectionForm() {
+    if (readOnly || busy) return;
     ui.sectionForm.hidden = false;
     ui.addSection.hidden = true;
     ui.sectionName.value = '';
@@ -327,17 +370,32 @@
 
   function createSection(event) {
     event.preventDefault();
+    if (readOnly || busy) return;
+    var section;
     try {
-      var section = model.createSection(ui.sectionName.value);
+      section = model.createSection(ui.sectionName.value);
+    } catch (error) {
+      setToast(error.message, 'error');
+      ui.sectionName.focus();
+      return;
+    }
+    setBusy(true);
+    window.SenkoTeamNotesFirebase.saveSection({
+      id: section.id,
+      name: section.name,
+      order: section.order,
+      expectedVersion: null
+    }).then(function () {
       closeSectionForm();
       ui.sectionSearch.value = '';
       renderSections();
       selectSection(section.id);
-      setToast('Seção criada neste protótipo.', 'ok');
-    } catch (error) {
-      setToast(error.message, 'error');
-      ui.sectionName.focus();
-    }
+      setToast('Seção criada no Firebase.', 'ok');
+    }).catch(function (error) {
+      model.deleteSection(section.id);
+      renderSections();
+      setToast(error.message || 'Não foi possível criar a seção.', 'error');
+    }).finally(function () { setBusy(false); });
   }
 
   function markEditorDirty() {
@@ -445,5 +503,28 @@
     var pages = selectedSectionId ? model.listPages(selectedSectionId, '') : [];
     if (pages.length) selectPage(pages[0].id, true);
     else fillEditor(null);
+  };
+
+  api.replaceData = function replaceData(sections, pages, nextReadOnly) {
+    var previousSectionId = selectedSectionId;
+    var previousPageId = selectedPageId;
+    readOnly = Boolean(nextReadOnly);
+    model.replaceData(sections, pages);
+    selectedSectionId = sectionById(previousSectionId)
+      ? previousSectionId
+      : ((model.listSections()[0] || {}).id || '');
+    selectedPageId = model.getPage(previousPageId) ? previousPageId : '';
+    if (!selectedPageId && selectedSectionId) {
+      selectedPageId = ((model.listPages(selectedSectionId, '')[0] || {}).id || '');
+    }
+    renderSections();
+    renderPages();
+    fillEditor(selectedPage());
+    setBusy(false);
+    if (readOnly) setToast('Backup público em modo somente leitura.', 'info');
+  };
+
+  api.reportDataError = function reportDataError(error) {
+    setToast((error && error.message) || 'Não foi possível sincronizar as notas.', 'error');
   };
 })();

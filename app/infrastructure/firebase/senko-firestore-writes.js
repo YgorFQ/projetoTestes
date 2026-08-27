@@ -786,12 +786,274 @@
     });
   }
 
+  // -----------------------------------------------------------------------
+  // Notas da equipe
+  // -----------------------------------------------------------------------
+  function saveTeamNoteSection(data) {
+    return withContext(function (context) {
+      var base = refs(context);
+      var sections = base.sdk.collection(base.workspace, 'teamNoteSections');
+      var sectionId = data.sectionId
+        ? cleanId(data.sectionId, 'ID da secao')
+        : base.sdk.doc(sections).id;
+      var sectionRef = base.sdk.doc(sections, sectionId);
+      var name = cleanName(data.name);
+      var nameKey = normalizeName(name);
+      var expectedVersion = data.expectedVersion === null || data.expectedVersion === undefined
+        ? null
+        : Number(data.expectedVersion);
+
+      return reservationId('team-note-sections', nameKey).then(function (reservationKey) {
+        var reservationRef = base.sdk.doc(base.workspace, 'nameReservations', reservationKey);
+        return base.sdk.runTransaction(context.db, function (transaction) {
+          return Promise.all([
+            transaction.get(base.member),
+            transaction.get(sectionRef),
+            transaction.get(reservationRef)
+          ]).then(function (snapshots) {
+            requireMemberSnapshot(snapshots[0]);
+            var existing = snapshots[1].exists() ? snapshots[1].data() : null;
+            var reservation = snapshots[2].exists() ? snapshots[2].data() : null;
+            if (existing && expectedVersion !== Number(existing.version || 0)) {
+              throw appError('aborted', 'Outra pessoa alterou esta secao.');
+            }
+            if (!existing && expectedVersion !== null) {
+              throw appError('aborted', 'Esta secao nao existe mais.');
+            }
+            if (reservation && reservation.resourcePath !== sectionRef.path) {
+              throw appError('already-exists', 'Ja existe uma secao com esse nome.');
+            }
+
+            var now = base.sdk.serverTimestamp();
+            var version = existing ? Number(existing.version || 0) + 1 : 1;
+            var section = {
+              id: sectionId,
+              workspaceId: context.workspaceId,
+              name: name,
+              nameKey: nameKey,
+              order: Number(data.order || (existing && existing.order) || 0),
+              version: version,
+              updatedAt: now,
+              updatedBy: context.user.uid,
+              updatedByName: actorName(context)
+            };
+            if (!existing) {
+              section.createdAt = now;
+              section.createdBy = context.user.uid;
+            }
+            transaction.set(sectionRef, section, { merge: true });
+            transaction.set(reservationRef, {
+              scope: 'team-note-sections',
+              name: name,
+              nameKey: nameKey,
+              resourcePath: sectionRef.path,
+              updatedAt: now
+            });
+            transaction.set(base.workspace, {
+              dataVersion: base.sdk.increment(1),
+              updatedAt: now,
+              updatedBy: context.user.uid
+            }, { merge: true });
+
+            if (existing && existing.nameKey && existing.nameKey !== nameKey) {
+              return reservationId('team-note-sections', existing.nameKey).then(function (oldKey) {
+                transaction.delete(base.sdk.doc(base.workspace, 'nameReservations', oldKey));
+                return { id: sectionId, version: version };
+              });
+            }
+            return { id: sectionId, version: version };
+          });
+        });
+      });
+    });
+  }
+
+  function saveTeamNotePage(data) {
+    return withContext(function (context) {
+      var base = refs(context);
+      var sectionId = cleanId(data.sectionId, 'ID da secao');
+      var sectionRef = base.sdk.doc(base.workspace, 'teamNoteSections', sectionId);
+      var pages = base.sdk.collection(sectionRef, 'pages');
+      var pageId = data.pageId ? cleanId(data.pageId, 'ID da pagina') : base.sdk.doc(pages).id;
+      var pageRef = base.sdk.doc(pages, pageId);
+      var name = cleanName(data.name);
+      var nameKey = normalizeName(name);
+      var content = cleanText(data.content, 'Conteudo', 750000);
+      if (!content.trim()) throw appError('invalid-argument', 'Escreva algum conteudo antes de salvar.');
+      var expectedVersion = data.expectedVersion === null || data.expectedVersion === undefined
+        ? null
+        : Number(data.expectedVersion);
+      var scope = 'team-note-pages:' + sectionId;
+
+      return reservationId(scope, nameKey).then(function (reservationKey) {
+        var reservationRef = base.sdk.doc(base.workspace, 'nameReservations', reservationKey);
+        return base.sdk.runTransaction(context.db, function (transaction) {
+          return Promise.all([
+            transaction.get(base.member),
+            transaction.get(sectionRef),
+            transaction.get(pageRef),
+            transaction.get(reservationRef)
+          ]).then(function (snapshots) {
+            requireMemberSnapshot(snapshots[0]);
+            if (!snapshots[1].exists() || snapshots[1].data().deleting) {
+              throw appError('failed-precondition', 'A secao nao existe mais.');
+            }
+            var existing = snapshots[2].exists() ? snapshots[2].data() : null;
+            var reservation = snapshots[3].exists() ? snapshots[3].data() : null;
+            if (existing && expectedVersion !== Number(existing.version || 0)) {
+              throw appError('aborted', 'Outra pessoa alterou esta pagina.');
+            }
+            if (!existing && expectedVersion !== null) {
+              throw appError('aborted', 'Esta pagina nao existe mais.');
+            }
+            if (reservation && reservation.resourcePath !== pageRef.path) {
+              throw appError('already-exists', 'Ja existe uma pagina com esse titulo nesta secao.');
+            }
+
+            var now = base.sdk.serverTimestamp();
+            var version = existing ? Number(existing.version || 0) + 1 : 1;
+            var page = {
+              id: pageId,
+              workspaceId: context.workspaceId,
+              sectionId: sectionId,
+              name: name,
+              nameKey: nameKey,
+              content: content,
+              version: version,
+              updatedAt: now,
+              updatedBy: context.user.uid,
+              updatedByName: actorName(context)
+            };
+            if (!existing) {
+              page.createdAt = now;
+              page.createdBy = context.user.uid;
+            }
+            transaction.set(pageRef, page, { merge: true });
+            transaction.set(reservationRef, {
+              scope: scope,
+              name: name,
+              nameKey: nameKey,
+              resourcePath: pageRef.path,
+              updatedAt: now
+            });
+            transaction.set(base.workspace, {
+              dataVersion: base.sdk.increment(1),
+              updatedAt: now,
+              updatedBy: context.user.uid
+            }, { merge: true });
+
+            if (existing && existing.nameKey && existing.nameKey !== nameKey) {
+              return reservationId(scope, existing.nameKey).then(function (oldKey) {
+                transaction.delete(base.sdk.doc(base.workspace, 'nameReservations', oldKey));
+                return { id: pageId, version: version };
+              });
+            }
+            return { id: pageId, version: version };
+          });
+        });
+      });
+    });
+  }
+
+  function deleteTeamNotePage(data) {
+    return withContext(function (context) {
+      var base = refs(context);
+      var sectionId = cleanId(data.sectionId, 'ID da secao');
+      var pageId = cleanId(data.pageId, 'ID da pagina');
+      var pageRef = base.sdk.doc(base.workspace, 'teamNoteSections', sectionId, 'pages', pageId);
+      return base.sdk.runTransaction(context.db, function (transaction) {
+        return Promise.all([transaction.get(base.member), transaction.get(pageRef)]).then(function (snapshots) {
+          requireMemberSnapshot(snapshots[0]);
+          if (!snapshots[1].exists()) return null;
+          var page = snapshots[1].data();
+          if (Number(page.version || 0) !== Number(data.expectedVersion || 0)) {
+            throw appError('aborted', 'Outra pessoa alterou esta pagina.');
+          }
+          transaction.set(pageRef, {
+            deleting: true,
+            updatedAt: base.sdk.serverTimestamp(),
+            updatedBy: context.user.uid
+          }, { merge: true });
+          transaction.set(base.workspace, {
+            dataVersion: base.sdk.increment(1),
+            updatedAt: base.sdk.serverTimestamp(),
+            updatedBy: context.user.uid
+          }, { merge: true });
+          if (!page.nameKey) return page;
+          return reservationId('team-note-pages:' + sectionId, page.nameKey).then(function (key) {
+            transaction.delete(base.sdk.doc(base.workspace, 'nameReservations', key));
+            return page;
+          });
+        });
+      }).then(function (page) {
+        if (!page) return { deleted: false, reason: 'not-found' };
+        return deleteInBatches(context, [pageRef]).then(function () {
+          return { deleted: true, id: pageId, name: page.name || '' };
+        });
+      });
+    });
+  }
+
+  function deleteTeamNoteSection(data) {
+    return withContext(function (context) {
+      var base = refs(context);
+      var sectionId = cleanId(data.sectionId, 'ID da secao');
+      var sectionRef = base.sdk.doc(base.workspace, 'teamNoteSections', sectionId);
+      return base.sdk.runTransaction(context.db, function (transaction) {
+        return Promise.all([transaction.get(base.member), transaction.get(sectionRef)]).then(function (snapshots) {
+          requireMemberSnapshot(snapshots[0]);
+          if (!snapshots[1].exists()) return null;
+          var section = snapshots[1].data();
+          if (Number(section.version || 0) !== Number(data.expectedVersion || 0)) {
+            throw appError('aborted', 'Outra pessoa alterou esta secao.');
+          }
+          transaction.set(sectionRef, {
+            deleting: true,
+            updatedAt: base.sdk.serverTimestamp(),
+            updatedBy: context.user.uid
+          }, { merge: true });
+          transaction.set(base.workspace, {
+            dataVersion: base.sdk.increment(1),
+            updatedAt: base.sdk.serverTimestamp(),
+            updatedBy: context.user.uid
+          }, { merge: true });
+          if (!section.nameKey) return section;
+          return reservationId('team-note-sections', section.nameKey).then(function (key) {
+            transaction.delete(base.sdk.doc(base.workspace, 'nameReservations', key));
+            return section;
+          });
+        });
+      }).then(function (section) {
+        if (!section) return { deleted: false, reason: 'not-found' };
+        return base.sdk.getDocs(base.sdk.collection(sectionRef, 'pages')).then(function (snapshot) {
+          return Promise.all(snapshot.docs.map(function (pageSnapshot) {
+            var page = pageSnapshot.data();
+            if (!page.nameKey) return null;
+            return reservationId('team-note-pages:' + sectionId, page.nameKey).then(function (key) {
+              return base.sdk.doc(base.workspace, 'nameReservations', key);
+            });
+          })).then(function (reservationRefs) {
+            var references = snapshot.docs.map(function (item) { return item.ref; })
+              .concat(reservationRefs.filter(Boolean), [sectionRef]);
+            return deleteInBatches(context, references);
+          });
+        }).then(function () {
+          return { deleted: true, id: sectionId, name: section.name || '' };
+        });
+      });
+    });
+  }
+
   window.SenkoFirestoreWrites = {
     saveVersionedContent: saveVersionedContent,
     saveCopyBaseTemplate: saveCopyBaseTemplate,
     saveCollection: saveCollection,
     saveGroup: saveGroup,
     deleteGroup: deleteGroup,
-    deleteContent: deleteContent
+    deleteContent: deleteContent,
+    saveTeamNoteSection: saveTeamNoteSection,
+    saveTeamNotePage: saveTeamNotePage,
+    deleteTeamNotePage: deleteTeamNotePage,
+    deleteTeamNoteSection: deleteTeamNoteSection
   };
 })();

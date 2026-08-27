@@ -24,7 +24,9 @@ function listGitFiles() {
     ['ls-files', '--cached', '--others', '--exclude-standard', '-z'],
     { cwd: root, encoding: 'utf8' }
   );
-  return output.split('\0').filter(Boolean).map(normalize);
+  return output.split('\0').filter(Boolean).map(normalize).filter((filePath) =>
+    fs.existsSync(path.join(root, ...filePath.split('/')))
+  );
 }
 
 function classify(filePath) {

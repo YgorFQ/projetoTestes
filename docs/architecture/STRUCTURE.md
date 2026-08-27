@@ -1,6 +1,6 @@
 # SenkoLib - Estrutura do projeto
 
-Esta e a organizacao oficial desde a versao `2026.08.26.2`. O objetivo e
+Esta e a organizacao oficial desde a versao `2026.08.27.2`. O objetivo e
 separar codigo executado, ferramentas globais e arquivos regeneraveis.
 
 ```text
@@ -15,6 +15,7 @@ SenkoLib/
 |   |   |   |-- repositories/        - Firebase e fallback estatico
 |   |   |   `-- styles/              - estilos exclusivos
 |   |   |-- colecoes/                 - mesma divisao da Biblioteca
+|   |   |-- team-notes/               - secoes e paginas de notas no Firebase
 |   |   |-- imagens/                  - feature independente
 |   |   `-- sources/                  - feature independente
 |   |-- tools/                        - janelas e comandos globais do shell
@@ -23,7 +24,6 @@ SenkoLib/
 |   |   |-- guide/                    - guia interno oficial
 |   |   |-- quick-create/             - criacao rapida
 |   |   |-- session/                  - login, conta e estado Firebase
-|   |   `-- team-notes/               - notas da equipe
 |   |-- shell/                        - header, abas e montagem do aplicativo
 |   |-- infrastructure/
 |   |   |-- firebase/                 - SDK, configuracao e transacoes
@@ -32,11 +32,10 @@ SenkoLib/
 |   |-- shared/                       - recursos usados por mais de uma area
 |   `-- prototype/                    - experiencias ainda nao oficiais
 |       |-- gamer-preview/            - simulador beta do container GAMER
-|       |-- faq-teste/                - editor beta de FAQ multissite
-|       `-- team-notes-workspace/     - tela beta de notas em secoes e paginas
+|       `-- faq-teste/                - editor beta de FAQ multissite
 |-- backup/
 |   |-- data/                         - snapshot tecnico do ultimo backup
-|   |-- latest/                       - bundle publico carregado pelo site
+|   |-- latest/                       - manifesto global e pasta independente por feature
 |   `-- meta/                         - inventarios gerados do repositorio
 |-- docs/
 |   |-- architecture/                 - estrutura e decisoes gerais

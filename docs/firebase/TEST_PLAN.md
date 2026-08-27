@@ -10,7 +10,7 @@ npm run test:static-backup
 npm run test:copy-base-editor
 npm run test:firebase-health
 npm run test:faq-prototype
-npm run test:team-notes-prototype
+npm run test:team-notes
 npm run scripts:check
 ```
 
@@ -35,6 +35,11 @@ Cenarios obrigatorios:
 - documento, revisao, reserva e dataVersion mudam juntos;
 - owner/admin/editor mantem conteudo;
 - regras administrativas respeitam cargos.
+- membro cria secao e pagina de Notas;
+- titulo duplicado na mesma secao e recusado;
+- versao atrasada de pagina e recusada;
+- visitante nao le nem altera Notas;
+- excluir secao permite remover as paginas vinculadas.
 
 ## Regras Realtime Database
 
@@ -135,19 +140,23 @@ Teste desktop e mobile:
 - entrega copiada contem somente HTML e CSS;
 - tema claro e escuro preservam legibilidade da janela.
 
-## Prototipo Notas da equipe
+## Notas da equipe
 
 - a tela ocupa toda a area da feature e separa secoes, paginas e editor em tres colunas continuas;
 - criar secao bloqueia nome duplicado;
 - excluir secao pede confirmacao, remove suas paginas e seleciona outra secao disponivel;
-- criar, editar, copiar, salvar e excluir pagina atualizam o estado do prototipo;
+- criar, editar, copiar, salvar e excluir pagina atualizam o Firestore;
 - exclusoes de secao e pagina usam o modal proprio das Notas, com foco contido, Escape e cancelamento pelo fundo;
 - busca de secoes considera o nome e busca de paginas considera titulo e conteudo;
-- tipo, tags e filtro de tipo nao aparecem no prototipo;
+- tipo, tags e filtro de tipo nao aparecem na feature;
 - itens da lista de paginas mostram somente titulo e data, sem previa do conteudo;
 - navegar com alteracoes nao salvas pede confirmacao;
 - as colunas de secoes e paginas possuem a mesma largura e o indicador visual de salvamento nao aparece;
-- a mensagem de salvamento deixa claro que nao ha escrita Firebase real;
+- a mensagem de salvamento confirma o Firebase e informa que a mudanca entra no proximo backup global;
+- o modo static usa backup/latest/team-notes/manifest.js e data.js e bloqueia toda mutacao;
+- remover o payload de outra feature nao torna Notas indisponivel;
+- salvar ou excluir nao chama a GitHub Contents API;
+- o backup global inclui secoes e paginas no mesmo commit das demais mudancas;
 - desktop, tablet e mobile permanecem navegaveis sem rolagem horizontal.
 
 ## Registro de uma rodada

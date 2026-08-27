@@ -2,6 +2,7 @@
   var CONFIG_KEY = 'senkolib_github_config';
   var TOKEN_KEY = 'senkolib_github_token';
   var DATA_ROOT = 'backup/data/';
+  var PUBLIC_ROOT = 'backup/latest/';
   var isRunning = false;
 
   function appError(message, code) {
@@ -224,6 +225,23 @@
     });
   }
 
+  function collectTeamNotes(context, workspaceRef, workspacePath, files) {
+    var sdk = context.firestore;
+    return sdk.getDocs(sdk.collection(workspaceRef, 'teamNoteSections')).then(function (snapshot) {
+      return Promise.all(sortedDocuments(snapshot).map(function (section) {
+        if (section.data().deleting) return Promise.resolve();
+        var sectionPath = workspacePath + '/teamNoteSections/' + section.id;
+        addDocumentFile(files, sectionPath, section);
+        return sdk.getDocs(sdk.collection(section.ref, 'pages')).then(function (pages) {
+          sortedDocuments(pages).forEach(function (page) {
+            if (page.data().deleting) return;
+            addDocumentFile(files, sectionPath + '/pages/' + page.id, page);
+          });
+        });
+      }));
+    });
+  }
+
   function buildWorkspaceFiles(context, workspaceData) {
     var sdk = context.firestore;
     var workspaceRef = sdk.doc(context.db, 'workspaces/' + context.workspaceId);
@@ -234,7 +252,8 @@
       collectGroups(context, workspaceRef, workspacePath, files),
       collectLibrary(context, workspaceRef, workspacePath, files),
       collectCollections(context, workspaceRef, workspacePath, files),
-      collectCopyBase(context, workspaceRef, workspacePath, files)
+      collectCopyBase(context, workspaceRef, workspacePath, files),
+      collectTeamNotes(context, workspaceRef, workspacePath, files)
     ]).then(function () {
       var dataFiles = Object.keys(files).sort();
       files[DATA_ROOT + 'manifest.json'] = JSON.stringify({
@@ -428,7 +447,9 @@
       var nextPaths = {};
       Object.keys(files).forEach(function (path) { nextPaths[path] = true; });
       var removals = currentTree.filter(function (entry) {
-        return entry.type === 'blob' && entry.path.indexOf(DATA_ROOT) === 0 && !nextPaths[entry.path];
+        return entry.type === 'blob' &&
+          (entry.path.indexOf(DATA_ROOT) === 0 || entry.path.indexOf(PUBLIC_ROOT) === 0) &&
+          !nextPaths[entry.path];
       }).map(function (entry) {
         return { path: entry.path, mode: '100644', type: 'blob', sha: null };
       });

@@ -25,6 +25,11 @@ O snapshot em `backup/latest/` e a fonte publica de contingencia. Ele
 contem somente o estado do ultimo backup concluido, e nunca aceita edicao. Esse
 snapshot e reconstruido pelo fluxo global de backup para GitHub.
 
+O manifesto global nao carrega dados internos. Cada feature possui
+`backup/latest/{feature}/manifest.js` e `data.js`, carregados pelo proprio
+`register.js`. Um snapshot ausente deixa somente sua feature indisponivel e nao
+altera o fallback das demais.
+
 Nao existe terceira fonte de dados. Arquivos JavaScript individuais nao sao
 banco, e o GitHub nao participa de criar, editar ou excluir conteudo.
 
@@ -51,12 +56,20 @@ banco, e o GitHub nao participa de criar, editar ou excluir conteudo.
 - cria, edita e exclui layouts internos;
 - pesquisa colecoes e abre previews completos.
 
+### Notas da equipe
+
+- organiza referencias operacionais em secoes e paginas;
+- cria e exclui secoes, incluindo suas paginas vinculadas;
+- cria, edita, copia e exclui paginas;
+- usa versao otimista e reserva de nomes por secao;
+- recebe alteracoes em tempo real no modo Firebase;
+- permanece consultavel no ultimo snapshot publico em modo somente leitura.
+
 ### Ferramentas globais
 
 - Criacao rapida inicia fluxos sem exigir navegacao manual ate a feature;
 - Acessos administra solicitacoes e cargos;
 - Backup no GitHub publica o ultimo estado completo do Firebase;
-- Notas da equipe guarda referencias operacionais;
 - Senko Guide explica produto, arquitetura e manutencao;
 - Sessao mostra a conta atual e oferece saida;
 - Status informa Firebase disponivel, degradado ou indisponivel.
@@ -93,6 +106,11 @@ membro no workspace. O produto autoriza pelo documento
 O HTML Basico e um singleton versionado, nao um layout com revisoes. O editor
 envia `expectedVersion`; o primeiro salvamento cria o documento e os seguintes
 incrementam `version` e `dataVersion` na mesma transacao.
+
+Secoes e paginas de Notas usam `expectedVersion`, reserva de nome e incremento
+de `dataVersion`, mas nao criam revisoes imutaveis. O titulo da pagina e unico
+dentro da secao. O GitHub recebe as notas somente quando o backup global e
+acionado.
 
 ## 6. Concorrencia
 
@@ -160,7 +178,21 @@ ou dados codificados dentro de controladores.
 - permitir que um dev júnior encontre dono, fluxo e teste de cada comportamento;
 - atualizar codigo, Guia e documentacao na mesma entrega.
 
-## 11. Criterio de pronto
+## 11. Confirmacao para novas criacoes
+
+Antes de criar nova feature, tool, area de produto, tipo persistente,
+integracao ou fluxo de dados, uma AI deve informar o dono, a pasta e a
+persistencia proposta e perguntar se o usuario deseja prosseguir. A execucao
+comeca somente depois de resposta afirmativa, mesmo quando o pedido inicial ja
+usa criar, implementar ou adicionar. A pausa so e dispensada quando o usuario
+manda explicitamente prosseguir sem perguntar.
+
+Por padrao, qualquer nova area editavel repete o contrato de Biblioteca,
+Colecoes e Notas: Firestore e a fonte editavel, `backup/latest/` e o fallback
+somente leitura e o botao global produz um unico commit no GitHub. Excecoes
+precisam ser apresentadas e autorizadas antes da implementacao.
+
+## 12. Criterio de pronto
 
 Uma mudanca so esta pronta quando comportamento, estado de erro, permissao,
 documentacao e testes relevantes concordam. Se a explicacao ensinaria algo

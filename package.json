@@ -19,10 +19,11 @@
     "test:access-modal": "node tests/access-modal-shell.test.js",
     "test:structure": "node tests/file-classification.test.js",
     "test:static-backup": "node tests/static-backup-builder.test.js",
+    "test:static-independence": "node tests/static-feature-independence.test.js",
     "test:copy-base-editor": "node tests/copy-base-editor.test.js",
     "test:firebase-health": "node tests/firebase-service-health.test.js",
     "test:faq-prototype": "node tests/faq-test-prototype.test.js",
-    "test:team-notes-prototype": "node tests/team-notes-workspace-prototype.test.js",
+    "test:team-notes": "node tests/team-notes-feature.test.js",
     "test:firestore-rules": "firebase emulators:exec --only firestore --project senkolib-rules-test \"node tests/firestore-client-writes.test.js\"",
     "test:database-rules": "firebase emulators:exec --only database --project senkolib-database-rules-test \"node tests/database-member-management.test.js\"",
     "test:restore-emulator": "node tests/backup/restore-emulator.test.js"

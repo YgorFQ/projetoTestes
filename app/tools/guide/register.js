@@ -42,9 +42,8 @@
             'Sources gera picture, source e ims.',
             'Preview e uma area beta para testes.',
             'Teste e um prototipo para montar e validar FAQs de eFacil, Martins e sites genericos.',
-            'Notas beta experimenta secoes, paginas e um editor continuo antes de substituir a ferramenta atual.',
             'Criacao rapida e a entrada oficial para iniciar criacoes em qualquer aba.',
-            'Notas da equipe e uma ferramenta global oficial para guardar prompts, regras, guias e padroes em arquivos proprios.',
+            'Notas da equipe e uma feature oficial para guardar prompts, regras, guias e padroes no Firestore.',
             'No fluxo atual, Biblioteca cria layouts e variacoes; Colecoes cria colecoes e layouts dentro de uma colecao existente.'
           ]
         },
@@ -420,18 +419,18 @@
           badge: 'beta',
           terms: 'preview beta prototype gamer teste faq multissite prototipo notas equipe team notes',
           paragraphs: [
-            'Notas da equipe continua como tool oficial; Preview, Teste e Notas beta ficam em app/prototype enquanto sao avaliados.',
+            'Notas da equipe e uma feature oficial; Preview e Teste ficam em app/prototype enquanto sao avaliados.',
             'Tudo que ainda esta em teste deve comecar em prototype antes de virar feature final.'
           ],
           bullets: [
-            'Notas da equipe: app/tools/team-notes/.',
+            'Notas da equipe: app/features/team-notes/.',
             'O acionador de Notas da equipe fica no menu de ferramentas e o painel consome os tokens visuais compartilhados do SenkoLib. A feature mantem classes proprias e nao deve criar uma paleta paralela.',
-            'A experiencia de Notas da equipe organiza busca, filtros, lista e editor em areas claras, sinaliza alteracoes nao salvas e pede confirmacao antes de descarta-las.',
-            'Cada nota criada pelo Team Notes deve virar um arquivo proprio em app/tools/team-notes/data/notes e entrar no manifest.js.',
+            'A experiencia de Notas da equipe organiza secoes, paginas, busca e editor, sinaliza alteracoes nao salvas e pede confirmacao antes de descarta-las.',
+            'Secoes e paginas sao documentos Firestore; backup/latest/team-notes/ possui manifesto e payload somente leitura gerados pelo backup global.',
             'Preview: app/prototype/gamer-preview/.',
             'Teste: app/prototype/faq-teste/.',
-            'Notas beta: app/prototype/team-notes-workspace/. A tela testa a hierarquia caderno, secoes, paginas e editor com dados apenas na memoria; secoes podem ser excluidas junto com suas paginas vinculadas e as exclusoes usam um modal proprio do prototipo.',
-            'Senko Guide e Team Notes nao sao prototipos; ambos ficam em app/tools/.',
+            'Os arquivos antigos em app/tools/team-notes/data existem apenas como fonte legada de migracao e nao sao carregados como banco.',
+            'Senko Guide continua uma tool; Notas da equipe agora e uma feature principal.',
             'Editor de layout da Biblioteca nao e mais prototipo; ele fica em app/features/biblioteca/.'
           ]
         },
@@ -473,7 +472,7 @@
             'Imagens: feature independente, mas merece revisao cuidadosa quando houver reforma interna.',
             'Sources: feature independente, mas merece revisao cuidadosa quando houver reforma interna.',
             'Criacao rapida: ferramenta oficial do shell com providers registrados pelas features.',
-            'Notas da equipe: ferramenta oficial em app/tools, com arquivos individuais e salvamento via GitHub.',
+            'Notas da equipe: feature oficial em app/features, editavel no Firestore e incluida no backup global.',
             'Preview: prototipo beta em app/prototype.',
             'Teste: prototipo beta de FAQ multissite em app/prototype.',
             'Senko Guide: ferramenta oficial do shell e prioridade maxima de manutencao.',
@@ -508,7 +507,7 @@
           badge: 'dados',
           terms: 'firebase firestore continuidade enabled config banco principal',
           paragraphs: [
-            'Firebase e a fonte principal editavel de Biblioteca e Colecoes. Sem uma sessao autorizada, o SenkoLib mostra o ultimo backup publico em modo somente leitura.',
+            'Firebase e a fonte principal editavel de Biblioteca, Colecoes e Notas da equipe. Sem uma sessao autorizada, o SenkoLib mostra o ultimo backup publico em modo somente leitura.',
             'A configuracao fica em app/infrastructure/firebase/firebase-config.js e o passo a passo completo fica em docs/firebase/SETUP.md.'
           ],
           bullets: [
@@ -550,8 +549,8 @@
             'O HTML e o CSS ficam publicos por decisao de produto, mas membros, e-mails, presenca, tokens, logs, autoria e revisoes antigas nao entram nesse bundle.'
           ],
           bullets: [
-            'Arquivos gerados: backup/latest/manifest.js, biblioteca.js e colecoes.js.',
-            'Adaptadores: repositories/static-repository.js dentro de Biblioteca e Colecoes.',
+            'O index carrega apenas backup/latest/manifest.js. Cada feature carrega seu proprio manifest.js e data.js em backup/latest/{feature}/.',
+            'Adaptadores: repositories/static-repository.js dentro de Biblioteca, Colecoes e Notas da equipe; a ausencia de um snapshot afeta somente sua dona.',
             'Criar, editar, excluir e fazer backup ficam bloqueados no modo static.',
             'Preview e copia de HTML/CSS continuam disponiveis.',
             'Um Live Server simples na raiz e suportado; file:// nao e requisito.',
@@ -706,6 +705,20 @@
           ]
         },
         {
+          title: 'Confirmar antes de criar',
+          badge: 'obrigatorio',
+          terms: 'ai confirmar prosseguir criar feature tool dados persistencia',
+          paragraphs: [
+            'Antes de criar uma feature, tool, area de produto, tipo persistente, integracao ou fluxo de dados, a AI deve explicar o dono, a pasta e a persistencia proposta.',
+            'Depois deve perguntar se o usuario quer prosseguir e aguardar resposta afirmativa, mesmo quando o pedido inicial ja diz criar, implementar ou adicionar. So pule a pausa se o usuario mandar explicitamente prosseguir sem perguntar.'
+          ],
+          bullets: [
+            'O padrao obrigatorio e Firestore editavel, backup/latest somente leitura e um unico backup global no GitHub.',
+            'Uma excecao a esse contrato exige autorizacao explicita antes de implementar.',
+            'A confirmacao deve acontecer antes de criar arquivos ou mudar o modelo de dados.'
+          ]
+        },
+        {
           title: 'Adicionar feature nova',
           badge: 'passo a passo',
           terms: 'adicionar feature nova register view scripts styles prototype independente pasta obrigatorio',
@@ -721,6 +734,7 @@
             'Criar styles proprios usando tokens de shared.',
             'Usar app/infrastructure para servicos externos globais; nao duplicar clientes dentro da feature.',
             'Adicionar o register.js no index.html.',
+            'Fazer o register carregar somente backup/latest/{feature}/manifest.js e data.js; nunca adicionar payload de feature ao index.',
             'Testar troca de abas, tema, console e remocao de outra feature.',
             'Executar npm run inventory:build para classificar os novos arquivos.',
             'Atualizar este guia com a nova feature.'
@@ -758,7 +772,7 @@
             'Usar o botao Editar HTML basico, revisar o codigo e salvar no Firebase.',
             'Cada save incrementa version e dataVersion na mesma transacao.',
             'Se outra pessoa salvar antes, o rascunho local e preservado e o save atrasado e recusado.',
-            'O proximo backup global inclui o singleton no snapshot tecnico e em backup/latest/biblioteca.js.',
+            'O proximo backup global inclui o singleton no snapshot tecnico e em backup/latest/biblioteca/data.js.',
             'No modo estatico, copiar continua disponivel e editar permanece bloqueado.'
           ]
         },
@@ -1054,17 +1068,17 @@
           ]
         },
         {
-          title: 'Mensagem: arquivo nao encontrado no GitHub',
+          title: 'Mensagem: destino nao encontrado no GitHub',
           badge: '404',
           terms: 'mensagem arquivo nao encontrado 404 github contents path caminho branch',
           paragraphs: [
-            'A API nao encontrou o arquivo no caminho usado pela integracao.'
+            'A API nao encontrou o repositorio, a branch ou a referencia usada pelo backup global.'
           ],
           bullets: [
-            'Conferir caminho exato do arquivo no provider da feature.',
-            'Conferir se a branch configurada e a branch onde o arquivo existe.',
-            'Se o arquivo for novo, a criacao deve usar PUT sem SHA.',
-            'Se o arquivo ja existe, buscar SHA antes de atualizar.'
+            'Conferir owner e repositorio fixos em firebase-config.js.',
+            'Conferir se a branch configurada existe.',
+            'Conferir se o token pode ver e escrever no repositorio.',
+            'Features nao tratam 404 GitHub: somente o backup global acessa a API.'
           ]
         },
         {
@@ -1072,13 +1086,13 @@
           badge: '409',
           terms: 'mensagem conflito sha github 409 arquivo desatualizado concorrencia',
           paragraphs: [
-            'Acontece quando o arquivo remoto mudou depois que a tela carregou ou quando a integracao usa SHA antigo.'
+            'Acontece quando a branch mudou enquanto o backup preparava a tree ou quando a referencia remota ficou desatualizada.'
           ],
           bullets: [
-            'Buscar o arquivo novamente antes de salvar.',
-            'Usar o SHA retornado pelo GET mais recente.',
-            'Evitar sobrescrever conteudo sem confirmar o estado remoto.',
-            'Recarregar a tela e repetir o fluxo se alguem alterou o arquivo por fora.'
+            'Nao usar force push.',
+            'Executar o backup global novamente para ler o head atual.',
+            'Confirmar se outra pessoa ou automacao alterou a branch.',
+            'O conflito do GitHub nao deve desfazer saves ja concluidos no Firestore.'
           ]
         },
         {
@@ -1132,7 +1146,7 @@
           ],
           bullets: [
             'Conferir conexao com internet.',
-            'Conferir URL montada para a GitHub Contents API.',
+            'Conferir as rotas da Git Data API usadas pelo backup global.',
             'Conferir se o token nao esta vazio.',
             'Abrir o console e verificar a requisicao que falhou.'
           ]
@@ -1143,12 +1157,12 @@
           terms: 'cache reload ctrl shift r service worker senko_reload',
           paragraphs: [
             'Em producao, CSS e JavaScript usam a versao meta senko-release para o navegador reaproveitar o cache entre reloads.',
-            'Os tres arquivos do backup publico recebem uma chave nova em toda abertura, entao dados atualizados nao dependem de limpar o cache.'
+            'Os manifestos e payloads do backup publico recebem uma chave nova em toda abertura, entao dados atualizados nao dependem de limpar o cache.'
           ],
           bullets: [
             'Testar reload normal.',
             'Incrementar meta[name="senko-release"] quando codigo ou CSS mudar.',
-            'Backup-only nao exige incremento porque manifest.js, biblioteca.js e colecoes.js sao sempre frescos.',
+            'Backup-only nao exige incremento porque o manifesto global e os arquivos manifest.js/data.js de cada feature sao sempre frescos.',
             'sw.js nao intercepta assets; ele apenas limpa caches historicos durante atualizacoes.',
             'Testar servidor local.',
             'Conferir caminho do arquivo alterado.',
@@ -1184,7 +1198,7 @@
           terms: 'fonte verdade firebase firestore snapshot static dados',
           paragraphs: [
             'Firestore e a unica fonte editavel. O snapshot em backup/latest e a unica fonte de contingencia e funciona somente para leitura.',
-            'O GitHub armazena o resultado do backup, mas nao participa do salvamento diario de layouts ou colecoes.'
+            'O GitHub armazena o resultado do backup, mas nao participa do salvamento diario de layouts, colecoes ou notas.'
           ],
           bullets: [
             'Firebase pronto: listeners em tempo real alimentam as features.',
@@ -1379,6 +1393,8 @@
             'Nao permitir nomes duplicados.',
             'Grupos de Colecoes nao devem ser apagados automaticamente.',
             'Novos dados editaveis pertencem ao Firestore; o backup gera automaticamente o bundle publico.',
+            'Cada feature valida seu proprio snapshot; a falta de uma pasta em backup/latest nao derruba as demais.',
+            'Antes de criar nova area ou persistencia, a AI explica o contrato e pergunta se o usuario quer prosseguir.',
             'ID tecnico nao deve ser editado como campo comum.',
             'Ordenacao alfabetica deve acontecer na renderizacao, sem reescrever dados so para ordenar.',
             'Toda alteracao precisa ser testada em mais de uma aba.',
@@ -1400,6 +1416,7 @@
             'Nao salvar token do GitHub no codigo.',
             'Nao deixar duas colecoes, layouts, variantes ou layouts de colecao com o mesmo nome.',
             'Nao editar manualmente os arquivos em backup/latest/.',
+            'Nao criar CRUD GitHub dentro de feature ou tool; somente o backup global escreve no repositorio.',
             'Nao editar ID gerado pelo editor como se fosse nome de exibicao.',
             'Nao deixar tela oficial dentro de prototype depois que virou fluxo oficial.',
             'Nao finalizar mudanca sem atualizar o guia quando o comportamento documentado mudou.'

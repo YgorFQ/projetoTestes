@@ -131,9 +131,11 @@ backup/data/
     |   |-- revisions/{revisionId}.json
     |   `-- variants/{variantId}/
     |       `-- revisions/{revisionId}.json
-    `-- collections/{collectionId}.json
-        `-- layouts/{layoutId}/
-            `-- revisions/{revisionId}.json
+    |-- collections/{collectionId}.json
+    |   `-- layouts/{layoutId}/
+    |       `-- revisions/{revisionId}.json
+    `-- teamNoteSections/{sectionId}.json
+        `-- pages/{pageId}.json
 ```
 
 Cada documento Firestore vira um JSON. Timestamps viram texto ISO 8601. O
@@ -167,15 +169,27 @@ O bundle publico gerado no mesmo commit fica em:
 ```text
 backup/latest/
 |-- manifest.js
-|-- biblioteca.js
-`-- colecoes.js
+|-- biblioteca/
+|   |-- manifest.js
+|   `-- data.js
+|-- colecoes/
+|   |-- manifest.js
+|   `-- data.js
+`-- team-notes/
+    |-- manifest.js
+    `-- data.js
 ```
 
-Esses tres arquivos sao dados gerados. Nao devem ser editados manualmente.
+Esses arquivos sao dados gerados. Nao devem ser editados manualmente. O index
+conhece somente o manifesto global; cada feature carrega sua propria pasta.
 Eles contem somente a versao atual de layouts, variacoes, colecoes, layouts
-internos, grupos e do HTML Basico compartilhado. Nao incluem documentos de revisao, autoria, membros,
+internos, grupos, HTML Basico compartilhado, secoes e paginas de Notas. Nao incluem documentos de revisao, autoria, membros,
 e-mails, presenca, tokens ou logs. O HTML e o CSS ficam publicos por decisao
 de produto.
+
+Se uma feature ou seu snapshot for removido, as outras continuam lendo suas
+pastas normalmente. O botao global ainda publica todas as pastas existentes na
+mesma tree e no mesmo commit.
 
 O gerador compartilhado fica em
 `app/infrastructure/static-backup/senko-static-backup-builder.js`. Para
@@ -209,11 +223,11 @@ regra e validada em `firebase/firestore.rules`.
 3. Localize `SenkoLib backup vN (nome da pessoa)`.
 4. Abra `backup/data/manifest.json` no commit.
 5. Compare `dataVersion` com o campo do workspace.
-6. Confira uma amostra de grupo, layout, variacao, colecao e layout interno.
+6. Confira uma amostra de grupo, layout, variacao, colecao, layout interno, secao e pagina de Notas.
 7. Confirme que HTML e CSS estao completos.
 8. Confirme que nenhum token ou documento `members` apareceu.
 9. Abra o aplicativo sem login e confira o selo **Somente leitura**.
-10. Confira as mesmas contagens em Biblioteca e Colecoes.
+10. Confira as mesmas contagens em Biblioteca, Colecoes e Notas.
 
 No Firestore, `workspaces/senkolib/exports/{id}` deve ficar com
 `status: completed`, `commitSha`, `commitUrl` e `fileCount`. Uma falha fica com

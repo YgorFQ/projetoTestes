@@ -61,13 +61,17 @@ sessao ou remontagem.
 
 ## 4. Modo estatico
 
-`backup/latest/manifest.js`, `biblioteca.js` e `colecoes.js` formam
-um bundle gerado. Repositories estaticos leem esse objeto e devolvem clones para
+`backup/latest/manifest.js` descreve a exportacao global. Cada feature carrega
+`backup/latest/{feature}/manifest.js` e `data.js` sob demanda. Repositories estaticos leem seu objeto e devolvem clones para
 que controladores nao alterem a copia global.
 
 O modo e somente leitura por definicao. Botoes de criacao e salvamento devem
 ser ocultados ou recusar a acao com mensagem clara. Nao existe sincronizacao
 de volta para o snapshot.
+
+A disponibilidade e individual: manifesto ou payload ausente deixa somente a
+feature correspondente sem dados. `SenkoDataMode` nao exige que Biblioteca,
+Colecoes e Notas estejam presentes ao mesmo tempo.
 
 ## 5. Escrita no Firestore
 
@@ -76,7 +80,7 @@ Todas as mutacoes de conteudo passam por
 porque quatro invariantes precisam mudar juntas:
 
 - o recurso recebe nova versao;
-- a revisao imutavel e criada;
+- a revisao imutavel e criada quando o tipo usa revisoes;
 - a reserva de nome aponta para o recurso;
 - `workspace.dataVersion` avanca exatamente uma unidade.
 
@@ -107,7 +111,7 @@ usuario abre tool
   -> GitHub Pages publica o bundle
 ```
 
-O backup nao e parte da transacao que salva um layout. Isso evita transformar
+O backup nao e parte da transacao que salva um layout, colecao ou nota. Isso evita transformar
 instabilidade ou limites do GitHub em indisponibilidade do editor.
 
 ## 9. Falhas esperadas

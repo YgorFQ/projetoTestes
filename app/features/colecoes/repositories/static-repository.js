@@ -5,7 +5,7 @@
    * Firebase; por isso controllers nao precisam de ramificacoes por fonte.
    */
   function source() {
-    return (window.SenkoStaticBackup || {}).colecoes || null;
+    return ((window.SenkoStaticBackup || {}).features || {}).colecoes || null;
   }
 
   function cloneLayout(item) {
@@ -64,8 +64,9 @@
   window.SenkoColecoesStatic = {
     isAvailable: function () {
       var data = source();
+      var manifests = (window.SenkoStaticBackup || {}).featureManifests || {};
       return Boolean(
-        data && Array.isArray(data.collections) &&
+        manifests.colecoes && data && Array.isArray(data.collections) &&
         Array.isArray(data.layouts) && Array.isArray(data.groups)
       );
     },

@@ -1,7 +1,8 @@
 (function () {
   'use strict';
   var backup = window.SenkoStaticBackup = window.SenkoStaticBackup || {};
-  backup.biblioteca = {
+  backup.features = backup.features || {};
+  backup.features["biblioteca"] = {
   "layouts": [
     {
       "id": "section 39.1 (caderno)",

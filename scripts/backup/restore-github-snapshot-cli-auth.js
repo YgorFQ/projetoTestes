@@ -16,6 +16,7 @@ const MANAGED_COLLECTIONS = [
   'groups',
   'bibliotecaLayouts',
   'collections',
+  'teamNoteSections',
   'nameReservations'
 ];
 

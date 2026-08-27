@@ -119,6 +119,33 @@ async function testGithubBackup(memberDb, outsiderDb, writes) {
     `workspaces/${WORKSPACE_ID}/settings/copyBase`
   )));
 
+  const noteSection = await writes.saveTeamNoteSection({
+    sectionId: 'processos',
+    name: 'Processos',
+    order: 10,
+    expectedVersion: null
+  });
+  assert.equal(noteSection.version, 1);
+  const notePage = await writes.saveTeamNotePage({
+    sectionId: noteSection.id,
+    pageId: 'checklist',
+    name: 'Checklist',
+    content: 'Revisar antes de publicar.',
+    expectedVersion: null
+  });
+  assert.equal(notePage.version, 1);
+  await expectClientError(writes.saveTeamNotePage({
+    sectionId: noteSection.id,
+    pageId: notePage.id,
+    name: 'Checklist alterado',
+    content: 'Conflito.',
+    expectedVersion: 0
+  }), 'functions/aborted');
+  await assertFails(firestore.getDoc(firestore.doc(
+    outsiderDb,
+    `workspaces/${WORKSPACE_ID}/teamNoteSections/processos/pages/checklist`
+  )));
+
   const requests = [];
   const originalFetch = global.fetch;
   global.localStorage = {
@@ -146,7 +173,11 @@ async function testGithubBackup(memberDb, outsiderDb, writes) {
     } else if (url.includes('/git/trees/base-tree?recursive=1')) {
       body = {
         truncated: false,
-        tree: [{ path: 'backup/data/arquivo-antigo.json', type: 'blob', sha: 'old' }]
+        tree: [
+          { path: 'backup/data/arquivo-antigo.json', type: 'blob', sha: 'old' },
+          { path: 'backup/latest/biblioteca.js', type: 'blob', sha: 'old-biblioteca' },
+          { path: 'backup/latest/colecoes.js', type: 'blob', sha: 'old-colecoes' }
+        ]
       };
     } else if (url.endsWith('/git/trees') && method === 'POST') {
       body = { sha: 'next-tree' };
@@ -205,8 +236,8 @@ async function testGithubBackup(memberDb, outsiderDb, writes) {
     });
 
     assert.equal(result.commitSha, 'commit-sha');
-    assert.equal(result.dataVersion, 12);
-    assert.equal(result.fileCount, 6);
+    assert.equal(result.dataVersion, 14);
+    assert.equal(result.fileCount, 12);
 
     const treeRequest = requests.find((request) =>
       request.method === 'POST' && request.url.endsWith('/git/trees')
@@ -216,6 +247,14 @@ async function testGithubBackup(memberDb, outsiderDb, writes) {
     assert.ok(treeBody.tree.some((entry) =>
       entry.path === 'backup/data/workspaces/senkolib/groups/grupo-backup.json' &&
       typeof entry.content === 'string'
+    ));
+    assert.ok(treeBody.tree.some((entry) =>
+      entry.path === 'backup/data/workspaces/senkolib/teamNoteSections/processos/pages/checklist.json' &&
+      typeof entry.content === 'string'
+    ));
+    assert.ok(treeBody.tree.some((entry) =>
+      entry.path === 'backup/latest/team-notes/data.js' &&
+      String(entry.content).includes('Revisar antes de publicar.')
     ));
     assert.ok(treeBody.tree.some((entry) =>
       entry.path === 'backup/data/manifest.json' && typeof entry.content === 'string'
@@ -229,22 +268,25 @@ async function testGithubBackup(memberDb, outsiderDb, writes) {
       entry.content.includes('dataVersion')
     ));
     assert.ok(treeBody.tree.some((entry) =>
-      entry.path === 'backup/latest/biblioteca.js' &&
+      entry.path === 'backup/latest/biblioteca/data.js' &&
       entry.content.includes('HTML básico do Firebase')
     ));
     assert.ok(treeBody.tree.some((entry) =>
-      entry.path === 'backup/latest/colecoes.js' &&
+      entry.path === 'backup/latest/colecoes/data.js' &&
       entry.content.includes('Grupo do backup')
     ));
     assert.ok(treeBody.tree.some((entry) =>
       entry.path === 'backup/data/arquivo-antigo.json' && entry.sha === null
+    ));
+    assert.ok(treeBody.tree.some((entry) =>
+      entry.path === 'backup/latest/biblioteca.js' && entry.sha === null
     ));
 
     const workspace = await firestore.getDoc(firestore.doc(
       memberDb,
       `workspaces/${WORKSPACE_ID}`
     ));
-    assert.equal(workspace.data().lastGithubExportVersion, 12);
+    assert.equal(workspace.data().lastGithubExportVersion, 14);
     assert.equal(workspace.data().lastGithubCommitSha, 'commit-sha');
 
     global.fetch = async () => new Response(JSON.stringify({

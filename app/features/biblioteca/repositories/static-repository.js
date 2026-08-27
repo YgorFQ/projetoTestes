@@ -5,7 +5,7 @@
    * que tambem pode ser consumido por outras montagens da feature.
    */
   function source() {
-    return (window.SenkoStaticBackup || {}).biblioteca || null;
+    return ((window.SenkoStaticBackup || {}).features || {}).biblioteca || null;
   }
 
   function cloneLayout(item) {
@@ -48,7 +48,9 @@
   window.SenkoBibliotecaStatic = {
     isAvailable: function () {
       var data = source();
-      return Boolean(data && Array.isArray(data.layouts) && Array.isArray(data.variants));
+      var manifests = (window.SenkoStaticBackup || {}).featureManifests || {};
+      return Boolean(manifests.biblioteca && data &&
+        Array.isArray(data.layouts) && Array.isArray(data.variants));
     },
     getLayouts: getLayouts,
     getVariants: getVariants,

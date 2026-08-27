@@ -78,6 +78,17 @@
     });
   }
 
+  async function loadStaticAssets() {
+    try {
+      await loadScript('../../../backup/latest/colecoes/manifest.js');
+      await loadScript('../../../backup/latest/colecoes/data.js');
+      return true;
+    } catch (error) {
+      console.warn('[Colecoes] Snapshot proprio indisponivel:', error.message || error);
+      return false;
+    }
+  }
+
   function applyFirebaseSnapshot() {
     if (typeof ColLib === 'undefined' || typeof ColLib.replaceAll !== 'function') return;
 
@@ -232,6 +243,8 @@
     loadPromise = (async function () {
       loadStyle('styles/index.css?v=20260816-structure');
       loadStyle('styles/layout-editor.css?v=20260816-structure');
+
+      await loadStaticAssets();
 
       await Promise.all([
         loadScript('view.js?v=20260613-fast-load'),

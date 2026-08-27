@@ -1,4 +1,5 @@
 const assert = require('node:assert/strict');
+const vm = require('node:vm');
 const builder = require('../app/infrastructure/static-backup/senko-static-backup-builder.js');
 
 const root = 'backup/data/workspaces/senkolib/';
@@ -48,6 +49,22 @@ const files = {
     version: 4,
     updatedByName: 'Nome privado do editor'
   }),
+  [root + 'teamNoteSections/processos.json']: JSON.stringify({
+    name: 'Processos',
+    order: 10,
+    version: 2,
+    createdAt: '2026-08-20T12:00:00.000Z',
+    updatedAt: '2026-08-27T12:00:00.000Z'
+  }),
+  [root + 'teamNoteSections/processos/pages/revisao.json']: JSON.stringify({
+    name: 'Fluxo de revisão',
+    sectionId: 'processos',
+    content: 'Revisar antes de publicar.',
+    version: 3,
+    createdAt: '2026-08-20T12:00:00.000Z',
+    updatedAt: '2026-08-27T12:00:00.000Z',
+    updatedByName: 'Nome privado das notas'
+  }),
   [root + 'members/member-1.json']: JSON.stringify({
     email: 'privado@example.com'
   })
@@ -61,7 +78,9 @@ assert.deepEqual(snapshot.manifest.counts, {
   collections: 1,
   collectionLayouts: 1,
   groups: 1,
-  copyBaseTemplates: 1
+  copyBaseTemplates: 1,
+  teamNoteSections: 1,
+  teamNotePages: 1
 });
 assert.equal(snapshot.biblioteca.layouts[0].html, '<main>atual</main>');
 assert.equal(snapshot.biblioteca.layouts[0].updatedByName, undefined);
@@ -72,6 +91,9 @@ assert.equal(snapshot.biblioteca.copyBase.html, '<div>HTML básico compartilhado
 assert.equal(snapshot.biblioteca.copyBase.version, 4);
 assert.equal(snapshot.biblioteca.copyBase.updatedByName, undefined);
 assert.equal(snapshot.colecoes.layouts[0].collectionId, 'collection-1');
+assert.equal(snapshot.teamNotes.sections[0].id, 'processos');
+assert.equal(snapshot.teamNotes.pages[0].content, 'Revisar antes de publicar.');
+assert.equal(snapshot.teamNotes.pages[0].updatedByName, undefined);
 
 const generated = builder.buildPublicFiles(files);
 const generatedText = Object.values(generated).join('\n');
@@ -80,10 +102,27 @@ assert.ok(!generatedText.includes('<main>antigo</main>'));
 assert.ok(!generatedText.includes('privado@example.com'));
 assert.ok(!generatedText.includes('Nome privado'));
 assert.ok(!generatedText.includes('Nome privado do editor'));
+assert.ok(!generatedText.includes('Nome privado das notas'));
 assert.deepEqual(Object.keys(generated).sort(), [
-  'backup/latest/biblioteca.js',
-  'backup/latest/colecoes.js',
-  'backup/latest/manifest.js'
+  'backup/latest/biblioteca/data.js',
+  'backup/latest/biblioteca/manifest.js',
+  'backup/latest/colecoes/data.js',
+  'backup/latest/colecoes/manifest.js',
+  'backup/latest/manifest.js',
+  'backup/latest/team-notes/data.js',
+  'backup/latest/team-notes/manifest.js'
 ]);
+
+const isolated = { window: {} };
+vm.runInNewContext(generated['backup/latest/manifest.js'], isolated);
+vm.runInNewContext(generated['backup/latest/team-notes/manifest.js'], isolated);
+vm.runInNewContext(generated['backup/latest/team-notes/data.js'], isolated);
+assert.deepEqual(
+  Array.from(isolated.window.SenkoStaticBackup.manifest.features),
+  ['biblioteca', 'colecoes', 'team-notes']
+);
+assert.equal(isolated.window.SenkoStaticBackup.featureManifests['team-notes'].featureId, 'team-notes');
+assert.equal(isolated.window.SenkoStaticBackup.features['team-notes'].pages.length, 1);
+assert.equal(isolated.window.SenkoStaticBackup.features.biblioteca, undefined);
 
 console.log('Static backup builder: OK');

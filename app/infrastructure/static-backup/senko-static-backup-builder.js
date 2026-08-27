@@ -12,7 +12,7 @@
   if (root) root.SenkoStaticBackupBuilder = api;
 })(typeof window !== 'undefined' ? window : null, function () {
   // O snapshot tecnico prioriza restauracao completa. O bundle publico contem
-  // apenas o necessario para renderizar Biblioteca e Colecoes em leitura.
+  // apenas o necessario para renderizar Biblioteca, Colecoes e Notas em leitura.
   var DATA_ROOT = 'backup/data/';
   var PUBLIC_ROOT = 'backup/latest/';
 
@@ -79,12 +79,64 @@
     };
   }
 
+  function publicTeamNoteSection(id, data) {
+    return {
+      id: id,
+      name: data.name || '',
+      order: Number(data.order || 0),
+      version: Number(data.version || 0),
+      createdAt: data.createdAt || null,
+      updatedAt: data.updatedAt || null
+    };
+  }
+
+  function publicTeamNotePage(sectionId, id, data) {
+    return {
+      id: id,
+      sectionId: sectionId,
+      name: data.name || '',
+      content: data.content || '',
+      version: Number(data.version || 0),
+      createdAt: data.createdAt || null,
+      updatedAt: data.updatedAt || null
+    };
+  }
+
   function assignmentScript(property, value) {
     return '(function () {\n' +
       "  'use strict';\n" +
       '  var backup = window.SenkoStaticBackup = window.SenkoStaticBackup || {};\n' +
       '  backup.' + property + ' = ' + JSON.stringify(value, null, 2) + ';\n' +
       '})();\n';
+  }
+
+  function featureAssignmentScript(featureId, property, value) {
+    return '(function () {\n' +
+      "  'use strict';\n" +
+      '  var backup = window.SenkoStaticBackup = window.SenkoStaticBackup || {};\n' +
+      '  backup.' + property + ' = backup.' + property + ' || {};\n' +
+      '  backup.' + property + '[' + JSON.stringify(featureId) + '] = ' +
+        JSON.stringify(value, null, 2) + ';\n' +
+      '})();\n';
+  }
+
+  function featureManifest(id, snapshot) {
+    var counts = snapshot.manifest.counts;
+    var countKeys = id === 'biblioteca'
+      ? ['bibliotecaLayouts', 'bibliotecaVariants', 'copyBaseTemplates']
+      : (id === 'colecoes'
+        ? ['collections', 'collectionLayouts', 'groups']
+        : ['teamNoteSections', 'teamNotePages']);
+    var featureCounts = {};
+    countKeys.forEach(function (key) { featureCounts[key] = Number(counts[key] || 0); });
+    return {
+      schemaVersion: 1,
+      featureId: id,
+      workspaceId: snapshot.manifest.workspaceId,
+      exportedAt: snapshot.manifest.exportedAt,
+      dataVersion: snapshot.manifest.dataVersion,
+      counts: featureCounts
+    };
   }
 
   // A lista de arquivos do manifesto e autoritativa. Caminhos extras recebidos
@@ -100,6 +152,8 @@
     var collectionLayouts = [];
     var groups = [];
     var copyBase = null;
+    var teamNoteSections = [];
+    var teamNotePages = [];
 
     Object.keys(files).sort().forEach(function (path) {
       if (path.indexOf(workspaceRoot) !== 0 || !path.endsWith('.json')) return;
@@ -132,6 +186,14 @@
       }
       if (segments[0] === 'collections' && segments[2] === 'layouts' && segments.length === 4) {
         collectionLayouts.push(publicCollectionLayout(segments[1], segments[3], data));
+        return;
+      }
+      if (segments[0] === 'teamNoteSections' && segments.length === 2) {
+        teamNoteSections.push(publicTeamNoteSection(segments[1], data));
+        return;
+      }
+      if (segments[0] === 'teamNoteSections' && segments[2] === 'pages' && segments.length === 4) {
+        teamNotePages.push(publicTeamNotePage(segments[1], segments[3], data));
       }
     });
 
@@ -140,6 +202,15 @@
     collections.sort(compareByName);
     collectionLayouts.sort(compareByName);
     groups.sort(compareByName);
+    teamNoteSections.sort(function (left, right) {
+      return Number(left.order || 0) - Number(right.order || 0) || compareByName(left, right);
+    });
+    var activeTeamNoteSections = {};
+    teamNoteSections.forEach(function (section) { activeTeamNoteSections[section.id] = true; });
+    teamNotePages = teamNotePages.filter(function (page) {
+      return Boolean(activeTeamNoteSections[page.sectionId]);
+    });
+    teamNotePages.sort(compareByName);
 
     return {
       manifest: {
@@ -147,13 +218,16 @@
         workspaceId: workspaceId,
         exportedAt: manifest.exportedAt || null,
         dataVersion: Number(manifest.dataVersion || 0),
+        features: ['biblioteca', 'colecoes', 'team-notes'],
         counts: {
           bibliotecaLayouts: bibliotecaLayouts.length,
           bibliotecaVariants: bibliotecaVariants.length,
           collections: collections.length,
           collectionLayouts: collectionLayouts.length,
           groups: groups.length,
-          copyBaseTemplates: copyBase ? 1 : 0
+          copyBaseTemplates: copyBase ? 1 : 0,
+          teamNoteSections: teamNoteSections.length,
+          teamNotePages: teamNotePages.length
         }
       },
       biblioteca: {
@@ -165,18 +239,38 @@
         collections: collections,
         layouts: collectionLayouts,
         groups: groups
+      },
+      teamNotes: {
+        sections: teamNoteSections,
+        pages: teamNotePages
       }
     };
   }
 
-  // Serializacao em tres scripts preserva carregamento sem fetch e tambem
-  // funciona quando o projeto e servido por um servidor HTTP minimo.
+  // Cada feature recebe manifesto e payload proprios. O manifesto global
+  // descreve apenas a exportacao completa e nao contem dados de produto.
   function buildPublicFiles(files) {
     var snapshot = buildPublicSnapshot(files);
     var output = {};
     output[PUBLIC_ROOT + 'manifest.js'] = assignmentScript('manifest', snapshot.manifest);
-    output[PUBLIC_ROOT + 'biblioteca.js'] = assignmentScript('biblioteca', snapshot.biblioteca);
-    output[PUBLIC_ROOT + 'colecoes.js'] = assignmentScript('colecoes', snapshot.colecoes);
+    output[PUBLIC_ROOT + 'biblioteca/manifest.js'] = featureAssignmentScript(
+      'biblioteca', 'featureManifests', featureManifest('biblioteca', snapshot)
+    );
+    output[PUBLIC_ROOT + 'biblioteca/data.js'] = featureAssignmentScript(
+      'biblioteca', 'features', snapshot.biblioteca
+    );
+    output[PUBLIC_ROOT + 'colecoes/manifest.js'] = featureAssignmentScript(
+      'colecoes', 'featureManifests', featureManifest('colecoes', snapshot)
+    );
+    output[PUBLIC_ROOT + 'colecoes/data.js'] = featureAssignmentScript(
+      'colecoes', 'features', snapshot.colecoes
+    );
+    output[PUBLIC_ROOT + 'team-notes/manifest.js'] = featureAssignmentScript(
+      'team-notes', 'featureManifests', featureManifest('team-notes', snapshot)
+    );
+    output[PUBLIC_ROOT + 'team-notes/data.js'] = featureAssignmentScript(
+      'team-notes', 'features', snapshot.teamNotes
+    );
     return output;
   }
 

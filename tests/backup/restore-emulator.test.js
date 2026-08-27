@@ -106,7 +106,14 @@ function buildFixture(root) {
         currentRevisionId: 'revision-1'
       })],
     [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/collections/collection-a/layouts/internal-a/revisions/revision-1.json`,
-      revisionData('internal-a', 'revision-1', 'collectionLayout', 'Internal A')]
+      revisionData('internal-a', 'revision-1', 'collectionLayout', 'Internal A')],
+    [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/teamNoteSections/processos.json`,
+      namedData('processos', 'Processos', { order: 10 })],
+    [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/teamNoteSections/processos/pages/checklist.json`,
+      namedData('checklist', 'Checklist', {
+        sectionId: 'processos',
+        content: 'Revisar antes de publicar.'
+      })]
   ]);
 
   for (const [relativePath, data] of files) {
@@ -181,7 +188,7 @@ async function main() {
     });
 
     runRestore(tempRoot, [], 0);
-    const [workspaceSnapshot, group, copyBase, layout, variant, collection, internal, reservations] =
+    const [workspaceSnapshot, group, copyBase, layout, variant, collection, internal, noteSection, notePage, reservations] =
       await Promise.all([
         workspace.get(),
         workspace.collection('groups').doc('interface').get(),
@@ -192,19 +199,23 @@ async function main() {
         workspace.collection('collections').doc('collection-a').get(),
         workspace.collection('collections').doc('collection-a')
           .collection('layouts').doc('internal-a').get(),
+        workspace.collection('teamNoteSections').doc('processos').get(),
+        workspace.collection('teamNoteSections').doc('processos')
+          .collection('pages').doc('checklist').get(),
         workspace.collection('nameReservations').get()
       ]);
 
     assert(workspaceSnapshot.data().restoreStatus === 'completed',
       'O workspace nao registrou restauracao concluida.');
     assert(workspaceSnapshot.data().dataVersion === 42, 'dataVersion incorreta.');
-    assert(group.exists && copyBase.exists && layout.exists && variant.exists && collection.exists && internal.exists,
+    assert(group.exists && copyBase.exists && layout.exists && variant.exists && collection.exists && internal.exists &&
+      noteSection.exists && notePage.exists,
       'Um recurso esperado nao foi restaurado.');
     assert(copyBase.data().html === '<div>HTML básico restaurado</div>',
       'O HTML basico nao foi restaurado corretamente.');
     assert(layout.data().createdAt instanceof Timestamp,
       'createdAt nao voltou a ser Timestamp.');
-    assert(reservations.size === 5, 'Quantidade de reservas incorreta.');
+    assert(reservations.size === 7, 'Quantidade de reservas incorreta.');
 
     const refused = runRestore(tempRoot, [], 1);
     assert(refused.includes('ja possui conteudo'),

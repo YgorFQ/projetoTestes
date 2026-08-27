@@ -38,6 +38,13 @@ os testes criam e limpam seus proprios projetos isolados.
 
 ## Fluxo recomendado de uma alteracao
 
+Se a tarefa exigir criar feature, tool, area persistente, integracao ou fluxo
+de dados, explique primeiro o dono, a pasta e a persistencia e pergunte se o
+usuario deseja prosseguir, mesmo quando o pedido inicial ja diz criar,
+implementar ou adicionar. So pule a pausa quando o usuario mandar prosseguir
+sem perguntar. Novas areas editaveis usam Firestore, fallback static e o
+backup global, salvo excecao aprovada antes da implementacao.
+
 1. Inicie emuladores.
 2. Abra duas janelas ou dois perfis.
 3. Reproduza o comportamento atual.

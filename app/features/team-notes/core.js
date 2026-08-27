@@ -1,69 +1,7 @@
 (function () {
   var api = window.SenkoTeamNotesWorkspace = window.SenkoTeamNotesWorkspace || {};
 
-  var seed = {
-    sections: [
-      { id: 'padroes-prompts', name: 'Padrões e prompts', order: 10 },
-      { id: 'processos', name: 'Processos', order: 20 },
-      { id: 'referencias', name: 'Referências', order: 30 }
-    ],
-    pages: [
-      {
-        id: 'padronizacao-html-2',
-        sectionId: 'padroes-prompts',
-        title: 'Padronização HTML 2',
-        content: 'Use este espaço para concentrar o prompt oficial de padronização HTML da equipe.\n\nA versão final deve manter regras escaneáveis, exemplos curtos e decisões que possam ser encontradas rapidamente.',
-        version: 4,
-        createdAt: '2026-08-18T13:20:00.000Z',
-        updatedAt: '2026-08-26T15:12:00.000Z'
-      },
-      {
-        id: 'prompt-pdp',
-        sectionId: 'padroes-prompts',
-        title: 'Prompt para PDP',
-        content: 'Modelo de prompt para começar uma sessão de conteúdo rico sem perder as regras de marca e de acessibilidade.',
-        version: 2,
-        createdAt: '2026-08-20T09:00:00.000Z',
-        updatedAt: '2026-08-25T18:30:00.000Z'
-      },
-      {
-        id: 'checklist-acessibilidade',
-        sectionId: 'padroes-prompts',
-        title: 'Checklist de acessibilidade',
-        content: '1. Conferir a hierarquia dos títulos.\n2. Validar nomes acessíveis.\n3. Preservar foco visível.\n4. Testar navegação por teclado.',
-        version: 1,
-        createdAt: '2026-08-22T10:45:00.000Z',
-        updatedAt: '2026-08-24T11:05:00.000Z'
-      },
-      {
-        id: 'ordem-execucao',
-        sectionId: 'processos',
-        title: 'Ordem de execução',
-        content: '1. Ler a ficha e o HTML herdado.\n2. Mapear limites protegidos.\n3. Implementar a alteração.\n4. Comparar antes e depois.\n5. Validar no navegador.',
-        version: 3,
-        createdAt: '2026-08-21T14:10:00.000Z',
-        updatedAt: '2026-08-26T12:23:00.000Z'
-      },
-      {
-        id: 'fluxo-revisao',
-        sectionId: 'processos',
-        title: 'Fluxo de revisão',
-        content: 'Checklist rápido para revisar uma entrega antes de publicar no ambiente principal.',
-        version: 1,
-        createdAt: '2026-08-23T16:00:00.000Z',
-        updatedAt: '2026-08-23T16:00:00.000Z'
-      },
-      {
-        id: 'links-ferramentas',
-        sectionId: 'referencias',
-        title: 'Links e ferramentas',
-        content: 'Centralize aqui links internos, ferramentas de apoio e referências que a equipe consulta com frequência.',
-        version: 1,
-        createdAt: '2026-08-19T08:30:00.000Z',
-        updatedAt: '2026-08-19T08:30:00.000Z'
-      }
-    ]
-  };
+  var seed = { sections: [], pages: [] };
 
   var state = clone(seed);
 
@@ -91,10 +29,13 @@
 
   function uniqueId(value, collection) {
     var base = slugify(value);
-    var id = base;
+    var suffix = window.crypto && typeof window.crypto.randomUUID === 'function'
+      ? window.crypto.randomUUID().replace(/-/g, '').slice(0, 12)
+      : Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    var id = (base + '-' + suffix).slice(0, 180);
     var index = 2;
     while (collection.some(function (item) { return item.id === id; })) {
-      id = base + '-' + index;
+      id = (base + '-' + suffix + '-' + index).slice(0, 180);
       index += 1;
     }
     return id;
@@ -210,8 +151,15 @@
     state = clone(seed);
   }
 
+  function replaceData(sections, pages) {
+    state = {
+      sections: clone(Array.isArray(sections) ? sections : []),
+      pages: clone(Array.isArray(pages) ? pages : [])
+    };
+  }
+
   api.model = {
-    source: 'prototype-memory',
+    source: 'senko-data-mode',
     listSections: listSections,
     listPages: listPages,
     getPage: getPage,
@@ -220,6 +168,7 @@
     createPage: createPage,
     savePage: savePage,
     deletePage: deletePage,
-    reset: reset
+    reset: reset,
+    replaceData: replaceData
   };
 })();

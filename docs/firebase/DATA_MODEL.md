@@ -5,6 +5,8 @@
 - O workspace atual e `senkolib`.
 - IDs tecnicos nao sao nomes de exibicao.
 - IDs novos de layouts, variantes e colecoes sao gerados pelo Firestore.
+- IDs de secoes e paginas de Notas recebem sufixo aleatorio no rascunho local
+  para evitar colisao antes do primeiro salvamento.
 - O ID de grupo e fornecido pela feature e validado pelo cliente e regras.
 - Datas de escrita usam `serverTimestamp()`.
 - Membros escrevem pelo SDK Web dentro de transacoes.
@@ -27,6 +29,8 @@ workspaces/{workspaceId}
 |-- collections/{collectionId}
 |   `-- layouts/{layoutId}
 |       `-- revisions/{revisionId}
+|-- teamNoteSections/{sectionId}
+|   `-- pages/{pageId}
 |-- nameReservations/{hash}
 `-- exports/{exportId}
 ```
@@ -183,6 +187,26 @@ Cada save cria um documento novo com `revisionId`, `resourceId`, `workspaceId`,
 Revisoes podem ser criadas somente junto de uma nova `currentRevisionId` e nao
 podem ser editadas. A exclusao em duas fases remove revisoes e filhos por lotes
 de ate 400 referencias.
+
+## Notas da equipe
+
+Caminho da secao:
+`workspaces/{workspaceId}/teamNoteSections/{sectionId}`
+
+Campos: `id`, `workspaceId`, `name`, `nameKey`, `order`, `version` e campos de
+criacao e atualizacao. A unicidade usa o escopo `team-note-sections`.
+
+Caminho da pagina:
+`workspaces/{workspaceId}/teamNoteSections/{sectionId}/pages/{pageId}`
+
+Campos: `id`, `workspaceId`, `sectionId`, `name`, `nameKey`, `content`,
+`version` e campos de criacao e atualizacao. `name` e o titulo mostrado na
+tela; a unicidade usa `team-note-pages:{sectionId}`. O conteudo aceita ate
+750.000 caracteres.
+
+Notas usam versao otimista, mas nao revisoes imutaveis. Excluir uma secao marca
+o pai como `deleting`, remove paginas e reservas por lotes e so entao remove a
+secao. Todas as mutacoes incrementam `workspace.dataVersion` uma vez.
 
 ## Reservas de nome
 

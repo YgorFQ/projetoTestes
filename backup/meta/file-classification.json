@@ -7,9 +7,9 @@
     "prototype"
   ],
   "counts": {
-    "official": 128,
-    "generated": 216,
-    "prototype": 18
+    "official": 137,
+    "generated": 220,
+    "prototype": 12
   },
   "entries": [
     {
@@ -201,6 +201,42 @@
       "status": "official"
     },
     {
+      "path": "app/features/team-notes/core.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/team-notes/data-source.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/team-notes/README.md",
+      "status": "official"
+    },
+    {
+      "path": "app/features/team-notes/register.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/team-notes/repositories/firebase-repository.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/team-notes/repositories/static-repository.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/team-notes/script.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/team-notes/styles.css",
+      "status": "official"
+    },
+    {
+      "path": "app/features/team-notes/view.js",
+      "status": "official"
+    },
+    {
       "path": "app/infrastructure/firebase/firebase-config.js",
       "status": "official"
     },
@@ -270,30 +306,6 @@
     },
     {
       "path": "app/prototype/gamer-preview/view.js",
-      "status": "prototype"
-    },
-    {
-      "path": "app/prototype/team-notes-workspace/core.js",
-      "status": "prototype"
-    },
-    {
-      "path": "app/prototype/team-notes-workspace/README.md",
-      "status": "prototype"
-    },
-    {
-      "path": "app/prototype/team-notes-workspace/register.js",
-      "status": "prototype"
-    },
-    {
-      "path": "app/prototype/team-notes-workspace/script.js",
-      "status": "prototype"
-    },
-    {
-      "path": "app/prototype/team-notes-workspace/styles.css",
-      "status": "prototype"
-    },
-    {
-      "path": "app/prototype/team-notes-workspace/view.js",
       "status": "prototype"
     },
     {
@@ -401,11 +413,7 @@
       "status": "official"
     },
     {
-      "path": "app/tools/team-notes/register.js",
-      "status": "official"
-    },
-    {
-      "path": "app/tools/team-notes/styles.css",
+      "path": "app/tools/team-notes/data/README.md",
       "status": "official"
     },
     {
@@ -1253,15 +1261,31 @@
       "status": "generated"
     },
     {
-      "path": "backup/latest/biblioteca.js",
+      "path": "backup/latest/biblioteca/data.js",
       "status": "generated"
     },
     {
-      "path": "backup/latest/colecoes.js",
+      "path": "backup/latest/biblioteca/manifest.js",
+      "status": "generated"
+    },
+    {
+      "path": "backup/latest/colecoes/data.js",
+      "status": "generated"
+    },
+    {
+      "path": "backup/latest/colecoes/manifest.js",
       "status": "generated"
     },
     {
       "path": "backup/latest/manifest.js",
+      "status": "generated"
+    },
+    {
+      "path": "backup/latest/team-notes/data.js",
+      "status": "generated"
+    },
+    {
+      "path": "backup/latest/team-notes/manifest.js",
       "status": "generated"
     },
     {
@@ -1457,7 +1481,11 @@
       "status": "official"
     },
     {
-      "path": "tests/team-notes-workspace-prototype.test.js",
+      "path": "tests/static-feature-independence.test.js",
+      "status": "official"
+    },
+    {
+      "path": "tests/team-notes-feature.test.js",
       "status": "official"
     }
   ]
