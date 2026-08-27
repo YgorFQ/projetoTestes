@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "workspaceId": "senkolib",
-  "exportedAt": "2026-08-26T14:57:35.039Z",
-  "dataVersion": 19,
+  "exportedAt": "2026-08-27T14:03:09.669Z",
+  "dataVersion": 22,
   "files": [
     "backup/data/workspaces/senkolib/bibliotecaLayouts/5zlr987NQG00uWJaGKTH.json",
     "backup/data/workspaces/senkolib/bibliotecaLayouts/5zlr987NQG00uWJaGKTH/revisions/wsWCQX0J0Azz1YIEGOVd.json",
@@ -213,6 +213,9 @@
     "backup/data/workspaces/senkolib/groups/pedro.json",
     "backup/data/workspaces/senkolib/groups/selecao-francesa.json",
     "backup/data/workspaces/senkolib/groups/ygor.json",
-    "backup/data/workspaces/senkolib/settings/copyBase.json"
+    "backup/data/workspaces/senkolib/settings/copyBase.json",
+    "backup/data/workspaces/senkolib/teamNoteSections/teste01-409ccff8f051.json",
+    "backup/data/workspaces/senkolib/teamNoteSections/teste01-409ccff8f051/pages/nova-pagina-49caef8a79b3.json",
+    "backup/data/workspaces/senkolib/teamNoteSections/teste01-409ccff8f051/pages/nova-pagina-abc41062d1bd.json"
   ]
 }

@@ -1,23 +1,23 @@
 {
   "createdAt": "2026-08-15T15:14:08.141Z",
-  "css": "  <style>\n    .section-ingredients {\n      width: 100%;\n      background-color: #fff8f0;\n      padding: 2rem 1.5rem;\n    }\n\n    .section-ingredients__inner {\n      max-width: 768px;\n      margin: 0 auto;\n    }\n\n    .section-ingredients__title {\n      font-size: clamp(1.1rem, 3vw, 1.4rem);\n      font-weight: 700;\n      color: #1a1a1a;\n      margin-bottom: 1rem;\n      text-align: center;\n    }\n\n    .section-ingredients__text {\n      font-size: 0.9rem;\n      color: #555;\n      line-height: 1.7;\n      text-align: center;\n      margin-bottom: 1.25rem;\n    }\n\n    .section-ingredients__alert {\n      display: flex;\n      align-items: flex-start;\n      gap: 0.75rem;\n      background: #fffbee;\n      border: 1px solid #f5c542;\n      border-radius: 10px;\n      padding: 0.9rem 1rem;\n    }\n\n    .section-ingredients__alert-icon {\n      font-size: 1.2rem;\n      flex-shrink: 0;\n      line-height: 1.4;\n    }\n\n    .section-ingredients__alert-text {\n      font-size: 0.85rem;\n      color: #7a5a00;\n      line-height: 1.55;\n    }\n\n    .section-ingredients__alert-text strong {\n      display: block;\n      font-size: 0.9rem;\n      margin-bottom: 0.2rem;\n    }\n\n    @media (min-width: 768px) {\n      .section-ingredients {\n        padding: 2.5rem 2rem;\n      }\n    }\n  </style>",
-  "collectionId": null,
-  "kind": "libraryLayout",
-  "name": "Section-16",
+  "updatedByName": "Importacao inicial",
+  "nameKey": "section 16",
   "legacyId": "section-16",
-  "updatedBy": "legacy-import",
+  "currentRevisionId": "legacy-import-v1",
   "createdBy": "legacy-import",
+  "html": "        <section class=\"section-ingredients\" aria-labelledby=\"ingredients-title\">\n            <div class=\"section-ingredients__inner\">\n                <h2 class=\"section-ingredients__title\" id=\"ingredients-title\">Ingredientes</h2>\n                <p class=\"section-ingredients__text\">\n                    Sal, pimenta-do-reino preta, coentro, cominho, orégano, cúrcuma, pimenta-calabresa, fécula de\n                    mandioca e\n                    antiumectante dióxido de silício.\n                </p>\n                <aside class=\"section-ingredients__alert\" role=\"note\" aria-label=\"Informação sobre alérgenos\">\n                    <span class=\"section-ingredients__alert-icon\" aria-hidden=\"true\">⚠️</span>\n                    <p class=\"section-ingredients__alert-text\">\n                        <strong>Informação sobre alérgenos</strong>\n                        Contém glúten. Pode conter trigo, aveia e macadâmia. Embalagem com 24 unidades de 40g.\n                    </p>\n                </aside>\n            </div>\n        </section>",
   "version": 1,
   "tags": [
     "Alerta",
     "Ingredientes"
   ],
-  "html": "        <section class=\"section-ingredients\" aria-labelledby=\"ingredients-title\">\n            <div class=\"section-ingredients__inner\">\n                <h2 class=\"section-ingredients__title\" id=\"ingredients-title\">Ingredientes</h2>\n                <p class=\"section-ingredients__text\">\n                    Sal, pimenta-do-reino preta, coentro, cominho, orégano, cúrcuma, pimenta-calabresa, fécula de\n                    mandioca e\n                    antiumectante dióxido de silício.\n                </p>\n                <aside class=\"section-ingredients__alert\" role=\"note\" aria-label=\"Informação sobre alérgenos\">\n                    <span class=\"section-ingredients__alert-icon\" aria-hidden=\"true\">⚠️</span>\n                    <p class=\"section-ingredients__alert-text\">\n                        <strong>Informação sobre alérgenos</strong>\n                        Contém glúten. Pode conter trigo, aveia e macadâmia. Embalagem com 24 unidades de 40g.\n                    </p>\n                </aside>\n            </div>\n        </section>",
-  "updatedByName": "Importacao inicial",
-  "currentRevisionId": "legacy-import-v1",
-  "updatedAt": "2026-08-15T15:14:08.141Z",
-  "nameKey": "section 16",
+  "id": "section-16",
+  "collectionId": null,
   "parentId": null,
+  "name": "Section-16",
   "workspaceId": "senkolib",
-  "id": "section-16"
+  "updatedBy": "legacy-import",
+  "css": "  <style>\n    .section-ingredients {\n      width: 100%;\n      background-color: #fff8f0;\n      padding: 2rem 1.5rem;\n    }\n\n    .section-ingredients__inner {\n      max-width: 768px;\n      margin: 0 auto;\n    }\n\n    .section-ingredients__title {\n      font-size: clamp(1.1rem, 3vw, 1.4rem);\n      font-weight: 700;\n      color: #1a1a1a;\n      margin-bottom: 1rem;\n      text-align: center;\n    }\n\n    .section-ingredients__text {\n      font-size: 0.9rem;\n      color: #555;\n      line-height: 1.7;\n      text-align: center;\n      margin-bottom: 1.25rem;\n    }\n\n    .section-ingredients__alert {\n      display: flex;\n      align-items: flex-start;\n      gap: 0.75rem;\n      background: #fffbee;\n      border: 1px solid #f5c542;\n      border-radius: 10px;\n      padding: 0.9rem 1rem;\n    }\n\n    .section-ingredients__alert-icon {\n      font-size: 1.2rem;\n      flex-shrink: 0;\n      line-height: 1.4;\n    }\n\n    .section-ingredients__alert-text {\n      font-size: 0.85rem;\n      color: #7a5a00;\n      line-height: 1.55;\n    }\n\n    .section-ingredients__alert-text strong {\n      display: block;\n      font-size: 0.9rem;\n      margin-bottom: 0.2rem;\n    }\n\n    @media (min-width: 768px) {\n      .section-ingredients {\n        padding: 2.5rem 2rem;\n      }\n    }\n  </style>",
+  "updatedAt": "2026-08-15T15:14:08.141Z",
+  "kind": "libraryLayout"
 }

@@ -1,13 +1,13 @@
 {
-  "createdBy": "legacy-import",
-  "workspaceId": "senkolib",
   "color": "#f59e0b",
-  "createdAt": "2026-08-15T15:14:08.138Z",
-  "updatedBy": "legacy-import",
-  "version": 1,
-  "id": "pedro",
-  "name": "pedro",
   "updatedAt": "2026-08-15T15:14:08.138Z",
   "nameKey": "pedro",
-  "updatedByName": "Importacao inicial"
+  "workspaceId": "senkolib",
+  "version": 1,
+  "createdBy": "legacy-import",
+  "updatedBy": "legacy-import",
+  "updatedByName": "Importacao inicial",
+  "name": "pedro",
+  "id": "pedro",
+  "createdAt": "2026-08-15T15:14:08.138Z"
 }

@@ -1,13 +1,13 @@
 {
-  "color": "#ef4444",
-  "updatedBy": "legacy-import",
-  "createdAt": "2026-08-15T15:14:08.138Z",
-  "name": "Seleção Francesa",
-  "version": 1,
   "createdBy": "legacy-import",
   "updatedByName": "Importacao inicial",
-  "id": "selecao-francesa",
+  "version": 1,
+  "updatedBy": "legacy-import",
   "workspaceId": "senkolib",
+  "nameKey": "selecao francesa",
+  "name": "Seleção Francesa",
+  "id": "selecao-francesa",
   "updatedAt": "2026-08-15T15:14:08.138Z",
-  "nameKey": "selecao francesa"
+  "createdAt": "2026-08-15T15:14:08.138Z",
+  "color": "#ef4444"
 }

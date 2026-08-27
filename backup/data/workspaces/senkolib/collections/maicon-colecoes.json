@@ -1,15 +1,15 @@
 {
+  "legacyId": "maicon-colecoes",
   "name": "Maicon Coleções",
-  "updatedByName": "Importacao inicial",
-  "nameKey": "maicon colecoes",
   "createdAt": "2026-08-15T15:14:08.221Z",
   "version": 1,
+  "groupId": "maicon",
+  "nameKey": "maicon colecoes",
+  "tags": [],
+  "createdBy": "legacy-import",
+  "updatedByName": "Importacao inicial",
+  "workspaceId": "senkolib",
   "id": "maicon-colecoes",
   "updatedAt": "2026-08-15T15:14:08.221Z",
-  "workspaceId": "senkolib",
-  "createdBy": "legacy-import",
-  "legacyId": "maicon-colecoes",
-  "updatedBy": "legacy-import",
-  "groupId": "maicon",
-  "tags": []
+  "updatedBy": "legacy-import"
 }

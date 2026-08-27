@@ -1,14 +1,14 @@
 {
   "baseRevisionId": null,
-  "html": "teste",
+  "createdBy": "legacy-import",
   "tags": [],
+  "revisionId": "legacy-import-v1",
+  "workspaceId": "senkolib",
+  "createdByName": "Importacao inicial",
   "name": "test",
   "resourceId": "test",
   "createdAt": "2026-08-15T15:14:08.167Z",
-  "workspaceId": "senkolib",
-  "revisionId": "legacy-import-v1",
-  "createdByName": "Importacao inicial",
   "css": "",
-  "createdBy": "legacy-import",
+  "html": "teste",
   "kind": "collectionLayout"
 }

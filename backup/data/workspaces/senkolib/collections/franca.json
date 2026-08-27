@@ -1,17 +1,17 @@
 {
-  "groupId": "selecao-francesa",
-  "updatedAt": "2026-08-15T15:14:08.186Z",
   "createdBy": "legacy-import",
-  "updatedBy": "legacy-import",
-  "name": "França",
-  "legacyId": "franca",
   "tags": [
     "catalogo"
   ],
-  "version": 1,
-  "workspaceId": "senkolib",
+  "updatedByName": "Importacao inicial",
+  "name": "França",
   "createdAt": "2026-08-15T15:14:08.186Z",
-  "id": "franca",
+  "legacyId": "franca",
+  "updatedAt": "2026-08-15T15:14:08.186Z",
+  "updatedBy": "legacy-import",
+  "workspaceId": "senkolib",
   "nameKey": "franca",
-  "updatedByName": "Importacao inicial"
+  "id": "franca",
+  "groupId": "selecao-francesa",
+  "version": 1
 }

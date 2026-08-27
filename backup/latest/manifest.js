@@ -4,8 +4,8 @@
   backup.manifest = {
   "schemaVersion": 1,
   "workspaceId": "senkolib",
-  "exportedAt": "2026-08-26T14:57:35.039Z",
-  "dataVersion": 19,
+  "exportedAt": "2026-08-27T14:03:09.669Z",
+  "dataVersion": 22,
   "features": [
     "biblioteca",
     "colecoes",
@@ -18,8 +18,8 @@
     "collectionLayouts": 48,
     "groups": 5,
     "copyBaseTemplates": 1,
-    "teamNoteSections": 0,
-    "teamNotePages": 0
+    "teamNoteSections": 1,
+    "teamNotePages": 2
   }
 };
 })();
