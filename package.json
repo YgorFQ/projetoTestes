@@ -21,6 +21,7 @@
     "test:static-backup": "node tests/static-backup-builder.test.js",
     "test:static-independence": "node tests/static-feature-independence.test.js",
     "test:copy-base-editor": "node tests/copy-base-editor.test.js",
+    "test:library-layout-download": "node tests/library-layout-download.test.js",
     "test:firebase-health": "node tests/firebase-service-health.test.js",
     "test:faq-prototype": "node tests/faq-test-prototype.test.js",
     "test:team-notes": "node tests/team-notes-feature.test.js",

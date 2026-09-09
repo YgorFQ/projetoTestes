@@ -59,6 +59,7 @@ admin e tentativa de promover owner sem permissao.
 - pesquisa por nome e tag;
 - preview renderiza;
 - copiar HTML/CSS funciona;
+- baixar HTML completo combina o CSS no `head` e o HTML no `body` sem salvar no Firebase;
 - botao de editar HTML Basico abre o modal e carrega o valor atual;
 - primeiro save cria `settings/copyBase` e o seguinte atualiza por versao;
 - conflito preserva o rascunho e o modo estatico bloqueia o save;

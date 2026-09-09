@@ -168,6 +168,16 @@
   padding: 0;
 }
 
+.library-editor-download-btn {
+  flex: 0 0 34px;
+  border-radius: 50%;
+}
+
+.library-editor-download-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
 .library-editor-body {
   min-width: 0;
   min-height: 0;

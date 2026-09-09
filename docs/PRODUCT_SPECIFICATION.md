@@ -41,6 +41,7 @@ banco, e o GitHub nao participa de criar, editar ou excluir conteudo.
 - pesquisa por nome, ID e tags;
 - abre preview isolado;
 - copia HTML, CSS ou o conjunto completo;
+- baixa o rascunho de um layout ou variacao como arquivo HTML completo, com o CSS incorporado;
 - copia e edita o template compartilhado do botao HTML Basico;
 - cria e edita layouts;
 - cria e edita variacoes ligadas a um layout;

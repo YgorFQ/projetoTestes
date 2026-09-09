@@ -223,7 +223,7 @@
 
     loadPromise = (async function () {
       loadStyle('styles/index.css?v=20260816-structure');
-      loadStyle('styles/layout-editor.css?v=20260801-presence');
+      loadStyle('styles/layout-editor.css?v=20260909-html-download');
       loadStyle('styles/copy-base-editor.css?v=20260826-copy-base-firebase');
 
       await loadStaticAssets();
@@ -245,7 +245,7 @@
        */
       var staticLoaded = loadStaticSnapshot();
       await Promise.all([
-        loadScript('controllers/layout-editor.js?v=20260816-structure'),
+        loadScript('controllers/layout-editor.js?v=20260909-html-download'),
         loadScript('controllers/index.js?v=20260816-structure'),
         loadScript('controllers/copy-base-template.js?v=20260816-structure').then(function () {
           return loadScript('controllers/copy-base.js?v=20260826-copy-base-firebase').then(function () {

@@ -872,7 +872,7 @@
         {
           title: 'Editar layout ou variacao',
           badge: 'editor',
-          terms: 'editar layout variacao editor oficial layout-editor id gerado tags preview salvar excluir',
+          terms: 'editar layout variacao editor oficial layout-editor id gerado tags preview salvar excluir baixar download html completo',
           paragraphs: [
             'O editor oficial da Biblioteca fica dentro da propria feature e substitui os modais antigos.',
             'Ele edita nome, tags, HTML, CSS e preview, mas nao deve editar o ID tecnico.'
@@ -882,6 +882,8 @@
             'CSS: app/features/biblioteca/styles/layout-editor.css.',
             'Campo editavel: nome do layout ou nome da variacao.',
             'Campo nao editavel: ID gerado.',
+            'O botao circular de download gera um arquivo .html completo com o CSS no head e o HTML no body.',
+            'O download usa o rascunho aberto e nao grava dados no Firebase.',
             'Salvar layout ou variacao executa transacao no Firestore.',
             'Cada save cria revisao e falha se a revisao-base estiver desatualizada.'
           ],

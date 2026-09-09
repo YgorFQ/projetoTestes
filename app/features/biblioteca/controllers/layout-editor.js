@@ -74,6 +74,13 @@
             '<button class="library-editor-btn library-editor-primary-btn" id="layoutEditorSaveBtn">Salvar</button>' +
             '<button class="library-editor-btn" id="layoutEditorCopyHtmlBtn">Copiar HTML</button>' +
             '<button class="library-editor-btn" id="layoutEditorCopyCssBtn">Copiar CSS</button>' +
+            '<button class="library-editor-btn library-editor-icon-btn library-editor-download-btn" id="layoutEditorDownloadBtn" type="button" title="Baixar HTML completo" aria-label="Baixar HTML completo">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">' +
+                '<path d="M12 3v12"></path>' +
+                '<path d="m7 10 5 5 5-5"></path>' +
+                '<path d="M5 21h14"></path>' +
+              '</svg>' +
+            '</button>' +
             '<button class="library-editor-btn library-editor-icon-btn" id="layoutEditorCloseBtn" title="Fechar">x</button>' +
           '</div>' +
         '</div>' +
@@ -152,7 +159,7 @@
   }
 
   function setBusy(isBusy) {
-    ['layoutEditorSaveBtn', 'layoutEditorDeleteBtn', 'layoutEditorCopyHtmlBtn', 'layoutEditorCopyCssBtn'].forEach(function (id) {
+    ['layoutEditorSaveBtn', 'layoutEditorDeleteBtn', 'layoutEditorCopyHtmlBtn', 'layoutEditorCopyCssBtn', 'layoutEditorDownloadBtn'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.disabled = Boolean(isBusy);
     });
@@ -437,6 +444,62 @@
       return;
     }
     navigator.clipboard.writeText(text);
+  }
+
+  function escapeHtmlText(value) {
+    return String(value || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+
+  function buildDownloadFilename(name) {
+    var value = String(name || '').trim();
+    if (typeof value.normalize === 'function') {
+      value = value.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+    value = value
+      .replace(/[^a-zA-Z0-9_-]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .slice(0, 80)
+      .toLowerCase();
+    return (value || 'layout') + '.html';
+  }
+
+  function buildDownloadDocument(data) {
+    var title = escapeHtmlText(data && data.name ? data.name : 'Layout SenkoLib');
+    var html = String(data && data.html || '');
+    var css = String(data && data.css || '')
+      .replace(/<\/style/gi, '<\\/style');
+
+    return '<!DOCTYPE html>\n' +
+      '<html lang="pt-BR">\n' +
+      '<head>\n' +
+      '  <meta charset="UTF-8">\n' +
+      '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
+      '  <title>' + title + '</title>\n' +
+      '  <style>\n' + css + '\n  </style>\n' +
+      '</head>\n' +
+      '<body>\n' + html + '\n</body>\n' +
+      '</html>\n';
+  }
+
+  function downloadCurrent() {
+    var data = getCurrentData();
+    var blob = new Blob([buildDownloadDocument(data)], {
+      type: 'text/html;charset=utf-8'
+    });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement('a');
+    link.href = url;
+    link.download = buildDownloadFilename(data.name);
+    link.rel = 'noopener';
+    link.hidden = true;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    setStatus('HTML completo baixado.');
   }
 
   function closeEditor() {
@@ -840,6 +903,8 @@
       copyFromEditor('css', this);
     });
 
+    document.getElementById('layoutEditorDownloadBtn').addEventListener('click', downloadCurrent);
+
     document.getElementById('layoutEditorSaveBtn').addEventListener('click', saveCurrent);
     document.getElementById('layoutEditorDeleteBtn').addEventListener('click', deleteCurrent);
 
@@ -982,7 +1047,9 @@
     },
     getCurrentData: getCurrentData,
     buildLayoutObjectCode: function () { return buildLayoutObjectCode(getCurrentData()); },
-    buildVariantObjectCode: function () { return buildVariantObjectCode(getCurrentData()); }
+    buildVariantObjectCode: function () { return buildVariantObjectCode(getCurrentData()); },
+    buildDownloadDocument: buildDownloadDocument,
+    buildDownloadFilename: buildDownloadFilename
   };
 
   window.openOfficialLayoutEditor = openLayout;
