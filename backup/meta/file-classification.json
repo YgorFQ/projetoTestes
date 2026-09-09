@@ -8,8 +8,8 @@
   ],
   "counts": {
     "official": 133,
-    "generated": 223,
-    "prototype": 12
+    "generated": 232,
+    "prototype": 5
   },
   "entries": [
     {
@@ -281,34 +281,6 @@
       "status": "prototype"
     },
     {
-      "path": "app/prototype/gamer-base.html",
-      "status": "prototype"
-    },
-    {
-      "path": "app/prototype/gamer-preview/Cafeteira Expresso Arno DGS1 Dolce Gusto (24_05_2026 11：31：47).html",
-      "status": "prototype"
-    },
-    {
-      "path": "app/prototype/gamer-preview/index.html",
-      "status": "prototype"
-    },
-    {
-      "path": "app/prototype/gamer-preview/register.js",
-      "status": "prototype"
-    },
-    {
-      "path": "app/prototype/gamer-preview/script.js",
-      "status": "prototype"
-    },
-    {
-      "path": "app/prototype/gamer-preview/styles.css",
-      "status": "prototype"
-    },
-    {
-      "path": "app/prototype/gamer-preview/view.js",
-      "status": "prototype"
-    },
-    {
       "path": "app/shared/assets/senko.ico",
       "status": "official"
     },
@@ -398,6 +370,14 @@
     },
     {
       "path": "backup/data/manifest.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/1ylS1MZZx8Kqiypo5cSu.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/1ylS1MZZx8Kqiypo5cSu/revisions/UfD9pT1cJb6ayQP4j9nR.json",
       "status": "generated"
     },
     {
@@ -701,6 +681,10 @@
       "status": "generated"
     },
     {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-32/revisions/IbplgNfP4zGBWLj9YlEr.json",
+      "status": "generated"
+    },
+    {
       "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-32/revisions/legacy-import-v1.json",
       "status": "generated"
     },
@@ -726,6 +710,10 @@
     },
     {
       "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-33/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-33/revisions/VwxyBm99TRznmUT7tztp.json",
       "status": "generated"
     },
     {
@@ -765,7 +753,15 @@
       "status": "generated"
     },
     {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-6/revisions/gU8PoRj0T163TQD3aGPx.json",
+      "status": "generated"
+    },
+    {
       "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-6/revisions/legacy-import-v1.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-6/revisions/tZuB5zVAQfrWnZlBCEM5.json",
       "status": "generated"
     },
     {
@@ -794,6 +790,10 @@
     },
     {
       "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-8/revisions/rEUThPwj8VPldw8VqBB4.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/bibliotecaLayouts/section-8/revisions/tZqoDlZAxv8FKkTvPzNE.json",
       "status": "generated"
     },
     {
@@ -1174,6 +1174,14 @@
     },
     {
       "path": "backup/data/workspaces/senkolib/collections/maicon-colecoes.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/collections/maicon-colecoes/layouts/foEeeYJERw44FP7knqRe.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/collections/maicon-colecoes/layouts/foEeeYJERw44FP7knqRe/revisions/jp9hjYUp6Mp72uj4pMlN.json",
       "status": "generated"
     },
     {

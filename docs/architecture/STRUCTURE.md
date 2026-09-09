@@ -1,6 +1,6 @@
 # SenkoLib - Estrutura do projeto
 
-Esta e a organizacao oficial desde a versao `2026.08.27.5`. O objetivo e
+Esta e a organizacao oficial desde a versao `2026.09.09.3`. O objetivo e
 separar codigo executado, ferramentas globais e arquivos regeneraveis.
 
 ```text
@@ -39,7 +39,6 @@ SenkoLib/
 |   |   `-- static-backup/            - motor que le e constroi o fallback
 |   |-- shared/                       - recursos usados por mais de uma area
 |   `-- prototype/                    - experiencias ainda nao oficiais
-|       |-- gamer-preview/            - simulador beta do container GAMER
 |       `-- faq-teste/                - editor beta de FAQ multissite
 |-- backup/
 |   |-- data/                         - snapshot tecnico do ultimo backup

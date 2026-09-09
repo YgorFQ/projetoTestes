@@ -75,7 +75,7 @@
         {
           title: 'Links rapidos',
           badge: 'atalhos',
-          terms: 'links rapidos abrir biblioteca colecoes imagens sources preview github',
+          terms: 'links rapidos abrir biblioteca colecoes imagens sources github',
           paragraphs: [
             'Use estes atalhos para pular direto para uma area do SenkoLib sem fechar mentalmente o contexto do guia.'
           ],
@@ -85,7 +85,6 @@
             { label: 'Abrir Notas', feature: 'team-notes' },
             { label: 'Abrir Imagens', feature: 'imagens' },
             { label: 'Abrir Sources', feature: 'sources' },
-            { label: 'Abrir Preview', feature: 'gamer-preview' },
             { label: 'Configurar GitHub', githubConfig: true }
           ]
         },
@@ -418,9 +417,9 @@
         {
           title: 'Ferramentas oficiais e areas beta',
           badge: 'beta',
-          terms: 'preview beta prototype gamer teste faq multissite prototipo notas equipe team notes',
+          terms: 'beta prototype teste faq multissite prototipo notas equipe team notes',
           paragraphs: [
-            'Notas da equipe e uma feature oficial; Preview e Teste ficam em app/prototype enquanto sao avaliados.',
+            'Notas da equipe e uma feature oficial; Teste fica em app/prototype enquanto e avaliado.',
             'Tudo que ainda esta em teste deve comecar em prototype antes de virar feature final.'
           ],
           bullets: [
@@ -430,7 +429,6 @@
             'Digitar fica somente no rascunho local; outras pessoas recebem apenas a versao confirmada depois do clique em Salvar.',
             'Ao salvar uma pagina, um circulo verde com check aparece ao lado do titulo; nome duplicado usa circulo vermelho com X. Ambos desaparecem com fade em dois segundos.',
             'Secoes e paginas sao documentos Firestore; backup/latest/team-notes/ possui manifesto e payload somente leitura gerados pelo backup global.',
-            'Preview: app/prototype/gamer-preview/.',
             'Teste: app/prototype/faq-teste/.',
             'O catalogo legado de app/tools/team-notes/data foi removido; Firestore e backup/latest/team-notes sao as unicas fontes.',
             'Senko Guide continua uma tool; Notas da equipe agora e uma feature principal.',
@@ -465,7 +463,7 @@
         {
           title: 'Status das areas',
           badge: 'estado',
-          terms: 'status areas estavel beta reforma biblioteca colecoes imagens sources preview guia',
+          terms: 'status areas estavel beta reforma biblioteca colecoes imagens sources guia',
           paragraphs: [
             'Este status ajuda uma pessoa nova a saber onde pode confiar mais e onde precisa testar com mais cuidado.'
           ],
@@ -476,7 +474,6 @@
             'Sources: feature independente, mas merece revisao cuidadosa quando houver reforma interna.',
             'Criacao rapida: ferramenta oficial do shell com providers registrados pelas features.',
             'Notas da equipe: feature oficial em app/features, editavel no Firestore e incluida no backup global.',
-            'Preview: prototipo beta em app/prototype.',
             'Teste: prototipo beta de FAQ multissite em app/prototype.',
             'Senko Guide: ferramenta oficial do shell e prioridade maxima de manutencao.',
             'Editor da Biblioteca: oficial, integrado em app/features/biblioteca/controllers/layout-editor.js.',

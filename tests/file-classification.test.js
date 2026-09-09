@@ -38,7 +38,6 @@ const expected = new Map([
   ['app/tools/access/register.js', 'official'],
   ['app/features/biblioteca/controllers/index.js', 'official'],
   ['app/features/colecoes/repositories/firebase-repository.js', 'official'],
-  ['app/prototype/gamer-preview/register.js', 'prototype'],
   ['firebase/firestore.rules', 'official'],
   ['.vscode/settings.json', 'official'],
   ['backup/latest/manifest.js', 'generated'],
@@ -49,6 +48,10 @@ const byPath = new Map(inventory.entries.map((entry) => [entry.path, entry.statu
 for (const [filePath, status] of expected) {
   assert.strictEqual(byPath.get(filePath), status, `${filePath} deveria ser ${status}.`);
 }
+assert(
+  !paths.has('app/prototype/gamer-preview/register.js'),
+  'A feature removida Preview (beta) nao pode voltar ao inventario.'
+);
 
 const expectedRootFiles = [
   '.firebaserc',
@@ -67,6 +70,7 @@ assert.deepStrictEqual(actualRootFiles, expectedRootFiles, 'A raiz possui arquiv
 const index = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 assert(index.includes('backup/latest/manifest.js'), 'Index nao carrega o fallback gerado.');
 assert(index.includes('app/tools/session/register.js'), 'Index nao carrega a tool de sessao.');
+assert(!index.includes('gamer-preview'), 'Index ainda carrega a feature removida Preview (beta).');
 assert(!index.includes('app/infrastructure/firebase/senko-firebase-ui.js'), 'Index usa UI Firebase antiga.');
 assert(!index.includes('app/features/access/register.js'), 'Index usa o antigo caminho de Acessos.');
 

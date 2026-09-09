@@ -14,7 +14,6 @@ padronizacao futura dos estilos em `app/shared/styles/`.
 | `app/features/biblioteca/styles/layout-editor.css` | Editor oficial da Biblioteca, usa varios tokens globais com fallback. |
 | `app/features/imagens/styles/imagens.css` | Estilos proprios da feature Imagens, consumindo os tokens oficiais do SenkoLib. |
 | `app/features/sources/styles/sources.css` | Estilos proprios da feature Sources, consumindo os tokens oficiais do SenkoLib. |
-| `app/prototype/gamer-preview/styles.css` | Preview beta renderizado como painel direto; usa iframe apenas para o preview interno. |
 
 ## Paleta base atual
 
@@ -96,7 +95,7 @@ Biblioteca, Colecoes e Shell usam:
 --font-code
 ```
 
-Imagens, ferramentas compartilhadas de imagem e Preview usam:
+Imagens e suas ferramentas compartilhadas usam:
 
 ```css
 --surface
@@ -226,7 +225,7 @@ Cabecalho usa borda inferior `1.5px solid var(--border)`, titulo com
 1. Deixar o shell com estilos de layout do aplicativo: header, abas, raiz das
    features e estado vazio.
 2. Deixar cada feature com seletores proprios para estrutura interna:
-   `.col-*`, cards de layout da Biblioteca, telas de Imagens e Preview.
+   `.col-*`, cards de layout da Biblioteca e telas de Imagens.
 3. Migrar aos poucos o que ainda esta duplicado no `styles.css` para
    componentes neutros, quando for seguro.
 4. Manter Imagens e Sources sem arquivos internos compartilhados entre si.
