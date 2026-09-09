@@ -74,7 +74,7 @@
             '<button class="library-editor-btn library-editor-primary-btn" id="layoutEditorSaveBtn">Salvar</button>' +
             '<button class="library-editor-btn" id="layoutEditorCopyHtmlBtn">Copiar HTML</button>' +
             '<button class="library-editor-btn" id="layoutEditorCopyCssBtn">Copiar CSS</button>' +
-            '<button class="library-editor-btn library-editor-icon-btn library-editor-download-btn" id="layoutEditorDownloadBtn" type="button" title="Baixar HTML completo" aria-label="Baixar HTML completo">' +
+            '<button class="library-editor-btn library-editor-icon-btn" id="layoutEditorDownloadBtn" type="button" title="Baixar HTML completo" aria-label="Baixar HTML completo">' +
               '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">' +
                 '<path d="M12 3v12"></path>' +
                 '<path d="m7 10 5 5 5-5"></path>' +
@@ -446,13 +446,6 @@
     navigator.clipboard.writeText(text);
   }
 
-  function escapeHtmlText(value) {
-    return String(value || '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
-  }
-
   function buildDownloadFilename(name) {
     var value = String(name || '').trim();
     if (typeof value.normalize === 'function') {
@@ -467,21 +460,9 @@
   }
 
   function buildDownloadDocument(data) {
-    var title = escapeHtmlText(data && data.name ? data.name : 'Layout SenkoLib');
     var html = String(data && data.html || '');
-    var css = String(data && data.css || '')
-      .replace(/<\/style/gi, '<\\/style');
-
-    return '<!DOCTYPE html>\n' +
-      '<html lang="pt-BR">\n' +
-      '<head>\n' +
-      '  <meta charset="UTF-8">\n' +
-      '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
-      '  <title>' + title + '</title>\n' +
-      '  <style>\n' + css + '\n  </style>\n' +
-      '</head>\n' +
-      '<body>\n' + html + '\n</body>\n' +
-      '</html>\n';
+    var css = String(data && data.css || '');
+    return '<style>\n' + css + '\n</style>\n' + html;
   }
 
   function downloadCurrent() {

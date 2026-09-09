@@ -882,7 +882,7 @@
             'CSS: app/features/biblioteca/styles/layout-editor.css.',
             'Campo editavel: nome do layout ou nome da variacao.',
             'Campo nao editavel: ID gerado.',
-            'O botao circular de download gera um arquivo .html completo com o CSS no head e o HTML no body.',
+            'O botao quadrado de download gera um arquivo .html contendo somente o bloco style seguido pelo HTML do editor.',
             'O download usa o rascunho aberto e nao grava dados no Firebase.',
             'Salvar layout ou variacao executa transacao no Firestore.',
             'Cada save cria revisao e falha se a revisao-base estiver desatualizada.'
