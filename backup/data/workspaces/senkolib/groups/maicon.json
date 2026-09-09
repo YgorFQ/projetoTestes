@@ -1,13 +1,13 @@
 {
-  "nameKey": "maicon",
   "updatedBy": "legacy-import",
+  "nameKey": "maicon",
   "createdBy": "legacy-import",
-  "workspaceId": "senkolib",
-  "updatedAt": "2026-08-15T15:14:08.138Z",
-  "version": 1,
   "name": "Maicon",
-  "createdAt": "2026-08-15T15:14:08.138Z",
   "id": "maicon",
   "updatedByName": "Importacao inicial",
+  "createdAt": "2026-08-15T15:14:08.138Z",
+  "version": 1,
+  "workspaceId": "senkolib",
+  "updatedAt": "2026-08-15T15:14:08.138Z",
   "color": "#64748b"
 }

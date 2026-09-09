@@ -1,17 +1,17 @@
 {
-  "name": "Coleção Joel",
-  "version": 1,
-  "groupId": "joel",
-  "nameKey": "colecao joel",
-  "legacyId": "colecao-joel",
   "tags": [
     "Responsivo"
   ],
+  "createdBy": "legacy-import",
+  "legacyId": "colecao-joel",
+  "groupId": "joel",
+  "updatedAt": "2026-08-15T15:14:08.218Z",
+  "id": "colecao-joel",
+  "nameKey": "colecao joel",
+  "updatedByName": "Importacao inicial",
+  "version": 1,
+  "name": "Coleção Joel",
   "updatedBy": "legacy-import",
   "workspaceId": "senkolib",
-  "updatedAt": "2026-08-15T15:14:08.218Z",
-  "updatedByName": "Importacao inicial",
-  "createdAt": "2026-08-15T15:14:08.218Z",
-  "id": "colecao-joel",
-  "createdBy": "legacy-import"
+  "createdAt": "2026-08-15T15:14:08.218Z"
 }
