@@ -6,8 +6,8 @@
   "schemaVersion": 1,
   "featureId": "biblioteca",
   "workspaceId": "senkolib",
-  "exportedAt": "2026-09-09T11:43:34.619Z",
-  "dataVersion": 29,
+  "exportedAt": "2026-09-23T13:54:03.142Z",
+  "dataVersion": 34,
   "counts": {
     "bibliotecaLayouts": 37,
     "bibliotecaVariants": 12,
