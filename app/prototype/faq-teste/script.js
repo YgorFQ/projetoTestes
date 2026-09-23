@@ -35,8 +35,6 @@
     Object.assign(els, {
       summary: api.$('faq-test-summary'),
       importInput: api.$('faq-test-import-input'),
-      importStatus: api.$('faq-test-import-status'),
-      importMeta: api.queryAll('.faq-test-import__meta')[0],
       importButton: api.$('faq-test-import-btn'),
       importClear: api.$('faq-test-import-clear'),
       editorTitle: api.$('faq-test-editor-title'),
@@ -160,20 +158,7 @@
   function renderImportStatus() {
     var result = core.parsePairs(els.importInput.value);
     var count = result.pairs.length;
-    var warningCount = result.diagnostics.filter(function (item) {
-      return item.type === 'warning';
-    }).length;
-    var errorCount = result.diagnostics.filter(function (item) {
-      return item.type === 'error';
-    }).length;
-
-    els.importStatus.textContent = count
-      ? count + (count === 1 ? ' par detectado' : ' pares detectados') +
-        (warningCount ? ' · ' + warningCount + (warningCount === 1 ? ' aviso' : ' avisos') : '')
-      : (result.diagnostics[0] ? result.diagnostics[0].message : 'Nenhum par detectado.');
     els.importButton.disabled = count === 0;
-    els.importMeta.classList.toggle('is-warning', warningCount > 0 && errorCount === 0);
-    els.importMeta.classList.toggle('is-error', errorCount > 0);
   }
 
   function importPairs() {
@@ -289,14 +274,14 @@
 
     var body = doc.createElement('div');
     body.className = 'faq-test-pair__body';
-    body.appendChild(createField(pair, index, 'question', 'Pergunta', 'HTML inline permitido'));
-    body.appendChild(createField(pair, index, 'answer', 'Resposta', 'links e destaques permitidos'));
+    body.appendChild(createField(pair, index, 'question', 'Pergunta'));
+    body.appendChild(createField(pair, index, 'answer', 'Resposta'));
     card.appendChild(head);
     card.appendChild(body);
     return card;
   }
 
-  function createField(pair, index, field, labelText, hint) {
+  function createField(pair, index, field, labelText) {
     var doc = api.getRoot().ownerDocument || document;
     var wrapper = doc.createElement('div');
     wrapper.className = 'faq-test-field';
@@ -304,9 +289,6 @@
     var label = doc.createElement('label');
     label.htmlFor = id;
     label.appendChild(doc.createTextNode(labelText));
-    var small = doc.createElement('span');
-    small.textContent = hint;
-    label.appendChild(small);
 
     var input = field === 'question'
       ? doc.createElement('input')

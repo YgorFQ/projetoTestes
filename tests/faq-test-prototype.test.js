@@ -23,6 +23,10 @@ const registerSource = fs.readFileSync(
   path.join(root, 'app/prototype/faq-teste/register.js'),
   'utf8'
 );
+const styleSource = fs.readFileSync(
+  path.join(root, 'app/prototype/faq-teste/styles.css'),
+  'utf8'
+);
 
 function listMarkup(html, site) {
   const expression = new RegExp(
@@ -43,6 +47,11 @@ assert.match(viewSource, /senko-btn-primary/);
 assert.match(viewSource, /senko-btn-ghost/);
 assert.match(viewSource, /senko-tab-btn/);
 assert.match(registerSource, /shared\/styles\/senko-components\.css/);
+assert.doesNotMatch(viewSource, /class="faq-test-hero"/);
+assert.doesNotMatch(viewSource, /class="faq-test-section-heading"/);
+assert.doesNotMatch(viewSource, /class="faq-test-import__meta"/);
+assert.match(styleSource, /\.faq-test-pair__delete\s*\{[\s\S]*?background:\s*var\(--red\)/);
+assert.match(styleSource, /\.faq-test-pair__body\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\)/);
 assert.doesNotMatch(viewSource, /data-workspace-tab="preview"/);
 assert.doesNotMatch(viewSource, /Marcadores de links|faq-test-panel--audit/);
 assert.match(controllerSource, /function switchWorkspace/);

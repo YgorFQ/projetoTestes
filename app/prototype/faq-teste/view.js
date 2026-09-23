@@ -6,24 +6,9 @@
     var wrapper = document.createElement('div');
     wrapper.className = 'senko-feature-content faq-test-page';
     wrapper.innerHTML = `
-      <header class="faq-test-hero" aria-labelledby="faq-test-title">
-        <div class="faq-test-hero__copy">
-          <span class="faq-test-eyebrow">FAQ multissite</span>
-          <div>
-            <h1 class="faq-test-title" id="faq-test-title">Editor de FAQs</h1>
-            <p class="faq-test-subtitle">Monte conteúdos específicos e acompanhe o resultado enquanto edita.</p>
-          </div>
-        </div>
-        <div class="senko-tag faq-test-summary" id="faq-test-summary" aria-live="polite">0 perguntas</div>
-      </header>
-
       <div class="faq-test-layout">
         <aside class="faq-test-sidebar" aria-label="Edição do FAQ">
           <div class="faq-test-sidebar__head">
-            <div>
-              <span class="faq-test-panel__kicker">Conteúdo</span>
-              <h2 class="faq-test-sidebar__title">Perguntas e respostas</h2>
-            </div>
             <nav class="faq-test-sites" aria-label="FAQ que está sendo editado">
               <button class="senko-tab-btn faq-test-site is-active active" type="button" data-edit-site="efacil">
                 <span class="faq-test-site__dot faq-test-site__dot--efacil" aria-hidden="true"></span>
@@ -51,19 +36,7 @@
           <div class="faq-test-sidebar__content">
             <section class="faq-test-panel faq-test-panel--editor" id="faq-test-panel-editor" role="tabpanel" aria-labelledby="faq-test-tab-editor" data-workspace-panel="editor">
               <div class="faq-test-importer">
-                <div class="faq-test-section-heading">
-                  <div>
-                    <span class="faq-test-section-heading__step">Entrada rápida</span>
-                    <h3>Adicionar perguntas</h3>
-                  </div>
-                  <span class="faq-test-format"><code>&lt;q&gt;&lt;a&gt;</code> ou <code>&lt;h3&gt;&lt;p&gt;</code></span>
-                </div>
-                <label class="faq-test-label" for="faq-test-import-input">Cole perguntas e respostas em massa</label>
-                <textarea class="faq-test-import" id="faq-test-import-input" spellcheck="false" placeholder="<q>Qual é o prazo?</q>\n<a>Consulte o prazo no carrinho.</a>\n\nou\n\n<h3>Onde acompanho meu pedido?</h3>\n<p>Acesse <a href=&quot;/meus-pedidos&quot;>Meus pedidos</a>.</p>"></textarea>
-                <div class="faq-test-import__meta">
-                  <span id="faq-test-import-status">Nenhum par detectado.</span>
-                  <span>HTML inline e links são preservados.</span>
-                </div>
+                <textarea class="faq-test-import" id="faq-test-import-input" aria-label="Adicionar perguntas e respostas" spellcheck="false" placeholder="<q>Qual é o prazo?</q>\n<a>Consulte o prazo no carrinho.</a>\n\nou\n\n<h3>Onde acompanho meu pedido?</h3>\n<p>Acesse <a href=&quot;/meus-pedidos&quot;>Meus pedidos</a>.</p>"></textarea>
                 <div class="faq-test-importer__actions">
                   <button class="senko-btn senko-btn-ghost faq-test-btn faq-test-btn--ghost" id="faq-test-import-clear" type="button">Limpar</button>
                   <button class="senko-btn senko-btn-primary faq-test-btn faq-test-btn--primary" id="faq-test-import-btn" type="button" disabled>Adicionar ao eFácil</button>
@@ -73,7 +46,6 @@
               <div class="faq-test-question-section">
                 <div class="faq-test-question-section__head">
                   <div>
-                    <span class="faq-test-section-heading__step">Lista atual</span>
                     <h3 id="faq-test-editor-title">FAQ eFácil</h3>
                   </div>
                   <div class="faq-test-actions faq-test-actions--compact">
@@ -131,6 +103,7 @@
         </section>
       </div>
 
+      <span id="faq-test-summary" hidden>0 perguntas</span>
       <div class="faq-test-toast" id="faq-test-toast" role="status" aria-live="polite"></div>
     `;
     return wrapper;

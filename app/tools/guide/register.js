@@ -448,6 +448,7 @@
             'Cada site possui editor proprio, inclusao manual e exclusao de perguntas.',
             'A interface usa duas colunas: entrada e perguntas ficam juntas no painel esquerdo, enquanto a previa permanece visivel no painel direito.',
             'A janela carrega os componentes neutros de shared/styles/senko-components.css e segue os mesmos tokens, abas, botoes, campos e paineis planos das outras areas do SenkoLib.',
+            'O editor usa um aside compacto sem cabecalho decorativo; pergunta e resposta ficam empilhadas e a exclusao aparece como um botao quadrado vermelho com icone de lixeira.',
             'Os botoes eFacil, Martins e Generico trocam o conjunto editado; cada pergunta aparece em um card expansivel com acao de remover.',
             'Editar FAQ e Codigo final alternam somente o painel esquerdo, sem esconder a previa.',
             'O simulador troca o canonical sem alterar o codigo final e usa a mesma section com as tres listas da entrega.',
