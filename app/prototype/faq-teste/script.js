@@ -194,6 +194,7 @@
     api.queryAll('[data-workspace-tab]').forEach(function (button) {
       var selected = button.dataset.workspaceTab === workspace;
       button.classList.toggle('is-active', selected);
+      button.classList.toggle('active', selected);
       button.setAttribute('aria-selected', selected ? 'true' : 'false');
       button.tabIndex = selected ? 0 : -1;
     });
@@ -272,7 +273,7 @@
 
     var deleteButton = doc.createElement('button');
     deleteButton.type = 'button';
-    deleteButton.className = 'faq-test-pair__delete';
+    deleteButton.className = 'senko-modal-close faq-test-pair__delete';
     deleteButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-8 0 1 13h8l1-13M10 11v5m4-5v5"></path></svg><span>Remover</span>';
     deleteButton.setAttribute('aria-label', 'Excluir pergunta ' + (index + 1));
     deleteButton.addEventListener('click', function (event) {
@@ -335,6 +336,7 @@
     api.queryAll('[data-edit-site]').forEach(function (button) {
       var selected = button.dataset.editSite === state.activeSite;
       button.classList.toggle('is-active', selected);
+      button.classList.toggle('active', selected);
       button.setAttribute('aria-pressed', selected ? 'true' : 'false');
     });
 
@@ -372,6 +374,7 @@
     api.queryAll('[data-preview-site]').forEach(function (button) {
       var selected = button.dataset.previewSite === state.previewSite;
       button.classList.toggle('is-active', selected);
+      button.classList.toggle('active', selected);
       button.setAttribute('aria-pressed', selected ? 'true' : 'false');
     });
 

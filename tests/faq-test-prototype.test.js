@@ -19,6 +19,10 @@ const controllerSource = fs.readFileSync(
   path.join(root, 'app/prototype/faq-teste/script.js'),
   'utf8'
 );
+const registerSource = fs.readFileSync(
+  path.join(root, 'app/prototype/faq-teste/register.js'),
+  'utf8'
+);
 
 function listMarkup(html, site) {
   const expression = new RegExp(
@@ -35,6 +39,10 @@ assert.equal((viewSource.match(/data-workspace-panel=/g) || []).length, 2);
 assert.match(viewSource, /class="faq-test-layout"/);
 assert.match(viewSource, /class="faq-test-sidebar"/);
 assert.match(viewSource, /class="faq-test-preview-panel"/);
+assert.match(viewSource, /senko-btn-primary/);
+assert.match(viewSource, /senko-btn-ghost/);
+assert.match(viewSource, /senko-tab-btn/);
+assert.match(registerSource, /shared\/styles\/senko-components\.css/);
 assert.doesNotMatch(viewSource, /data-workspace-tab="preview"/);
 assert.doesNotMatch(viewSource, /Marcadores de links|faq-test-panel--audit/);
 assert.match(controllerSource, /function switchWorkspace/);
