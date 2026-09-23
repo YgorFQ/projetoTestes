@@ -30,10 +30,16 @@ function listMarkup(html, site) {
 }
 
 assert.ok(core, 'O core do protótipo deve expor uma API testável.');
-assert.equal((viewSource.match(/data-workspace-tab=/g) || []).length, 4);
-assert.equal((viewSource.match(/data-workspace-panel=/g) || []).length, 4);
+assert.equal((viewSource.match(/data-workspace-tab=/g) || []).length, 2);
+assert.equal((viewSource.match(/data-workspace-panel=/g) || []).length, 2);
+assert.match(viewSource, /class="faq-test-layout"/);
+assert.match(viewSource, /class="faq-test-sidebar"/);
+assert.match(viewSource, /class="faq-test-preview-panel"/);
+assert.doesNotMatch(viewSource, /data-workspace-tab="preview"/);
 assert.doesNotMatch(viewSource, /Marcadores de links|faq-test-panel--audit/);
 assert.match(controllerSource, /function switchWorkspace/);
+assert.match(controllerSource, /doc\.createElement\('details'\)/);
+assert.match(controllerSource, /faq-test-pair__delete/);
 assert.doesNotMatch(controllerSource, /function renderAudit/);
 
 const parsed = core.parsePairs([

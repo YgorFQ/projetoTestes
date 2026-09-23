@@ -5,7 +5,7 @@
   var STORAGE_KEY = 'senkolib_faq_test_draft_v1';
   var state = {
     activeSite: 'efacil',
-    workspace: 'import',
+    workspace: 'editor',
     previewSite: 'efacil',
     previewCanonical: 'https://www.efacil.com.br/produto-exemplo',
     data: core ? core.createEmptyData() : { efacil: [], martins: [], generic: [] }
@@ -200,7 +200,6 @@
     api.queryAll('[data-workspace-panel]').forEach(function (candidate) {
       candidate.hidden = candidate.dataset.workspacePanel !== workspace;
     });
-    if (workspace === 'preview') renderPreviewNow();
     if (workspace === 'output') renderOutput();
   }
 
@@ -250,21 +249,41 @@
 
   function createPairCard(pair, index) {
     var doc = api.getRoot().ownerDocument || document;
-    var card = doc.createElement('article');
+    var card = doc.createElement('details');
     card.className = 'faq-test-pair';
+    card.open = index === 0 || (!pair.question.trim() && !pair.answer.trim());
 
-    var head = doc.createElement('div');
+    var head = doc.createElement('summary');
     head.className = 'faq-test-pair__head';
+    var chevron = doc.createElement('span');
+    chevron.className = 'faq-test-pair__chevron';
+    chevron.setAttribute('aria-hidden', 'true');
+
+    var heading = doc.createElement('span');
+    heading.className = 'faq-test-pair__heading';
     var number = doc.createElement('span');
     number.className = 'faq-test-pair__number';
     number.textContent = 'Pergunta ' + String(index + 1).padStart(2, '0');
+    var title = doc.createElement('strong');
+    title.className = 'faq-test-pair__title';
+    var titleParser = doc.createElement('textarea');
+    titleParser.innerHTML = pair.question.replace(/<[^>]*>/g, ' ');
+    title.textContent = titleParser.value.replace(/\s+/g, ' ').trim() || 'Nova pergunta';
+
     var deleteButton = doc.createElement('button');
     deleteButton.type = 'button';
     deleteButton.className = 'faq-test-pair__delete';
-    deleteButton.textContent = 'Excluir';
+    deleteButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3m-8 0 1 13h8l1-13M10 11v5m4-5v5"></path></svg><span>Remover</span>';
     deleteButton.setAttribute('aria-label', 'Excluir pergunta ' + (index + 1));
-    deleteButton.addEventListener('click', function () { deletePair(index); });
-    head.appendChild(number);
+    deleteButton.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      deletePair(index);
+    });
+    heading.appendChild(number);
+    heading.appendChild(title);
+    head.appendChild(chevron);
+    head.appendChild(heading);
     head.appendChild(deleteButton);
 
     var body = doc.createElement('div');

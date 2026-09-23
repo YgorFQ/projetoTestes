@@ -49,18 +49,18 @@
 
     var stylesheet = document.createElement('link');
     stylesheet.rel = 'stylesheet';
-    stylesheet.href = featureUrl('styles.css?v=20260923-faq-test-11');
+    stylesheet.href = featureUrl('styles.css?v=20260923-faq-test-12');
     root.appendChild(stylesheet);
   }
 
   function loadPanel() {
     if (loadPromise) return loadPromise;
     loadPromise = (async function () {
-      await loadScript('core.js?v=20260923-faq-test-11');
-      await loadScript('view.js?v=20260923-faq-test-11');
+      await loadScript('core.js?v=20260923-faq-test-12');
+      await loadScript('view.js?v=20260923-faq-test-12');
       var content = window.SenkoFaqTest.createView();
       shadow.appendChild(content);
-      await loadScript('script.js?v=20260923-faq-test-11');
+      await loadScript('script.js?v=20260923-faq-test-12');
       if (typeof window.SenkoFaqTest.init !== 'function') {
         throw new Error('Inicializador do protótipo Teste indisponível.');
       }

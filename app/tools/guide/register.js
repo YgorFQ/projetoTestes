@@ -446,7 +446,9 @@
           bullets: [
             'A entrada aceita pares q/a e h3/p, inclusive os dois formatos na mesma colagem.',
             'Cada site possui editor proprio, inclusao manual e exclusao de perguntas.',
-            'A interface compacta separa Entrada, Perguntas, Simular e Codigo em quatro abas; apenas uma area principal aparece por vez.',
+            'A interface usa duas colunas: entrada e perguntas ficam juntas no painel esquerdo, enquanto a previa permanece visivel no painel direito.',
+            'Os botoes eFacil, Martins e Generico trocam o conjunto editado; cada pergunta aparece em um card expansivel com acao de remover.',
+            'Editar FAQ e Codigo final alternam somente o painel esquerdo, sem esconder a previa.',
             'O simulador troca o canonical sem alterar o codigo final e usa a mesma section com as tres listas da entrega.',
             'A janela lateral de redirecionamentos foi removida; links continuam preservados no conteudo e no codigo final.',
             'O rascunho fica somente no localStorage deste navegador e nao grava Firebase ou GitHub.',
