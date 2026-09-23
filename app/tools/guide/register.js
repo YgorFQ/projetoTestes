@@ -452,6 +452,7 @@
             'Os botoes eFacil, Martins e Generico trocam o conjunto editado; cada card expansivel mostra somente Pergunta XX no cabecalho, mantendo o texto completo no campo de edicao.',
             'Editar FAQ e Codigo final alternam somente o painel esquerdo, sem esconder a previa.',
             'O simulador troca o canonical sem alterar o codigo final, mostra site, endereco e quantidade sem selo adicional de status e usa a mesma section com as tres listas da entrega.',
+            'A area renderizada da previa comeca diretamente pela FAQ, sem um card interno repetindo site, canonical e quantidade.',
             'A janela lateral de redirecionamentos foi removida; links continuam preservados no conteudo e no codigo final.',
             'O conteudo existe somente na memoria da aba: recarregar a pagina apaga todas as perguntas e nenhum rascunho e salvo em localStorage, Firebase ou GitHub.',
             'Excluir uma pergunta ou limpar o FAQ acontece diretamente, sem abrir confirmacoes nativas do navegador.',

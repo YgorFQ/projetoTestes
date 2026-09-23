@@ -49,23 +49,23 @@
 
     var sharedStylesheet = document.createElement('link');
     sharedStylesheet.rel = 'stylesheet';
-    sharedStylesheet.href = featureUrl('../../shared/styles/senko-components.css?v=20260923-faq-test-16');
+    sharedStylesheet.href = featureUrl('../../shared/styles/senko-components.css?v=20260923-faq-test-17');
     root.appendChild(sharedStylesheet);
 
     var stylesheet = document.createElement('link');
     stylesheet.rel = 'stylesheet';
-    stylesheet.href = featureUrl('styles.css?v=20260923-faq-test-16');
+    stylesheet.href = featureUrl('styles.css?v=20260923-faq-test-17');
     root.appendChild(stylesheet);
   }
 
   function loadPanel() {
     if (loadPromise) return loadPromise;
     loadPromise = (async function () {
-      await loadScript('core.js?v=20260923-faq-test-16');
-      await loadScript('view.js?v=20260923-faq-test-16');
+      await loadScript('core.js?v=20260923-faq-test-17');
+      await loadScript('view.js?v=20260923-faq-test-17');
       var content = window.SenkoFaqTest.createView();
       shadow.appendChild(content);
-      await loadScript('script.js?v=20260923-faq-test-16');
+      await loadScript('script.js?v=20260923-faq-test-17');
       if (typeof window.SenkoFaqTest.init !== 'function') {
         throw new Error('Inicializador do protótipo Teste indisponível.');
       }

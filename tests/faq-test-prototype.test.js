@@ -130,9 +130,8 @@ assert.doesNotMatch(output, /<script/i, 'A entrega final deve continuar em HTML 
 const preview = core.buildPreviewDocument(data, 'martins');
 assert.match(preview, /martinsatacado\.com\.br\/produto-exemplo/);
 assert.match(preview, /data-preview-site="martins"/);
-assert.match(preview, /data-faq-preview-context="martins"/);
-assert.match(preview, /FAQ Martins/);
-assert.match(preview, /1 pergunta/);
+assert.doesNotMatch(preview, /faq-preview-context/);
+assert.doesNotMatch(preview, /Visualização ativa/);
 assert.equal((preview.match(/<section id="faq-section"/g) || []).length, 1);
 assert.match(listMarkup(preview, 'efacil'), /Qual é o prazo\?/);
 assert.match(listMarkup(preview, 'generic'), /Genérico\?/);
@@ -143,7 +142,7 @@ assert.match(linkPreview, /data-faq-link-status="ok"/);
 
 const genericPreview = core.buildPreviewDocument(data, 'generic');
 assert.match(genericPreview, /data-preview-site="generic"/);
-assert.match(genericPreview, /FAQ Genérico/);
+assert.doesNotMatch(genericPreview, /faq-preview-context/);
 
 const canonicalPreview = core.buildPreviewDocument(
   data,

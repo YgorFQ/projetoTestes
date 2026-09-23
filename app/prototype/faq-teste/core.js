@@ -542,61 +542,12 @@ html:has(head link[rel="canonical"][href*="martinsatacado.com.br"]) .for--generi
   function buildPreviewDocument(data, site, canonicalOverride) {
     var selectedSite = SITE_CONFIG[site] ? site : 'generic';
     var config = SITE_CONFIG[selectedSite];
-    var selectedPairs = data[selectedSite] || [];
     var canonicalUrl = normalizeCanonical(canonicalOverride, config.canonical);
     var previewCss = `
 body {
   margin: 0;
   padding: 24px;
   background: #f4f5f7;
-}
-
-.faq-preview-context {
-  display: grid;
-  gap: 8px;
-  margin: 0 0 24px;
-  padding: 16px;
-  border: 1px solid #d9dde3;
-  border-left: 6px solid #6b7280;
-  border-radius: 12px;
-  background: #ffffff;
-  color: #2e3538;
-  font-family: Arial, sans-serif;
-}
-
-body[data-preview-site="efacil"] .faq-preview-context {
-  border-left-color: #1677c8;
-}
-
-body[data-preview-site="martins"] .faq-preview-context {
-  border-left-color: #9a6700;
-}
-
-.faq-preview-context__eyebrow {
-  color: #6b7280;
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.faq-preview-context__site {
-  font-size: clamp(1.125rem, 2vw, 1.5rem);
-  overflow-wrap: anywhere;
-}
-
-.faq-preview-context__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-  color: #5d6570;
-  font-size: 0.75rem;
-  line-height: 1.5;
-  overflow-wrap: anywhere;
-}
-
-.faq-preview-context__count {
-  font-weight: 700;
 }
 
 .faq-section__a-text a,
@@ -614,14 +565,6 @@ a[data-faq-link-status="error"] { outline-color: #e03030; }
 @media (min-width: 768px) {
   body { padding: 32px; }
 }`;
-    var context = '<div class="faq-preview-context" data-faq-preview-context="' + selectedSite + '" aria-label="Contexto da simulação">\n' +
-      '  <span class="faq-preview-context__eyebrow">Visualização ativa</span>\n' +
-      '  <strong class="faq-preview-context__site">FAQ ' + config.label + '</strong>\n' +
-      '  <span class="faq-preview-context__meta">' +
-      '<span>canonical: ' + canonicalUrl + '</span>' +
-      '<span class="faq-preview-context__count">' + selectedPairs.length +
-      (selectedPairs.length === 1 ? ' pergunta' : ' perguntas') + '</span></span>\n' +
-      '</div>';
     /* O simulador usa a mesma estrutura final e o canonical escolhe a lista visivel. */
     var annotatedSection = buildSection(data, true, true);
     return '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n' +
@@ -629,7 +572,7 @@ a[data-faq-link-status="error"] { outline-color: #e03030; }
       '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
       '  <link rel="canonical" href="' + escapeAttribute(canonicalUrl) + '">\n' +
       '  <style>\n' + FAQ_CSS + '\n' + previewCss + '\n  </style>\n' +
-      '</head>\n<body data-preview-site="' + selectedSite + '">\n' + context + '\n' + annotatedSection + '\n' +
+      '</head>\n<body data-preview-site="' + selectedSite + '">\n' + annotatedSection + '\n' +
       '<script>document.addEventListener("click",function(event){if(event.target.closest("a")){event.preventDefault();}});<' + '/script>\n' +
       '</body>\n</html>';
   }
