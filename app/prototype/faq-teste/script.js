@@ -420,7 +420,7 @@
       els.output.select();
       document.execCommand('copy');
     }
-    showToast('HTML + CSS copiado.');
+    showToast('HTML copiado.');
   }
 
   function showToast(message) {

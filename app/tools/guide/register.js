@@ -440,17 +440,18 @@
           badge: 'prototipo',
           terms: 'teste faq efacil martins generico canonical perguntas respostas abas compacto q a h3 p',
           paragraphs: [
-            'Teste monta tres conjuntos independentes de perguntas e respostas e gera uma unica entrega em HTML e CSS puro.',
-            'O canonical da pagina mostra o FAQ eFacil ou Martins; quando nenhum dominio conhecido aparece, o FAQ generico funciona como fallback.'
+            'Teste monta tres conjuntos independentes de perguntas e respostas e gera uma unica section HTML com cabecalho compartilhado.',
+            'Cada conjunto vira uma lista propria: for--generic, for--efacil ou for--martins. O canonical mostra a lista eFacil ou Martins; quando nenhum dominio conhecido aparece, a lista generica funciona como fallback.'
           ],
           bullets: [
             'A entrada aceita pares q/a e h3/p, inclusive os dois formatos na mesma colagem.',
             'Cada site possui editor proprio, inclusao manual e exclusao de perguntas.',
             'A interface compacta separa Entrada, Perguntas, Simular e Codigo em quatro abas; apenas uma area principal aparece por vez.',
-            'O simulador troca o canonical do preview sem alterar o codigo final e monta somente o FAQ reconhecido.',
+            'O simulador troca o canonical sem alterar o codigo final e usa a mesma section com as tres listas da entrega.',
             'A janela lateral de redirecionamentos foi removida; links continuam preservados no conteudo e no codigo final.',
             'O rascunho fica somente no localStorage deste navegador e nao grava Firebase ou GitHub.',
-            'A entrega final continua em HTML e CSS puro e preserva os links escritos nas respostas.'
+            'Cada pergunta gera um novo li dentro da lista do site correspondente; o HTML final preserva os links escritos nas respostas.',
+            'A entrega referencia style-faq-padrao-tecnica.css e variacao-pdp.css e mantem a ordem generico, eFacil e Martins.'
           ],
           note: 'Enquanto o fluxo estiver sendo refinado, a aba deve permanecer em app/prototype e usar o nome temporario Teste.'
         }

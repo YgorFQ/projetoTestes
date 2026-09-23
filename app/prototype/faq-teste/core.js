@@ -2,8 +2,8 @@
   /*
    * Regras puras do prototipo Teste.
    *
-   * Este modulo nao conhece DOM, shell ou persistencia. Ele converte os pares
-   * aceitos, audita destinos e gera o bloco final em HTML + CSS puro.
+   * Este modulo nao conhece DOM, shell ou persistencia. Ele converte os pares,
+   * audita destinos e gera o HTML final com as folhas de estilo oficiais.
    */
   var SITE_CONFIG = {
     efacil: {
@@ -23,23 +23,28 @@
     }
   };
 
-  var FAQ_CSS = `/* FAQ multissite: eFácil, Martins e fallback genérico. */
-.faq-section,
-.faq-section * {
+  var FAQ_STYLESHEET_URLS = [
+    'https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/style-faq-padrao-tecnica.css?v=1',
+    'https://imgprd.martinsatacado.com.br/catalogoimg/catalogo/variacao-pdp.css?v=1'
+  ];
+
+  var FAQ_CSS = `/* Apoio visual do simulador para a estrutura usada em produção. */
+[id="faq-section"],
+[id="faq-section"] * {
   box-sizing: border-box;
 }
 
-.faq-section {
+[id="faq-section"] {
   width: 100%;
   margin: 0 auto 24px;
   font-family: Arial, sans-serif;
 }
 
-.faq-section__header {
+[id="faq-section__header"] {
   margin: 0 0 8px;
 }
 
-.faq-section__title {
+[id="faq-section__title"] {
   display: flex;
   align-items: center;
   width: 100%;
@@ -55,7 +60,7 @@
   overflow-wrap: anywhere;
 }
 
-.faq-section__list {
+[id="faq-section__list"] {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -65,7 +70,7 @@
   align-items: stretch;
 }
 
-.faq-section__item {
+[id="faq-section__item"] {
   margin: 0;
   overflow: hidden;
   border: 1px solid #e5e5e5;
@@ -73,11 +78,11 @@
   background-color: #ffffff;
 }
 
-.faq-section__details {
+[id="faq-section__details"] {
   width: 100%;
 }
 
-.faq-section__summary {
+[id="faq-section__summary"] {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -89,29 +94,29 @@
   transition: background-color 0.15s ease;
 }
 
-.faq-section__summary::-webkit-details-marker {
+[id="faq-section__summary"]::-webkit-details-marker {
   width: 0;
   height: 0;
   overflow: hidden;
   color: transparent;
 }
 
-.faq-section__summary::marker {
+[id="faq-section__summary"]::marker {
   content: "";
 }
 
-.faq-section__summary:hover,
-.faq-section__details[open] .faq-section__summary {
+[id="faq-section__summary"]:hover,
+[id="faq-section__details"][open] [id="faq-section__summary"] {
   background-color: #f9f9f9;
 }
 
-.faq-section__summary:focus-visible {
+[id="faq-section__summary"]:focus-visible {
   border-radius: 11px;
   outline: 2px solid #ea5b0c;
   outline-offset: -2px;
 }
 
-.faq-section__q-text {
+[id="faq-section__q-text"] {
   flex: 1;
   margin: 0;
   color: #333333;
@@ -121,15 +126,15 @@
   overflow-wrap: anywhere;
 }
 
-.faq-section__icon {
+[id="faq-section__icon"] {
   position: relative;
   width: 20px;
   height: 20px;
   flex-shrink: 0;
 }
 
-.faq-section__icon::before,
-.faq-section__icon::after {
+[id="faq-section__icon"]::before,
+[id="faq-section__icon"]::after {
   position: absolute;
   border-radius: 2px;
   background-color: rgb(46, 53, 56);
@@ -137,31 +142,31 @@
   transition: transform 0.25s ease, opacity 0.25s ease;
 }
 
-.faq-section__icon::before {
+[id="faq-section__icon"]::before {
   top: 9px;
   left: 4px;
   width: 12px;
   height: 2px;
 }
 
-.faq-section__icon::after {
+[id="faq-section__icon"]::after {
   top: 4px;
   left: 9px;
   width: 2px;
   height: 12px;
 }
 
-.faq-section__details[open] .faq-section__icon::after {
+[id="faq-section__details"][open] [id="faq-section__icon"]::after {
   opacity: 0;
   transform: rotate(90deg);
 }
 
-.faq-section__a-inner {
+[id="faq-section__a-inner"] {
   padding: 16px;
   border-top: 1px solid #e5e5e5;
 }
 
-.faq-section__a-text {
+[id="faq-section__a-text"] {
   margin: 0;
   color: rgb(46, 53, 56);
   font-size: clamp(0.75rem, 1vw, 0.875rem);
@@ -169,80 +174,38 @@
   overflow-wrap: anywhere;
 }
 
-/* Somente uma versão participa da renderização, conforme o canonical. */
-.faq-version--efacil,
-.faq-version--martins,
-.faq-version--generic {
-  position: absolute;
-  width: 1px;
-  height: 0;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
-  clip-path: inset(50%);
-  content-visibility: hidden;
-  contain-intrinsic-size: 0 0;
+/* Cada lista pertence a um destino; a genérica é o fallback. */
+.for--efacil,
+.for--martins {
+  display: none !important;
 }
 
-.faq-version--generic {
-  position: static;
-  width: 100%;
-  height: auto;
-  margin: 0 auto 24px;
-  padding: initial;
-  overflow: visible;
-  visibility: visible;
-  opacity: 1;
-  pointer-events: auto;
-  clip-path: none;
-  content-visibility: visible;
+.for--generic {
+  display: block !important;
 }
 
-html:has(head link[rel="canonical"][href*="efacil.com.br"]) .faq-version--efacil,
-html:has(head link[rel="canonical"][href*="martinsatacado.com.br"]) .faq-version--martins {
-  position: static;
-  width: 100%;
-  height: auto;
-  margin: 0 auto 24px;
-  padding: initial;
-  overflow: visible;
-  visibility: visible;
-  opacity: 1;
-  pointer-events: auto;
-  clip-path: none;
-  content-visibility: visible;
+html:has(head link[rel="canonical"][href*="efacil.com.br"]) .for--efacil,
+html:has(head link[rel="canonical"][href*="martinsatacado.com.br"]) .for--martins {
+  display: block !important;
 }
 
-html:has(head link[rel="canonical"][href*="efacil.com.br"]) .faq-version--generic,
-html:has(head link[rel="canonical"][href*="martinsatacado.com.br"]) .faq-version--generic {
-  position: absolute;
-  width: 1px;
-  height: 0;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
-  clip-path: inset(50%);
-  content-visibility: hidden;
+html:has(head link[rel="canonical"][href*="efacil.com.br"]) .for--generic,
+html:has(head link[rel="canonical"][href*="martinsatacado.com.br"]) .for--generic {
+  display: none !important;
 }
 
 @media (min-width: 768px) {
-  .faq-section__summary {
+  [id="faq-section__summary"] {
     padding: 16px 24px;
   }
 
-  .faq-section__a-inner {
+  [id="faq-section__a-inner"] {
     padding: 16px 24px 24px;
   }
 }
 
 @media (min-width: 1200px) {
-  .faq-section__title {
+  [id="faq-section__title"] {
     padding-inline: 24px;
   }
 }`;
@@ -507,42 +470,73 @@ html:has(head link[rel="canonical"][href*="martinsatacado.com.br"]) .faq-version
     var question = annotate ? annotateLinks(pair.question, site) : pair.question;
     var answer = annotate ? annotateLinks(pair.answer, site) : pair.answer;
     return [
-      '    <li class="faq-section__item">',
-      '      <details class="faq-section__details">',
-      '        <summary class="faq-section__summary">',
-      '          <h3 class="faq-section__q-text">' + question + '</h3>',
-      '          <span class="faq-section__icon" aria-hidden="true"></span>',
-      '        </summary>',
-      '        <div class="faq-section__a-inner">',
-      '          <p class="faq-section__a-text">' + answer + '</p>',
-      '        </div>',
-      '      </details>',
-      '    </li>'
+      '        <li id="faq-section__item">',
+      '            <details id="faq-section__details">',
+      '                <summary id="faq-section__summary">',
+      '                    <h3 id="faq-section__q-text">' + question + '</h3>',
+      '                    <span id="faq-section__icon" aria-hidden="true"></span>',
+      '                </summary>',
+      '',
+      '                <div id="faq-section__a-inner">',
+      '                    <p id="faq-section__a-text">' + answer + '</p>',
+      '                </div>',
+      '            </details>',
+      '        </li>'
     ].join('\n');
   }
 
-  function buildSection(site, pairs, annotate) {
-    var titleId = 'faq-title-' + site;
+  function buildList(site, pairs, annotate) {
     var items = (pairs || []).map(function (pair) {
       return buildItem(pair, site, annotate);
-    }).join('\n');
+    }).join('\n\n');
+    var labels = {
+      generic: 'GENÉRICAS GENÉRICAS GENÉRICAS',
+      efacil: 'EFACIL EFACIL EFACIL',
+      martins: 'MARTINS MARTINS MARTINS'
+    };
     return [
-      '<section class="faq-section faq-version--' + site + '" aria-labelledby="' + titleId + '">',
-      '  <div class="faq-section__header">',
-      '    <h2 class="faq-section__title" id="' + titleId + '">Dúvidas Frequentes</h2>',
-      '  </div>',
-      '  <ul class="faq-section__list">',
+      '    <!----------------------------------',
+      '        ' + labels[site],
+      '    ------------------------------------>',
+      '    <ul id="faq-section__list" class="for--' + site + '" role="list">',
       items,
-      '  </ul>',
+      '    </ul>'
+    ].filter(function (line) {
+      return line !== '' || items !== '';
+    }).join('\n');
+  }
+
+  function buildStylesheetLinks() {
+    return FAQ_STYLESHEET_URLS.map(function (href) {
+      return '    <link rel="stylesheet" href="' + href + '">';
+    }).join('\n');
+  }
+
+  function buildSection(data, annotate, includeStylesheets) {
+    var lines = [
+      '<section id="faq-section" aria-label="faq-section__title">'
+    ];
+    if (includeStylesheets !== false) {
+      lines.push(buildStylesheetLinks(), '');
+    }
+    lines.push(
+      '    <div id="faq-section__header">',
+      '        <h2 id="faq-section__title">Dúvidas Frequentes</h2>',
+      '    </div>',
+      '',
+      buildList('generic', data.generic || [], annotate),
+      '',
+      buildList('efacil', data.efacil || [], annotate),
+      '',
+      buildList('martins', data.martins || [], annotate),
+      '',
       '</section>'
-    ].join('\n');
+    );
+    return lines.join('\n');
   }
 
   function buildOutput(data) {
-    return '<style>\n' + FAQ_CSS + '\n</style>\n\n' +
-      buildSection('efacil', data.efacil || [], false) + '\n\n' +
-      buildSection('martins', data.martins || [], false) + '\n\n' +
-      buildSection('generic', data.generic || [], false);
+    return buildSection(data, false, true);
   }
 
   function buildPreviewDocument(data, site, canonicalOverride) {
@@ -628,26 +622,28 @@ a[data-faq-link-status="error"] { outline-color: #e03030; }
       '<span class="faq-preview-context__count">' + selectedPairs.length +
       (selectedPairs.length === 1 ? ' pergunta' : ' perguntas') + '</span></span>\n' +
       '</div>';
-    /* O simulador monta fisicamente apenas o FAQ reconhecido pelo canonical. */
-    var annotatedSections = buildSection(selectedSite, selectedPairs, true);
+    /* O simulador usa a mesma estrutura final e o canonical escolhe a lista visivel. */
+    var annotatedSection = buildSection(data, true, true);
     return '<!DOCTYPE html>\n<html lang="pt-BR">\n<head>\n' +
       '  <meta charset="UTF-8">\n' +
       '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n' +
       '  <link rel="canonical" href="' + escapeAttribute(canonicalUrl) + '">\n' +
       '  <style>\n' + FAQ_CSS + '\n' + previewCss + '\n  </style>\n' +
-      '</head>\n<body data-preview-site="' + selectedSite + '">\n' + context + '\n' + annotatedSections + '\n' +
+      '</head>\n<body data-preview-site="' + selectedSite + '">\n' + context + '\n' + annotatedSection + '\n' +
       '<script>document.addEventListener("click",function(event){if(event.target.closest("a")){event.preventDefault();}});<' + '/script>\n' +
       '</body>\n</html>';
   }
 
   global.SenkoFaqTestCore = {
     SITE_CONFIG: SITE_CONFIG,
+    FAQ_STYLESHEET_URLS: FAQ_STYLESHEET_URLS,
     FAQ_CSS: FAQ_CSS,
     createEmptyData: createEmptyData,
     detectSiteFromCanonical: detectSiteFromCanonical,
     parsePairs: parsePairs,
     auditHref: auditHref,
     collectLinkAudits: collectLinkAudits,
+    buildList: buildList,
     buildSection: buildSection,
     buildOutput: buildOutput,
     buildPreviewDocument: buildPreviewDocument

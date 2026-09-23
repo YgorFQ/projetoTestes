@@ -121,7 +121,7 @@
           <div class="faq-test-panel__head">
             <div>
               <span class="faq-test-panel__kicker">Entrega</span>
-              <h2 class="faq-test-panel__title" id="faq-test-output-title">HTML + CSS final</h2>
+              <h2 class="faq-test-panel__title" id="faq-test-output-title">HTML final</h2>
             </div>
             <button class="faq-test-btn faq-test-btn--primary" id="faq-test-copy-output" type="button">Copiar código</button>
           </div>
