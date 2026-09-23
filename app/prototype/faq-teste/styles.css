@@ -326,9 +326,9 @@ textarea {
 
 .faq-test-pair {
   min-width: 0;
-  margin-bottom: .55rem;
+  margin-bottom: .65rem;
   overflow: hidden;
-  border: 1px solid var(--border);
+  border: 1px solid var(--border2);
   border-radius: var(--radius);
   background: var(--bg);
 }
@@ -338,8 +338,8 @@ textarea {
 }
 
 .faq-test-pair[open] {
-  border-color: var(--accent-border);
-  box-shadow: inset 3px 0 0 var(--accent);
+  border-color: var(--border2);
+  box-shadow: var(--shadow-card);
 }
 
 .faq-test-pair__head {
@@ -363,7 +363,7 @@ textarea {
 
 .faq-test-pair[open] .faq-test-pair__head {
   border-bottom: 1px solid var(--border);
-  background: var(--accent-bg);
+  background: var(--bg2);
 }
 
 .faq-test-pair__chevron {
@@ -383,13 +383,13 @@ textarea {
 .faq-test-pair__heading {
   min-width: 0;
   display: grid;
-  gap: .1rem;
+  gap: .2rem;
 }
 
 .faq-test-pair__number {
-  color: var(--accent);
+  color: var(--text3);
   font-family: var(--font-code);
-  font-size: .58rem;
+  font-size: .64rem;
   font-weight: 800;
   letter-spacing: .04em;
   text-transform: uppercase;
@@ -399,8 +399,9 @@ textarea {
   min-width: 0;
   overflow: hidden;
   color: var(--text2);
-  font-size: .7rem;
-  line-height: 1.35;
+  font-size: .86rem;
+  font-weight: 800;
+  line-height: 1.4;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -457,23 +458,24 @@ textarea {
   justify-content: space-between;
   gap: .5rem;
   color: var(--text2);
-  font-size: .66rem;
+  font-size: .75rem;
   font-weight: 900;
 }
 
 .faq-test-pair__input,
 .faq-test-pair__textarea {
-  padding: .65rem;
-  font-size: .7rem;
-  line-height: 1.5;
+  padding: .75rem;
+  background: var(--bg2);
+  font-size: .84rem;
+  line-height: 1.6;
 }
 
 .faq-test-pair__input {
-  min-height: 40px;
+  min-height: 44px;
 }
 
 .faq-test-pair__textarea {
-  min-height: 96px;
+  min-height: 112px;
   resize: vertical;
 }
 

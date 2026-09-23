@@ -2,7 +2,6 @@
   /* Controller visual do protótipo Teste. */
   var api = window.SenkoFaqTest = window.SenkoFaqTest || {};
   var core = window.SenkoFaqTestCore;
-  var STORAGE_KEY = 'senkolib_faq_test_draft_v1';
   var state = {
     activeSite: 'efacil',
     workspace: 'editor',
@@ -59,41 +58,6 @@
     };
   }
 
-  function loadDraft() {
-    try {
-      var saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-      if (!saved || !saved.data) return;
-      Object.keys(core.SITE_CONFIG).forEach(function (site) {
-        state.data[site] = Array.isArray(saved.data[site])
-          ? saved.data[site].map(safePair)
-          : [];
-      });
-      if (core.SITE_CONFIG[saved.activeSite]) state.activeSite = saved.activeSite;
-      if (core.SITE_CONFIG[saved.previewSite]) state.previewSite = saved.previewSite;
-      if (typeof saved.previewCanonical === 'string') {
-        state.previewCanonical = saved.previewCanonical;
-        state.previewSite = core.detectSiteFromCanonical(saved.previewCanonical);
-      } else {
-        state.previewCanonical = core.SITE_CONFIG[state.previewSite].canonical;
-      }
-    } catch (error) {
-      console.warn('[Teste] Rascunho local inválido; iniciando vazio.', error);
-    }
-  }
-
-  function persistDraft() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        activeSite: state.activeSite,
-        previewSite: state.previewSite,
-        previewCanonical: state.previewCanonical,
-        data: state.data
-      }));
-    } catch (error) {
-      console.warn('[Teste] Não foi possível salvar o rascunho local.', error);
-    }
-  }
-
   function siteLabel(site) {
     return core.SITE_CONFIG[site].label;
   }
@@ -142,7 +106,6 @@
     if (!core.SITE_CONFIG[site]) return;
     state.previewSite = site;
     state.previewCanonical = core.SITE_CONFIG[site].canonical;
-    persistDraft();
     renderPreviewControls();
     renderPreviewNow();
   }
@@ -150,7 +113,6 @@
   function updatePreviewFromCanonical() {
     state.previewCanonical = els.canonicalInput.value;
     state.previewSite = core.detectSiteFromCanonical(state.previewCanonical);
-    persistDraft();
     renderPreviewControls();
     renderPreviewNow();
   }
@@ -201,7 +163,6 @@
     state.activeSite = site;
     state.previewSite = site;
     state.previewCanonical = core.SITE_CONFIG[site].canonical;
-    persistDraft();
     renderAll();
   }
 
@@ -220,14 +181,12 @@
       showToast('O FAQ ' + siteLabel(state.activeSite) + ' já está vazio.');
       return;
     }
-    if (!window.confirm('Remover todas as perguntas do FAQ ' + siteLabel(state.activeSite) + '?')) return;
     state.data[state.activeSite] = [];
     renderAll();
     showToast('FAQ ' + siteLabel(state.activeSite) + ' limpo.');
   }
 
   function deletePair(index) {
-    if (!window.confirm('Excluir a pergunta ' + (index + 1) + '?')) return;
     currentPairs().splice(index, 1);
     renderAll();
     showToast('Pergunta excluída.');
@@ -303,7 +262,6 @@
     input.spellcheck = true;
     input.addEventListener('input', function () {
       pair[field] = input.value;
-      persistDraft();
       renderDerived();
     });
 
@@ -408,7 +366,6 @@
   }
 
   function renderAll() {
-    persistDraft();
     renderEditor();
     renderPreviewControls();
     renderDerived();
@@ -442,7 +399,6 @@
     initialized = true;
     api.setRoot(root);
     bindElements();
-    loadDraft();
     bindEvents();
     renderImportStatus();
     renderAll();

@@ -453,7 +453,8 @@
             'Editar FAQ e Codigo final alternam somente o painel esquerdo, sem esconder a previa.',
             'O simulador troca o canonical sem alterar o codigo final e usa a mesma section com as tres listas da entrega.',
             'A janela lateral de redirecionamentos foi removida; links continuam preservados no conteudo e no codigo final.',
-            'O rascunho fica somente no localStorage deste navegador e nao grava Firebase ou GitHub.',
+            'O conteudo existe somente na memoria da aba: recarregar a pagina apaga todas as perguntas e nenhum rascunho e salvo em localStorage, Firebase ou GitHub.',
+            'Excluir uma pergunta ou limpar o FAQ acontece diretamente, sem abrir confirmacoes nativas do navegador.',
             'Cada pergunta gera um novo li dentro da lista do site correspondente; o HTML final preserva os links escritos nas respostas.',
             'A entrega referencia style-faq-padrao-tecnica.css e variacao-pdp.css e mantem a ordem generico, eFacil e Martins.'
           ],

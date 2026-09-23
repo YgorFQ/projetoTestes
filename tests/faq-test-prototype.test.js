@@ -57,6 +57,9 @@ assert.doesNotMatch(viewSource, /Marcadores de links|faq-test-panel--audit/);
 assert.match(controllerSource, /function switchWorkspace/);
 assert.match(controllerSource, /doc\.createElement\('details'\)/);
 assert.match(controllerSource, /faq-test-pair__delete/);
+assert.doesNotMatch(controllerSource, /window\.confirm/);
+assert.doesNotMatch(controllerSource, /localStorage/);
+assert.doesNotMatch(controllerSource, /STORAGE_KEY/);
 assert.doesNotMatch(controllerSource, /function renderAudit/);
 
 const parsed = core.parsePairs([
