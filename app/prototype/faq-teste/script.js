@@ -209,11 +209,6 @@
     var number = doc.createElement('span');
     number.className = 'faq-test-pair__number';
     number.textContent = 'Pergunta ' + String(index + 1).padStart(2, '0');
-    var title = doc.createElement('strong');
-    title.className = 'faq-test-pair__title';
-    var titleParser = doc.createElement('textarea');
-    titleParser.innerHTML = pair.question.replace(/<[^>]*>/g, ' ');
-    title.textContent = titleParser.value.replace(/\s+/g, ' ').trim() || 'Nova pergunta';
 
     var deleteButton = doc.createElement('button');
     deleteButton.type = 'button';
@@ -226,7 +221,6 @@
       deletePair(index);
     });
     heading.appendChild(number);
-    heading.appendChild(title);
     head.appendChild(chevron);
     head.appendChild(heading);
     head.appendChild(deleteButton);
@@ -327,16 +321,12 @@
     var site = document.createElement('strong');
     site.className = 'faq-test-route__site faq-test-route__site--' + state.previewSite;
     site.textContent = 'FAQ ' + config.label;
-    var status = document.createElement('span');
-    status.className = 'faq-test-route__status';
-    status.textContent = state.previewSite === 'generic' ? 'fallback aplicado' : 'canonical detectado';
     var canonical = document.createElement('code');
     canonical.textContent = state.previewCanonical.trim() || 'canonical vazio';
     var count = document.createElement('span');
     count.className = 'faq-test-route__count';
     count.textContent = pairCount + (pairCount === 1 ? ' pergunta' : ' perguntas');
     els.route.appendChild(site);
-    els.route.appendChild(status);
     els.route.appendChild(canonical);
     els.route.appendChild(count);
   }

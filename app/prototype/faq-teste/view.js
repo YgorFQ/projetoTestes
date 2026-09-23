@@ -73,7 +73,6 @@
         <section class="faq-test-preview-panel" aria-labelledby="faq-test-preview-title">
           <div class="faq-test-preview-panel__head">
             <div>
-              <span class="faq-test-panel__kicker">Prévia ao vivo</span>
               <h2 class="faq-test-panel__title" id="faq-test-preview-title">Visualizando <span id="faq-test-preview-site-name">eFácil</span></h2>
             </div>
             <div class="faq-test-preview-sites" role="group" aria-label="Canonical usado no preview">
@@ -92,7 +91,6 @@
             </div>
             <div class="faq-test-route" id="faq-test-route">
               <strong class="faq-test-route__site faq-test-route__site--efacil">FAQ eFácil</strong>
-              <span class="faq-test-route__status">canonical detectado</span>
               <code>https://www.efacil.com.br/produto-exemplo</code>
               <span class="faq-test-route__count">0 perguntas</span>
             </div>

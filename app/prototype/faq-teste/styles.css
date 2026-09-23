@@ -388,22 +388,9 @@ textarea {
 
 .faq-test-pair__number {
   color: var(--text3);
-  font-family: var(--font-code);
-  font-size: .64rem;
-  font-weight: 800;
+  font-size: 1rem;
+  font-weight: 700;
   letter-spacing: .04em;
-  text-transform: uppercase;
-}
-
-.faq-test-pair__title {
-  min-width: 0;
-  overflow: hidden;
-  color: var(--text2);
-  font-size: .86rem;
-  font-weight: 800;
-  line-height: 1.4;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .faq-test-pair__delete {
@@ -596,7 +583,6 @@ textarea {
 }
 
 .faq-test-route__site,
-.faq-test-route__status,
 .faq-test-route__count {
   flex: 0 0 auto;
   padding: .22rem .48rem;
@@ -618,11 +604,6 @@ textarea {
 .faq-test-route__site--generic {
   background: var(--bg3);
   color: var(--text2);
-}
-
-.faq-test-route__status {
-  background: rgba(35, 134, 73, .1);
-  color: var(--green);
 }
 
 .faq-test-route__count {

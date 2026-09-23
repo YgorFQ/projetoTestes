@@ -50,6 +50,8 @@ assert.match(registerSource, /shared\/styles\/senko-components\.css/);
 assert.doesNotMatch(viewSource, /class="faq-test-hero"/);
 assert.doesNotMatch(viewSource, /class="faq-test-section-heading"/);
 assert.doesNotMatch(viewSource, /class="faq-test-import__meta"/);
+assert.doesNotMatch(viewSource, /Prévia ao vivo/);
+assert.doesNotMatch(viewSource, /faq-test-route__status/);
 assert.match(styleSource, /\.faq-test-pair__delete\s*\{[\s\S]*?background:\s*var\(--red\)/);
 assert.match(styleSource, /\.faq-test-pair__body\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\)/);
 assert.doesNotMatch(viewSource, /data-workspace-tab="preview"/);
@@ -61,6 +63,16 @@ assert.doesNotMatch(controllerSource, /window\.confirm/);
 assert.doesNotMatch(controllerSource, /localStorage/);
 assert.doesNotMatch(controllerSource, /STORAGE_KEY/);
 assert.doesNotMatch(controllerSource, /function renderAudit/);
+assert.doesNotMatch(controllerSource, /faq-test-pair__title/);
+assert.doesNotMatch(controllerSource, /faq-test-route__status/);
+
+const pairNumberStyle = styleSource.match(/\.faq-test-pair__number\s*\{([^}]*)\}/);
+assert.ok(pairNumberStyle, 'O estilo do numero da pergunta deve existir.');
+assert.match(pairNumberStyle[1], /color:\s*var\(--text3\)/);
+assert.match(pairNumberStyle[1], /font-size:\s*1rem/);
+assert.match(pairNumberStyle[1], /font-weight:\s*700/);
+assert.match(pairNumberStyle[1], /letter-spacing:\s*\.04em/);
+assert.doesNotMatch(pairNumberStyle[1], /font-family|text-transform/);
 
 const parsed = core.parsePairs([
   '<q>Qual é o prazo?</q>',
