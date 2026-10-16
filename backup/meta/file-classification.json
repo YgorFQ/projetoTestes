@@ -7,7 +7,7 @@
     "prototype"
   ],
   "counts": {
-    "official": 136,
+    "official": 137,
     "generated": 233,
     "prototype": 5
   },
@@ -1426,6 +1426,10 @@
     },
     {
       "path": "scripts/backup/restore-github-snapshot.js",
+      "status": "official"
+    },
+    {
+      "path": "scripts/maintenance/backfill-library-analysis-public.js",
       "status": "official"
     },
     {

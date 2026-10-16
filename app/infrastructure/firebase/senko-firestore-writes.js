@@ -396,6 +396,7 @@
       var layoutId = cleanId(data.layoutId, 'ID do layout');
       var layoutRef = base.sdk.doc(base.workspace, 'bibliotecaLayouts', layoutId);
       var analysisRef = base.sdk.doc(layoutRef, 'analysis', 'current');
+      var publicAnalysisRef = base.sdk.doc(layoutRef, 'publicAnalysis', 'current');
       var descriptiveName = cleanName(data.descriptiveName);
       var fields = {
         mainStructure: cleanText(data.mainStructure, 'Estrutura principal', 500),
@@ -451,6 +452,15 @@
             result.createdBy = context.user.uid;
           }
           transaction.set(analysisRef, result, { merge: true });
+          transaction.set(publicAnalysisRef, Object.assign({
+            id: 'current',
+            kind: 'publicLibraryAnalysis',
+            workspaceId: context.workspaceId,
+            layoutId: layoutId,
+            descriptiveName: descriptiveName,
+            tags: tags,
+            version: currentVersion + 1
+          }, fields));
           transaction.set(base.workspace, {
             dataVersion: base.sdk.increment(1),
             updatedAt: now,
@@ -758,6 +768,9 @@
       return Promise.all([
         collectRevisions(target.ref),
         sdk.getDocs(sdk.collection(target.ref, 'analysis')).then(function (snapshot) {
+          snapshot.docs.forEach(function (item) { references.push(item.ref); });
+        }),
+        sdk.getDocs(sdk.collection(target.ref, 'publicAnalysis')).then(function (snapshot) {
           snapshot.docs.forEach(function (item) { references.push(item.ref); });
         })
       ]).then(function () {

@@ -129,11 +129,12 @@ acionado.
 Em Notas, digitar nao escreve cada tecla nem transmite o rascunho. Somente o
 documento confirmado por **Salvar** chega aos listeners de outras pessoas.
 
-A análise da Biblioteca é um documento filho `analysis/current` de cada layout.
-Tem `version` própria e não cria revisão do HTML/CSS. Somente admin e owner
-podem salvá-la; membros leem o documento ao abrir o modal. O backup público
-leva os campos de leitura, sem autoria. Uma edição concorrente é recusada sem
-descartar o formulário local.
+A análise da Biblioteca pertence ao documento filho `analysis/current` de cada
+layout. Uma projeção sem autoria em `publicAnalysis/current` permite a todos os
+usuários ler a versão atual no modal, inclusive em modo público. O backup
+continua como fallback de leitura. A análise tem `version` própria e não cria
+revisão do HTML/CSS. Somente admin e owner podem salvá-la. Uma edição
+concorrente é recusada sem descartar o formulário local.
 
 ## 6. Concorrencia
 

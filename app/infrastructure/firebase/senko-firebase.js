@@ -450,15 +450,33 @@
   }
 
   function listenDocument(path, callback, onError, options) {
-    assertReady();
-    var reference = modules.firestore.doc(services.db, path);
-    return modules.firestore.onSnapshot(reference, function (documentSnapshot) {
-      callback(documentSnapshot.exists()
-        ? Object.assign({ id: documentSnapshot.id }, documentSnapshot.data())
-        : null);
-    }, function (error) {
-      handleListenerError(error, onError, 'document-listener', options);
+    function startListener() {
+      var reference = modules.firestore.doc(services.db, path);
+      return modules.firestore.onSnapshot(reference, function (documentSnapshot) {
+        callback(documentSnapshot.exists()
+          ? Object.assign({ id: documentSnapshot.id }, documentSnapshot.data())
+          : null);
+      }, function (error) {
+        handleListenerError(error, onError, 'document-listener', options);
+      });
+    }
+
+    if (!options || !options.publicRead) {
+      assertReady();
+      return startListener();
+    }
+
+    var stopped = false;
+    var unsubscribe = null;
+    initialize().then(function () {
+      if (!stopped) unsubscribe = startListener();
+    }).catch(function (error) {
+      if (!stopped) handleListenerError(error, onError, 'document-listener', options);
     });
+    return function () {
+      stopped = true;
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
   }
 
   function safePresenceSegment(value) {

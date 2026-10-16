@@ -6,6 +6,8 @@ const {
   createSourceReader,
   loadSnapshot,
   parseArgs,
+  publicAnalysisData,
+  publicAnalysisPath,
   reservationId,
   restoredData,
   targetDocumentPath
@@ -175,11 +177,19 @@ function buildWrites(projectId, snapshot) {
   ];
 
   for (const entry of snapshot.entries) {
+    const data = restoredData(entry, workspaceId);
     writes.push(updateWrite(
       projectId,
       targetDocumentPath(entry, workspaceId),
-      restoredData(entry, workspaceId)
+      data
     ));
+    if (entry.type === 'libraryAnalysis') {
+      writes.push(updateWrite(
+        projectId,
+        publicAnalysisPath(entry, workspaceId),
+        publicAnalysisData(data, workspaceId)
+      ));
+    }
 
     const reservation = reservationWrite(projectId, workspaceId, entry, nowIso);
     if (reservation) writes.push(reservation);

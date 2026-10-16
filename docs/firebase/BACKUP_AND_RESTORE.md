@@ -145,6 +145,11 @@ backup/data/
         `-- pages/{pageId}.json
 ```
 
+O documento público `publicAnalysis/current` é derivado de `analysis/current`
+durante a restauração e não duplica conteúdo no snapshot técnico. Para análises
+anteriores à projeção pública, execute
+`node scripts/maintenance/backfill-library-analysis-public.js --project senkolibtestes --workspace senkolib`.
+
 Cada documento Firestore vira um JSON. Timestamps viram texto ISO 8601. O
 `manifest.json` informa:
 

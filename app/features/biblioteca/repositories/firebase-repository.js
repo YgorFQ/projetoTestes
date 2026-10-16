@@ -54,10 +54,10 @@
 
   function watchAnalysis(layoutId, callback, onError) {
     return window.SenkoFirebase.listenDocument(
-      workspacePath('bibliotecaLayouts/' + layoutId + '/analysis/current'),
+      workspacePath('bibliotecaLayouts/' + layoutId + '/publicAnalysis/current'),
       callback,
       onError,
-      { errorScope: 'feature' }
+      { errorScope: 'feature', publicRead: true }
     );
   }
 

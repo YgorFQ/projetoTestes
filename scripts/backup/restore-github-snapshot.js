@@ -495,6 +495,21 @@ function restoredData(entry, targetWorkspaceId) {
   return data;
 }
 
+function publicAnalysisData(data, workspaceId) {
+  return {
+    id: 'current', kind: 'publicLibraryAnalysis', workspaceId,
+    layoutId: data.layoutId, descriptiveName: data.descriptiveName,
+    mainStructure: data.mainStructure, whatIsIt: data.whatIsIt,
+    purpose: data.purpose, rationale: data.rationale,
+    whenToUse: data.whenToUse, limitations: data.limitations,
+    tags: data.tags, version: data.version
+  };
+}
+
+function publicAnalysisPath(entry, workspaceId) {
+  return `workspaces/${workspaceId}/bibliotecaLayouts/${entry.parentId}/publicAnalysis/current`;
+}
+
 async function hasManagedContent(db, workspaceId) {
   const workspace = db.doc(`workspaces/${workspaceId}`);
   const snapshots = await Promise.all(
@@ -552,10 +567,17 @@ async function restoreSnapshot(db, snapshot, options, sourceDescription) {
     });
 
     for (const entry of snapshot.entries) {
+      const data = restoredData(entry, snapshot.targetWorkspaceId);
       writer.set(
         db.doc(targetDocumentPath(entry, snapshot.targetWorkspaceId)),
-        restoredData(entry, snapshot.targetWorkspaceId)
+        data
       );
+      if (entry.type === 'libraryAnalysis') {
+        writer.set(
+          db.doc(publicAnalysisPath(entry, snapshot.targetWorkspaceId)),
+          publicAnalysisData(data, snapshot.targetWorkspaceId)
+        );
+      }
       queueReservation(writer, db, snapshot.targetWorkspaceId, entry);
     }
     await writer.close();
@@ -636,6 +658,8 @@ if (require.main === module) {
 }
 
 module.exports = {
+  publicAnalysisData,
+  publicAnalysisPath,
   createSourceReader,
   loadSnapshot,
   normalizeName,

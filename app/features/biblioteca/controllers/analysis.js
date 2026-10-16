@@ -113,14 +113,14 @@
   function connect() {
     stopWatching();
     if (!layout || !dialog.open) return;
-    if (!window.SenkoDataMode || !window.SenkoDataMode.isFirebase()) {
-      analysis = window.SenkoBibliotecaStatic.getAnalysis(layout.id);
+    var firebase = window.SenkoFirebase;
+    if (!firebase || !firebase.isEnabled || !firebase.isEnabled()) {
       if (!editing) showRead();
       else setStatus('Firebase indisponível. O rascunho permanece aqui, mas não pode ser salvo.', true);
       return;
     }
     unsubscribe = window.SenkoBibliotecaFirebase.watchAnalysis(layout.id, function (remote) {
-      analysis = remote;
+      analysis = remote || window.SenkoBibliotecaStatic.getAnalysis(layout.id);
       if (editing) {
         if (!saving && Number(remote && remote.version || 0) !== baseVersion) {
           setStatus('Outra pessoa alterou esta análise. Seu rascunho foi preservado; compare antes de salvar.', true);
@@ -226,8 +226,7 @@
       if (!dialog || !selectedLayout || dialog.open) return;
       layout = selectedLayout;
       trigger = button;
-      analysis = window.SenkoDataMode.isFirebase()
-        ? null : window.SenkoBibliotecaStatic.getAnalysis(layout.id);
+      analysis = window.SenkoBibliotecaStatic.getAnalysis(layout.id);
       document.getElementById('libraryAnalysisTitle').textContent = layout.name;
       document.getElementById('libraryAnalysisPreview').srcdoc = buildSrcDoc(layout.html || '', layout.css || '');
       setStatus('');

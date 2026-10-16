@@ -36,9 +36,9 @@ Cenarios obrigatorios:
 - HTML Basico cria o singleton, incrementa a versao e recusa conflito;
 - documento, revisao, reserva e dataVersion mudam juntos;
 - admin e owner salvam a analise de um layout; editor e visitante nao escrevem;
-- membro le a analise, visitante so a ve no snapshot publico;
+- membro e visitante leem `publicAnalysis/current` atualizado; visitante nao le `analysis/current`;
 - version atrasada da analise e recusada sem sobrescrever o Firestore;
-- excluir layout remove tambem `analysis/current`;
+- excluir layout remove `analysis/current` e `publicAnalysis/current`;
 - owner/admin/editor mantem conteudo;
 - regras administrativas respeitam cargos.
 - membro cria secao e pagina de Notas;

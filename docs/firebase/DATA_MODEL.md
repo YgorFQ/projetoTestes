@@ -25,6 +25,7 @@ workspaces/{workspaceId}
 |-- bibliotecaLayouts/{layoutId}
 |   |-- revisions/{revisionId}
 |   |-- analysis/current
+|   |-- publicAnalysis/current
 |   `-- variants/{variantId}
 |       `-- revisions/{revisionId}
 |-- collections/{collectionId}
@@ -162,6 +163,15 @@ confere o layout pai, compara `expectedVersion` e incrementa
 `workspace.dataVersion`. A análise não cria revisão do HTML/CSS. Na exclusão
 do layout, o documento filho é removido antes do pai. O backup técnico inclui
 o documento; o bundle público leva só os campos de apresentação e a versão.
+
+Uma projeção pública em
+`workspaces/{workspaceId}/bibliotecaLayouts/{layoutId}/publicAnalysis/current`
+contém somente `id`, `kind: publicLibraryAnalysis`, `workspaceId`, `layoutId`,
+os sete campos descritivos, `tags` e `version`. Qualquer usuário pode ler esse
+documento diretamente do Firestore. A transação de admin/owner atualiza os dois
+documentos juntos; as regras exigem conteúdo correspondente. O documento
+privado mantém autoria e leitura restrita aos membros. Na exclusão, ambos os
+filhos são removidos. A restauração deriva a projeção do snapshot técnico.
 
 ## Variacao da Biblioteca
 

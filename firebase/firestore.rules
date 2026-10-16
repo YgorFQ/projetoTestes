@@ -283,6 +283,44 @@ service cloud.firestore {
         && data.updatedByName is string && data.updatedByName.size() <= 320;
     }
 
+    function validPublicLibraryAnalysis(data, workspaceId, layoutId) {
+      return data.keys().hasAll([
+          'id', 'kind', 'workspaceId', 'layoutId', 'descriptiveName',
+          'mainStructure', 'whatIsIt', 'purpose', 'rationale', 'whenToUse',
+          'limitations', 'tags', 'version'
+        ])
+        && data.keys().hasOnly([
+          'id', 'kind', 'workspaceId', 'layoutId', 'descriptiveName',
+          'mainStructure', 'whatIsIt', 'purpose', 'rationale', 'whenToUse',
+          'limitations', 'tags', 'version'
+        ])
+        && data.id == 'current'
+        && data.kind == 'publicLibraryAnalysis'
+        && data.workspaceId == workspaceId
+        && data.layoutId == layoutId
+        && validName(data.descriptiveName)
+        && data.mainStructure is string && data.mainStructure.size() <= 500
+        && data.whatIsIt is string && data.whatIsIt.size() <= 10000
+        && data.purpose is string && data.purpose.size() <= 10000
+        && data.rationale is string && data.rationale.size() <= 10000
+        && data.whenToUse is string && data.whenToUse.size() <= 10000
+        && data.limitations is string && data.limitations.size() <= 10000
+        && validTags(data.tags)
+        && data.version is int && data.version >= 1;
+    }
+
+    function sameLibraryAnalysisContent(publicData, privateData) {
+      return publicData.descriptiveName == privateData.descriptiveName
+        && publicData.mainStructure == privateData.mainStructure
+        && publicData.whatIsIt == privateData.whatIsIt
+        && publicData.purpose == privateData.purpose
+        && publicData.rationale == privateData.rationale
+        && publicData.whenToUse == privateData.whenToUse
+        && publicData.limitations == privateData.limitations
+        && publicData.tags == privateData.tags
+        && publicData.version == privateData.version;
+    }
+
     function validGroup(data, workspaceId, groupId) {
       return data.keys().hasAll([
           'id', 'workspaceId', 'name', 'nameKey', 'color', 'version',
@@ -536,6 +574,9 @@ service cloud.firestore {
             && request.resource.data.updatedBy == request.auth.uid
             && exists(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId))
             && get(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)).data.get('deleting', false) == false
+            && sameLibraryAnalysisContent(
+              getAfter(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)/publicAnalysis/current).data,
+              request.resource.data)
             && dataVersionAdvanced(workspaceId);
           allow update: if isAdmin(workspaceId) && analysisId == 'current'
             && validLibraryAnalysis(request.resource.data, workspaceId, layoutId)
@@ -548,6 +589,26 @@ service cloud.firestore {
             && request.resource.data.updatedAt == request.time
             && request.resource.data.updatedBy == request.auth.uid
             && get(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)).data.get('deleting', false) == false
+            && sameLibraryAnalysisContent(
+              getAfter(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)/publicAnalysis/current).data,
+              request.resource.data)
+            && dataVersionAdvanced(workspaceId);
+          allow delete: if isMember(workspaceId)
+            && get(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)).data.deleting == true;
+        }
+
+        match /publicAnalysis/{analysisId} {
+          allow get: if analysisId == 'current'
+            && exists(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId))
+            && get(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)).data.get('deleting', false) == false;
+          allow list: if isMember(workspaceId);
+          allow create, update: if isAdmin(workspaceId) && analysisId == 'current'
+            && validPublicLibraryAnalysis(request.resource.data, workspaceId, layoutId)
+            && exists(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId))
+            && get(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)).data.get('deleting', false) == false
+            && sameLibraryAnalysisContent(
+              request.resource.data,
+              getAfter(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)/analysis/current).data)
             && dataVersionAdvanced(workspaceId);
           allow delete: if isMember(workspaceId)
             && get(/databases/$(database)/documents/workspaces/$(workspaceId)/bibliotecaLayouts/$(layoutId)).data.deleting == true;
