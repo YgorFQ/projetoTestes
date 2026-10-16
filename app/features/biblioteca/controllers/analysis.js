@@ -183,9 +183,14 @@
       showRead();
       setStatus('Análise salva no Firebase.');
     }).catch(function (error) {
-      setStatus(error && error.code && error.code.indexOf('aborted') !== -1
-        ? 'Outra pessoa salvou esta análise antes de você. Seu rascunho foi preservado.'
-        : (error.message || 'Não foi possível salvar a análise.'), true);
+      var code = String(error && error.code || '');
+      if (code.indexOf('aborted') !== -1) {
+        setStatus('Outra pessoa salvou esta análise antes de você. Seu rascunho foi preservado.', true);
+      } else if (code.indexOf('permission-denied') !== -1) {
+        setStatus('O Firestore recusou o salvamento. Confira seu acesso admin/owner e se as regras da análise foram publicadas no Firebase. Seu rascunho foi preservado.', true);
+      } else {
+        setStatus(error && error.message || 'Não foi possível salvar a análise.', true);
+      }
     }).finally(function () {
       saving = false;
       document.getElementById('libraryAnalysisSave').disabled = false;

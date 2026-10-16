@@ -79,6 +79,8 @@ admin e tentativa de promover owner sem permissao.
   abre a analise, sem abrir o editor normal do layout;
 - o modal mostra preview isolado a esquerda e campos de leitura a direita;
 - admin/owner edita os sete campos e as tags, salva e ve a leitura atualizada;
+- erro de permissao no save explica a necessidade de acesso e regras publicadas,
+  mantendo o formulario preenchido;
 - editor e modo static nao mostram o comando de edicao;
 - rascunho com mudanca remota fica no formulario e o save atrasado e recusado;
 - em largura pequena o preview fica acima da analise;

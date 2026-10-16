@@ -70,4 +70,33 @@ receiveRemote({ version: 2, descriptiveName: 'Alteração remota', tags: ['Cards
 assert.equal(inputs.descriptiveName.value, 'Meu rascunho');
 assert.equal(ids.libraryAnalysisForm.hidden, false);
 assert.match(ids.libraryAnalysisStatus.textContent, /rascunho foi preservado/);
-console.log('Library analysis editor draft conflict: OK');
+
+async function verifyPermissionError() {
+  inputs.mainStructure.value = 'Grid';
+  inputs.whatIsIt.value = 'Uma seção visual';
+  inputs.purpose.value = 'Mostrar benefícios';
+  inputs.rationale.value = 'Comparação rápida';
+  inputs.whenToUse.value = 'Em produtos variados';
+  inputs.limitations.value = 'Texto curto';
+  inputs.tags.value = 'Grid, Cards';
+  context.window.SenkoBibliotecaFirebase.saveAnalysis = async (payload) => {
+    assert.equal(payload.layoutId, 'layout-1');
+    assert.equal(payload.descriptiveName, 'Meu rascunho');
+    assert.equal(payload.limitations, 'Texto curto');
+    assert.deepEqual(Array.from(payload.tags), ['Grid', 'Cards']);
+    const error = new Error('Missing or insufficient permissions.');
+    error.code = 'permission-denied';
+    throw error;
+  };
+  ids.libraryAnalysisForm.dispatch('submit', { preventDefault() {} });
+  await new Promise(setImmediate);
+  assert.equal(inputs.descriptiveName.value, 'Meu rascunho');
+  assert.equal(ids.libraryAnalysisForm.hidden, false);
+  assert.match(ids.libraryAnalysisStatus.textContent, /regras da análise foram publicadas/);
+  console.log('Library analysis editor draft and permission handling: OK');
+}
+
+verifyPermissionError().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

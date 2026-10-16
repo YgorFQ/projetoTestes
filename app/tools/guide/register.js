@@ -320,6 +320,7 @@
             'O botao circular i no canto superior esquerdo de cada card abre Mais informacoes: preview a esquerda e analise de leitura a direita.',
             'Somente admin e owner veem Editar analise. Os campos e tags sao salvos no Firestore apenas ao clicar em Salvar alteracoes.',
             'A analise fica em bibliotecaLayouts/{layoutId}/analysis/current, com versao propria; editor e visitante nao podem altera-la.',
+            'Se o Firestore recusar Salvar alteracoes por permissao, confira o cargo da conta e publique firebase/firestore.rules no projeto Firebase. O commit no GitHub nao implanta regras.',
             'O backup publico da Biblioteca inclui a analise para leitura, e a exclusao do layout remove seu documento filho.',
             'Modal da analise: controllers/analysis.js e styles/analysis.css.',
             'Template do HTML Basico: controllers/copy-base-template.js.',
