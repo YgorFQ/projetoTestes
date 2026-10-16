@@ -177,6 +177,9 @@
         addDocumentFile(files, layoutPath, layout);
         return Promise.all([
           collectRevisions(context, layout.ref, layoutPath, files),
+          sdk.getDoc(sdk.doc(layout.ref, 'analysis', 'current')).then(function (analysis) {
+            if (analysis.exists()) addDocumentFile(files, layoutPath + '/analysis/current', analysis);
+          }),
           sdk.getDocs(sdk.collection(layout.ref, 'variants')).then(function (variants) {
             return Promise.all(sortedDocuments(variants).map(function (variant) {
               var variantPath = layoutPath + '/variants/' + variant.id;

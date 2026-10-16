@@ -52,6 +52,15 @@
     );
   }
 
+  function watchAnalysis(layoutId, callback, onError) {
+    return window.SenkoFirebase.listenDocument(
+      workspacePath('bibliotecaLayouts/' + layoutId + '/analysis/current'),
+      callback,
+      onError,
+      { errorScope: 'feature' }
+    );
+  }
+
   function watchVariantsForLayouts(layoutIds, callback, onError) {
     var ids = Array.from(new Set((layoutIds || []).filter(Boolean))).sort();
     var variantsByLayout = {};
@@ -159,6 +168,10 @@
     });
   }
 
+  function saveAnalysis(analysis) {
+    return window.SenkoFirestoreWrites.saveLibraryAnalysis(analysis);
+  }
+
   function deleteLayout(layout) {
     return window.SenkoFirestoreWrites.deleteContent({
       workspaceId: window.SenkoFirebase.getWorkspaceId(),
@@ -190,10 +203,12 @@
     isActive: firebaseReady,
     watchLayouts: watchLayouts,
     watchCopyBase: watchCopyBase,
+    watchAnalysis: watchAnalysis,
     watchVariantsForLayouts: watchVariantsForLayouts,
     saveLayout: saveLayout,
     saveVariant: saveVariant,
     saveCopyBaseTemplate: saveCopyBaseTemplate,
+    saveAnalysis: saveAnalysis,
     deleteLayout: deleteLayout,
     deleteVariant: deleteVariant,
     enterEditor: enterEditor

@@ -238,6 +238,40 @@
     </div>
   </div>
 
+  <!-- Análise vinculada ao layout selecionado -->
+  <dialog class="library-analysis-dialog" id="libraryAnalysisDialog" aria-labelledby="libraryAnalysisTitle">
+    <div class="library-analysis-shell">
+      <header class="library-analysis-header">
+        <div><span class="modal-category">Biblioteca · Mais informações</span><h2 id="libraryAnalysisTitle"></h2></div>
+        <button type="button" class="library-analysis-close" id="libraryAnalysisClose" aria-label="Fechar informações">×</button>
+      </header>
+      <div class="library-analysis-columns">
+        <section class="library-analysis-preview" aria-label="Prévia do layout">
+          <iframe id="libraryAnalysisPreview" title="Prévia do layout" sandbox="allow-scripts"></iframe>
+        </section>
+        <section class="library-analysis-content" aria-label="Análise do layout">
+          <div id="libraryAnalysisRead"></div>
+          <form id="libraryAnalysisForm" hidden>
+            <label>Nome descritivo <input name="descriptiveName" maxlength="160" required></label>
+            <label>Estrutura principal <textarea name="mainStructure" maxlength="500" rows="2"></textarea></label>
+            <label>O que é? <textarea name="whatIsIt" maxlength="10000" rows="3"></textarea></label>
+            <label>Para que serve? <textarea name="purpose" maxlength="10000" rows="3"></textarea></label>
+            <label>Por que é assim? <textarea name="rationale" maxlength="10000" rows="3"></textarea></label>
+            <label>Quando utilizar? <textarea name="whenToUse" maxlength="10000" rows="3"></textarea></label>
+            <label>Limitações <textarea name="limitations" maxlength="10000" rows="3"></textarea></label>
+            <label>Tags <input name="tags" maxlength="3239" placeholder="Separe por vírgula"></label>
+            <div class="library-analysis-form-actions">
+              <button type="button" id="libraryAnalysisCancel">Cancelar</button>
+              <button type="submit" id="libraryAnalysisSave">Salvar alterações</button>
+            </div>
+          </form>
+          <p class="library-analysis-status" id="libraryAnalysisStatus" role="status" aria-live="polite"></p>
+        </section>
+      </div>
+      <footer class="library-analysis-footer" id="libraryAnalysisFooter" hidden><button type="button" id="libraryAnalysisEdit" hidden>Editar análise</button></footer>
+    </div>
+  </dialog>
+
   <!-- Toast -->
   <div class="toast" id="toast">✓ Copiado!</div>
   `;

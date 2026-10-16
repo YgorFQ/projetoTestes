@@ -11,6 +11,7 @@ SenkoLib/
 |   |   |   |-- register.js          - carrega e registra a feature
 |   |   |   |-- view.js              - estrutura visual
 |   |   |   |-- controllers/         - eventos, editores e fluxo de tela
+|   |   |   |   `-- analysis.js        - modal de leitura/edicao da analise do layout
 |   |   |   |-- core/                - modelo e regras internas
 |   |   |   |-- repositories/        - Firebase e fallback estatico
 |   |   |   `-- styles/              - estilos exclusivos

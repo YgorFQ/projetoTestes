@@ -47,6 +47,11 @@ banco, e o GitHub nao participa de criar, editar ou excluir conteudo.
 - cria e edita variacoes ligadas a um layout;
 - exclui layouts e variacoes;
 - mostra alteracoes remotas no editor aberto.
+- oferece **Mais informações** em cada card: prévia do layout à esquerda e
+  análise de leitura à direita, com nome descritivo, estrutura principal,
+  explicação, finalidade, motivo, uso, limitações e tags;
+- permite que somente admin e owner editem a análise em um formulário no modal.
+  O salvamento é explícito, versionado e ligado ao ID do layout.
 
 ### Colecoes
 
@@ -86,6 +91,7 @@ banco, e o GitHub nao participa de criar, editar ou excluir conteudo.
 | Promover ou remover owner | sim | nao | nao | nao |
 | Gerenciar qualquer cargo | sim | limitado | nao | nao |
 | Fazer backup no GitHub | sim | sim | sim | nao |
+| Editar análise de layout da Biblioteca | sim | sim | nao | nao |
 | Ver snapshot publico | sim | sim | sim | sim |
 
 O cargo do Console Firebase e diferente do cargo dentro do SenkoLib. Permissao
@@ -120,6 +126,12 @@ acionado.
 
 Em Notas, digitar nao escreve cada tecla nem transmite o rascunho. Somente o
 documento confirmado por **Salvar** chega aos listeners de outras pessoas.
+
+A análise da Biblioteca é um documento filho `analysis/current` de cada layout.
+Tem `version` própria e não cria revisão do HTML/CSS. Somente admin e owner
+podem salvá-la; membros leem o documento ao abrir o modal. O backup público
+leva os campos de leitura, sem autoria. Uma edição concorrente é recusada sem
+descartar o formulário local.
 
 ## 6. Concorrencia
 

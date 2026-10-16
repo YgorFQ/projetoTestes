@@ -42,6 +42,20 @@
     };
   }
 
+  function publicAnalysis(data) {
+    return {
+      descriptiveName: data.descriptiveName || '',
+      mainStructure: data.mainStructure || '',
+      whatIsIt: data.whatIsIt || '',
+      purpose: data.purpose || '',
+      rationale: data.rationale || '',
+      whenToUse: data.whenToUse || '',
+      limitations: data.limitations || '',
+      tags: Array.isArray(data.tags) ? data.tags : [],
+      version: Number(data.version || 0)
+    };
+  }
+
   function publicVariant(layoutId, id, data) {
     var variant = publicLayout(id, data);
     variant.layoutId = layoutId;
@@ -123,7 +137,7 @@
   function featureManifest(id, snapshot) {
     var counts = snapshot.manifest.counts;
     var countKeys = id === 'biblioteca'
-      ? ['bibliotecaLayouts', 'bibliotecaVariants', 'copyBaseTemplates']
+      ? ['bibliotecaLayouts', 'bibliotecaVariants', 'bibliotecaAnalyses', 'copyBaseTemplates']
       : (id === 'colecoes'
         ? ['collections', 'collectionLayouts', 'groups']
         : ['teamNoteSections', 'teamNotePages']);
@@ -147,6 +161,7 @@
     var workspaceId = String(manifest.workspaceId || 'senkolib');
     var workspaceRoot = DATA_ROOT + 'workspaces/' + workspaceId + '/';
     var bibliotecaLayouts = [];
+    var bibliotecaAnalyses = {};
     var bibliotecaVariants = [];
     var collections = [];
     var collectionLayouts = [];
@@ -176,6 +191,11 @@
         bibliotecaLayouts.push(publicLayout(segments[1], data));
         return;
       }
+      if (segments[0] === 'bibliotecaLayouts' && segments.length === 4 &&
+          segments[2] === 'analysis' && segments[3] === 'current') {
+        bibliotecaAnalyses[segments[1]] = publicAnalysis(data);
+        return;
+      }
       if (segments[0] === 'bibliotecaLayouts' && segments[2] === 'variants' && segments.length === 4) {
         bibliotecaVariants.push(publicVariant(segments[1], segments[3], data));
         return;
@@ -197,6 +217,9 @@
       }
     });
 
+    bibliotecaLayouts.forEach(function (layout) {
+      if (bibliotecaAnalyses[layout.id]) layout.analysis = bibliotecaAnalyses[layout.id];
+    });
     bibliotecaLayouts.sort(compareByName);
     bibliotecaVariants.sort(compareByName);
     collections.sort(compareByName);
@@ -222,6 +245,7 @@
         counts: {
           bibliotecaLayouts: bibliotecaLayouts.length,
           bibliotecaVariants: bibliotecaVariants.length,
+          bibliotecaAnalyses: bibliotecaLayouts.filter(function (layout) { return Boolean(layout.analysis); }).length,
           collections: collections.length,
           collectionLayouts: collectionLayouts.length,
           groups: groups.length,

@@ -79,6 +79,15 @@ function buildFixture(root) {
       })],
     [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/bibliotecaLayouts/layout-a/revisions/revision-1.json`,
       revisionData('layout-a', 'revision-1', 'libraryLayout', 'Layout A')],
+    [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/bibliotecaLayouts/layout-a/analysis/current.json`, {
+      id: 'current', kind: 'libraryAnalysis', workspaceId: sourceWorkspaceId,
+      layoutId: 'layout-a', descriptiveName: 'Layout A explicado',
+      mainStructure: 'Grid', whatIsIt: 'Uma seção.', purpose: 'Mostrar conteúdo.',
+      rationale: 'Organização visual.', whenToUse: 'Na página inicial.',
+      limitations: 'Textos curtos.', tags: ['Grid'], version: 1,
+      createdAt: timestamp, createdBy: 'restore-fixture', updatedAt: timestamp,
+      updatedBy: 'restore-fixture', updatedByName: 'Fixture'
+    }],
     [`${snapshotRoot}/workspaces/${sourceWorkspaceId}/bibliotecaLayouts/layout-a/variants/variant-a.json`,
       namedData('variant-a', 'Variant A', {
         kind: 'libraryVariant',
@@ -188,12 +197,14 @@ async function main() {
     });
 
     runRestore(tempRoot, [], 0);
-    const [workspaceSnapshot, group, copyBase, layout, variant, collection, internal, noteSection, notePage, reservations] =
+    const [workspaceSnapshot, group, copyBase, layout, analysis, variant, collection, internal, noteSection, notePage, reservations] =
       await Promise.all([
         workspace.get(),
         workspace.collection('groups').doc('interface').get(),
         workspace.collection('settings').doc('copyBase').get(),
         workspace.collection('bibliotecaLayouts').doc('layout-a').get(),
+        workspace.collection('bibliotecaLayouts').doc('layout-a')
+          .collection('analysis').doc('current').get(),
         workspace.collection('bibliotecaLayouts').doc('layout-a')
           .collection('variants').doc('variant-a').get(),
         workspace.collection('collections').doc('collection-a').get(),
@@ -208,11 +219,13 @@ async function main() {
     assert(workspaceSnapshot.data().restoreStatus === 'completed',
       'O workspace nao registrou restauracao concluida.');
     assert(workspaceSnapshot.data().dataVersion === 42, 'dataVersion incorreta.');
-    assert(group.exists && copyBase.exists && layout.exists && variant.exists && collection.exists && internal.exists &&
+    assert(group.exists && copyBase.exists && layout.exists && analysis.exists && variant.exists && collection.exists && internal.exists &&
       noteSection.exists && notePage.exists,
       'Um recurso esperado nao foi restaurado.');
     assert(copyBase.data().html === '<div>HTML básico restaurado</div>',
       'O HTML basico nao foi restaurado corretamente.');
+    assert(analysis.data().layoutId === 'layout-a' && analysis.data().descriptiveName === 'Layout A explicado',
+      'A analise nao foi restaurada com seu layout.');
     assert(layout.data().createdAt instanceof Timestamp,
       'createdAt nao voltou a ser Timestamp.');
     assert(reservations.size === 7, 'Quantidade de reservas incorreta.');

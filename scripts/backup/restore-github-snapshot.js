@@ -197,6 +197,9 @@ function parseDocumentPath(filePath, sourceWorkspaceId) {
   } else if (segments.length === 2 && segments[0] === 'bibliotecaLayouts') {
     [type, resourceId, scope] = ['libraryLayout', segments[1], 'biblioteca-layouts'];
   } else if (segments.length === 4 && segments[0] === 'bibliotecaLayouts' &&
+             segments[2] === 'analysis' && segments[3] === 'current') {
+    [type, parentId, resourceId] = ['libraryAnalysis', segments[1], 'current'];
+  } else if (segments.length === 4 && segments[0] === 'bibliotecaLayouts' &&
              segments[2] === 'revisions') {
     [type, resourceId, revisionId] = ['libraryLayoutRevision', segments[1], segments[3]];
   } else if (segments.length === 4 && segments[0] === 'bibliotecaLayouts' &&
@@ -266,7 +269,8 @@ function validateDocument(entry, data, sourceWorkspaceId) {
     throw new Error(`${entry.filePath}: workspaceId nao corresponde ao manifesto.`);
   }
 
-  if (!entry.type.endsWith('Revision') && entry.type !== 'copyBaseTemplate') {
+  if (!entry.type.endsWith('Revision') &&
+      entry.type !== 'copyBaseTemplate' && entry.type !== 'libraryAnalysis') {
     validateNamedDocument(entry, data);
   }
 
@@ -282,6 +286,19 @@ function validateDocument(entry, data, sourceWorkspaceId) {
     }
   } else if (entry.type === 'libraryLayout' && data.kind !== 'libraryLayout') {
     throw new Error(`${entry.filePath}: kind precisa ser libraryLayout.`);
+  } else if (entry.type === 'libraryAnalysis') {
+    const fields = ['mainStructure', 'whatIsIt', 'purpose', 'rationale', 'whenToUse', 'limitations'];
+    if (data.id !== 'current' || data.kind !== 'libraryAnalysis' ||
+        data.layoutId !== entry.parentId ||
+        typeof data.descriptiveName !== 'string' ||
+        data.descriptiveName.trim().length < 2 || data.descriptiveName.length > 160 ||
+        !fields.every((field) => typeof data[field] === 'string' &&
+          data[field].length <= (field === 'mainStructure' ? 500 : 10000)) ||
+        !Array.isArray(data.tags) || data.tags.length > 40 ||
+        data.tags.some((tag) => typeof tag !== 'string' || tag.length > 80) ||
+        !Number.isSafeInteger(data.version) || data.version < 1) {
+      throw new Error(`${entry.filePath}: analise da Biblioteca invalida.`);
+    }
   } else if (entry.type === 'libraryVariant') {
     if (data.kind !== 'libraryVariant' || data.parentId !== entry.parentId) {
       throw new Error(`${entry.filePath}: variante possui pai ou kind invalido.`);
@@ -326,6 +343,9 @@ function resourceKey(entry) {
 }
 
 function parentKey(entry) {
+  if (entry.type === 'libraryAnalysis') {
+    return `bibliotecaLayouts/${entry.parentId}`;
+  }
   if (entry.type === 'libraryLayoutRevision') {
     return `bibliotecaLayouts/${entry.resourceId}`;
   }

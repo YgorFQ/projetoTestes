@@ -24,6 +24,7 @@ workspaces/{workspaceId}
 |-- settings/copyBase
 |-- bibliotecaLayouts/{layoutId}
 |   |-- revisions/{revisionId}
+|   |-- analysis/current
 |   `-- variants/{variantId}
 |       `-- revisions/{revisionId}
 |-- collections/{collectionId}
@@ -144,6 +145,23 @@ Caminho: `workspaces/{workspaceId}/bibliotecaLayouts/{layoutId}`
 | `createdAt` / `createdBy` | timestamp/string | Auditoria de criacao |
 | `updatedAt` / `updatedBy` | timestamp/string | Auditoria de alteracao |
 | `updatedByName` | string | Nome mostrado no aviso ao vivo |
+
+## Análise do layout da Biblioteca
+
+Caminho: `workspaces/{workspaceId}/bibliotecaLayouts/{layoutId}/analysis/current`.
+O ID técnico do layout é o vínculo; renomear o layout não move a análise.
+
+O documento tem `id: current`, `kind: libraryAnalysis`, `workspaceId`,
+`layoutId`, `descriptiveName` (2 a 160 caracteres), `mainStructure` (até 500),
+`whatIsIt`, `purpose`, `rationale`, `whenToUse` e `limitations` (até 10.000
+caracteres cada), `tags` (até 40), `version` e campos de criação/atualização.
+As tags são próprias da análise e não alteram as tags do layout.
+
+Membros podem ler. Somente `owner` e `admin` criam ou atualizam; a transação
+confere o layout pai, compara `expectedVersion` e incrementa
+`workspace.dataVersion`. A análise não cria revisão do HTML/CSS. Na exclusão
+do layout, o documento filho é removido antes do pai. O backup técnico inclui
+o documento; o bundle público leva só os campos de apresentação e a versão.
 
 ## Variacao da Biblioteca
 

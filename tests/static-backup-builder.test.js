@@ -22,6 +22,14 @@ const files = {
     html: '<main>antigo</main>',
     css: 'main { color: blue; }'
   }),
+  [root + 'bibliotecaLayouts/layout-1/analysis/current.json']: JSON.stringify({
+    id: 'current', kind: 'libraryAnalysis', layoutId: 'layout-1',
+    descriptiveName: 'Cards circulares', mainStructure: 'Grid e cards',
+    whatIsIt: 'Uma seção de destaque.', purpose: 'Apresentar características.',
+    rationale: 'Facilita comparação.', whenToUse: 'Em listas de benefícios.',
+    limitations: 'Evite textos longos.', tags: ['Grid', 'Cards'], version: 2,
+    updatedByName: 'Nome privado da análise'
+  }),
   [root + 'bibliotecaLayouts/layout-1/variants/variant-1.json']: JSON.stringify({
     name: 'Variante atual',
     html: '<aside>variante</aside>',
@@ -75,6 +83,7 @@ assert.equal(snapshot.manifest.dataVersion, 9);
 assert.deepEqual(snapshot.manifest.counts, {
   bibliotecaLayouts: 1,
   bibliotecaVariants: 1,
+  bibliotecaAnalyses: 1,
   collections: 1,
   collectionLayouts: 1,
   groups: 1,
@@ -86,6 +95,9 @@ assert.equal(snapshot.biblioteca.layouts[0].html, '<main>atual</main>');
 assert.equal(snapshot.biblioteca.layouts[0].updatedByName, undefined);
 assert.equal(snapshot.biblioteca.layouts[0].revisionId, undefined);
 assert.equal(snapshot.biblioteca.layouts[0].version, undefined);
+assert.equal(snapshot.biblioteca.layouts[0].analysis.descriptiveName, 'Cards circulares');
+assert.deepEqual(snapshot.biblioteca.layouts[0].analysis.tags, ['Grid', 'Cards']);
+assert.equal(snapshot.biblioteca.layouts[0].analysis.updatedByName, undefined);
 assert.equal(snapshot.biblioteca.variants[0].layoutId, 'layout-1');
 assert.equal(snapshot.biblioteca.copyBase.html, '<div>HTML básico compartilhado</div>');
 assert.equal(snapshot.biblioteca.copyBase.version, 4);
@@ -103,6 +115,7 @@ assert.ok(!generatedText.includes('privado@example.com'));
 assert.ok(!generatedText.includes('Nome privado'));
 assert.ok(!generatedText.includes('Nome privado do editor'));
 assert.ok(!generatedText.includes('Nome privado das notas'));
+assert.ok(!generatedText.includes('Nome privado da análise'));
 assert.deepEqual(Object.keys(generated).sort(), [
   'backup/latest/biblioteca/data.js',
   'backup/latest/biblioteca/manifest.js',

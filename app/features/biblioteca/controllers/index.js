@@ -458,6 +458,17 @@ function createCard(layout, index) {
   ov.className = 'card-preview-overlay';
   preview.appendChild(ov);
   mountPreview(preview, layout.html, layout.css, layout.name);
+  var infoButton = document.createElement('button');
+  infoButton.type = 'button';
+  infoButton.className = 'library-analysis-info';
+  infoButton.textContent = 'i';
+  infoButton.title = 'Mais informações';
+  infoButton.setAttribute('aria-label', 'Mais informações sobre ' + layout.name);
+  infoButton.addEventListener('click', function (event) {
+    event.stopPropagation();
+    if (window.SenkoBibliotecaAnalysis) window.SenkoBibliotecaAnalysis.open(layout, infoButton);
+  });
+  preview.appendChild(infoButton);
 
   var body = document.createElement('div'); body.className = 'card-body';
   var nameEl = document.createElement('div'); nameEl.className = 'card-name'; nameEl.textContent = layout.name;

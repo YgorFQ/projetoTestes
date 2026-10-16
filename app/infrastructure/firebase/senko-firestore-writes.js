@@ -388,6 +388,80 @@
     });
   }
 
+  // A análise pertence ao layout, mas tem versão própria: documentar um
+  // layout não cria revisão de HTML/CSS e só admin/owner pode alterar o texto.
+  function saveLibraryAnalysis(data) {
+    return withContext(function (context) {
+      var base = refs(context);
+      var layoutId = cleanId(data.layoutId, 'ID do layout');
+      var layoutRef = base.sdk.doc(base.workspace, 'bibliotecaLayouts', layoutId);
+      var analysisRef = base.sdk.doc(layoutRef, 'analysis', 'current');
+      var descriptiveName = cleanName(data.descriptiveName);
+      var fields = {
+        mainStructure: cleanText(data.mainStructure, 'Estrutura principal', 500),
+        whatIsIt: cleanText(data.whatIsIt, 'O que e', 10000),
+        purpose: cleanText(data.purpose, 'Para que serve', 10000),
+        rationale: cleanText(data.rationale, 'Por que e assim', 10000),
+        whenToUse: cleanText(data.whenToUse, 'Quando utilizar', 10000),
+        limitations: cleanText(data.limitations, 'Limitacoes', 10000)
+      };
+      var tags = cleanTags(data.tags);
+      if (!Array.isArray(data.tags) || data.tags.length !== tags.length ||
+          data.tags.some(function (tag) { return typeof tag !== 'string' || tag.length > 80; })) {
+        throw appError('invalid-argument', 'Tags da analise invalidas.');
+      }
+      var expectedVersion = Number(data.expectedVersion);
+      if (!Number.isSafeInteger(expectedVersion) || expectedVersion < 0) {
+        throw appError('invalid-argument', 'Versao esperada da analise invalida.');
+      }
+
+      return base.sdk.runTransaction(context.db, function (transaction) {
+        return Promise.all([
+          transaction.get(base.member),
+          transaction.get(layoutRef),
+          transaction.get(analysisRef)
+        ]).then(function (snapshots) {
+          requireMemberSnapshot(snapshots[0]);
+          if (['owner', 'admin'].indexOf(snapshots[0].data().role) === -1) {
+            throw appError('permission-denied', 'Somente admin ou owner pode editar a analise.');
+          }
+          if (!snapshots[1].exists() || snapshots[1].data().deleting) {
+            throw appError('not-found', 'Este layout nao existe mais.');
+          }
+          var existing = snapshots[2].exists() ? snapshots[2].data() : null;
+          var currentVersion = existing ? Number(existing.version || 0) : 0;
+          if (currentVersion !== expectedVersion) {
+            throw appError('aborted', 'Outra pessoa alterou esta analise.');
+          }
+          var now = base.sdk.serverTimestamp();
+          var result = Object.assign({
+            id: 'current',
+            kind: 'libraryAnalysis',
+            workspaceId: context.workspaceId,
+            layoutId: layoutId,
+            descriptiveName: descriptiveName,
+            tags: tags,
+            version: currentVersion + 1,
+            updatedAt: now,
+            updatedBy: context.user.uid,
+            updatedByName: actorName(context)
+          }, fields);
+          if (!existing) {
+            result.createdAt = now;
+            result.createdBy = context.user.uid;
+          }
+          transaction.set(analysisRef, result, { merge: true });
+          transaction.set(base.workspace, {
+            dataVersion: base.sdk.increment(1),
+            updatedAt: now,
+            updatedBy: context.user.uid
+          }, { merge: true });
+          return result;
+        });
+      });
+    });
+  }
+
   // -----------------------------------------------------------------------
   // Colecoes
   // -----------------------------------------------------------------------
@@ -681,7 +755,12 @@
     }
 
     if (target.kind === 'libraryLayout') {
-      return collectRevisions(target.ref).then(function () {
+      return Promise.all([
+        collectRevisions(target.ref),
+        sdk.getDocs(sdk.collection(target.ref, 'analysis')).then(function (snapshot) {
+          snapshot.docs.forEach(function (item) { references.push(item.ref); });
+        })
+      ]).then(function () {
         return sdk.getDocs(sdk.collection(target.ref, 'variants'));
       }).then(function (variants) {
         return Promise.all(variants.docs.map(function (variant) {
@@ -1047,6 +1126,7 @@
   window.SenkoFirestoreWrites = {
     saveVersionedContent: saveVersionedContent,
     saveCopyBaseTemplate: saveCopyBaseTemplate,
+    saveLibraryAnalysis: saveLibraryAnalysis,
     saveCollection: saveCollection,
     saveGroup: saveGroup,
     deleteGroup: deleteGroup,

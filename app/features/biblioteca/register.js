@@ -225,6 +225,7 @@
       loadStyle('styles/index.css?v=20260816-structure');
       loadStyle('styles/layout-editor.css?v=20260909-style-html-download');
       loadStyle('styles/copy-base-editor.css?v=20260826-copy-base-firebase');
+      loadStyle('styles/analysis.css?v=20261016-analysis-1');
 
       await loadStaticAssets();
 
@@ -247,6 +248,7 @@
       await Promise.all([
         loadScript('controllers/layout-editor.js?v=20260909-style-html-download'),
         loadScript('controllers/index.js?v=20260816-structure'),
+        loadScript('controllers/analysis.js?v=20261016-analysis-1'),
         loadScript('controllers/copy-base-template.js?v=20260816-structure').then(function () {
           return loadScript('controllers/copy-base.js?v=20260826-copy-base-firebase').then(function () {
             return loadScript('controllers/copy-base-editor.js?v=20260826-copy-base-firebase');
@@ -259,6 +261,7 @@
       }
 
       window.SenkoBiblioteca.init();
+      if (window.SenkoBibliotecaAnalysis) window.SenkoBibliotecaAnalysis.init();
       if (window.SenkoBibliotecaCopyBase) window.SenkoBibliotecaCopyBase.init();
       if (window.SenkoBibliotecaCopyBaseEditor) window.SenkoBibliotecaCopyBaseEditor.init();
       loadStaticCopyBase();

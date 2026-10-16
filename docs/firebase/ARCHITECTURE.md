@@ -25,6 +25,8 @@ GitHub Actions.
 - Colecoes e grupos usam contador de versao.
 - Secoes e paginas de Notas usam contador de versao e reserva de nomes.
 - O template compartilhado do HTML Basico usa um singleton com contador de versao.
+- A análise de cada layout da Biblioteca usa um documento filho com versão
+  própria; somente admin/owner edita, e a leitura pública vem do backup.
 - Um save desatualizado falha com `aborted`; nunca ha sobrescrita silenciosa.
 - Todos os documentos em `members` podem alterar conteudo. O campo `role`
   separa governanca em `owner`, `admin` e `editor`.

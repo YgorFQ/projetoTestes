@@ -449,7 +449,7 @@
     });
   }
 
-  function listenDocument(path, callback, onError) {
+  function listenDocument(path, callback, onError, options) {
     assertReady();
     var reference = modules.firestore.doc(services.db, path);
     return modules.firestore.onSnapshot(reference, function (documentSnapshot) {
@@ -457,7 +457,7 @@
         ? Object.assign({ id: documentSnapshot.id }, documentSnapshot.data())
         : null);
     }, function (error) {
-      handleListenerError(error, onError, 'document-listener');
+      handleListenerError(error, onError, 'document-listener', options);
     });
   }
 

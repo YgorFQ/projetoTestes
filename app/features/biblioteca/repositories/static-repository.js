@@ -45,6 +45,15 @@
     };
   }
 
+  function getAnalysis(layoutId) {
+    var data = source();
+    var layout = data && data.layouts.find(function (item) { return item.id === layoutId; });
+    if (!layout || !layout.analysis) return null;
+    return Object.assign({}, layout.analysis, {
+      tags: Array.isArray(layout.analysis.tags) ? layout.analysis.tags.slice() : []
+    });
+  }
+
   window.SenkoBibliotecaStatic = {
     isAvailable: function () {
       var data = source();
@@ -54,6 +63,7 @@
     },
     getLayouts: getLayouts,
     getVariants: getVariants,
-    getCopyBase: getCopyBase
+    getCopyBase: getCopyBase,
+    getAnalysis: getAnalysis
   };
 })();

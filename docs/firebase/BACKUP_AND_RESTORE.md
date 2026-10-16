@@ -134,6 +134,7 @@ backup/data/
     |-- groups/{groupId}.json
     |-- settings/copyBase.json
     |-- bibliotecaLayouts/{layoutId}.json
+    |   |-- analysis/current.json
     |   |-- revisions/{revisionId}.json
     |   `-- variants/{variantId}/
     |       `-- revisions/{revisionId}.json
@@ -188,8 +189,9 @@ backup/latest/
 
 Esses arquivos sao dados gerados. Nao devem ser editados manualmente. O index
 conhece somente o manifesto global; cada feature carrega sua propria pasta.
-Eles contem somente a versao atual de layouts, variacoes, colecoes, layouts
-internos, grupos, HTML Basico compartilhado, secoes e paginas de Notas. Nao incluem documentos de revisao, autoria, membros,
+Eles contem somente a versao atual de layouts, suas analises publicas,
+variacoes, colecoes, layouts internos, grupos, HTML Basico compartilhado,
+secoes e paginas de Notas. Nao incluem documentos de revisao, autoria, membros,
 e-mails, presenca, tokens ou logs. O HTML e o CSS ficam publicos por decisao
 de produto.
 

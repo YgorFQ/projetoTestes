@@ -62,7 +62,7 @@ async function seed(testEnvironment) {
   });
 }
 
-function loadClientWriter(db) {
+function loadClientWriter(db, uid = MEMBER_UID, role = 'editor') {
   global.window = {
     crypto: crypto.webcrypto,
     SenkoFirebase: {
@@ -71,11 +71,11 @@ function loadClientWriter(db) {
         db,
         firestore,
         user: {
-          uid: MEMBER_UID,
+          uid,
           email: 'member@example.com',
           displayName: 'Membro de teste'
         },
-        member: { uid: MEMBER_UID },
+        member: { uid, role },
         workspaceId: WORKSPACE_ID
       })
     }
@@ -615,6 +615,42 @@ async function main() {
     assert.equal(workspace.data().dataVersion, 9);
     assert.equal(workspace.data().lastGithubExportVersion, 9);
     await testGithubBackup(memberDb, outsiderDb, writes);
+
+    const documentedLayout = await writes.saveVersionedContent({
+      kind: 'libraryLayout', name: 'Layout documentado', tags: [],
+      html: '<section>Documentado</section>', css: '', baseRevisionId: null
+    });
+    const analysisPath = `workspaces/${WORKSPACE_ID}/bibliotecaLayouts/${documentedLayout.id}/analysis/current`;
+    const analysisInput = {
+      layoutId: documentedLayout.id, descriptiveName: 'Cards circulares',
+      mainStructure: 'Grid e cards', whatIsIt: 'Uma seção visual.',
+      purpose: 'Mostrar benefícios.', rationale: 'Facilita comparar.',
+      whenToUse: 'Em listas.', limitations: 'Textos curtos.',
+      tags: ['Grid', 'Cards'], expectedVersion: 0
+    };
+    const adminWrites = loadClientWriter(adminDb, ADMIN_UID, 'admin');
+    const firstAnalysis = await adminWrites.saveLibraryAnalysis(analysisInput);
+    assert.equal(firstAnalysis.version, 1);
+    assert.equal((await firestore.getDoc(firestore.doc(memberDb, analysisPath))).data().layoutId,
+      documentedLayout.id);
+    await assertFails(firestore.getDoc(firestore.doc(outsiderDb, analysisPath)));
+    const editorWrites = loadClientWriter(memberDb);
+    await expectClientError(editorWrites.saveLibraryAnalysis({
+      ...analysisInput, expectedVersion: 1
+    }), 'functions/permission-denied');
+    const ownerWrites = loadClientWriter(ownerDb, OWNER_UID, 'owner');
+    const secondAnalysis = await ownerWrites.saveLibraryAnalysis({
+      ...analysisInput, purpose: 'Mostrar características.', expectedVersion: 1
+    });
+    assert.equal(secondAnalysis.version, 2);
+    await expectClientError(ownerWrites.saveLibraryAnalysis({
+      ...analysisInput, expectedVersion: 1
+    }), 'functions/aborted');
+    await ownerWrites.deleteContent({
+      kind: 'libraryLayout', resourceId: documentedLayout.id,
+      expectedRevisionId: documentedLayout.revisionId
+    });
+    assert.equal((await firestore.getDoc(firestore.doc(ownerDb, analysisPath))).exists(), false);
     console.log('Firestore client/rules test: OK');
   } finally {
     await testEnvironment.cleanup();

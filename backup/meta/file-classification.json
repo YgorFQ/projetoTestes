@@ -7,8 +7,8 @@
     "prototype"
   ],
   "counts": {
-    "official": 133,
-    "generated": 232,
+    "official": 136,
+    "generated": 233,
     "prototype": 5
   },
   "entries": [
@@ -26,6 +26,10 @@
     },
     {
       "path": "AGENTS.md",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/controllers/analysis.js",
       "status": "official"
     },
     {
@@ -62,6 +66,10 @@
     },
     {
       "path": "app/features/biblioteca/repositories/static-repository.js",
+      "status": "official"
+    },
+    {
+      "path": "app/features/biblioteca/styles/analysis.css",
       "status": "official"
     },
     {
@@ -1225,6 +1233,14 @@
       "status": "generated"
     },
     {
+      "path": "backup/data/workspaces/senkolib/collections/maicon-colecoes/layouts/tqLKGNIKUDo7R13J3bye.json",
+      "status": "generated"
+    },
+    {
+      "path": "backup/data/workspaces/senkolib/collections/maicon-colecoes/layouts/tqLKGNIKUDo7R13J3bye/revisions/w3pHq6lT29LgPODRMkgT.json",
+      "status": "generated"
+    },
+    {
       "path": "backup/data/workspaces/senkolib/groups/joel.json",
       "status": "generated"
     },
@@ -1249,15 +1265,11 @@
       "status": "generated"
     },
     {
-      "path": "backup/data/workspaces/senkolib/teamNoteSections/teste01-409ccff8f051.json",
+      "path": "backup/data/workspaces/senkolib/teamNoteSections/lista-de-fazeres-17d59300e92b.json",
       "status": "generated"
     },
     {
-      "path": "backup/data/workspaces/senkolib/teamNoteSections/teste01-409ccff8f051/pages/nova-pagina-49caef8a79b3.json",
-      "status": "generated"
-    },
-    {
-      "path": "backup/data/workspaces/senkolib/teamNoteSections/teste01-409ccff8f051/pages/nova-pagina-abc41062d1bd.json",
+      "path": "backup/data/workspaces/senkolib/teamNoteSections/lista-de-fazeres-17d59300e92b/pages/nova-pagina-63498db66b5a.json",
       "status": "generated"
     },
     {
@@ -1474,6 +1486,10 @@
     },
     {
       "path": "tests/fixtures/github-backup-ui.html",
+      "status": "official"
+    },
+    {
+      "path": "tests/library-analysis-editor.test.js",
       "status": "official"
     },
     {

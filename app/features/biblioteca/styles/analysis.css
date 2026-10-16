@@ -1,0 +1,69 @@
+.library-analysis-info {
+  position: absolute;
+  z-index: 2;
+  top: 12px;
+  left: 12px;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--accent);
+  font: 800 18px var(--font-body);
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+}
+.library-analysis-info:hover,
+.library-analysis-info:focus-visible { background: var(--accent); color: #fff; }
+
+.library-analysis-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(1180px, calc(100vw - 32px));
+  max-width: none;
+  max-height: min(90vh, 900px);
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+  font-family: var(--font-body);
+}
+.library-analysis-dialog::backdrop { background: rgba(0, 0, 0, .72); backdrop-filter: blur(5px); }
+.library-analysis-shell { display: flex; flex-direction: column; max-height: min(90vh, 900px); }
+.library-analysis-header,
+.library-analysis-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 24px; }
+.library-analysis-header { border-bottom: 1px solid var(--border); }
+.library-analysis-header h2 { margin: 5px 0 0; font: 800 1.3rem var(--font-display); }
+.library-analysis-close { border: 0; background: transparent; color: var(--text); font-size: 28px; cursor: pointer; }
+.library-analysis-columns { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 0; flex: 1; }
+.library-analysis-preview { min-height: 380px; background: #fff; border-right: 1px solid var(--border); }
+.library-analysis-preview iframe { display: block; width: 100%; height: 100%; border: 0; }
+.library-analysis-content { min-height: 0; overflow: auto; padding: 24px; }
+.library-analysis-read-field { margin: 0 0 22px; }
+.library-analysis-read-field h3 { margin: 0 0 5px; color: var(--accent); font-size: .85rem; }
+.library-analysis-read-field p { margin: 0; white-space: pre-wrap; line-height: 1.5; overflow-wrap: anywhere; }
+.library-analysis-read-field p.is-empty { color: var(--text3); }
+.library-analysis-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.library-analysis-content form label { display: block; margin: 0 0 16px; font-weight: 800; }
+.library-analysis-content input,
+.library-analysis-content textarea { display: block; box-sizing: border-box; width: 100%; margin-top: 6px; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text); font: 400 .9rem var(--font-body); }
+.library-analysis-content textarea { resize: vertical; }
+.library-analysis-form-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.library-analysis-form-actions button,
+.library-analysis-footer button { padding: 9px 14px; border: 1px solid var(--accent); border-radius: var(--radius); background: var(--accent); color: #fff; font: 800 .85rem var(--font-body); cursor: pointer; }
+.library-analysis-form-actions button:first-child { background: transparent; color: var(--text); border-color: var(--border); }
+.library-analysis-form-actions button:disabled { opacity: .6; cursor: wait; }
+.library-analysis-status { margin: 12px 0 0; min-height: 1.2em; color: var(--text2); font-size: .83rem; }
+.library-analysis-status.is-error { color: var(--red); }
+.library-analysis-footer { border-top: 1px solid var(--border); }
+.library-analysis-dialog [hidden] { display: none !important; }
+@media (max-width: 760px) {
+  .library-analysis-dialog { width: calc(100vw - 16px); max-height: 95vh; }
+  .library-analysis-shell { max-height: 95vh; }
+  .library-analysis-columns { grid-template-columns: 1fr; overflow: auto; }
+  .library-analysis-preview { min-height: 280px; height: 38vh; border-right: 0; border-bottom: 1px solid var(--border); }
+  .library-analysis-content { overflow: visible; padding: 18px; }
+}

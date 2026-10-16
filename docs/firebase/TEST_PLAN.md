@@ -8,6 +8,7 @@ npm run test:asset-versioning
 npm run test:access-modal
 npm run test:static-backup
 npm run test:static-independence
+npm run test:library-analysis-editor
 npm run test:copy-base-editor
 npm run test:firebase-health
 npm run test:faq-prototype
@@ -34,6 +35,10 @@ Cenarios obrigatorios:
 - versao atrasada e recusada;
 - HTML Basico cria o singleton, incrementa a versao e recusa conflito;
 - documento, revisao, reserva e dataVersion mudam juntos;
+- admin e owner salvam a analise de um layout; editor e visitante nao escrevem;
+- membro le a analise, visitante so a ve no snapshot publico;
+- version atrasada da analise e recusada sem sobrescrever o Firestore;
+- excluir layout remove tambem `analysis/current`;
 - owner/admin/editor mantem conteudo;
 - regras administrativas respeitam cargos.
 - membro cria secao e pagina de Notas;
@@ -70,6 +75,13 @@ admin e tentativa de promover owner sem permissao.
 - nomes equivalentes sao recusados;
 - ID tecnico nao e campo editavel;
 - outro navegador recebe a mudanca.
+- cada card mostra o botao circular "i" no canto superior esquerdo; clicar nele
+  abre a analise, sem abrir o editor normal do layout;
+- o modal mostra preview isolado a esquerda e campos de leitura a direita;
+- admin/owner edita os sete campos e as tags, salva e ve a leitura atualizada;
+- editor e modo static nao mostram o comando de edicao;
+- rascunho com mudanca remota fica no formulario e o save atrasado e recusado;
+- em largura pequena o preview fica acima da analise;
 
 ## Smoke test de Colecoes
 
@@ -121,6 +133,8 @@ editor sem comparar `dirty`.
 - token nao aparece em payload gerado;
 - um commit contem snapshot tecnico e publico;
 - manifestos possuem contagens coerentes;
+- analises entram no snapshot tecnico, no payload publico da Biblioteca e na
+  restauracao ligadas ao ID do layout, sem autoria no payload publico;
 - mudanca de dataVersion durante exportacao causa nova tentativa;
 - erro 401/403/404/rede possui mensagem util;
 - falha do GitHub nao altera Firestore.
