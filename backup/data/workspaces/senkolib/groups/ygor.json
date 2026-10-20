@@ -1,13 +1,13 @@
 {
-  "updatedBy": "legacy-import",
-  "createdBy": "legacy-import",
-  "name": "Ygor",
-  "workspaceId": "senkolib",
-  "updatedByName": "Importacao inicial",
-  "color": "#1a9e52",
-  "updatedAt": "2026-08-15T15:14:08.138Z",
-  "version": 1,
+  "createdAt": "2026-08-15T15:14:08.138Z",
   "id": "ygor",
   "nameKey": "ygor",
-  "createdAt": "2026-08-15T15:14:08.138Z"
+  "workspaceId": "senkolib",
+  "color": "#1a9e52",
+  "version": 1,
+  "name": "Ygor",
+  "updatedAt": "2026-08-15T15:14:08.138Z",
+  "updatedByName": "Importacao inicial",
+  "createdBy": "legacy-import",
+  "updatedBy": "legacy-import"
 }

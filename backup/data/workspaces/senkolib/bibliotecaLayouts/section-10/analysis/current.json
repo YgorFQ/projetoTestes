@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "whatIsIt": "Test",
+  "updatedAt": "2026-10-16T17:39:01.432Z",
+  "mainStructure": "Test",
+  "createdBy": "0CgDxMIM5qaJ8aTHfveyKk7jfl83",
+  "layoutId": "section-10",
+  "updatedByName": "Ygor Ferreira",
+  "id": "current",
+  "limitations": "Tes",
+  "purpose": "Test",
+  "workspaceId": "senkolib",
+  "kind": "libraryAnalysis",
+  "updatedBy": "0CgDxMIM5qaJ8aTHfveyKk7jfl83",
+  "whenToUse": "Test",
+  "tags": [
+    "teste"
+  ],
+  "createdAt": "2026-10-16T17:39:01.432Z",
+  "descriptiveName": "Teste",
+  "rationale": "test"
+}

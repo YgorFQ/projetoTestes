@@ -1,13 +1,13 @@
 {
-  "color": "#f59e0b",
-  "updatedAt": "2026-08-15T15:14:08.138Z",
-  "updatedBy": "legacy-import",
-  "createdBy": "legacy-import",
-  "version": 1,
-  "updatedByName": "Importacao inicial",
-  "nameKey": "pedro",
   "name": "pedro",
-  "id": "pedro",
+  "nameKey": "pedro",
   "createdAt": "2026-08-15T15:14:08.138Z",
-  "workspaceId": "senkolib"
+  "id": "pedro",
+  "updatedByName": "Importacao inicial",
+  "color": "#f59e0b",
+  "updatedBy": "legacy-import",
+  "version": 1,
+  "workspaceId": "senkolib",
+  "createdBy": "legacy-import",
+  "updatedAt": "2026-08-15T15:14:08.138Z"
 }
