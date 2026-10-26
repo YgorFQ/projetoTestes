@@ -1,14 +1,14 @@
 {
-  "tags": [],
-  "createdAt": "2026-08-15T15:14:08.167Z",
-  "revisionId": "legacy-import-v1",
-  "workspaceId": "senkolib",
-  "css": "",
-  "createdByName": "Importacao inicial",
-  "resourceId": "teste2",
-  "html": "teste2",
   "name": "teste2",
-  "baseRevisionId": null,
+  "createdAt": "2026-08-15T15:14:08.167Z",
+  "workspaceId": "senkolib",
+  "html": "teste2",
   "kind": "collectionLayout",
+  "css": "",
+  "resourceId": "teste2",
+  "createdByName": "Importacao inicial",
+  "tags": [],
+  "baseRevisionId": null,
+  "revisionId": "legacy-import-v1",
   "createdBy": "legacy-import"
 }

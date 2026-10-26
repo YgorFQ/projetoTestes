@@ -6,8 +6,8 @@
   "schemaVersion": 1,
   "featureId": "team-notes",
   "workspaceId": "senkolib",
-  "exportedAt": "2026-10-20T12:20:29.699Z",
-  "dataVersion": 37,
+  "exportedAt": "2026-10-26T12:59:05.263Z",
+  "dataVersion": 39,
   "counts": {
     "teamNoteSections": 1,
     "teamNotePages": 1

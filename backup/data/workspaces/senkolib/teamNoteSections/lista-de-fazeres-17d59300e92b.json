@@ -1,13 +1,13 @@
 {
-  "createdAt": "2026-09-14T22:27:27.683Z",
-  "workspaceId": "senkolib",
-  "version": 1,
-  "id": "lista-de-fazeres-17d59300e92b",
-  "updatedByName": "Ygor Ferreira Queiroz",
-  "order": 10,
   "updatedAt": "2026-09-14T22:27:27.683Z",
-  "name": "Lista de fazeres",
+  "updatedByName": "Ygor Ferreira Queiroz",
   "createdBy": "NR6ZezfodIfyBbyWwVcytRpNGfL2",
+  "id": "lista-de-fazeres-17d59300e92b",
+  "name": "Lista de fazeres",
+  "order": 10,
   "nameKey": "lista de fazeres",
-  "updatedBy": "NR6ZezfodIfyBbyWwVcytRpNGfL2"
+  "createdAt": "2026-09-14T22:27:27.683Z",
+  "updatedBy": "NR6ZezfodIfyBbyWwVcytRpNGfL2",
+  "version": 1,
+  "workspaceId": "senkolib"
 }

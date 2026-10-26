@@ -1,15 +1,15 @@
 {
+  "legacyId": "maicon-colecoes",
+  "name": "Maicon Coleções",
   "workspaceId": "senkolib",
   "createdBy": "legacy-import",
-  "tags": [],
-  "updatedAt": "2026-08-15T15:14:08.221Z",
-  "name": "Maicon Coleções",
+  "updatedBy": "legacy-import",
   "createdAt": "2026-08-15T15:14:08.221Z",
-  "legacyId": "maicon-colecoes",
   "groupId": "maicon",
   "nameKey": "maicon colecoes",
   "id": "maicon-colecoes",
-  "updatedBy": "legacy-import",
+  "updatedAt": "2026-08-15T15:14:08.221Z",
   "updatedByName": "Importacao inicial",
+  "tags": [],
   "version": 1
 }

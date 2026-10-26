@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "workspaceId": "senkolib",
-  "exportedAt": "2026-10-20T12:20:29.699Z",
-  "dataVersion": 37,
+  "exportedAt": "2026-10-26T12:59:05.263Z",
+  "dataVersion": 39,
   "files": [
     "backup/data/workspaces/senkolib/bibliotecaLayouts/1ylS1MZZx8Kqiypo5cSu.json",
     "backup/data/workspaces/senkolib/bibliotecaLayouts/1ylS1MZZx8Kqiypo5cSu/revisions/UfD9pT1cJb6ayQP4j9nR.json",
@@ -10,6 +10,8 @@
     "backup/data/workspaces/senkolib/bibliotecaLayouts/5zlr987NQG00uWJaGKTH/revisions/wsWCQX0J0Azz1YIEGOVd.json",
     "backup/data/workspaces/senkolib/bibliotecaLayouts/5zlr987NQG00uWJaGKTH/variants/YCKlLQluSqFqlIZlqdL8.json",
     "backup/data/workspaces/senkolib/bibliotecaLayouts/5zlr987NQG00uWJaGKTH/variants/YCKlLQluSqFqlIZlqdL8/revisions/M2LDMpPTxQEa8DCxU1xI.json",
+    "backup/data/workspaces/senkolib/bibliotecaLayouts/LWLDWetI3fVgD0Z3hqsf.json",
+    "backup/data/workspaces/senkolib/bibliotecaLayouts/LWLDWetI3fVgD0Z3hqsf/revisions/aqNXpozAOu4yQXyHyXyB.json",
     "backup/data/workspaces/senkolib/bibliotecaLayouts/OHMfwMDRXJPzzWPucyBW.json",
     "backup/data/workspaces/senkolib/bibliotecaLayouts/OHMfwMDRXJPzzWPucyBW/revisions/TxhxcHvHLREZWUUE0qfF.json",
     "backup/data/workspaces/senkolib/bibliotecaLayouts/qAXLOZHnkJeHggXz0TEg.json",
@@ -131,8 +133,6 @@
     "backup/data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao-8/revisions/legacy-import-v1.json",
     "backup/data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao-9.json",
     "backup/data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao-9/revisions/legacy-import-v1.json",
-    "backup/data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao1.json",
-    "backup/data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao1/revisions/legacy-import-v1.json",
     "backup/data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao3.json",
     "backup/data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao3/revisions/legacy-import-v1.json",
     "backup/data/workspaces/senkolib/collections/carneiro-colecoes/layouts/padrao6.json",

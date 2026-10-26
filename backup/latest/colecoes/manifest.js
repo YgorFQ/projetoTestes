@@ -6,11 +6,11 @@
   "schemaVersion": 1,
   "featureId": "colecoes",
   "workspaceId": "senkolib",
-  "exportedAt": "2026-10-20T12:20:29.699Z",
-  "dataVersion": 37,
+  "exportedAt": "2026-10-26T12:59:05.263Z",
+  "dataVersion": 39,
   "counts": {
     "collections": 5,
-    "collectionLayouts": 52,
+    "collectionLayouts": 51,
     "groups": 5
   }
 };
