@@ -252,14 +252,26 @@
         <section class="library-analysis-content" aria-label="Análise do layout">
           <div id="libraryAnalysisRead"></div>
           <form id="libraryAnalysisForm" hidden>
-            <label>Nome descritivo <input name="descriptiveName" maxlength="160" required></label>
-            <label>Estrutura principal <textarea name="mainStructure" maxlength="500" rows="2"></textarea></label>
-            <label>O que é? <textarea name="whatIsIt" maxlength="10000" rows="3"></textarea></label>
-            <label>Para que serve? <textarea name="purpose" maxlength="10000" rows="3"></textarea></label>
-            <label>Por que é assim? <textarea name="rationale" maxlength="10000" rows="3"></textarea></label>
-            <label>Quando utilizar? <textarea name="whenToUse" maxlength="10000" rows="3"></textarea></label>
-            <label>Limitações <textarea name="limitations" maxlength="10000" rows="3"></textarea></label>
-            <label>Tags <input name="tags" maxlength="3239" placeholder="Separe por vírgula"></label>
+            <div class="library-analysis-mode-switch" role="group" aria-label="Modo de preenchimento da análise">
+              <button type="button" id="libraryAnalysisManualMode" class="library-analysis-mode-button" aria-controls="libraryAnalysisManualPanel" aria-pressed="true">Manual</button>
+              <button type="button" id="libraryAnalysisCodeMode" class="library-analysis-mode-button" aria-controls="libraryAnalysisCodePanel" aria-pressed="false">Código</button>
+            </div>
+            <div id="libraryAnalysisManualPanel" class="library-analysis-manual-panel">
+              <label>Nome descritivo <input name="descriptiveName" maxlength="160" required></label>
+              <label>Estrutura principal <textarea name="mainStructure" maxlength="500" rows="2"></textarea></label>
+              <label>O que é? <textarea name="whatIsIt" maxlength="10000" rows="3"></textarea></label>
+              <label>Para que serve? <textarea name="purpose" maxlength="10000" rows="3"></textarea></label>
+              <label>Por que é assim? <textarea name="rationale" maxlength="10000" rows="3"></textarea></label>
+              <label>Quando utilizar? <textarea name="whenToUse" maxlength="10000" rows="3"></textarea></label>
+              <label>Limitações <textarea name="limitations" maxlength="10000" rows="3"></textarea></label>
+              <label>Tags <input name="tags" maxlength="3239" placeholder="Separe por vírgula"></label>
+            </div>
+            <div id="libraryAnalysisCodePanel" class="library-analysis-code-panel" hidden>
+              <label for="libraryAnalysisCodeInput">Cole o JSON da análise</label>
+              <p id="libraryAnalysisCodeHelp" class="library-analysis-code-help">Chaves aceitas: <code>nome_descritivo</code>, <code>estrutura_principal</code>, <code>o_que_e</code>, <code>para_que_serve</code>, <code>por_que_e_assim</code>, <code>quando_utilizar</code>, <code>limitacoes</code> e <code>tags</code> (lista de textos). Campos ausentes serão mantidos.</p>
+              <textarea id="libraryAnalysisCodeInput" rows="14" spellcheck="false" aria-describedby="libraryAnalysisCodeHelp" placeholder='{"nome_descritivo":"Título da seção","tags":["responsivo"]}'></textarea>
+              <button type="button" id="libraryAnalysisFillCode" class="library-analysis-fill-button">Preencher campos</button>
+            </div>
             <div class="library-analysis-form-actions">
               <button type="button" id="libraryAnalysisCancel">Cancelar</button>
               <button type="submit" id="libraryAnalysisSave">Salvar alterações</button>

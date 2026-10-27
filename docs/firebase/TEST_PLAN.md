@@ -79,6 +79,10 @@ admin e tentativa de promover owner sem permissao.
   abre a analise, sem abrir o editor normal do layout;
 - o modal mostra preview isolado a esquerda e campos de leitura a direita;
 - admin/owner edita os sete campos e as tags, salva e ve a leitura atualizada;
+- os modos Manual e Código alternam sem perder o rascunho; JSON completo ou
+  parcial preenche apenas as chaves fornecidas e retorna ao modo Manual;
+- JSON inválido, chave desconhecida ou tipo incorreto mostra erro sem alterar
+  os campos; o código colado não salva automaticamente no Firebase;
 - erro de permissao no save explica a necessidade de acesso e regras publicadas,
   mantendo o formulario preenchido;
 - editor e modo static nao mostram o comando de edicao;

@@ -5,6 +5,7 @@ const vm = require('node:vm');
 
 function element() {
   const listeners = {};
+  const attributes = {};
   return {
     hidden: false,
     textContent: '',
@@ -17,7 +18,8 @@ function element() {
     appendChild(child) { this.children.push(child); },
     replaceChildren() { this.children = []; },
     focus() {},
-    setAttribute() {},
+    setAttribute(name, value) { attributes[name] = String(value); },
+    getAttribute(name) { return attributes[name] || null; },
     get childElementCount() { return this.children.length; }
   };
 }
@@ -26,7 +28,9 @@ const ids = Object.fromEntries([
   'libraryAnalysisDialog', 'libraryAnalysisForm', 'libraryAnalysisRead',
   'libraryAnalysisStatus', 'libraryAnalysisEdit', 'libraryAnalysisFooter', 'libraryAnalysisClose',
   'libraryAnalysisCancel', 'libraryAnalysisSave', 'libraryAnalysisTitle',
-  'libraryAnalysisPreview'
+  'libraryAnalysisPreview', 'libraryAnalysisManualPanel', 'libraryAnalysisCodePanel',
+  'libraryAnalysisCodeInput', 'libraryAnalysisManualMode', 'libraryAnalysisCodeMode',
+  'libraryAnalysisFillCode'
 ].map((id) => [id, element()]));
 ids.libraryAnalysisDialog.open = false;
 ids.libraryAnalysisDialog.showModal = function () { this.open = true; };
@@ -47,7 +51,7 @@ const context = {
   },
   buildSrcDoc: () => '<html></html>',
   window: {
-    SenkoFirebase: { getState: () => ({ member: { role: 'admin' } }) },
+    SenkoFirebase: { isEnabled: () => true, getState: () => ({ member: { role: 'admin' } }) },
     SenkoDataMode: { isFirebase: () => true, onChange() {} },
     SenkoBibliotecaStatic: { getAnalysis: () => null },
     SenkoBibliotecaFirebase: {
@@ -64,8 +68,52 @@ context.window.SenkoBibliotecaAnalysis.open({ id: 'layout-1', name: 'Cards', htm
 receiveRemote({ version: 1, descriptiveName: 'Nome inicial', tags: ['Grid'] });
 assert.equal(ids.libraryAnalysisEdit.hidden, false);
 ids.libraryAnalysisEdit.dispatch('click');
-inputs.descriptiveName.value = 'Meu rascunho';
-ids.libraryAnalysisForm.dispatch('input');
+ids.libraryAnalysisCodeMode.dispatch('click');
+assert.equal(ids.libraryAnalysisManualPanel.hidden, true);
+assert.equal(ids.libraryAnalysisCodePanel.hidden, false);
+assert.equal(ids.libraryAnalysisSave.hidden, true);
+assert.equal(ids.libraryAnalysisCodeMode.getAttribute('aria-pressed'), 'true');
+ids.libraryAnalysisCodeInput.value = JSON.stringify({
+  nome_descritivo: 'Meu rascunho',
+  estrutura_principal: 'Grid',
+  o_que_e: 'Uma seção visual',
+  para_que_serve: 'Mostrar benefícios',
+  por_que_e_assim: 'Comparação rápida',
+  quando_utilizar: 'Em produtos variados',
+  limitacoes: 'Texto curto',
+  tags: ['Grid', 'Cards']
+});
+ids.libraryAnalysisFillCode.dispatch('click');
+assert.equal(inputs.descriptiveName.value, 'Meu rascunho');
+assert.equal(inputs.mainStructure.value, 'Grid');
+assert.equal(inputs.tags.value, 'Grid, Cards');
+assert.equal(ids.libraryAnalysisManualPanel.hidden, false);
+assert.equal(ids.libraryAnalysisSave.hidden, false);
+assert.match(ids.libraryAnalysisStatus.textContent, /Revise a análise/);
+
+ids.libraryAnalysisCodeMode.dispatch('click');
+ids.libraryAnalysisCodeInput.value = '{"nome_descritivo":';
+ids.libraryAnalysisFillCode.dispatch('click');
+assert.equal(inputs.descriptiveName.value, 'Meu rascunho');
+assert.equal(ids.libraryAnalysisCodePanel.hidden, false);
+assert.match(ids.libraryAnalysisStatus.textContent, /JSON válido/);
+
+ids.libraryAnalysisCodeInput.value = JSON.stringify({ campo_errado: 'texto' });
+ids.libraryAnalysisFillCode.dispatch('click');
+assert.equal(inputs.descriptiveName.value, 'Meu rascunho');
+assert.match(ids.libraryAnalysisStatus.textContent, /Campo não reconhecido/);
+
+ids.libraryAnalysisCodeInput.value = JSON.stringify({ nome_descritivo: 'Não aplicar', tags: 'uma tag' });
+ids.libraryAnalysisFillCode.dispatch('click');
+assert.equal(inputs.descriptiveName.value, 'Meu rascunho');
+assert.match(ids.libraryAnalysisStatus.textContent, /"tags" deve ser uma lista/);
+
+ids.libraryAnalysisCodeInput.value = JSON.stringify({ limitacoes: 'Novo limite' });
+ids.libraryAnalysisFillCode.dispatch('click');
+assert.equal(inputs.descriptiveName.value, 'Meu rascunho');
+assert.equal(inputs.limitations.value, 'Novo limite');
+assert.equal(ids.libraryAnalysisManualPanel.hidden, false);
+inputs.limitations.value = 'Texto curto';
 receiveRemote({ version: 2, descriptiveName: 'Alteração remota', tags: ['Cards'] });
 assert.equal(inputs.descriptiveName.value, 'Meu rascunho');
 assert.equal(ids.libraryAnalysisForm.hidden, false);

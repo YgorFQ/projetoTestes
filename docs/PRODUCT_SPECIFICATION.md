@@ -51,6 +51,10 @@ banco, e o GitHub nao participa de criar, editar ou excluir conteudo.
   análise de leitura à direita, com nome descritivo, estrutura principal,
   explicação, finalidade, motivo, uso, limitações e tags;
 - permite que somente admin e owner editem a análise em um formulário no modal.
+  A edição oferece modos Manual e Código. No modo Código, um JSON opcional com
+  chaves em português preenche os campos existentes ao clicar em **Preencher
+  campos**. O formulário volta ao modo Manual para revisão; campos ausentes
+  mantêm seus valores e JSON inválido não altera nenhum campo.
   O salvamento é explícito, versionado e ligado ao ID do layout. Se o Firestore
   recusar a gravação, o formulário mantém o rascunho e explica como conferir o
   cargo da conta e as regras implantadas.

@@ -47,6 +47,17 @@
 .library-analysis-read-field p { margin: 0; white-space: pre-wrap; line-height: 1.5; overflow-wrap: anywhere; }
 .library-analysis-read-field p.is-empty { color: var(--text3); }
 .library-analysis-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.library-analysis-mode-switch { display: flex; gap: 8px; margin-bottom: 24px; padding: 8px; border-radius: var(--radius); background: var(--bg2); }
+.library-analysis-mode-button { flex: 1; padding: 8px 16px; border: 1px solid transparent; border-radius: var(--radius); background: transparent; color: var(--text2); font: 800 .85rem var(--font-body); cursor: pointer; }
+.library-analysis-mode-button[aria-pressed="true"] { border-color: var(--border); background: var(--bg); color: var(--accent); box-shadow: var(--shadow-card); }
+.library-analysis-mode-button:focus-visible,
+.library-analysis-fill-button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.library-analysis-content form .library-analysis-code-panel label { margin-bottom: 8px; }
+.library-analysis-code-help { margin: 0 0 16px; color: var(--text2); font-size: .85rem; line-height: 1.6; overflow-wrap: anywhere; }
+.library-analysis-code-help code { font-family: var(--font-code); }
+.library-analysis-content .library-analysis-code-panel textarea { min-height: 240px; margin: 0 0 16px; font: 400 .9rem var(--font-code); line-height: 1.6; }
+.library-analysis-content .library-analysis-code-panel textarea:focus-visible { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 2px; }
+.library-analysis-fill-button { padding: 8px 16px; border: 1px solid var(--accent); border-radius: var(--radius); background: var(--accent); color: #fff; font: 800 .85rem var(--font-body); cursor: pointer; }
 .library-analysis-content form label { display: block; margin: 0 0 16px; font-weight: 800; }
 .library-analysis-content input,
 .library-analysis-content textarea { display: block; box-sizing: border-box; width: 100%; margin-top: 6px; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text); font: 400 .9rem var(--font-body); }

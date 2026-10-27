@@ -308,7 +308,7 @@
         {
           title: 'Biblioteca',
           badge: 'layouts',
-          terms: 'biblioteca layout variacao variante analise mais informacoes documentacao admin owner senkolib register variants layout-editor editor oficial id manifest html basico copy base',
+          terms: 'biblioteca layout variacao variante analise mais informacoes documentacao admin owner senkolib register variants layout-editor editor oficial id manifest html basico copy base json codigo manual preencher',
           paragraphs: [
             'A Biblioteca guarda layouts, variantes e o HTML Basico compartilhado no Firestore e le o ultimo snapshot publico quando o Firebase nao esta disponivel.',
             'Firebase e snapshot gerado sao as duas unicas fontes de dados.'
@@ -318,7 +318,8 @@
             'UI: controllers/index.js.',
             'Editor oficial: controllers/layout-editor.js.',
             'O botao circular i no canto superior esquerdo de cada card abre Mais informacoes: preview a esquerda e analise de leitura a direita.',
-            'Somente admin e owner veem Editar analise. Os campos e tags sao salvos no Firestore apenas ao clicar em Salvar alteracoes.',
+            'Somente admin e owner veem Editar analise. No modo Manual, preenchem os campos; no modo Codigo, colam um JSON com chaves como nome_descritivo, estrutura_principal e tags e clicam em Preencher campos.',
+            'Preencher campos valida o JSON, copia os valores para o formulario e volta ao modo Manual para revisao. Campos ausentes permanecem como estavam. Nada e salvo ate clicar em Salvar alteracoes.',
             'A analise fica em bibliotecaLayouts/{layoutId}/analysis/current, com versao propria. Uma copia sem autoria em publicAnalysis/current permite leitura atual a todos; editor e visitante nao podem altera-la.',
             'Se o Firestore recusar Salvar alteracoes por permissao, confira o cargo da conta e publique firebase/firestore.rules no projeto Firebase. O commit no GitHub nao implanta regras.',
             'O backup publico da Biblioteca inclui a analise como fallback de leitura, e a exclusao do layout remove os dois documentos filhos.',

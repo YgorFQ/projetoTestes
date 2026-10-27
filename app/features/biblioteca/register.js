@@ -225,12 +225,12 @@
       loadStyle('styles/index.css?v=20260816-structure');
       loadStyle('styles/layout-editor.css?v=20260909-style-html-download');
       loadStyle('styles/copy-base-editor.css?v=20260826-copy-base-firebase');
-      loadStyle('styles/analysis.css?v=20261016-analysis-1');
+      loadStyle('styles/analysis.css?v=20261027-analysis-code');
 
       await loadStaticAssets();
 
       await Promise.all([
-        loadScript('view.js?v=20260613-fast-load'),
+        loadScript('view.js?v=20261027-analysis-code'),
         loadScript('core/index.js?v=20260816-structure'),
         loadScript('repositories/firebase-repository.js?v=20260816-structure'),
         loadScript('repositories/static-repository.js?v=20260816-structure')
@@ -248,7 +248,7 @@
       await Promise.all([
         loadScript('controllers/layout-editor.js?v=20260909-style-html-download'),
         loadScript('controllers/index.js?v=20260816-structure'),
-        loadScript('controllers/analysis.js?v=20261016-analysis-1'),
+        loadScript('controllers/analysis.js?v=20261027-analysis-code'),
         loadScript('controllers/copy-base-template.js?v=20260816-structure').then(function () {
           return loadScript('controllers/copy-base.js?v=20260826-copy-base-firebase').then(function () {
             return loadScript('controllers/copy-base-editor.js?v=20260826-copy-base-firebase');

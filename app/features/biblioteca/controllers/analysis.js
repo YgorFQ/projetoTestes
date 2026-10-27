@@ -4,6 +4,12 @@
   var readPanel;
   var status;
   var editButton;
+  var manualPanel;
+  var codePanel;
+  var codeInput;
+  var manualModeButton;
+  var codeModeButton;
+  var saveButton;
   var layout = null;
   var analysis = null;
   var trigger = null;
@@ -22,6 +28,15 @@
     ['whenToUse', 'Quando utilizar?'],
     ['limitations', 'Limitações']
   ];
+  var codeFields = {
+    nome_descritivo: ['descriptiveName', 160],
+    estrutura_principal: ['mainStructure', 500],
+    o_que_e: ['whatIsIt', 10000],
+    para_que_serve: ['purpose', 10000],
+    por_que_e_assim: ['rationale', 10000],
+    quando_utilizar: ['whenToUse', 10000],
+    limitacoes: ['limitations', 10000]
+  };
 
   function canEdit() {
     var firebase = window.SenkoFirebase;
@@ -33,6 +48,76 @@
   function setStatus(message, error) {
     status.textContent = message || '';
     status.classList.toggle('is-error', Boolean(error));
+  }
+
+  function setMode(mode, focus) {
+    var isManual = mode === 'manual';
+    manualPanel.hidden = !isManual;
+    codePanel.hidden = isManual;
+    manualModeButton.setAttribute('aria-pressed', String(isManual));
+    codeModeButton.setAttribute('aria-pressed', String(!isManual));
+    saveButton.hidden = !isManual;
+    if (focus) {
+      (isManual ? form.elements.namedItem('descriptiveName') : codeInput).focus();
+    }
+  }
+
+  function parseCode() {
+    var source = codeInput.value.trim();
+    if (!source) throw new Error('Cole um JSON antes de preencher os campos.');
+    var fenced = source.match(/^```(?:json)?\s*\n([\s\S]*?)\n```$/i);
+    if (fenced) source = fenced[1].trim();
+    var data;
+    try { data = JSON.parse(source); }
+    catch (error) { throw new Error('O código precisa ser um JSON válido. Confira vírgulas, aspas e chaves.'); }
+    if (!data || typeof data !== 'object' || Array.isArray(data)) {
+      throw new Error('O JSON precisa conter um objeto com os campos da análise.');
+    }
+    var keys = Object.keys(data);
+    if (!keys.length) throw new Error('O JSON não contém campos para preencher.');
+    var updates = {};
+    keys.forEach(function (key) {
+      if (key === 'tags') {
+        if (!Array.isArray(data.tags) || data.tags.some(function (tag) {
+          return typeof tag !== 'string' || !tag.trim() || tag.indexOf(',') !== -1;
+        })) {
+          throw new Error('"tags" deve ser uma lista de palavras ou frases sem vírgulas internas.');
+        }
+        var tags = parseTags(data.tags.join(', '));
+        var tagText = tags.join(', ');
+        if (tagText.length > 3239) throw new Error('A lista de tags é longa demais.');
+        updates.tags = tagText;
+        return;
+      }
+      if (!Object.prototype.hasOwnProperty.call(codeFields, key)) {
+        throw new Error('Campo não reconhecido no JSON: ' + key + '.');
+      }
+      var mapping = codeFields[key];
+      if (typeof data[key] !== 'string') {
+        throw new Error('"' + key + '" precisa conter um texto.');
+      }
+      var value = data[key].trim();
+      if (value.length > mapping[1]) {
+        throw new Error('"' + key + '" excede o limite de ' + mapping[1] + ' caracteres.');
+      }
+      if (key === 'nome_descritivo' && value.length < 2) {
+        throw new Error('"nome_descritivo" precisa ter pelo menos 2 caracteres.');
+      }
+      updates[mapping[0]] = value;
+    });
+    return updates;
+  }
+
+  function fillFromCode() {
+    var updates;
+    try { updates = parseCode(); }
+    catch (error) { setStatus(error.message, true); codeInput.focus(); return; }
+    Object.keys(updates).forEach(function (name) {
+      form.elements.namedItem(name).value = updates[name];
+    });
+    dirty = true;
+    setMode('manual', true);
+    setStatus('Campos preenchidos. Revise a análise e clique em Salvar alterações para gravar no Firebase.');
   }
 
   function addReadField(label, value) {
@@ -83,6 +168,8 @@
   function showRead() {
     editing = false;
     dirty = false;
+    codeInput.value = '';
+    setMode('manual');
     form.hidden = true;
     readPanel.hidden = false;
     renderRead();
@@ -95,6 +182,8 @@
       form.elements.namedItem(field[0]).value = analysis ? analysis[field[0]] || '' : '';
     });
     form.elements.namedItem('tags').value = analysis ? (analysis.tags || []).join(', ') : '';
+    codeInput.value = '';
+    setMode('manual');
     dirty = false;
     editing = true;
     readPanel.hidden = true;
@@ -177,7 +266,7 @@
     try { values.tags = parseTags(form.elements.namedItem('tags').value); }
     catch (error) { setStatus(error.message, true); return; }
     saving = true;
-    document.getElementById('libraryAnalysisSave').disabled = true;
+    saveButton.disabled = true;
     window.SenkoBibliotecaFirebase.saveAnalysis(values).then(function (saved) {
       analysis = saved;
       showRead();
@@ -193,7 +282,7 @@
       }
     }).finally(function () {
       saving = false;
-      document.getElementById('libraryAnalysisSave').disabled = false;
+      saveButton.disabled = false;
     });
   }
 
@@ -203,6 +292,15 @@
     readPanel = document.getElementById('libraryAnalysisRead');
     status = document.getElementById('libraryAnalysisStatus');
     editButton = document.getElementById('libraryAnalysisEdit');
+    manualPanel = document.getElementById('libraryAnalysisManualPanel');
+    codePanel = document.getElementById('libraryAnalysisCodePanel');
+    codeInput = document.getElementById('libraryAnalysisCodeInput');
+    manualModeButton = document.getElementById('libraryAnalysisManualMode');
+    codeModeButton = document.getElementById('libraryAnalysisCodeMode');
+    saveButton = document.getElementById('libraryAnalysisSave');
+    manualModeButton.addEventListener('click', function () { setMode('manual', true); });
+    codeModeButton.addEventListener('click', function () { setMode('code', true); });
+    document.getElementById('libraryAnalysisFillCode').addEventListener('click', fillFromCode);
     document.getElementById('libraryAnalysisClose').addEventListener('click', close);
     document.getElementById('libraryAnalysisCancel').addEventListener('click', function () {
       if (saving) return;
